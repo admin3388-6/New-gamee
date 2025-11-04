@@ -1,56 +1,26 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع إشعارات OneSignal</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موقعي مع OneSignal</title>
 
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          // ** App ID الخاص بك **
-          appId: "356e4353-98ed-4e27-9314-d51ad5e83ced", 
-        });
-
-        // ** هذا السطر يظهر نافذة الاشتراك للمستخدم فوراً **
-        // بما أنك حذفت زر الجرس التلقائي، هذا يضمن أن المستخدم سيتمكن من الاشتراك
-        OneSignal.showSlidedownPrompt();
+  <!-- كود OneSignal -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "792b9975-ae47-4a4a-8640-4aa10b284b92", // App ID الخاص بك
+        notifyButton: {
+          enable: true, // لإظهار زر الجرس
+        },
       });
-    </script>
-    <style>
-        body {
-            font-family: Tahoma, Arial, sans-serif;
-            text-align: center;
-            padding-top: 50px;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: auto;
-        }
-        h1 {
-            color: #007bff;
-        }
-        p {
-            font-size: 1.1em;
-            line-height: 1.6;
-        }
-    </style>
+    });
+  </script>
 </head>
 <body>
-
-    <div class="container">
-        <h1>🎉 نجاح النشر!</h1>
-        <p>تم تحديث الكود. يجب أن تظهر لك الآن نافذة تطلب منك الاشتراك في الإشعارات فور دخول الموقع.</p>
-        <p>إذا ظهرت النافذة، فهذا يعني أن نظام OneSignal يعمل بشكل صحيح!</p>
-    </div>
-    
+  <h1>✅ إشعارات OneSignal تعمل الآن!</h1>
+  <p>اضغط "السماح" لتفعيل الإشعارات عندما يظهر الطلب.</p>
 </body>
 </html>

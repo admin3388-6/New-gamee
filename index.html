@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyData - الصفحة الرئيسية</title>
+    <meta name="description" content="مرحبًا بك في SkyData، استمتع بآلاف الأدوات المجانية 100% مع ضمان حماية الخصوصية.">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "48370ee9-5129-4aa7-994a-d3dd8368c5f7",
+          
+          // إعدادات إضافية موصى بها لتحسين التجربة:
+          notifyButton: {
+            enable: true, // تفعيل زر الاشتراك العائم (أيقونة الجرس)
+          },
+          welcomeNotification: {
+            title: "مرحباً بك في SkyData",
+            message: "شكراً لانضمامك! سنبقيك على اطلاع بأحدث الأدوات.",
+            disable: false
+          },
+          // لتمكين الإشعارات على البيئات المحلية
+          allowLocalhostAsSecureOrigin: true, 
+        });
+      });
+    </script>
+
+    <style>
+        :root {
+            /* تعريف المتغيرات للألوان */
+            --primary-color: #000000; /* أسود */
+            --secondary-color: #ffffff; /* أبيض */
+            --font-family: 'Arial', Tahoma, sans-serif; /* خط نص بسيط وأفضل خط متاح بشكل عام */
+        }
+
+        /* تنسيقات أساسية للجسم والصفحة بالكامل */
+        body {
+            direction: rtl; /* اتجاه من اليمين لليسار للغة العربية */
+            font-family: var(--font-family);
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            transition: all 0.3s ease; /* لضمان سلاسة التغييرات */
+            min-height: 100vh; /* لتغطية الشاشة بالكامل */
+        }
+
+        /* الحاوية الرئيسية لتوسيط المحتوى */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* رأس الصفحة (الناف بار) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--primary-color);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-section img {
+            width: 40px; /* حجم الشعار */
+            height: 40px;
+            margin-left: 10px;
+        }
+
+        /* تنسيقات قسم الترحيب */
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .hero-section p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        /* تنسيقات قسم الخصوصية */
+        .privacy-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            background-color: #f7f7f7; /* لون رمادي فاتح للخلفية للتمييز */
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .privacy-section h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .privacy-section ul {
+            list-style: none;
+            padding: 0;
+            font-size: 1.1em;
+        }
+
+        .privacy-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .privacy-section img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+        }
+
+        /* --- زر تبديل اللغات المخصص (UI) --- */
+        .language-switcher {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-button {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+        }
+
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            background-color: var(--secondary-color);
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 10;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            margin-top: 5px;
+            max-height: 300px; 
+            overflow-y: auto;
+        }
+
+        .lang-switcher:hover .lang-dropdown,
+        .lang-button[aria-expanded="true"] + .lang-dropdown {
+             display: block;
+        }
+
+        .lang-dropdown-item {
+            color: var(--primary-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* لتباعد النص والعلم */
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .lang-dropdown-item:hover {
+            background-color: #eee;
+        }
+
+        .lang-dropdown-item img {
+            width: 20px;
+            height: 15px;
+            border: 1px solid #ccc;
+        }
+        
+        /* دعم الشاشات الصغيرة (Mobile Responsiveness) */
+        @media (max-width: 600px) {
+            .hero-section {
+                padding: 40px 10px;
+            }
+            .hero-section h1 {
+                font-size: 2em;
+            }
+            .hero-section p {
+                font-size: 1em;
+            }
+            .privacy-section {
+                padding: 30px 10px;
+            }
+        }
+
+        /* تنسيق لتحديد العناصر القابلة للترجمة */
+        .translatable {
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="#" class="logo-section">
+            <img src="https://i.ibb.co/5g1pQGF4/Picsart-25-11-03-20-43-32-033-1.webp" alt="SkyData Logo">
+            <span>Skydata</span>
+        </a>
+
+        <div class="language-switcher" id="langSwitcher">
+            <button class="lang-button" aria-expanded="false" aria-controls="lang-menu">
+                <span id="currentLangText">العربية</span>
+            </button>
+            <div class="lang-dropdown" id="lang-menu">
+                <div class="lang-dropdown-item" data-lang="ar">
+                    <span>العربية</span>
+                    <img src="https://flagcdn.com/w20/sa.png" alt="علم السعودية">
+                </div>
+                <div class="lang-dropdown-item" data-lang="en">
+                    <span>English</span>
+                    <img src="https://flagcdn.com/w20/us.png" alt="US Flag">
+                </div>
+                <div class="lang-dropdown-item" data-lang="es">
+                    <span>Español</span>
+                    <img src="https://flagcdn.com/w20/es.png" alt="Spain Flag">
+                </div>
+                <div class="lang-dropdown-item" data-lang="it">
+                    <span>Italiano</span>
+                    <img src="https://flagcdn.com/w20/it.png" alt="Italy Flag">
+                </div>
+                <div class="lang-dropdown-item" data-lang="fr">
+                    <span>Français</span>
+                    <img src="https://flagcdn.com/w20/fr.png" alt="France Flag">
+                </div>
+                <div class="lang-dropdown-item" data-lang="ru">
+                    <span>Русский</span>
+                    <img src="https://flagcdn.com/w20/ru.png" alt="Russia Flag">
+                </div>
+                <div class="lang-dropdown-item" data-lang="zh">
+                    <span>中文 (الصينية)</span>
+                    <img src="https://flagcdn.com/w20/cn.png" alt="China Flag">
+                </div>
+                <div class="lang-dropdown-item" data-lang="ja">
+                    <span>日本語 (اليابانية)</span>
+                    <img src="https://flagcdn.com/w20/jp.png" alt="Japan Flag">
+                </div>
+                <div class="lang-dropdown-item" data-lang="pt">
+                    <span>Português (البرازيلية)</span>
+                    <img src="https://flagcdn.com/w20/br.png" alt="Brazil Flag">
+                </div>
+                </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <section class="hero-section translatable">
+            <h1 data-key="welcome_message">مرحبا بك في **SkyData**</h1>
+            <p data-key="tools_message">أستمتع **بالاف الادوات المجانية 100%**</p>
+            <p data-key="no_limits_message">**لا حدود مع SkyData**</p>
+
+            <img src="https://i.ibb.co/5g1pQGF4/Picsart-25-11-03-20-43-32-033-1.webp" alt="SkyData Main Image" style="max-width: 250px; height: auto; margin-top: 40px;">
+        </section>
+
+        <section class="privacy-section translatable">
+            <h2 data-key="privacy_title">حماية خصوصيتك ومعلوماتك 100%</h2>
+            <ul>
+                <li data-key="no_tracking">✅ منع تتبع</li>
+                <li data-key="no_data_collection">✅ منع جمع المعلومات</li>
+                <li data-key="freedom_browsing">✅ تصفح واعمل بكل حرية وخصوصية</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // قاموس الترجمة (Translation Dictionary)
+        const translations = {
+            'ar': {
+                'welcome_message': 'مرحبا بك في **SkyData**',
+                'tools_message': 'أستمتع **بالاف الادوات المجانية 100%**',
+                'no_limits_message': '**لا حدود مع SkyData**',
+                'privacy_title': 'حماية خصوصيتك ومعلوماتك 100%',
+                'no_tracking': '✅ منع تتبع',
+                'no_data_collection': '✅ منع جمع المعلومات',
+                'freedom_browsing': '✅ تصفح واعمل بكل حرية وخصوصية',
+            },
+            'en': {
+                'welcome_message': 'Welcome to **SkyData**',
+                'tools_message': 'Enjoy **thousands of 100% free tools**',
+                'no_limits_message': '**No limits with SkyData**',
+                'privacy_title': '100% Protection of your Privacy and Information',
+                'no_tracking': '✅ Tracking prevention',
+                'no_data_collection': '✅ Information gathering prevention',
+                'freedom_browsing': '✅ Browse and work with total freedom and privacy',
+            },
+            'es': {
+                'welcome_message': '¡Bienvenido a **SkyData**!',
+                'tools_message': 'Disfruta de **miles de herramientas 100% gratuitas**',
+                'no_limits_message': '**Sin límites con SkyData**',
+                'privacy_title': 'Protección 100% de su Privacidad e Información',
+                'no_tracking': '✅ Prevención de seguimiento',
+                'no_data_collection': '✅ Prevención de recopilación de información',
+                'freedom_browsing': '✅ Navegue y trabaje con total libertad y privacidad',
+            },
+            // يجب إضافة باقي اللغات هنا (it, fr, ru, zh, ja, pt)
+        };
+
+        // دالة تطبيق الترجمة
+        function applyTranslation(lang) {
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    // استخدام innerHTML لدعم تنسيق **bold**
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+            
+            // تحديث نص الزر بناءً على اللغة المحددة
+            const langName = document.querySelector(`.lang-dropdown-item[data-lang="${lang}"] span`).textContent;
+            document.getElementById('currentLangText').textContent = langName;
+            
+            // تحديث اتجاه الصفحة (RTL/LTR)
+            document.documentElement.lang = lang;
+            document.body.style.direction = (lang === 'ar') ? 'rtl' : 'ltr';
+            
+            // حفظ اللغة في التخزين المحلي
+            localStorage.setItem('userLang', lang);
+        }
+
+        // إعداد اللغة الافتراضية عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            // التحقق مما إذا كانت هناك لغة مفضلة محفوظة
+            const savedLang = localStorage.getItem('userLang') || 'ar'; // الافتراضي العربية
+            applyTranslation(savedLang);
+
+            // إضافة مستمعي الأحداث لزر تبديل اللغات
+            document.querySelectorAll('.lang-dropdown-item').forEach(item => {
+                item.addEventListener('click', (event) => {
+                    const newLang = event.currentTarget.getAttribute('data-lang');
+                    applyTranslation(newLang);
+                    // إغلاق القائمة
+                    const button = document.querySelector('.lang-button');
+                    document.getElementById('lang-menu').style.display = 'none';
+                    button.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            // منطق فتح/إغلاق القائمة المنسدلة
+            document.querySelector('.lang-button').addEventListener('click', (e) => {
+                const dropdown = document.getElementById('lang-menu');
+                const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
+                
+                if (isExpanded) {
+                    dropdown.style.display = 'none';
+                    e.currentTarget.setAttribute('aria-expanded', 'false');
+                } else {
+                    dropdown.style.display = 'block';
+                    e.currentTarget.setAttribute('aria-expanded', 'true');
+                    
+                    // ضبط موضع القائمة بناءً على اتجاه النص الحالي
+                    const isRTL = document.body.style.direction === 'rtl';
+                    if (isRTL) {
+                        dropdown.style.left = 'auto';
+                        dropdown.style.right = '0';
+                    } else {
+                        dropdown.style.left = '0';
+                        dropdown.style.right = 'auto';
+                    }
+                }
+            });
+
+            // إغلاق القائمة عند النقر خارجها
+            document.addEventListener('click', (e) => {
+                const langSwitcher = document.getElementById('langSwitcher');
+                const button = document.querySelector('.lang-button');
+                const dropdown = document.getElementById('lang-menu');
+
+                if (!langSwitcher.contains(e.target) && button.getAttribute('aria-expanded') === 'true') {
+                    dropdown.style.display = 'none';
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

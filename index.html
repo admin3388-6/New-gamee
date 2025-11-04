@@ -28,16 +28,18 @@
   <p>إذا لم يظهر طلب الإذن، اضغط الزر أدناه:</p>
   <button onclick="askPermission()">طلب الإشعار يدويًا</button>
 
-  <script>
-    async function askPermission() {
-      const OneSignal = window.OneSignal;
-      if (OneSignal) {
-        await OneSignal.Notifications.requestPermission();
-        alert("تم إرسال طلب الإشعار ✅");
-      } else {
-        alert("OneSignal لم يتم تحميله بعد 😅");
-      }
-    }
-  </script>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "792b9975-ae47-4a4a-8640-4aa10b284b92",
+      serviceWorkerPath: "OneSignalSDKWorker.js", 
+      notifyButton: {
+        enable: true, // هذا يُظهر زر الجرس
+      },
+    });
+  });
+</script>
 </body>
 </html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار إشعارات OneSignal</title>
+
+  <!-- تحميل مكتبة OneSignal v16 -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "792b9975-ae47-4a4a-8640-4aa10b284b92", // App ID الخاص بك
+        notifyButton: { enable: true }, // زر الجرس
+        autoPrompt: true, // <== هذا يُظهر الطلب تلقائيًا
+      });
+    });
+<!-- تحميل مكتبة OneSignal -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "792b9975-ae47-4a4a-8640-4aa10b284b92",
+      serviceWorkerPath: "OneSignalSDKWorker.js", // مهم جدًا حتى يعمل على Vercel
+      notifyButton: {
+        enable: true, // هذا يظهر زر الجرس تلقائيًا
+        size: 'medium',
+        theme: 'default',
+        position: 'bottom-right',
+      },
+      promptOptions: {
+        slidedown: {
+          enabled: true,
+          autoPrompt: true,
+          actionMessage: "هل تريد تلقي إشعارات من موقعنا؟",
+          acceptButtonText: "نعم بالتأكيد",
+          cancelButtonText: "لاحقًا",
+        }
+      }
+    });
+  });
+</script>
+
+<!-- مكان الزر المخصص (اختياري) -->
+<div class="onesignal-customlink-container"></div>
+</body>
+</html>

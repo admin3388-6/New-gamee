@@ -3,24 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موقعي مع OneSignal</title>
+  <title>اختبار إشعارات OneSignal</title>
 
-  <!-- كود OneSignal -->
+  <!-- تحميل مكتبة OneSignal v16 -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.init({
         appId: "792b9975-ae47-4a4a-8640-4aa10b284b92", // App ID الخاص بك
-        notifyButton: {
-          enable: true, // لإظهار زر الجرس
-        },
+        notifyButton: { enable: true }, // زر الجرس
+        autoPrompt: true, // <== هذا يُظهر الطلب تلقائيًا
       });
     });
   </script>
+
+  <style>
+    body { font-family: sans-serif; background: #fafafa; text-align: center; margin-top: 100px; }
+    button { padding: 10px 15px; border: none; background: #1976d2; color: white; border-radius: 6px; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <h1>✅ إشعارات OneSignal تعمل الآن!</h1>
-  <p>اضغط "السماح" لتفعيل الإشعارات عندما يظهر الطلب.</p>
+  <h1>🔔 اختبار إشعارات OneSignal</h1>
+  <p>إذا لم يظهر طلب الإذن، اضغط الزر أدناه:</p>
+  <button onclick="askPermission()">طلب الإشعار يدويًا</button>
+
+  <script>
+    async function askPermission() {
+      const OneSignal = window.OneSignal;
+      if (OneSignal) {
+        await OneSignal.Notifications.requestPermission();
+        alert("تم إرسال طلب الإشعار ✅");
+      } else {
+        alert("OneSignal لم يتم تحميله بعد 😅");
+      }
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">تحويل صور إلى PDF - Skydata</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl; 
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            flex-grow: 1; /* لجعل المحتوى يملأ المساحة */
+        }
+
+        /* تصميم الهيدر (نسخة من الصفحة الرئيسية) */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { height: 40px; margin-left: 10px; }
+        .lang-switcher { display: flex; }
+        .lang-switcher a {
+            text-decoration: none; color: #007bff; margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+        }
+        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+
+        /* تصميم الفوتر (نسخة من الصفحة الرئيسية) */
+        footer {
+            background-color: #1e1e1e;
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .footer-links a {
+            color: #ffffff; background-color: #007bff; text-decoration: none;
+            margin: 0 10px 15px 10px; display: inline-block; padding: 10px 20px;
+            border-radius: 5px; font-size: 1.1em; font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .footer-links a:hover { background-color: #0056b3; }
+        .social-icons { margin-top: 20px; }
+        .social-icons a { margin: 0 10px; }
+        .social-icons img { height: 30px; }
+        
+        /* تصميم أداة التحويل */
+        main {
+            text-align: center;
+        }
+        .pdf-tool-box {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+        .pdf-tool-box h1 {
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        /* تصميم زر اختيار الملفات */
+        #image-input {
+            display: none; /* إخفاء الزر الافتراضي */
+        }
+        .file-upload-label {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .file-upload-label:hover {
+            background-color: #0056b3;
+        }
+        
+        /* تصميم زر التحويل */
+        .cta-button {
+            display: inline-block;
+            background-color: #28a745; /* لون أخضر للتحويل */
+            color: #ffffff;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #218838;
+        }
+        .cta-button.disabled { /* عندما يكون الزر معطلاً */
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        #status-message {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #e0e0e0;
+        }
+    </style>
+    </head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        </div>
+        <div class="lang-switcher">
+            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <main>
+            <div class="pdf-tool-box">
+                <h1 data-lang-key="toolTitle">أداة تحويل الصور إلى PDF</h1>
+                
+                <label for="image-input" class="file-upload-label" data-lang-key="selectImages">اختر الصور</label>
+                
+                <input type="file" id="image-input" multiple accept="image/jpeg, image/png">
+                
+                <button id="convert-btn" class="cta-button" data-lang-key="convertButton">تحويل إلى PDF</button>
+                
+                <p id="status-message" data-lang-key="statusReady">اختر صورة واحدة أو أكثر للبدء...</p>
+            </div>
+
+            <a href="index.html" class="cta-button" style="background-color: #555; margin-top: 50px;" data-lang-key="backToHome">العودة للرئيسية</a>
+        </main>
+        
+    </div> <footer style="margin-top: auto;"> <div class="footer-links">
+            <a href="Safety.html" data-lang-key="footerPolicy">شروط الاستخدام وسياسة الخصوصية</a>
+            <a href="aboutus.html" data-lang-key="footerAbout">عن Skydata</a>
+        </div>
+        <div class="social-icons">
+            <a href="https://www.youtube.com/@Skydataa" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/KjqPWR0S/qm6aoefmjlhw2bhdgmss.webp" alt="يوتيوب">
+            </a>
+            <a href="https://discord.gg/6m3c2up4p3" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/sdxTC105/qqoxsxvwoleec1dfbhew.webp" alt="ديسكورد">
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // هذا السطر ضروري لتعريف المكتبة بشكل صحيح
+        window.jsPDF = window.jspdf.jsPDF;
+
+        // --- 1. قاموس الترجمة ---
+        const translations = {
+            "ar": {
+                "pageTitle": "تحويل صور إلى PDF - Skydata",
+                "toolTitle": "أداة تحويل الصور إلى PDF",
+                "selectImages": "اختر الصور",
+                "convertButton": "تحويل إلى PDF",
+                "statusReady": "اختر صورة واحدة أو أكثر للبدء...",
+                "statusSelected": " تم اختيار {count} صور. جاهز للتحويل.",
+                "statusConverting": "جاري التحويل... يرجى الانتظار.",
+                "statusError": "الرجاء اختيار ملفات صور أولاً.",
+                "statusDone": "تم التحويل بنجاح! جاري تحميل ملف PDF...",
+                "backToHome": "العودة للرئيسية",
+                "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
+                "footerAbout": "عن Skydata"
+            },
+            "en": {
+                "pageTitle": "Image to PDF Converter - Skydata",
+                "toolTitle": "Image to PDF Converter Tool",
+                "selectImages": "Select Images",
+                "convertButton": "Convert to PDF",
+                "statusReady": "Select one or more images to start...",
+                "statusSelected": "{count} images selected. Ready to convert.",
+                "statusConverting": "Converting... Please wait.",
+                "statusError": "Please select image files first.",
+                "statusDone": "Conversion successful! Downloading your PDF...",
+                "backToHome": "Back to Home",
+                "footerPolicy": "Terms of Use and Privacy Policy",
+                "footerAbout": "About Skydata"
+            }
+        };
+
+        // --- 2. متغير اللغة الحالي ---
+        let currentLang = 'ar'; // اللغة الافتراضية
+
+        // --- 3. دالة تبديل اللغة ---
+        function setLanguage(lang) {
+            currentLang = lang; // تحديث اللغة الحالية
+            // تحديث اتجاه الصفحة
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+
+            // تحديث كلاسات الأزرار النشطة
+            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+            // تحديث كل النصوص
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+        }
+        
+        // --- 4. منطق تحويل PDF ---
+
+        // الحصول على العناصر من الصفحة
+        const imageInput = document.getElementById('image-input');
+        const convertBtn = document.getElementById('convert-btn');
+        const statusMsg = document.getElementById('status-message');
+
+        // تحديث رسالة الحالة عند اختيار ملفات
+        imageInput.addEventListener('change', () => {
+            const count = imageInput.files.length;
+            if (count > 0) {
+                const text = translations[currentLang].statusSelected.replace('{count}', count);
+                statusMsg.innerText = text;
+            } else {
+                statusMsg.innerText = translations[currentLang].statusReady;
+            }
+        });
+
+        // دالة مساعدة لقراءة ملف الصورة كـ Data URL
+        function readImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // الحدث الرئيسي عند الضغط على زر "تحويل"
+        convertBtn.addEventListener('click', async () => {
+            const files = imageInput.files;
+
+            // التأكد من وجود ملفات
+            if (files.length === 0) {
+                statusMsg.innerText = translations[currentLang].statusError;
+                return;
+            }
+
+            statusMsg.innerText = translations[currentLang].statusConverting;
+            convertBtn.classList.add('disabled'); // تعطيل الزر
+            convertBtn.disabled = true;
+
+            try {
+                // إنشاء مستند PDF جديد
+                const doc = new jsPDF('p', 'mm', 'a4'); // (portrait, millimeters, a4 size)
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const imageData = await readImage(file);
+                    
+                    // إضافة صفحة جديدة (بعد الصورة الأولى)
+                    if (i > 0) {
+                        doc.addPage();
+                    }
+
+                    // الحصول على أبعاد الصفحة وأبعاد الصورة
+                    const imgProps = doc.getImageProperties(imageData);
+                    const pdfWidth = doc.internal.pageSize.getWidth();
+                    const pdfHeight = doc.internal.pageSize.getHeight();
+
+                    // حساب النسبة للحفاظ على أبعاد الصورة داخل الصفحة
+                    const ratio = Math.min(pdfWidth / imgProps.width, pdfHeight / imgProps.height);
+                    
+                    const imgWidth = imgProps.width * ratio;
+                    const imgHeight = imgProps.height * ratio;
+
+                    // حساب الموضع لتوسيط الصورة
+                    const x = (pdfWidth - imgWidth) / 2;
+                    const y = (pdfHeight - imgHeight) / 2;
+
+                    // إضافة الصورة إلى المستند
+                    doc.addImage(imageData, imgProps.fileType, x, y, imgWidth, imgHeight);
+                }
+
+                // حفظ الملف وبدء التحميل
+                doc.save('skydata_images.pdf');
+                
+                statusMsg.innerText = translations[currentLang].statusDone;
+
+            } catch (error) {
+                console.error(error);
+                statusMsg.innerText = "حدث خطأ أثناء التحويل.";
+            } finally {
+                // إعادة تفعيل الزر
+                convertBtn.classList.remove('disabled');
+                convertBtn.disabled = false;
+            }
+        });
+
+    </script>
+    </body>
+</html>

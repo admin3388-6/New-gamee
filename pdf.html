@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-key="pageTitle">تحويل صور إلى PDF - Skydata</title>
 
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+        });
+      });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
@@ -44,7 +53,7 @@
         .social-icons img { height: 30px; }
         
         /* ============================================
-         ==  CSS الجديد (أداة التحويل والمعاينة)  ==
+         ==  CSS (أداة التحويل والمعاينة)  ==
          ============================================
         */
         main { text-align: center; }
@@ -55,7 +64,6 @@
         }
         .pdf-tool-box h1 { color: #ffffff; margin-bottom: 20px; }
 
-        /* زر اختيار الملفات (الرئيسي) */
         #image-input { display: none; }
         .file-upload-label {
             display: inline-block; background-color: #007bff; color: #ffffff;
@@ -65,82 +73,88 @@
         }
         .file-upload-label:hover { background-color: #0056b3; }
         
-        /* --- (جديد) حاوية المعاينة القابلة للتمرير --- */
+        /* --- حاوية المعاينة (الحل لمشكلة التحريك) --- */
         .preview-container-wrapper {
-            width: 100%;
-            overflow: hidden; /* إخفاء شريط التمرير العمودي */
+            width: 100%; /* يجب أن يكون العرض 100% */
+            overflow: hidden; /* إخفاء أي شيء يخرج عن الحاوية */
             border: 1px solid #333;
             background-color: #121212;
             border-radius: 5px;
-            display: none; /* مخفي افتراضياً */
+            display: none;
+            box-sizing: border-box; /* لضمان عدم تجاوز العرض */
         }
+        /* --- الشريط الداخلي القابل للتمرير --- */
         .preview-container {
             display: flex;
-            overflow-x: auto; /* هذا يجعل التمرير الأفقي ممكناً */
+            overflow-x: auto; /* هذا هو السحر: يسمح بالتمرير الأفقي */
             white-space: nowrap; /* يمنع الصور من النزول لسطر جديد */
             padding: 10px;
+            /* هذا يضمن أن المحتوى الداخلي لا يحرك الصفحة */
         }
         .preview-image {
-            height: 100px; /* حجم موحد للمعاينة */
+            height: 100px;
             width: auto;
-            margin-left: 10px; /* مسافة بين الصور */
+            margin-left: 10px;
             border-radius: 5px;
             border: 2px solid #444;
+            flex-shrink: 0; /* يمنع الصور من الانكماش */
         }
 
-        /* --- (جديد) منطقة التقدم --- */
+        /* --- منطقة التقدم --- */
         #progress-area {
             padding: 20px;
-            display: none; /* مخفي افتراضياً */
+            display: none;
         }
         .progress-circle {
-            width: 80px;
-            height: 80px;
+            width: 80px; height: 80px;
             border: 10px solid #333;
-            border-top-color: #007bff; /* لون الدائرة الأزرق */
+            border-top-color: #007bff;
             border-radius: 50%;
             margin: 0 auto;
-            animation: spin 1s linear infinite; /* حركة الدوران */
+            animation: spin 1s linear infinite;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         #progress-percent {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ffffff;
-            margin-top: 15px;
-            display: block;
+            font-size: 1.5em; font-weight: bold;
+            color: #ffffff; margin-top: 15px; display: block;
         }
-        #status-message {
-            font-size: 1.1em; color: #e0e0e0;
-        }
+        #status-message { font-size: 1.1em; color: #e0e0e0; }
 
-        /* --- (جديد) منطقة الأزرار (البدأ والتحميل) --- */
+        /* --- منطقة الأزرار (البدأ والتحميل) --- */
         #button-area {
             margin-top: 20px;
-            height: 50px; /* حجز مساحة للزر */
+            min-height: 50px; /* حجز مساحة للزر */
+        }
+        
+        /* --- (جديد) حقل إدخال اسم الملف --- */
+        #filename-input {
+            background-color: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 0 10px 10px 10px;
+            direction: ltr; /* جعل الكتابة لاسم الملف من اليسار لليمين */
+            width: 70%;
         }
 
         /* زر التحويل (أخضر) وزر البدأ (أزرق) */
         .cta-button {
             display: inline-block;
-            background-color: #28a745; /* أخضر افتراضي (للتحميل) */
-            color: #ffffff; padding: 12px 25px; font-size: 1.1em;
-            font-weight: bold; text-decoration: none; border-radius: 5px;
-            border: none; cursor: pointer; transition: background-color 0.3s ease;
+            background-color: #28a745; color: #ffffff; padding: 12px 25px;
+            font-size: 1.1em; font-weight: bold; text-decoration: none;
+            border-radius: 5px; border: none; cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .cta-button.blue {
-            background-color: #007bff; /* أزرق (للبدأ) */
-        }
+        .cta-button.blue { background-color: #007bff; }
         .cta-button:hover { background-color: #218838; }
         .cta-button.blue:hover { background-color: #0056b3; }
-        
         .cta-button:disabled { background-color: #555; cursor: not-allowed; }
 
-        .back-button {
-            background-color: #555; margin-top: 50px;
-        }
+        .back-button { background-color: #555; margin-top: 50px; }
         .back-button:hover { background-color: #444; }
 
     </style>
@@ -165,7 +179,7 @@
                 <h1 data-lang-key="toolTitle">أداة تحويل الصور إلى PDF</h1>
                 
                 <label for="image-input" class="file-upload-label" data-lang-key="selectImages">اختر الصور</label>
-                <input type="file" id="image-input" multiple accept="image/jpeg, image/png, image/webp">
+                <input type="file" id="image-input" multiple accept="image/*">
                 
                 <div class="preview-container-wrapper" id="preview-wrapper">
                     <div class="preview-container" id="preview-list">
@@ -203,7 +217,6 @@
     </footer>
 
     <script>
-        // هذا السطر ضروري لتعريف المكتبة بشكل صحيح
         window.jsPDF = window.jspdf.jsPDF;
 
         // --- 1. قاموس الترجمة (محدث) ---
@@ -214,6 +227,7 @@
                 "selectImages": "اختر الصور",
                 "startButton": "ابدأ التحويل",
                 "downloadButton": "تحميل ملف PDF",
+                "filenameLabel": "اسم الملف:",
                 "statusReady": "اختر صورة واحدة أو أكثر للبدء...",
                 "statusSelected": " تم اختيار {count} صور. جاهز للبدء.",
                 "statusConverting": "جاري التحويل... {percent}%",
@@ -229,6 +243,7 @@
                 "selectImages": "Select Images",
                 "startButton": "Start Conversion",
                 "downloadButton": "Download PDF File",
+                "filenameLabel": "File Name:",
                 "statusReady": "Select one or more images to start...",
                 "statusSelected": "{count} images selected. Ready to start.",
                 "statusConverting": "Converting... {percent}%",
@@ -241,7 +256,7 @@
         };
 
         // --- 2. متغير اللغة الحالي ---
-        let currentLang = 'ar'; // اللغة الافتراضية
+        let currentLang = 'ar'; 
 
         // --- 3. دالة تبديل اللغة (كما هي) ---
         function setLanguage(lang) {
@@ -257,13 +272,11 @@
                     element.innerHTML = translations[lang][key];
                 }
             });
-            // تحديث الرسائل الديناميكية
             updateStatusMessage(); 
         }
         
         // --- 4. منطق تحويل PDF (محدث بالكامل) ---
 
-        // الحصول على عناصر الصفحة
         const imageInput = document.getElementById('image-input');
         const previewWrapper = document.getElementById('preview-wrapper');
         const previewList = document.getElementById('preview-list');
@@ -273,16 +286,15 @@
         const buttonArea = document.getElementById('button-area');
         const initialMessage = document.getElementById('initial-message');
         
-        let selectedFiles = []; // لتخزين الملفات المختارة
-        let objectUrls = []; // لتخزين روابط المعاينة (لإلغائها لاحقاً)
+        let selectedFiles = [];
+        let objectUrls = [];
+        let generatedPdfBlob = null; // (جديد) لتخزين الـ PDF
 
-        // دالة مساعدة لتحديث رسائل الحالة بناءً على اللغة
         function updateStatusMessage(key = 'statusReady', values = {}) {
             let text = translations[currentLang][key] || '';
             if (values.count) text = text.replace('{count}', values.count);
             if (values.percent) text = text.replace('{percent}', values.percent);
             
-            // تحديث إما الرسالة الأولية أو رسالة التقدم
             if (progressArea.style.display === 'none') {
                 initialMessage.innerText = text;
             } else {
@@ -294,42 +306,37 @@
         imageInput.addEventListener('change', () => {
             selectedFiles = Array.from(imageInput.files);
             
-            // تنظيف المعاينة القديمة وروابطها
             previewList.innerHTML = '';
             objectUrls.forEach(url => URL.revokeObjectURL(url));
             objectUrls = [];
+            generatedPdfBlob = null; // مسح الـ PDF القديم
 
             if (selectedFiles.length === 0) {
                 previewWrapper.style.display = 'none';
-                buttonArea.innerHTML = ''; // إخفاء زر البدأ
+                buttonArea.innerHTML = '';
                 initialMessage.style.display = 'block';
                 updateStatusMessage('statusReady');
                 return;
             }
 
-            // إظهار منطقة المعاينة
             previewWrapper.style.display = 'block';
             initialMessage.style.display = 'none';
 
-            // إنشاء المعاينة
             selectedFiles.forEach(file => {
                 const img = document.createElement('img');
                 img.classList.add('preview-image');
                 const url = URL.createObjectURL(file);
-                objectUrls.push(url); // تخزين الرابط لإلغائه لاحقاً
+                objectUrls.push(url);
                 img.src = url;
                 previewList.appendChild(img);
             });
 
-            // إظهار زر "ابدأ التحويل"
             buttonArea.innerHTML = `<button id="start-btn" class="cta-button blue">${translations[currentLang].startButton}</button>`;
             updateStatusMessage('statusSelected', { count: selectedFiles.length });
             
-            // إضافة مستمع الحدث للزر الجديد
             document.getElementById('start-btn').addEventListener('click', startConversion);
         });
 
-        // دالة مساعدة لقراءة الصورة (كما هي)
         function readImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -346,7 +353,6 @@
                 return;
             }
 
-            // إخفاء المعاينة والأزرار، وإظهار التقدم
             previewWrapper.style.display = 'none';
             buttonArea.innerHTML = '';
             progressArea.style.display = 'block';
@@ -359,18 +365,16 @@
 
                 for (let i = 0; i < totalFiles; i++) {
                     const file = selectedFiles[i];
-                    
-                    // تحديث شريط التقدم
                     const percent = Math.round(((i + 1) / totalFiles) * 100);
+                    
+                    // تحديث النسبة فقط (العملية الفعلية هي قراءة الصورة)
                     progressPercent.innerText = `${percent}%`;
                     updateStatusMessage('statusConverting', { percent: percent });
 
-                    // قراءة الصورة (هذه هي الخطوة البطيئة)
                     const imageData = await readImage(file);
                     
                     if (i > 0) doc.addPage();
                     
-                    // إضافة الصورة (نفس المنطق السابق)
                     const imgProps = doc.getImageProperties(imageData);
                     const pdfWidth = doc.internal.pageSize.getWidth();
                     const pdfHeight = doc.internal.pageSize.getHeight();
@@ -383,15 +387,38 @@
                     doc.addImage(imageData, imgProps.fileType, x, y, imgWidth, imgHeight);
                 }
 
-                // --- الخطوة ج: عند الانتهاء ---
-                progressArea.style.display = 'none'; // إخفاء شريط التقدم
+                // --- الخطوة ج: عند الانتهاء (تعديل) ---
+                progressArea.style.display = 'none';
                 
-                // إنشاء رابط التحميل (أكثر كفاءة للذاكرة)
-                const pdfBlob = doc.output('blob');
-                const downloadUrl = URL.createObjectURL(pdfBlob);
+                // تخزين الـ PDF كـ Blob (أكثر كفاءة)
+                generatedPdfBlob = doc.output('blob');
 
-                // إظهار زر "تحميل"
-                buttonArea.innerHTML = `<a href="${downloadUrl}" download="skydata_images.pdf" class="cta-button">${translations[currentLang].downloadButton}</a>`;
+                // إظهار حقل إدخال الاسم وزر التحميل
+                buttonArea.innerHTML = `
+                    <label for="filename-input" style="display:block; margin-bottom:10px;">${translations[currentLang].filenameLabel}</label>
+                    <input type="text" id="filename-input" value="skydata_images.pdf">
+                    <button id="download-btn" class="cta-button">${translations[currentLang].downloadButton}</button>
+                `;
+                
+                // إضافة مستمع لزر التحميل الجديد
+                document.getElementById('download-btn').addEventListener('click', () => {
+                    if (!generatedPdfBlob) return;
+                    
+                    let filename = document.getElementById('filename-input').value;
+                    if (!filename.toLowerCase().endsWith('.pdf')) {
+                        filename += '.pdf';
+                    }
+                    
+                    const downloadUrl = URL.createObjectURL(generatedPdfBlob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(downloadUrl);
+                });
+
                 initialMessage.style.display = 'block';
                 updateStatusMessage('statusDone');
 
@@ -399,11 +426,11 @@
                 console.error(error);
                 progressArea.style.display = 'none';
                 initialMessage.style.display = 'block';
-                updateStatusMessage('statusError'); // أو رسالة خطأ مخصصة
+                updateStatusMessage('statusError');
             }
         }
         
-        // تشغيل الترجمة عند تحميل الصفحة (للتأكد من الرسائل الأولية)
+        // تشغيل الترجمة عند تحميل الصفحة
         setLanguage(currentLang);
 
     </script>

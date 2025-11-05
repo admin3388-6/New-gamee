@@ -73,49 +73,67 @@
         }
         .file-upload-label:hover { background-color: #0056b3; }
         
-        /* --- حاوية المعاينة (الحل لمشكلة التحريك) --- */
+        /* --- (جديد) حاوية المعاينة مع الأزرار --- */
+        .preview-controls-wrapper {
+            position: relative; /* لوضع الأزرار بدقة */
+            width: 100%;
+            display: none; /* مخفي افتراضياً */
+            margin-bottom: 20px;
+        }
+        /* --- حاوية المعاينة (النافذة) --- */
         .preview-container-wrapper {
-            width: 100%; /* يجب أن يكون العرض 100% */
-            overflow: hidden; /* إخفاء أي شيء يخرج عن الحاوية */
+            width: 100%;
+            overflow: hidden; /* هذا هو السحر: يخفي كل ما يخرج عن الإطار */
             border: 1px solid #333;
             background-color: #121212;
             border-radius: 5px;
-            display: none;
-            box-sizing: border-box; /* لضمان عدم تجاوز العرض */
+            box-sizing: border-box;
         }
-        /* --- الشريط الداخلي القابل للتمرير --- */
+        /* --- الشريط الداخلي (الذي يتحرك) --- */
         .preview-container {
             display: flex;
-            overflow-x: auto; /* هذا هو السحر: يسمح بالتمرير الأفقي */
-            white-space: nowrap; /* يمنع الصور من النزول لسطر جديد */
+            overflow-x: visible; /* لن يظهر شريط تمرير أبداً */
+            white-space: nowrap;
             padding: 10px;
-            /* هذا يضمن أن المحتوى الداخلي لا يحرك الصفحة */
+            transition: transform 0.3s ease-out; /* حركة ناعمة */
         }
         .preview-image {
-            height: 100px;
-            width: auto;
-            margin-left: 10px;
-            border-radius: 5px;
-            border: 2px solid #444;
-            flex-shrink: 0; /* يمنع الصور من الانكماش */
+            height: 100px; width: auto;
+            margin-left: 10px; border-radius: 5px;
+            border: 2px solid #444; flex-shrink: 0;
         }
 
-        /* --- منطقة التقدم --- */
-        #progress-area {
-            padding: 20px;
-            display: none;
-        }
-        .progress-circle {
-            width: 80px; height: 80px;
-            border: 10px solid #333;
-            border-top-color: #007bff;
+        /* --- (جديد) أزرار التحكم بالمعاينة --- */
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background-color: rgba(0, 123, 255, 0.7); /* أزرق شفاف */
+            color: white;
+            border: none;
             border-radius: 50%;
-            margin: 0 auto;
-            animation: spin 1s linear infinite;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: none; /* مخفي افتراضياً */
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .scroll-btn:hover {
+            background-color: rgba(0, 123, 255, 1); /* أزرق كامل */
         }
+        .scroll-btn.left { left: 5px; }
+        .scroll-btn.right { right: 5px; }
+
+
+        /* --- منطقة التقدم --- */
+        #progress-area { padding: 20px; display: none; }
+        .progress-circle {
+            width: 80px; height: 80px; border: 10px solid #333;
+            border-top-color: #007bff; border-radius: 50%;
+            margin: 0 auto; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         #progress-percent {
             font-size: 1.5em; font-weight: bold;
             color: #ffffff; margin-top: 15px; display: block;
@@ -123,31 +141,21 @@
         #status-message { font-size: 1.1em; color: #e0e0e0; }
 
         /* --- منطقة الأزرار (البدأ والتحميل) --- */
-        #button-area {
-            margin-top: 20px;
-            min-height: 50px; /* حجز مساحة للزر */
-        }
+        #button-area { margin-top: 20px; min-height: 50px; }
         
-        /* --- (جديد) حقل إدخال اسم الملف --- */
+        /* --- حقل إدخال اسم الملف --- */
         #filename-input {
-            background-color: #333;
-            color: #e0e0e0;
-            border: 1px solid #555;
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 1em;
-            margin: 0 10px 10px 10px;
-            direction: ltr; /* جعل الكتابة لاسم الملف من اليسار لليمين */
-            width: 70%;
+            background-color: #333; color: #e0e0e0; border: 1px solid #555;
+            padding: 12px; border-radius: 5px; font-size: 1em;
+            margin: 0 10px 10px 10px; direction: ltr; width: 70%;
         }
 
-        /* زر التحويل (أخضر) وزر البدأ (أزرق) */
+        /* أزرار CTA */
         .cta-button {
-            display: inline-block;
-            background-color: #28a745; color: #ffffff; padding: 12px 25px;
-            font-size: 1.1em; font-weight: bold; text-decoration: none;
-            border-radius: 5px; border: none; cursor: pointer;
-            transition: background-color 0.3s ease;
+            display: inline-block; background-color: #28a745; color: #ffffff;
+            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
+            text-decoration: none; border-radius: 5px; border: none;
+            cursor: pointer; transition: background-color 0.3s ease;
         }
         .cta-button.blue { background-color: #007bff; }
         .cta-button:hover { background-color: #218838; }
@@ -181,10 +189,15 @@
                 <label for="image-input" class="file-upload-label" data-lang-key="selectImages">اختر الصور</label>
                 <input type="file" id="image-input" multiple accept="image/*">
                 
-                <div class="preview-container-wrapper" id="preview-wrapper">
-                    <div class="preview-container" id="preview-list">
-                        </div>
+                <div class="preview-controls-wrapper" id="preview-wrapper">
+                    <div class="preview-container-wrapper">
+                        <div class="preview-container" id="preview-list">
+                            </div>
+                    </div>
+                    <button class="scroll-btn left" id="scroll-left">&lt;</button>
+                    <button class="scroll-btn right" id="scroll-right">&gt;</button>
                 </div>
+
 
                 <div id="progress-area">
                     <div class="progress-circle"></div>
@@ -286,9 +299,16 @@
         const buttonArea = document.getElementById('button-area');
         const initialMessage = document.getElementById('initial-message');
         
+        // (جديد) أزرار التحكم بالمعاينة
+        const scrollLeftBtn = document.getElementById('scroll-left');
+        const scrollRightBtn = document.getElementById('scroll-right');
+        const previewWindow = document.querySelector('.preview-container-wrapper');
+
         let selectedFiles = [];
         let objectUrls = [];
-        let generatedPdfBlob = null; // (جديد) لتخزين الـ PDF
+        let generatedPdfBlob = null;
+        let currentScrollPosition = 0; // (جديد) لتتبع موضع التمرير
+        const scrollAmount = 300; // (جديد) مسافة التمرير بالبكسل
 
         function updateStatusMessage(key = 'statusReady', values = {}) {
             let text = translations[currentLang][key] || '';
@@ -302,24 +322,72 @@
             }
         }
 
-        // --- الخطوة أ: عند اختيار الصور ---
+        // --- (جديد) دالة لتحديث أزرار التمرير ---
+        function updateScrollButtons() {
+            const listWidth = previewList.scrollWidth; // العرض الكلي للصور
+            const windowWidth = previewWindow.clientWidth; // العرض المرئي
+            
+            if (listWidth <= windowWidth) {
+                // لا حاجة للأزرار
+                scrollLeftBtn.style.display = 'none';
+                scrollRightBtn.style.display = 'none';
+                return;
+            }
+
+            // إظهار/إخفاء زر اليسار (للعودة للبداية)
+            scrollLeftBtn.style.display = (currentScrollPosition < 0) ? 'block' : 'none';
+
+            // إظهار/إخفاء زر اليمين (للمزيد)
+            const maxScroll = windowWidth - listWidth;
+            scrollRightBtn.style.display = (currentScrollPosition > maxScroll) ? 'block' : 'none';
+        }
+
+        // --- (جديد) أحداث النقر على أزرار التمرير ---
+        scrollRightBtn.addEventListener('click', () => {
+            const listWidth = previewList.scrollWidth;
+            const windowWidth = previewWindow.clientWidth;
+            const maxScroll = windowWidth - listWidth;
+
+            currentScrollPosition -= scrollAmount; // تحريك لليسار
+            if (currentScrollPosition < maxScroll) {
+                currentScrollPosition = maxScroll; // منع التمرير الزائد
+            }
+            previewList.style.transform = `translateX(${currentScrollPosition}px)`;
+            updateScrollButtons();
+        });
+
+        scrollLeftBtn.addEventListener('click', () => {
+            currentScrollPosition += scrollAmount; // تحريك لليمين
+            if (currentScrollPosition > 0) {
+                currentScrollPosition = 0; // منع التمرير الزائد
+            }
+            previewList.style.transform = `translateX(${currentScrollPosition}px)`;
+            updateScrollButtons();
+        });
+
+
+        // --- الخطوة أ: عند اختيار الصور (محدث) ---
         imageInput.addEventListener('change', () => {
             selectedFiles = Array.from(imageInput.files);
             
             previewList.innerHTML = '';
             objectUrls.forEach(url => URL.revokeObjectURL(url));
             objectUrls = [];
-            generatedPdfBlob = null; // مسح الـ PDF القديم
+            generatedPdfBlob = null;
+            
+            // (جديد) إعادة تعيين التمرير
+            currentScrollPosition = 0;
+            previewList.style.transform = 'translateX(0px)';
 
             if (selectedFiles.length === 0) {
-                previewWrapper.style.display = 'none';
+                previewWrapper.style.display = 'none'; // إخفاء حاوية المعاينة
                 buttonArea.innerHTML = '';
                 initialMessage.style.display = 'block';
                 updateStatusMessage('statusReady');
                 return;
             }
 
-            previewWrapper.style.display = 'block';
+            previewWrapper.style.display = 'block'; // إظهار حاوية المعاينة
             initialMessage.style.display = 'none';
 
             selectedFiles.forEach(file => {
@@ -330,6 +398,9 @@
                 img.src = url;
                 previewList.appendChild(img);
             });
+
+            // (جديد) تحديث الأزرار بعد إضافة الصور (نحتاج تأخير بسيط ليحسب المتصفح العرض)
+            setTimeout(updateScrollButtons, 100); 
 
             buttonArea.innerHTML = `<button id="start-btn" class="cta-button blue">${translations[currentLang].startButton}</button>`;
             updateStatusMessage('statusSelected', { count: selectedFiles.length });
@@ -346,14 +417,16 @@
             });
         }
 
-        // --- الخطوة ب: عند الضغط على "ابدأ التحويل" ---
+        // --- الخطوة ب: عند الضغط على "ابدأ التحويل" (محدث) ---
         async function startConversion() {
             if (selectedFiles.length === 0) {
                 updateStatusMessage('statusError');
                 return;
             }
 
-            previewWrapper.style.display = 'none';
+            previewWrapper.style.display = 'none'; // إخفاء المعاينة
+            scrollLeftBtn.style.display = 'none'; // إخفاء الأزرار
+            scrollRightBtn.style.display = 'none';
             buttonArea.innerHTML = '';
             progressArea.style.display = 'block';
             progressPercent.innerText = '0%';
@@ -367,7 +440,6 @@
                     const file = selectedFiles[i];
                     const percent = Math.round(((i + 1) / totalFiles) * 100);
                     
-                    // تحديث النسبة فقط (العملية الفعلية هي قراءة الصورة)
                     progressPercent.innerText = `${percent}%`;
                     updateStatusMessage('statusConverting', { percent: percent });
 
@@ -387,34 +459,26 @@
                     doc.addImage(imageData, imgProps.fileType, x, y, imgWidth, imgHeight);
                 }
 
-                // --- الخطوة ج: عند الانتهاء (تعديل) ---
+                // --- الخطوة ج: عند الانتهاء (كما هي) ---
                 progressArea.style.display = 'none';
-                
-                // تخزين الـ PDF كـ Blob (أكثر كفاءة)
                 generatedPdfBlob = doc.output('blob');
 
-                // إظهار حقل إدخال الاسم وزر التحميل
                 buttonArea.innerHTML = `
                     <label for="filename-input" style="display:block; margin-bottom:10px;">${translations[currentLang].filenameLabel}</label>
                     <input type="text" id="filename-input" value="skydata_images.pdf">
                     <button id="download-btn" class="cta-button">${translations[currentLang].downloadButton}</button>
                 `;
                 
-                // إضافة مستمع لزر التحميل الجديد
                 document.getElementById('download-btn').addEventListener('click', () => {
                     if (!generatedPdfBlob) return;
-                    
                     let filename = document.getElementById('filename-input').value;
                     if (!filename.toLowerCase().endsWith('.pdf')) {
                         filename += '.pdf';
                     }
-                    
                     const downloadUrl = URL.createObjectURL(generatedPdfBlob);
                     const a = document.createElement('a');
-                    a.href = downloadUrl;
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
+                    a.href = downloadUrl; a.download = filename;
+                    document.body.appendChild(a); a.click();
                     document.body.removeChild(a);
                     URL.revokeObjectURL(downloadUrl);
                 });

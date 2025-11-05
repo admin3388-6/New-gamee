@@ -3,22 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة اختبار OneSignal</title>
+    <title>Skydata - خدمات سحابية وأدوات مجانية</title>
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({
-          // هذا هو الـ App ID الذي أدخلته
           appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
         });
       });
     </script>
-    
+    <style>
+        /* إعدادات عامة للجسم */
+        body {
+            font-family: Arial, sans-serif; /* خط لطيف */
+            direction: rtl; /* دعم اللغة العربية */
+            background-color: #f4f7f6; /* لون خلفية رمادي فاتح */
+            color: #333; /* لون الخط الأساسي */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* حاوية لتوسيط المحتوى */
+        .container {
+            max-width: 900px; /* عرض أقصى للصفحة */
+            margin: 0 auto; /* توسيط الصفحة */
+            padding: 20px;
+        }
+
+        /* تصميم الهيدر (الجزء العلوي) */
+        header {
+            display: flex;
+            justify-content: space-between; /* توزيع العناصر (شعارات يسار، لغة يمين) */
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #ffffff; /* خلفية بيضاء للهيدر */
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* حاوية الشعارات */
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo-container img {
+            height: 40px; /* ارتفاع موحد للشعارات */
+            margin-left: 10px; /* مسافة بين الشعارين */
+        }
+
+        /* تصميم زر تبديل اللغة (شكل فقط) */
+        .lang-switcher a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 5px;
+            font-weight: bold;
+        }
+
+        /* المحتوى الرئيسي */
+        main {
+            text-align: center; /* توسيط كل النصوص في المحتوى */
+            padding: 30px 0;
+        }
+
+        /* قسم النصوص التقديمية */
+        .intro-text {
+            margin-bottom: 30px;
+        }
+        .intro-text h1 {
+            font-size: 2em;
+            color: #000;
+        }
+        .intro-text p {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.6;
+        }
+        /* تصميم كلمة "مجانا" */
+        .free-badge {
+            font-size: 1.5em;
+            color: #28a745; /* لون أخضر */
+            font-weight: bold;
+            margin: 15px 0;
+            display: block;
+        }
+
+        /* تصميم أقسام الميزات */
+        .feature-section {
+            background-color: #ffffff; /* خلفية بيضاء لكل قسم */
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .feature-section img {
+            max-width: 100%; /* لضمان استجابة الصور */
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .feature-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .feature-section p {
+            font-size: 1.1em;
+        }
+
+        /* تصميم الزر الأزرق الجميل */
+        .cta-button {
+            display: inline-block;
+            background-color: #007bff; /* لون أزرق */
+            color: #ffffff; /* نص أبيض */
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-decoration: none; /* إزالة الخط تحت الرابط */
+            border-radius: 5px; /* حواف دائرية */
+            margin-top: 20px;
+            transition: background-color 0.3s ease; /* حركة عند تمرير الماوس */
+        }
+        .cta-button:hover {
+            background-color: #0056b3; /* لون أغمق عند التمرير */
+        }
+
+        /* تصميم الفوتر (الجزء السفلي) */
+        footer {
+            background-color: #333; /* خلفية سوداء للفوتر */
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            display: block; /* جعل كل رابط في سطر */
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        /* أيقونات التواصل الاجتماعي */
+        .social-icons {
+            margin-top: 20px;
+        }
+        .social-icons a {
+            margin: 0 10px;
+        }
+        .social-icons img {
+            height: 30px; /* حجم أيقونات التواصل */
+        }
+
+    </style>
     </head>
 <body>
-    <h1>صفحة اختبار OneSignal</h1>
-    <p>إذا رأيت هذه الصفحة، انتظر قليلاً لظهور طلب الإشعارات...</p>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        </div>
+        
+        <div class="lang-switcher">
+            <a href="#">AR</a> | <a href="#">EN</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <main>
+            
+            <section class="intro-text">
+                <h1>تقدم لك Skydata المئات من الخدمات و الادوات تعمل من أجل العميل</h1>
+                <p>بالإضافة إلى خدمات سحابية متقدمة وخدمات احترافية</p>
+                <span class="free-badge">مجانا</span>
+                <p>تحويل الملفات و الصور و تعديل الصور ادوات الصور رفع الصور تحويلها الى روابط مجانا بدون بطاقة بدون اشتراكات</p>
+            </section>
+
+            <section class="feature-section">
+                <img src="https://i.ibb.co/HT2mXkhS/13fa98a87cf632cca045cfc9ebefe0a3.jpg" alt="دعم صيغ متعددة">
+                <h2>دعم أكثر من 150 صيغة</h2>
+            </section>
+
+            <section class="feature-section">
+                <img src="https://i.ibb.co/3m54vv8V/1271bc403bfb8db01a68f4d87679395b.webp" alt="ميزة سحابية">
+            </section>
+
+            <section class="feature-section">
+                <h2>حماية وتشفير البيانات المتقدم</h2>
+                <p>يتم تشفير بيناتك حماية خصوصيتك 100%</p>
+                <img src="https://i.ibb.co/0ygjpskG/22027b8a2b10228783284f13454681aa.jpg" alt="حماية وتشفير">
+            </section>
+
+            <section class="cta-section">
+                <a href="pdf.html" class="cta-button">تحويل صور إلى PDF</a>
+            </section>
+
+        </main>
+        
+    </div> <footer>
+        <div class="footer-links">
+            <a href="Safety.html">شروط الاستخدام وسياسة الخصوصية</a>
+            <a href="aboutus.html">عن Skydata (About Us)</a>
+        </div>
+        
+        <div class="social-icons">
+            <a href="https://www.youtube.com/@Skydataa" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/KjqPWR0S/qm6aoefmjlhw2bhdgmss.webp" alt="يوتيوب">
+            </a>
+            <a href="https://discord.gg/6m3c2up4p3" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/sdxTC105/qqoxsxvwoleec1dfbhew.webp" alt="ديسكورد">
+            </a>
+        </div>
+    </footer>
+
 </body>
 </html>

@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-key="pageTitle">Skydata - خدمات سحابية وأدوات مجانية</title>
 
+    <meta name="description" content="موقع Skydata يقدم أدوات مجانية لتحويل الصور، بما في ذلك تحويل الصور إلى PDF، وضغط WEBP، ورفع الصور للحصول على روابط. خدمات سحابية سريعة ومجانية.">
+    <meta name="description" lang="en" content="Skydata offers free image tools, including Image to PDF converter, WEBP compressor, and Image to Link generator. Fast, free cloud services.">
+    
+    <meta name="keywords" content="Skydata, تحويل صور, أدوات مجانية, سحابية, PDF, WEBP, صورة إلى رابط, ضغط صور, image converter, free tools, image to pdf, image to webp, image to link, cloud tools, free image hosting, convertir images, outils gratuits, image en pdf, image en webp, image en lien, servicios cloud, convertir imágenes, herramientas gratuitas, imagen a pdf, imagen a webp, imagen a enlace, servicios en la nube, convertire immagini, strumenti gratuiti, immagine in pdf, immagine in webp, immagine in link, servizi cloud, Bilder konvertieren, kostenlose Tools, Bild in PDF, Bild in WEBP, Bild in Link, Cloud-Dienste, конвертер изображений, бесплатные инструменты, изображение в PDF, изображение в WEBP, изображение в ссылку, облачные сервисы, 图像转换器, 免费工具, 图片转PDF, 图片转WEBP, 图片转链接, 云服务, इमेज कन्वर्टर, फ्री टूल्स, इमेज से पीडीएफ, इमेज से वेबपी, इमेज से लिंक, क्लाउड सेवाएं">
+
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -14,152 +19,107 @@
         });
       });
     </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378041273892848"
+     crossorigin="anonymous"></script>
+
     <style>
-        /* إعدادات عامة للجسم - وضع داكن */
         body {
-            font-family: Arial, sans-serif;
-            direction: rtl; 
-            background-color: #121212; /* لون خلفية داكن جداً */
-            color: #e0e0e0; /* لون الخط الأساسي (أبيض-رمادي) */
-            margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif; direction: rtl; 
+            background-color: #121212; color: #e0e0e0;
+            margin: 0; padding: 0;
         }
 
-        /* حاوية لتوسيط المحتوى */
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 900px; margin: 0 auto; padding: 20px;
         }
 
-        /* تصميم الهيدر (الجزء العلوي) - داكن */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background-color: #1e1e1e; /* لون أغمق قليلاً من الخلفية */
-            border-bottom: 1px solid #333; /* فاصل داكن */
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-        .logo-container img {
-            height: 40px;
-            margin-left: 10px;
-        }
-
-        /* تصميم زر تبديل اللغة (احترافي) */
-        .lang-switcher {
-            display: flex;
-        }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { height: 40px; margin-left: 10px; }
+        .lang-switcher { display: flex; }
         .lang-switcher a {
-            text-decoration: none;
-            color: #007bff;
-            margin: 0 5px;
-            font-weight: bold;
-            cursor: pointer; /* إظهار أنه قابل للنقر */
-            padding: 5px 8px;
-            border-radius: 5px;
+            text-decoration: none; color: #007bff; margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
         }
-        .lang-switcher a.active { /* الزر النشط */
-            background-color: #007bff;
-            color: #ffffff;
-        }
+        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
 
-        /* المحتوى الرئيسي */
-        main {
-            text-align: center;
-            padding: 30px 0;
-        }
-
-        /* قسم النصوص التقديمية */
-        .intro-text {
-            margin-bottom: 30px;
-        }
-        .intro-text h1 {
-            font-size: 2em;
-            color: #ffffff; /* أبيض ناصع للعنوان */
-        }
-        .intro-text p {
-            font-size: 1.1em;
-            color: #e0e0e0;
-            line-height: 1.6;
-        }
+        main { text-align: center; padding: 30px 0; }
+        .intro-text { margin-bottom: 30px; }
+        .intro-text h1 { font-size: 2em; color: #ffffff; }
+        .intro-text p { font-size: 1.1em; color: #e0e0e0; line-height: 1.6; }
         .free-badge {
-            font-size: 1.5em;
-            color: #28a745;
-            font-weight: bold;
-            margin: 15px 0;
-            display: block;
+            font-size: 1.5em; color: #28a745; font-weight: bold;
+            margin: 15px 0; display: block;
         }
 
-        /* تصميم أقسام الميزات - داكن */
         .feature-section {
-            background-color: #1e1e1e; /* نفس لون الهيدر */
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
+            background-color: #1e1e1e; border-radius: 8px;
+            padding: 20px; margin-bottom: 25px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .feature-section img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 15px;
         }
-        .feature-section h2 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            color: #ffffff;
-        }
-        .feature-section p {
-            font-size: 1.1em;
-        }
+        .feature-section h2 { font-size: 1.5em; margin-bottom: 10px; color: #ffffff; }
+        .feature-section p { font-size: 1.1em; }
 
-        /* تصميم الزر الأزرق (تحويل PDF) */
         .cta-button {
-            display: inline-block;
-            background-color: #007bff;
-            color: #ffffff;
-            padding: 12px 25px;
-            font-size: 1.1em;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 5px;
+            display: inline-block; background-color: #007bff; color: #ffffff;
+            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
+            text-decoration: none; border-radius: 5px;
             margin-top: 20px;
-            transition: background-color 0.3s ease;
+            margin-left: 10px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
         }
-        .cta-button:hover {
-            background-color: #0056b3;
+        .cta-button:hover { 
+            background-color: #0056b3; 
+            transform: scale(1.03);
+        }
+        
+        /* لون الزر الأخضر */
+        .cta-button.green {
+            background-color: #28a745;
+        }
+        .cta-button.green:hover {
+            background-color: #218838;
+        }
+        
+        /* (جديد) لون الزر البرتقالي */
+        .cta-button.orange {
+            background-color: #fd7e14;
+        }
+        .cta-button.orange:hover {
+            background-color: #e66900;
         }
 
-        /* تصميم الفوتر (الجزء السفلي) - داكن */
+
+        /* الفوتر مع الأزرار والأيقونات */
         footer {
             background-color: #1e1e1e;
             color: #fff;
             padding: 30px 20px;
             text-align: center;
             margin-top: 30px;
+            border-top: 1px solid #333;
         }
-        /* تعديل الأزرار في الفوتر (شروط الاستخدام وعن الشركة) */
         .footer-links a {
-            color: #ffffff; /* لون النص أبيض */
-            background-color: #007bff; /* خلفية زرقاء */
+            color: #ffffff; background-color: #007bff;
             text-decoration: none;
-            margin: 0 10px 15px 10px; /* إضافة مسافة سفلية */
-            display: inline-block; /* جعلها بجانب بعضها إذا أمكن */
-            padding: 10px 20px; /* جعلها كأزرار */
-            border-radius: 5px; /* حواف دائرية */
-            font-size: 1.1em;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            margin: 0 10px 15px 10px; display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.1em; font-weight: bold;
+            transition: all 0.3s ease;
         }
         .footer-links a:hover {
-            background-color: #0056b3; /* لون أغمق عند التمرير */
+            background-color: #0056b3;
+            transform: scale(1.03);
         }
         
         .social-icons {
@@ -170,6 +130,46 @@
         }
         .social-icons img {
             height: 30px;
+            transition: transform 0.2s ease;
+        }
+        .social-icons img:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 10px 15px;
+            }
+
+            .intro-text h1 {
+                font-size: 1.8em;
+            }
+            .feature-section {
+                padding: 15px;
+            }
+            
+            /* جعل أزرار الفوتر والأدوات عمودية في الهواتف */
+            .footer-links a,
+            .cta-section .cta-button {
+                display: block;
+                width: 80%;
+                margin: 10px auto;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .logo-container img {
+                height: 30px;
+            }
+            .lang-switcher a {
+                padding: 3px 5px;
+                font-size: 0.9em;
+            }
         }
 
     </style>
@@ -216,6 +216,8 @@
 
             <section class="cta-section">
                 <a href="pdf.html" class="cta-button" data-lang-key="ctaButton">تحويل صور إلى PDF</a>
+                <a href="imgdv.html" class="cta-button green" data-lang-key="ctaButtonWebp">تحويل الصور الى webp</a>
+                <a href="imgtag.html" class="cta-button orange" data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</a>
             </section>
 
         </main>
@@ -233,12 +235,15 @@
             <a href="https://discord.gg/6m3c2up4p3" target="_blank" rel="noopener noreferrer">
                 <img src="https://i.ibb.co/sdxTC105/qqoxsxvwoleec1dfbhew.webp" alt="ديسكورد">
             </a>
+            <a href="update.html">
+                <img src="https://i.ibb.co/fQc3YFk/download-white.png" alt="صفحة التحديثات" style="height: 30px; width: 30px;">
+            </a>
         </div>
     </footer>
 
 
     <script>
-        // 1. قاموس الترجمة (أضف أي نص هنا)
+        // 1. قاموس الترجمة (محدث)
         const translations = {
             "ar": {
                 "pageTitle": "Skydata - خدمات سحابية وأدوات مجانية",
@@ -250,6 +255,8 @@
                 "featureSecurityTitle": "حماية وتشفير البيانات المتقدم",
                 "featureSecurityDesc": "يتم تشفير بيناتك حماية خصوصيتك 100%",
                 "ctaButton": "تحويل صور إلى PDF",
+                "ctaButtonWebp": "تحويل الصور الى webp",
+                "ctaButtonImgtag": "تحويل الصور الى روابط",
                 "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
                 "footerAbout": "عن Skydata"
             },
@@ -263,6 +270,8 @@
                 "featureSecurityTitle": "Advanced Data Protection and Encryption",
                 "featureSecurityDesc": "Your data is encrypted, ensuring 100% privacy protection",
                 "ctaButton": "Convert Images to PDF",
+                "ctaButtonWebp": "Convert Images to WEBP",
+                "ctaButtonImgtag": "Convert Images to Links",
                 "footerPolicy": "Terms of Use and Privacy Policy",
                 "footerAbout": "About Skydata"
             }
@@ -270,7 +279,6 @@
 
         // 2. الدالة المسؤولة عن تبديل اللغة
         function setLanguage(lang) {
-            // تحديث اتجاه الصفحة (RTL/LTR)
             if (lang === 'ar') {
                 document.documentElement.lang = 'ar';
                 document.documentElement.dir = 'rtl';
@@ -279,11 +287,9 @@
                 document.documentElement.dir = 'ltr';
             }
 
-            // تحديث كلاسات الأزرار النشطة
             document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
             document.getElementById('lang-en').classList.toggle('active', lang === 'en');
 
-            // البحث عن كل عنصر يحمل "data-lang-key" وتحديث نصه
             document.querySelectorAll('[data-lang-key]').forEach(element => {
                 const key = element.getAttribute('data-lang-key');
                 if (translations[lang][key]) {
@@ -291,9 +297,8 @@
                 }
             });
         }
-
-        // 3. (اختياري) يمكنك تعيين لغة افتراضية عند تحميل الصفحة
-        // حالياً هي العربية بناءً على كود HTML، لكن يمكننا تغييرها هنا
+        
+        // (اختياري) يمكنك تعيين لغة افتراضية عند تحميل الصفحة
         // setLanguage('ar'); // تم ضبطها كافتراضية
     </script>
     </body>

@@ -52,10 +52,6 @@
         .social-icons a { margin: 0 10px; }
         .social-icons img { height: 30px; }
         
-        /* ============================================
-         ==  CSS (أداة التحويل والمعاينة)  ==
-         ============================================
-        */
         main { text-align: center; }
         .pdf-tool-box {
             background-color: #1e1e1e; padding: 30px;
@@ -73,17 +69,17 @@
         }
         .file-upload-label:hover { background-color: #0056b3; }
         
-        /* --- (جديد) حاوية المعاينة مع الأزرار --- */
+        /* --- حاوية المعاينة مع الأزرار --- */
         .preview-controls-wrapper {
-            position: relative; /* لوضع الأزرار بدقة */
+            position: relative;
             width: 100%;
-            display: none; /* مخفي افتراضياً */
+            display: none;
             margin-bottom: 20px;
         }
         /* --- حاوية المعاينة (النافذة) --- */
         .preview-container-wrapper {
             width: 100%;
-            overflow: hidden; /* هذا هو السحر: يخفي كل ما يخرج عن الإطار */
+            overflow: hidden; /* إخفاء كل ما يخرج عن الإطار */
             border: 1px solid #333;
             background-color: #121212;
             border-radius: 5px;
@@ -103,13 +99,13 @@
             border: 2px solid #444; flex-shrink: 0;
         }
 
-        /* --- (جديد) أزرار التحكم بالمعاينة --- */
+        /* --- أزرار التحكم بالمعاينة --- */
         .scroll-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             z-index: 10;
-            background-color: rgba(0, 123, 255, 0.7); /* أزرق شفاف */
+            background-color: rgba(0, 123, 255, 0.7);
             color: white;
             border: none;
             border-radius: 50%;
@@ -120,13 +116,11 @@
             display: none; /* مخفي افتراضياً */
         }
         .scroll-btn:hover {
-            background-color: rgba(0, 123, 255, 1); /* أزرق كامل */
+            background-color: rgba(0, 123, 255, 1);
         }
         .scroll-btn.left { left: 5px; }
         .scroll-btn.right { right: 5px; }
 
-
-        /* --- منطقة التقدم --- */
         #progress-area { padding: 20px; display: none; }
         .progress-circle {
             width: 80px; height: 80px; border: 10px solid #333;
@@ -140,17 +134,14 @@
         }
         #status-message { font-size: 1.1em; color: #e0e0e0; }
 
-        /* --- منطقة الأزرار (البدأ والتحميل) --- */
         #button-area { margin-top: 20px; min-height: 50px; }
         
-        /* --- حقل إدخال اسم الملف --- */
         #filename-input {
             background-color: #333; color: #e0e0e0; border: 1px solid #555;
             padding: 12px; border-radius: 5px; font-size: 1em;
             margin: 0 10px 10px 10px; direction: ltr; width: 70%;
         }
 
-        /* أزرار CTA */
         .cta-button {
             display: inline-block; background-color: #28a745; color: #ffffff;
             padding: 12px 25px; font-size: 1.1em; font-weight: bold;
@@ -232,7 +223,7 @@
     <script>
         window.jsPDF = window.jspdf.jsPDF;
 
-        // --- 1. قاموس الترجمة (محدث) ---
+        // --- 1. قاموس الترجمة ---
         const translations = {
             "ar": {
                 "pageTitle": "تحويل صور إلى PDF - Skydata",
@@ -271,7 +262,7 @@
         // --- 2. متغير اللغة الحالي ---
         let currentLang = 'ar'; 
 
-        // --- 3. دالة تبديل اللغة (كما هي) ---
+        // --- 3. دالة تبديل اللغة ---
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
@@ -299,7 +290,6 @@
         const buttonArea = document.getElementById('button-area');
         const initialMessage = document.getElementById('initial-message');
         
-        // (جديد) أزرار التحكم بالمعاينة
         const scrollLeftBtn = document.getElementById('scroll-left');
         const scrollRightBtn = document.getElementById('scroll-right');
         const previewWindow = document.querySelector('.preview-container-wrapper');
@@ -307,8 +297,8 @@
         let selectedFiles = [];
         let objectUrls = [];
         let generatedPdfBlob = null;
-        let currentScrollPosition = 0; // (جديد) لتتبع موضع التمرير
-        const scrollAmount = 300; // (جديد) مسافة التمرير بالبكسل
+        let currentScrollPosition = 0;
+        const scrollAmount = 300;
 
         function updateStatusMessage(key = 'statusReady', values = {}) {
             let text = translations[currentLang][key] || '';
@@ -322,51 +312,57 @@
             }
         }
 
-        // --- (جديد) دالة لتحديث أزرار التمرير ---
+        // --- (مُعدل) دالة لتحديث أزرار التمرير ---
         function updateScrollButtons() {
             const listWidth = previewList.scrollWidth; // العرض الكلي للصور
             const windowWidth = previewWindow.clientWidth; // العرض المرئي
             
-            if (listWidth <= windowWidth) {
-                // لا حاجة للأزرار
-                scrollLeftBtn.style.display = 'none';
-                scrollRightBtn.style.display = 'none';
-                return;
-            }
+            // انتظر قليلاً ليتمكن المتصفح من حساب العرض الحقيقي
+            // هذا يضمن أن 'listWidth' له قيمة صحيحة
+            setTimeout(() => {
+                const listWidth = previewList.scrollWidth;
+                const windowWidth = previewWindow.clientWidth;
 
-            // إظهار/إخفاء زر اليسار (للعودة للبداية)
-            scrollLeftBtn.style.display = (currentScrollPosition < 0) ? 'block' : 'none';
+                if (listWidth <= windowWidth) {
+                    scrollLeftBtn.style.display = 'none';
+                    scrollRightBtn.style.display = 'none';
+                    return;
+                }
 
-            // إظهار/إخفاء زر اليمين (للمزيد)
-            const maxScroll = windowWidth - listWidth;
-            scrollRightBtn.style.display = (currentScrollPosition > maxScroll) ? 'block' : 'none';
+                // إظهار/إخفاء زر اليسار (للعودة للبداية)
+                scrollLeftBtn.style.display = (currentScrollPosition < 0) ? 'block' : 'none';
+
+                // إظهار/إخفاء زر اليمين (للمزيد)
+                const maxScroll = windowWidth - listWidth;
+                scrollRightBtn.style.display = (currentScrollPosition > maxScroll) ? 'block' : 'none';
+            }, 100); // تأخير بسيط
         }
 
-        // --- (جديد) أحداث النقر على أزرار التمرير ---
+        // --- أحداث النقر على أزرار التمرير ---
         scrollRightBtn.addEventListener('click', () => {
             const listWidth = previewList.scrollWidth;
             const windowWidth = previewWindow.clientWidth;
             const maxScroll = windowWidth - listWidth;
 
-            currentScrollPosition -= scrollAmount; // تحريك لليسار
+            currentScrollPosition -= scrollAmount;
             if (currentScrollPosition < maxScroll) {
-                currentScrollPosition = maxScroll; // منع التمرير الزائد
+                currentScrollPosition = maxScroll;
             }
             previewList.style.transform = `translateX(${currentScrollPosition}px)`;
             updateScrollButtons();
         });
 
         scrollLeftBtn.addEventListener('click', () => {
-            currentScrollPosition += scrollAmount; // تحريك لليمين
+            currentScrollPosition += scrollAmount;
             if (currentScrollPosition > 0) {
-                currentScrollPosition = 0; // منع التمرير الزائد
+                currentScrollPosition = 0;
             }
             previewList.style.transform = `translateX(${currentScrollPosition}px)`;
             updateScrollButtons();
         });
 
 
-        // --- الخطوة أ: عند اختيار الصور (محدث) ---
+        // --- (هذا هو التعديل الأهم) الخطوة أ: عند اختيار الصور ---
         imageInput.addEventListener('change', () => {
             selectedFiles = Array.from(imageInput.files);
             
@@ -375,33 +371,45 @@
             objectUrls = [];
             generatedPdfBlob = null;
             
-            // (جديد) إعادة تعيين التمرير
             currentScrollPosition = 0;
             previewList.style.transform = 'translateX(0px)';
 
             if (selectedFiles.length === 0) {
-                previewWrapper.style.display = 'none'; // إخفاء حاوية المعاينة
+                previewWrapper.style.display = 'none';
                 buttonArea.innerHTML = '';
                 initialMessage.style.display = 'block';
                 updateStatusMessage('statusReady');
                 return;
             }
 
-            previewWrapper.style.display = 'block'; // إظهار حاوية المعاينة
+            previewWrapper.style.display = 'block';
             initialMessage.style.display = 'none';
+
+            // (جديد) متغير لعد الصور التي تم تحميلها
+            let imagesLoaded = 0;
 
             selectedFiles.forEach(file => {
                 const img = document.createElement('img');
                 img.classList.add('preview-image');
+                
+                // (جديد) إضافة مستمع 'onload'
+                // هذا هو مفتاح الحل
+                img.onload = () => {
+                    imagesLoaded++;
+                    // (جديد) فقط بعد تحميل كل الصور، قم بتحديث الأزرار
+                    if (imagesLoaded === selectedFiles.length) {
+                        updateScrollButtons();
+                    }
+                };
+
                 const url = URL.createObjectURL(file);
                 objectUrls.push(url);
                 img.src = url;
                 previewList.appendChild(img);
             });
-
-            // (جديد) تحديث الأزرار بعد إضافة الصور (نحتاج تأخير بسيط ليحسب المتصفح العرض)
-            setTimeout(updateScrollButtons, 100); 
-
+            
+            // (تم حذف) إزالة 'setTimeout' الذي كان هنا
+            
             buttonArea.innerHTML = `<button id="start-btn" class="cta-button blue">${translations[currentLang].startButton}</button>`;
             updateStatusMessage('statusSelected', { count: selectedFiles.length });
             
@@ -417,15 +425,15 @@
             });
         }
 
-        // --- الخطوة ب: عند الضغط على "ابدأ التحويل" (محدث) ---
+        // --- الخطوة ب: عند الضغط على "ابدأ التحويل" ---
         async function startConversion() {
             if (selectedFiles.length === 0) {
                 updateStatusMessage('statusError');
                 return;
             }
 
-            previewWrapper.style.display = 'none'; // إخفاء المعاينة
-            scrollLeftBtn.style.display = 'none'; // إخفاء الأزرار
+            previewWrapper.style.display = 'none';
+            scrollLeftBtn.style.display = 'none';
             scrollRightBtn.style.display = 'none';
             buttonArea.innerHTML = '';
             progressArea.style.display = 'block';
@@ -459,7 +467,7 @@
                     doc.addImage(imageData, imgProps.fileType, x, y, imgWidth, imgHeight);
                 }
 
-                // --- الخطوة ج: عند الانتهاء (كما هي) ---
+                // --- الخطوة ج: عند الانتهاء ---
                 progressArea.style.display = 'none';
                 generatedPdfBlob = doc.output('blob');
 

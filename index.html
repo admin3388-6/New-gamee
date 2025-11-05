@@ -3,30 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة اختبار PushEngage</title>
+    <title>صفحة اختبار OneSignal</title>
 
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
-    (function(w, d) {
-      w.PushEngage = w.PushEngage || [];
-      w._peq = w._peq || [];
-      PushEngage.push(['init', {
-          // هذا هو الـ App ID الذي أدخلته
-          appId: '58ba8b39-a92a-48dd-8be4-2feaad917bcd' 
-      }]);
-
-      var e = d.createElement('script');
-
-      e.src = 'https://clientcdn.pushengage.com/sdks/pushengage-web-sdk.js';
-      e.async = true;
-      e.type = 'text/javascript';
-      d.head.appendChild(e);
-    })(window, document);
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          // هذا هو الـ App ID الجديد الذي أدخلته
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+        });
+      });
     </script>
+    
     </head>
 <body>
-
-    <h1>صفحة اختبار PushEngage</h1>
+    <h1>صفحة اختبار OneSignal</h1>
     <p>إذا رأيت هذه الصفحة، انتظر قليلاً لظهور طلب الإشعارات...</p>
-
 </body>
 </html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">محرر الصور - Skydata</title>
+
+    <meta name="description" content="محرر صور مجاني من Skydata. أضف فلاتر، نصوص، وعدل السطوع، التباين، والتشبع لصورك مباشرة في المتصفح.">
+    <meta name="description" lang="en" content="Skydata's free photo editor. Add filters, text, and adjust brightness, contrast, and saturation to your images directly in the browser.">
+    
+    <meta name="keywords" content="محرر صور, تعديل صور, فلاتر صور, إضافة نص على الصورة, زيادة سطوع الصورة, Skydata, photo editor, image editor, free photo editor, add text to photo, image filters, instagram filters, adjust brightness, adjust contrast, saturate, grayscale, sepia, blur photo, éditeur de photos, retouche photo, filtres photo, ajouter du texte, editor de fotos, editar fotos, filtros de fotos, agregar texto a la foto, Bildbearbeitung, Foto-Editor, Foto-Filter, Text auf Foto hinzufügen, editor di foto, modifica foto, filtri fotografici, aggiungi testo alla foto, фоторедактор, редактировать фото, фильтры для фото, добавить текст на фото, 照片编辑器, 图片编辑, 照片滤镜, 图片加文字, फोटो एडिटर, फोटो संपादित करें, फोटो फिल्टर, फोटो पर टेक्स्ट जोड़ें">
+
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+        });
+      });
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: Arial, sans-serif; direction: rtl; 
+            background-color: #121212; color: #e0e0e0;
+            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+        }
+        /* (مُصلح) عرض الحاوية */
+        .container { 
+            max-width: 900px; /* تم إصلاح العرض */
+            margin: 0 auto; 
+            padding: 20px; 
+            flex-grow: 1; 
+        }
+        
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { height: 40px; margin-left: 10px; }
+        .lang-switcher { display: flex; }
+        .lang-switcher a {
+            text-decoration: none; color: #007bff; margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+        }
+        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+
+        footer {
+            background-color: #1e1e1e; padding: 20px;
+            text-align: center; margin-top: auto;
+            border-top: 1px solid #333;
+        }
+        
+        main { text-align: center; }
+        .tool-box {
+            background-color: #1e1e1e; padding: 30px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* (مُصلح) تقسيم الواجهة */
+        .editor-layout {
+            display: none; /* (جديد) مخفي افتراضياً */
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        .editor-settings {
+            flex: 1;
+            min-width: 300px;
+            background-color: #121212;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: right;
+        }
+        .canvas-preview {
+            flex: 2;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* (مُصلح) منطقة الحالة الأولية */
+        #progress-area { padding: 20px; display: block; }
+        #progress-status { font-size: 1.1em; color: #e0e0e0; }
+
+        /* (مُصلح) إخفاء زر الملفات الافتراضي */
+        #image-input { 
+            display: none; 
+        }
+        /* (مُصلح) زر اختيار الملف المخصص */
+        .file-upload-label {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .file-upload-label:hover { 
+            background-color: #0056b3;
+            transform: scale(1.03);
+        }
+        
+        /* تصميم التبويبات (Tabs) */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background-color: transparent;
+            color: #e0e0e0;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .tab-btn:hover {
+            background-color: #444;
+        }
+        .tab-btn.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        /* تصميم عناصر التحكم */
+        .setting-group {
+            margin-bottom: 20px;
+        }
+        .setting-group label {
+            display: block;
+            font-size: 1.1em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .setting-group input[type="text"],
+        .setting-group input[type="range"] {
+            width: 100%;
+            background-color: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .setting-group input[type="range"] {
+            padding: 0;
+            cursor: pointer;
+        }
+        .color-input-wrapper {
+            position: relative;
+            width: 100%;
+            height: 45px;
+        }
+        .color-input-wrapper input[type="color"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .color-swatch {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #555;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        .color-input-wrapper:hover .color-swatch {
+            border-color: #007bff;
+        }
+
+
+        #canvas-container {
+            width: 100%;
+            height: 400px;
+            border: 2px dashed #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: #121212;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        #editor-canvas {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        #download-area {
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .cta-button {
+            display: inline-block; background-color: #007bff; color: #ffffff;
+            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
+            text-decoration: none; border-radius: 5px; border: none;
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            margin: 5px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        .cta-button:hover { 
+            transform: scale(1.03);
+        }
+        .cta-button.green { background-color: #28a745; }
+        .cta-button.green:hover { background-color: #218838; }
+        
+        .cta-button:disabled { background-color: #555; cursor: not-allowed; }
+
+        .back-button { 
+            background-color: #555; margin-top: 50px; 
+            font-size: 1.1em; padding: 10px 20px;
+            display: inline-block;
+            width: auto;
+        }
+        .back-button:hover { background-color: #444; }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .editor-layout {
+                flex-direction: column;
+            }
+            .canvas-preview {
+                order: -1;
+            }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            header { padding: 10px 15px; }
+            .tool-box { padding: 20px; }
+            .tool-box h1 { font-size: 1.8em; }
+        }
+        @media (max-width: 380px) {
+            .logo-container img { height: 30px; }
+        }
+
+    </style>
+    </head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        </div>
+        <div class="lang-switcher">
+            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <main>
+            <div class="tool-box">
+                <h1 data-lang-key="toolTitle">محرر الصور الاحترافي</h1>
+                
+                <label for="image-input" class="file-upload-label" id="upload-label" data-lang-key="selectImage">اختر صورة...</label>
+                <input type="file" id="image-input" accept="image/*">
+                
+                <div id="progress-area">
+                    <p id="progress-status" data-lang-key="statusReady">اختر صورة للبدء...</p>
+                </div>
+                
+                <div class="editor-layout" id="editor-layout">
+                    
+                    <div class="canvas-preview">
+                        <div id="canvas-container">
+                            <canvas id="editor-canvas"></canvas>
+                        </div>
+                        <div id="download-area">
+                            <button id="download-btn" class="cta-button green full-width" data-lang-key="downloadButton" disabled>تحميل الصورة</button>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-settings">
+                        
+                        <div class="tabs">
+                            <button class="tab-btn active" data-tab="filters-tab" data-lang-key="tabFilters">الفلاتر</button>
+                            <button class="tab-btn" data-tab="text-tab" data-lang-key="tabText">إضافة نص</button>
+                        </div>
+
+                        <div id="filters-tab" class="tab-content active">
+                            <div class="setting-group">
+                                <label for="brightness-slider" data-lang-key="filterBrightness">السطوع</label>
+                                <input type="range" id="brightness-slider" min="0" max="200" value="100">
+                            </div>
+                            <div class="setting-group">
+                                <label for="contrast-slider" data-lang-key="filterContrast">التباين</label>
+                                <input type="range" id="contrast-slider" min="0" max="200" value="100">
+                            </div>
+                            <div class="setting-group">
+                                <label for="saturate-slider" data-lang-key="filterSaturate">التشبع</label>
+                                <input type="range" id="saturate-slider" min="0" max="200" value="100">
+                            </div>
+                            <div class="setting-group">
+                                <label for="grayscale-slider" data-lang-key="filterGrayscale">أبيض وأسود</label>
+                                <input type="range" id="grayscale-slider" min="0" max="100" value="0">
+                            </div>
+                            <div class="setting-group">
+                                <label for="sepia-slider" data-lang-key="filterSepia">سيبيا (قديم)</label>
+                                <input type="range" id="sepia-slider" min="0" max="100" value="0">
+                            </div>
+                            <div class="setting-group">
+                                <label for="blur-slider" data-lang-key="filterBlur">ضبابية</label>
+                                <input type="range" id="blur-slider" min="0" max="10" value="0" step="0.1">
+                            </div>
+                            <button id="reset-filters-btn" class="cta-button red" data-lang-key="resetButton" style="width: 100%;">إعادة ضبط الفلاتر</button>
+                        </div>
+
+                        <div id="text-tab" class="tab-content">
+                            <div class="setting-group">
+                                <label for="text-input" data-lang-key="textLabel">النص:</label>
+                                <input type="text" id="text-input" placeholder="اكتب نصك هنا...">
+                            </div>
+                            <div class="setting-group">
+                                <label data-lang-key="textColorLabel">لون النص:</label>
+                                <div class="color-input-wrapper">
+                                    <input type="color" id="text-color-input" value="#FFFFFF">
+                                    <div class="color-swatch" id="text-color-swatch" style="background-color: #FFFFFF;"></div>
+                                </div>
+                            </div>
+                            <button id="add-text-btn" class="cta-button blue" data-lang-key="addButton" style="width: 100%;">إضافة النص للمنتصف</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
+        </main>
+        
+    </div> <footer style="margin-top: auto;">
+        </footer>
+
+    <script>
+        // --- 1. قاموس الترجمة ---
+        const translations = {
+            "ar": {
+                "pageTitle": "محرر الصور - Skydata",
+                "toolTitle": "محرر الصور الاحترافي",
+                "selectImage": "اختر صورة...",
+                "statusReady": "اختر صورة للبدء...",
+                "tabFilters": "الفلاتر",
+                "tabText": "إضافة نص",
+                "filterBrightness": "السطوع",
+                "filterContrast": "التباين",
+                "filterSaturate": "التشبع",
+                "filterGrayscale": "أبيض وأسود",
+                "filterSepia": "سيبيا (قديم)",
+                "filterBlur": "ضبابية (بكسل)",
+                "resetButton": "إعادة ضبط الفلاتر",
+                "textLabel": "النص:",
+                "textColorLabel": "لون النص:",
+                "addButton": "إضافة النص للمنتصف",
+                "downloadButton": "تحميل الصورة",
+                "backToHome": "العودة للرئيسية"
+            },
+            "en": {
+                "pageTitle": "Photo Editor - Skydata",
+                "toolTitle": "Pro Photo Editor",
+                "selectImage": "Choose an Image...",
+                "statusReady": "Select an image to start...",
+                "tabFilters": "Filters",
+                "tabText": "Add Text",
+                "filterBrightness": "Brightness",
+                "filterContrast": "Contrast",
+                "filterSaturate": "Saturation",
+                "filterGrayscale": "Grayscale",
+                "filterSepia": "Sepia",
+                "filterBlur": "Blur (px)",
+                "resetButton": "Reset Filters",
+                "textLabel": "Text:",
+                "textColorLabel": "Text Color:",
+                "addButton": "Add Text to Center",
+                "downloadButton": "Download Image",
+                "backToHome": "Back to Home"
+            }
+        };
+
+        // --- 2. متغير اللغة الحالي ---
+        let currentLang = 'ar'; 
+
+        // --- 3. دالة تبديل اللغة ---
+        window.setLanguage = function(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    element.innerText = translations[lang][key];
+                }
+            });
+            
+            document.getElementById('text-input').placeholder = (lang === 'ar') ? 'اكتب نصك هنا...' : 'Type your text here...';
+        }
+        
+        // --- 4. منطق الأداة ---
+        document.addEventListener("DOMContentLoaded", () => {
+        
+            // عناصر الصفحة
+            const imageInput = document.getElementById('image-input');
+            const canvas = document.getElementById('editor-canvas');
+            const ctx = canvas.getContext('2d');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            // (مُصلح) عناصر التدفق
+            const uploadLabel = document.getElementById('upload-label');
+            const progressArea = document.getElementById('progress-area');
+            const progressStatus = document.getElementById('progress-status');
+            const editorLayout = document.getElementById('editor-layout'); // المحرر الكامل
+
+            // عناصر الفلاتر
+            const sliders = {
+                brightness: document.getElementById('brightness-slider'),
+                contrast: document.getElementById('contrast-slider'),
+                saturate: document.getElementById('saturate-slider'),
+                grayscale: document.getElementById('grayscale-slider'),
+                sepia: document.getElementById('sepia-slider'),
+                blur: document.getElementById('blur-slider')
+            };
+            const resetFiltersBtn = document.getElementById('reset-filters-btn');
+            
+            // عناصر النص
+            const textInput = document.getElementById('text-input');
+            const textColorInput = document.getElementById('text-color-input');
+            const textColorSwatch = document.getElementById('text-color-swatch');
+            const addTextBtn = document.getElementById('add-text-btn');
+
+            let originalImage = null;
+            let currentFilters = {};
+            let textObjects = [];
+
+            // --- (مُصلح) دالة إعادة الضبط ---
+            function resetTool() {
+                originalImage = null;
+                imageInput.value = null;
+                
+                editorLayout.style.display = 'none'; // إخفاء المحرر
+                
+                progressArea.style.display = 'block'; // إظهار رسالة البدء
+                updateStatusMessage(progressStatus, 'statusReady');
+                uploadLabel.style.display = 'inline-block'; // إظهار زر الرفع
+                
+                downloadBtn.disabled = true;
+                resetFilters(); // إعادة ضبط الفلاتر والنصوص
+            }
+
+            // --- دالة: إعادة ضبط الفلاتر ---
+            function resetFilters() {
+                sliders.brightness.value = 100;
+                sliders.contrast.value = 100;
+                sliders.saturate.value = 100;
+                sliders.grayscale.value = 0;
+                sliders.sepia.value = 0;
+                sliders.blur.value = 0;
+                
+                textObjects = [];
+                if (originalImage) {
+                    redrawCanvas();
+                }
+            }
+            
+            // --- دالة: قراءة الفلاتر ---
+            function getFilterString() {
+                currentFilters = {
+                    brightness: sliders.brightness.value,
+                    contrast: sliders.contrast.value,
+                    saturate: sliders.saturate.value,
+                    grayscale: sliders.grayscale.value,
+                    sepia: sliders.sepia.value,
+                    blur: sliders.blur.value
+                };
+                
+                return `brightness(${currentFilters.brightness}%) 
+                        contrast(${currentFilters.contrast}%) 
+                        saturate(${currentFilters.saturate}%) 
+                        grayscale(${currentFilters.grayscale}%) 
+                        sepia(${currentFilters.sepia}%) 
+                        blur(${currentFilters.blur}px)`;
+            }
+
+            // --- دالة: إعادة رسم الكانفاس (الأهم) ---
+            function redrawCanvas() {
+                if (!originalImage) return;
+
+                // 1. مسح الكانفاس
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 2. تطبيق الفلاتر
+                ctx.filter = getFilterString();
+                
+                // 3. رسم الصورة الأصلية
+                ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+                
+                // 4. إزالة الفلاتر (حتى لا تؤثر على النص)
+                ctx.filter = 'none';
+                
+                // 5. رسم النصوص
+                textObjects.forEach(textObj => {
+                    ctx.fillStyle = textObj.color;
+                    ctx.font = 'bold 40px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle'; 
+                    ctx.fillText(textObj.text, textObj.x, textObj.y);
+                });
+            }
+
+            // --- (مُصلح) مستمع اختيار الصور ---
+            imageInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) {
+                    resetTool();
+                    return;
+                }
+                
+                resetFilters(); // إعادة ضبط الفلاتر والنصوص
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    originalImage = new Image();
+                    originalImage.onload = () => {
+                        // (هذا هو الإصلاح)
+                        // 1. إخفاء زر الرفع ورسالة "اختر"
+                        uploadLabel.style.display = 'none';
+                        progressArea.style.display = 'none';
+                        
+                        // 2. إظهار المحرر بالكامل
+                        editorLayout.style.display = 'flex';
+                        
+                        // 3. ضبط الكانفاس والرسم
+                        canvas.width = originalImage.width;
+                        canvas.height = originalImage.height;
+                        redrawCanvas(); // الرسم لأول مرة
+                        
+                        // 4. تفعيل زر التحميل
+                        downloadBtn.disabled = false;
+                    };
+                    originalImage.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // --- مستمعات الفلاتر ---
+            Object.values(sliders).forEach(slider => {
+                slider.addEventListener('input', redrawCanvas);
+            });
+            resetFiltersBtn.addEventListener('click', resetFilters);
+
+            // --- مستمعات النص ---
+            textColorInput.addEventListener('input', (e) => {
+                textColorSwatch.style.backgroundColor = e.target.value;
+            });
+            
+            addTextBtn.addEventListener('click', () => {
+                if (!originalImage || !textInput.value) return;
+                
+                textObjects.push({
+                    text: textInput.value,
+                    color: textColorInput.value,
+                    x: canvas.width / 2,
+                    y: canvas.height / 2
+                });
+                
+                textInput.value = ""; // تفريغ الحقل
+                redrawCanvas();
+            });
+
+            // --- مستمعات التبويبات ---
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab).classList.add('active');
+                });
+            });
+
+            // --- مستمع زر التحميل ---
+            downloadBtn.addEventListener('click', () => {
+                if (!originalImage) return;
+                
+                const dataUrl = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = "skydata_edited.png";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+
+            // --- تشغيل الصفحة ---
+            setLanguage(currentLang);
+            resetTool(); // البدء بالحالة النظيفة
+
+        }); // نهاية غلاف DOMContentLoaded
+    </script>
+    </body>
+</html>

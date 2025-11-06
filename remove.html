@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Background from Image</title>
+</head>
+<body>
+
+<h1>Upload Image to Remove Background</h1>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="imageFile" accept="image/*">
+    <button type="submit">Remove Background</button>
+</form>
+
+<div id="result">
+    <h3>Result:</h3>
+    <img id="outputImage" src="" alt="Image with no background" />
+</div>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('file', document.getElementById('imageFile').files[0]);
+
+        // استدعاء API Hugging Face لإزالة الخلفية
+        fetch('https://api-inference.huggingface.co/models/username/private-bg-model', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer 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'  // استخدام توكن API
+            },
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(imageBlob => {
+            // عرض الصورة الجديدة بعد إزالة الخلفية
+            const img = URL.createObjectURL(imageBlob);
+            document.getElementById('outputImage').src = img;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
+</body>
+</html>

@@ -22,6 +22,9 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378041273892848"
      crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
     <style>
         body {
             font-family: Arial, sans-serif; direction: rtl; 
@@ -57,6 +60,45 @@
             margin: 15px 0; display: block;
         }
 
+        /* لوحة الإحصائيات */
+        .stats-panel {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .stat-item {
+            text-align: center;
+            min-width: 150px;
+        }
+        .stat-item .stat-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .stat-item .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1;
+        }
+        .stat-item .label {
+            font-size: 1em;
+            color: #aaa;
+        }
+        .stars-display {
+            color: #ffc107;
+            font-size: 1.2em;
+        }
+
         .feature-section {
             background-color: #1e1e1e; border-radius: 8px;
             padding: 20px; margin-bottom: 25px;
@@ -68,32 +110,39 @@
         .feature-section h2 { font-size: 1.5em; margin-bottom: 10px; color: #ffffff; }
         .feature-section p { font-size: 1.1em; }
 
+        /* (مُعدل) تصميم الأزرار مع الأيقونات */
+        .cta-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px; /* مسافة بين الأزرار */
+        }
         .cta-button {
-            display: inline-block; background-color: #007bff; color: #ffffff;
-            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: #007bff; /* (مُعدل) اللون الأزرق الموحد */
+            color: #ffffff;
+            padding: 12px 20px; 
+            font-size: 1.1em; font-weight: bold;
             text-decoration: none; border-radius: 5px;
-            margin: 10px; /* (معدل) مسافة متساوية */
             transition: all 0.3s ease;
+            flex-basis: 250px; 
+            flex-grow: 1;
         }
         .cta-button:hover { 
-            background-color: #0056b3; 
+            background-color: #0056b3; /* (مُعدل) لون أزرق أغمق */
             transform: scale(1.03);
         }
         
-        .cta-button.green { background-color: #28a745; }
-        .cta-button.green:hover { background-color: #218838; }
+        /* (مُعدل) تصميم الأيقونة داخل الزر */
+        .btn-icon {
+            font-size: 1.2em; /* حجم الأيقونة */
+            margin-inline-end: 10px; /* مسافة بين الأيقونة والنص */
+        }
         
-        .cta-button.orange { background-color: #fd7e14; }
-        .cta-button.orange:hover { background-color: #e66900; }
-
-        /* ألوان إضافية للأزرار الجديدة */
-        .cta-button.purple { background-color: #6f42c1; }
-        .cta-button.purple:hover { background-color: #5a379a; }
-
-        .cta-button.teal { background-color: #20c997; }
-        .cta-button.teal:hover { background-color: #1a9973; }
+        /* (تم الحذف) كل الألوان الأخرى مثل .green .orange .purple */
         
-        /* الفوتر مع الأزرار والأيقونات */
         footer {
             background-color: #1e1e1e;
             color: #fff;
@@ -129,27 +178,63 @@
         .social-icons img:hover {
             transform: scale(1.1);
         }
+
+        /* تصميم نافذة التقييم */
+        .rating-widget {
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+        .rating-widget h3 {
+            margin: 0 0 15px 0;
+            color: #fff;
+        }
+        .rating-stars {
+            display: inline-block;
+        }
+        .rating-stars .star {
+            font-size: 2.5em;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .rating-stars .star:hover,
+        .rating-stars .star.hovered {
+            color: #ffc107;
+        }
+        .rating-stars .star.selected {
+            color: #ffc107;
+        }
+        #rating-thanks {
+            display: none;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
         
         /* Responsive */
         @media (max-width: 600px) {
             .container {
                 padding: 10px;
             }
-            
             header {
                 padding: 10px 15px;
             }
-
             .intro-text h1 {
                 font-size: 1.8em;
             }
             .feature-section {
                 padding: 15px;
             }
-            
-            /* جعل أزرار الفوتر والأدوات عمودية في الهواتف */
-            .footer-links a,
+            .stats-panel {
+                flex-direction: column;
+            }
             .cta-section .cta-button {
+                flex-basis: 100%;
+                margin: 8px 0;
+            }
+            .footer-links a {
                 display: block;
                 width: 80%;
                 margin: 10px auto;
@@ -193,6 +278,20 @@
                 <p data-lang-key="introDesc">تحويل الملفات و الصور و تعديل الصور ادوات الصور رفع الصور تحويلها الى روابط مجانا بدون بطاقة بدون اشتراكات</p>
             </section>
 
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <img src="https://i.ibb.co/r2BCLCf9/c8f95745b2e06be2056b0002ad0e38a1.jpg" alt="Visitors" class="stat-icon">
+                    <div class="number" id="visitor-count">0</div>
+                    <div class="label" data-lang-key="visitors">عدد زوار الموقع</div>
+                </div>
+                <div class="stat-item">
+                    <img src="https://i.ibb.co/1tm4Fj8B/Picsart-25-11-06-14-38-15-248.webp" alt="Rating" class="stat-icon">
+                    <div class="number" id="rating-average">0.0</div>
+                    <div class="label" id="rating-count" data-lang-key="ratings">من (0 تقييمات)</div>
+                </div>
+            </div>
+
+
             <section class="feature-section">
                 <img src="https://i.ibb.co/HT2mXkhS/13fa98a87cf632cca045cfc9ebefe0a3.jpg" alt="دعم صيغ متعددة">
                 <h2 data-lang-key="featureFormats">دعم أكثر من 150 صيغة</h2>
@@ -209,12 +308,42 @@
             </section>
 
             <section class="cta-section">
-                <a href="pdf.html" class="cta-button" data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</a>
-                <a href="imgdv.html" class="cta-button green" data-lang-key="ctaButtonWebp">تحويل الصور الى webp</a>
-                <a href="imgtag.html" class="cta-button orange" data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</a>
-                <a href="qr.html" class="cta-button purple" data-lang-key="ctaButtonQr">صانع QR Code</a>
-                <a href="size.html" class="cta-button teal" data-lang-key="ctaButtonSize">تغيير حجم الصور</a>
-                <a href="zoom.html" class="cta-button" data-lang-key="ctaButtonZoom">تكبير الصور (AI)</a>
+                
+                <a href="pdf.html" class="cta-button">
+                    <i class="fas fa-file-pdf btn-icon"></i>
+                    <span data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</span>
+                </a>
+                
+                <a href="imgdv.html" class="cta-button">
+                    <i class="fas fa-compress-arrows-alt btn-icon"></i>
+                    <span data-lang-key="ctaButtonWebp">تحويل الصور الى webp</span>
+                </a>
+                
+                <a href="imgtag.html" class="cta-button">
+                    <i class="fas fa-link btn-icon"></i>
+                    <span data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</span>
+                </a>
+                
+                <a href="qr.html" class="cta-button">
+                    <i class="fas fa-qrcode btn-icon"></i>
+                    <span data-lang-key="ctaButtonQr">صانع QR Code</span>
+                </a>
+                
+                <a href="size.html" class="cta-button">
+                    <i class="fas fa-ruler-combined btn-icon"></i>
+                    <span data-lang-key="ctaButtonSize">تغيير حجم الصور</span>
+                </a>
+                
+                <a href="zoom.html" class="cta-button">
+                    <i class="fas fa-search-plus btn-icon"></i>
+                    <span data-lang-key="ctaButtonZoom">تكبير الصور (AI)</span>
+                </a>
+                
+                <a href="editor.html" class="cta-button">
+                    <i class="fas fa-magic btn-icon"></i>
+                    <span data-lang-key="ctaButtonEditor">محرر الصور</span>
+                </a>
+
             </section>
 
         </main>
@@ -236,11 +365,43 @@
                 <img src="https://i.ibb.co/fQc3YFk/download-white.png" alt="صفحة التحديثات" style="height: 30px; width: 30px;">
             </a>
         </div>
+
+        <div class="rating-widget">
+            <h3 data-lang-key="rateUs">قم بتقييم خدمتنا</h3>
+            <div class="rating-stars" id="rating-stars">
+                <span class="star" data-value="1">☆</span>
+                <span class="star" data-value="2">☆</span>
+                <span class="star" data-value="3">☆</span>
+                <span class="star" data-value="4">☆</span>
+                <span class="star" data-value="5">☆</span>
+            </div>
+            <p id="rating-thanks" data-lang-key="thanks">شكراً لتقييمك!</p>
+        </div>
     </footer>
 
 
-    <script>
-        // 1. قاموس الترجمة (محدث)
+    <script type="module">
+        // 1. استيراد المكتبات (App و Realtime Database)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+        // 2. كود الإعداد الخاص بك
+        const firebaseConfig = {
+          apiKey: "AIzaSyD7QnPaJTYiawCz6SrtdBGT_NDeAPX9bBc",
+          authDomain: "pixelrpg-5ebc3.firebaseapp.com",
+          databaseURL: "https://pixelrpg-5ebc3-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "pixelrpg-5ebc3",
+          storageBucket: "pixelrpg-5ebc3.firebasestorage.app",
+          messagingSenderId: "1041585714383",
+          appId: "1:1041585714383:web:3f6912a5d6bddebe5573ba",
+          measurementId: "G-8MENZDEGB1"
+        };
+
+        // 3. تشغيل فايربيس
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // --- 4. منطق الترجمة (مُعدل) ---
         const translations = {
             "ar": {
                 "pageTitle": "Skydata - خدمات سحابية وأدوات مجانية",
@@ -257,9 +418,13 @@
                 "ctaButtonQr": "صانع QR Code",
                 "ctaButtonSize": "تغيير حجم الصور",
                 "ctaButtonZoom": "تكبير الصور (AI)",
-                // (تم حذف) الأزرار
+                "ctaButtonEditor": "محرر الصور", // (جديد)
                 "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
-                "footerAbout": "عن Skydata"
+                "footerAbout": "عن Skydata",
+                "visitors": "عدد زوار الموقع",
+                "ratings": "من ({count} تقييمات)",
+                "rateUs": "قم بتقييم خدمتنا",
+                "thanks": "شكراً لتقييمك!"
             },
             "en": {
                 "pageTitle": "Skydata - Cloud Services and Free Tools",
@@ -276,35 +441,187 @@
                 "ctaButtonQr": "QR Code Generator",
                 "ctaButtonSize": "Image Resizer",
                 "ctaButtonZoom": "Image Upscaler (AI)",
-                // (تم حذف) الأزرار
+                "ctaButtonEditor": "Photo Editor", // (جديد)
                 "footerPolicy": "Terms of Use and Privacy Policy",
-                "footerAbout": "About Skydata"
+                "footerAbout": "About Skydata",
+                "visitors": "Total Site Visitors",
+                "ratings": "from ({count} ratings)",
+                "rateUs": "Rate Our Service",
+                "thanks": "Thanks for your rating!"
             }
         };
 
-        // 2. الدالة المسؤولة عن تبديل اللغة
-        function setLanguage(lang) {
-            if (lang === 'ar') {
-                document.documentElement.lang = 'ar';
-                document.documentElement.dir = 'rtl';
-            } else {
-                document.documentElement.lang = 'en';
-                document.documentElement.dir = 'ltr';
-            }
-
+        let currentLang = 'ar';
+        window.setLanguage = function(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
             document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
             document.getElementById('lang-en').classList.toggle('active', lang === 'en');
 
             document.querySelectorAll('[data-lang-key]').forEach(element => {
                 const key = element.getAttribute('data-lang-key');
                 if (translations[lang][key]) {
-                    element.innerHTML = translations[lang][key];
+                    const text = translations[lang][key];
+                    if (text.includes('{count}')) {
+                         // سيتم تحديثه بواسطة onValue
+                    } else {
+                        element.innerHTML = text;
+                    }
                 }
+            });
+            const ratingsData = window.currentRatingsData || { count: 0 };
+            document.getElementById('rating-count').innerText = translations[currentLang].ratings.replace('{count}', ratingsData.count);
+        }
+        setLanguage(currentLang);
+
+        // --- 5. (مُعدل) منطق قاعدة البيانات ---
+
+        // عناصر الواجهة
+        const visitorCountEl = document.getElementById('visitor-count');
+        const ratingAverageEl = document.getElementById('rating-average');
+        const ratingCountEl = document.getElementById('rating-count');
+        const ratingStarsContainer = document.getElementById('rating-stars');
+        const allStars = ratingStarsContainer.querySelectorAll('.star');
+        const thanksMessage = document.getElementById('rating-thanks');
+
+        // مراجع قاعدة البيانات
+        const visitorsRef = ref(database, 'statistics/visitors');
+        const ratingsRef = ref(database, 'statistics/ratings');
+
+        // (جديد) دالة تنسيق الأرقام K/M/B
+        function formatLargeNumber(num) {
+          if (num >= 1000000000) { // Billion
+             return (num / 1000000000).toFixed(1).replace('.0', '') + 'B';
+          }
+          if (num >= 1000000) { // Million
+             return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
+          }
+          if (num >= 1000) { // Thousand
+             return (num / 1000).toFixed(1).replace('.0', '') + 'K';
+          }
+          return num.toString(); // 0-999
+        }
+
+        // (مُعدل) نظام التحقق من التقييم
+        const voteTimestamp = localStorage.getItem('skydataVoteTimestamp');
+        const fifteenDaysInMillis = 15 * 24 * 60 * 60 * 1000;
+        let canVote = true;
+
+        if (voteTimestamp) {
+            const timeSinceVote = new Date().getTime() - Number(voteTimestamp);
+            if (timeSinceVote < fifteenDaysInMillis) {
+                canVote = false;
+            } else {
+                localStorage.removeItem('skydataVoteTimestamp');
+                canVote = true;
+            }
+        }
+
+        // زيادة عدد الزوار
+        function incrementVisitor() {
+            if (sessionStorage.getItem('skydataVisitor')) {
+                return;
+            }
+            sessionStorage.setItem('skydataVisitor', 'true');
+            
+            runTransaction(visitorsRef, (currentData) => {
+                return (currentData || 0) + 1;
+            });
+        }
+
+        // (مُعدل) جلب البيانات وعرضها
+        function loadData() {
+            // جلب الزوار
+            onValue(visitorsRef, (snapshot) => {
+                const count = snapshot.val() || 0;
+                visitorCountEl.innerText = formatLargeNumber(count); // تطبيق الدالة هنا
+            });
+
+            // جلب التقييمات
+            onValue(ratingsRef, (snapshot) => {
+                const data = snapshot.val() || { totalScore: 0, count: 0 };
+                window.currentRatingsData = data;
+                let average = 0;
+                
+                if (data.count > 0) {
+                    average = (data.totalScore / data.count).toFixed(1);
+                }
+                
+                ratingAverageEl.innerText = average;
+                ratingCountEl.innerText = translations[currentLang].ratings.replace('{count}', data.count);
+            });
+        }
+
+        // إرسال التقييم
+        function submitRating(starValue) {
+            if (!canVote) {
+                showThanks();
+                return;
+            }
+
+            runTransaction(ratingsRef, (currentData) => {
+                if (currentData === null) {
+                    return { totalScore: starValue, count: 1 };
+                } else {
+                    return {
+                        totalScore: (currentData.totalScore || 0) + starValue,
+                        count: (currentData.count || 0) + 1
+                    };
+                }
+            }).then(() => {
+                localStorage.setItem('skydataVoteTimestamp', new Date().getTime().toString());
+                canVote = false;
+                showThanks();
+            }).catch((error) => {
+                console.error("Firebase transaction failed: ", error);
             });
         }
         
-        // (اختياري) يمكنك تعيين لغة افتراضية عند تحميل الصفحة
-        // setLanguage('ar'); // تم ضبطها كافتراضية
+        function showThanks() {
+            ratingStarsContainer.style.display = 'none';
+            thanksMessage.style.display = 'block';
+        }
+
+        // --- 6. (مُعدل) ربط الأحداث ---
+        
+        allStars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                if (!canVote) return;
+                highlightStars(star.dataset.value);
+            });
+            star.addEventListener('mouseout', () => {
+                if (!canVote) return;
+                highlightStars(0);
+            });
+            star.addEventListener('click', () => {
+                if (!canVote) return;
+                const value = parseInt(star.dataset.value, 10);
+                highlightStars(value, true);
+                submitRating(value);
+            });
+        });
+
+        function highlightStars(value, isSelected = false) {
+            allStars.forEach(star => {
+                if (star.dataset.value <= value) {
+                    star.classList.add(isSelected ? 'selected' : 'hovered');
+                    star.innerHTML = '★';
+                } else {
+                    star.classList.remove('hovered');
+                    star.innerHTML = '☆';
+                }
+            });
+        }
+
+        // --- 7. بدء التشغيل ---
+        loadData();
+        incrementVisitor();
+        
+        if (!canVote) {
+            showThanks();
+        }
+
     </script>
     </body>
 </html>

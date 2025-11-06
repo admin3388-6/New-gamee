@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">عن Skydata - Skydata</title>
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+        });
+      });
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: Arial, sans-serif; direction: rtl; 
+            background-color: #121212; color: #e0e0e0;
+            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; flex-grow: 1; }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { height: 40px; margin-left: 10px; }
+        .lang-switcher { display: flex; }
+        .lang-switcher a {
+            text-decoration: none; color: #007bff; margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+        }
+        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+
+        footer {
+            background-color: #1e1e1e; padding: 20px;
+            text-align: center; margin-top: auto;
+            border-top: 1px solid #333;
+        }
+        
+        main { text-align: right; }
+        .content-box {
+            background-color: #1e1e1e; padding: 30px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+            line-height: 1.7;
+        }
+        .content-box h1 { 
+            color: #ffffff; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .content-box h2 {
+            color: #007bff;
+            margin-top: 30px;
+        }
+        .content-box p {
+            font-size: 1.1em;
+            color: #e0e0e0;
+        }
+        /* (جديد) تصميم شعار في وسط الصفحة */
+        .about-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 25px;
+            margin: 10px auto 20px auto;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .cta-button {
+            display: inline-block; background-color: #007bff; color: #ffffff;
+            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
+            text-decoration: none; border-radius: 5px; border: none;
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .back-button { 
+            background-color: #555; margin-top: 50px; 
+            font-size: 1.1em; padding: 10px 20px;
+            display: inline-block;
+        }
+        .back-button:hover { background-color: #444; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            header { padding: 10px 15px; }
+            .content-box { padding: 20px; }
+        }
+        @media (max-width: 380px) {
+            .logo-container img { height: 30px; }
+        }
+
+    </style>
+    </head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        </div>
+        <div class="lang-switcher">
+            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <main>
+            <div class="content-box">
+                <h1 data-lang-key="mainTitle">عن Skydata</h1>
+
+                <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata" class="about-logo">
+                
+                <h2 data-lang-key="missionTitle">مهمتنا</h2>
+                <p data-lang-key="missionText1">
+                    (هذا نص مؤقت، قم باستبداله بالنصوص الخاصة بك). مهمتنا في Skydata هي توفير أدوات صور سحابية قوية ومجانية وسهلة الاستخدام للجميع. نحن نؤمن بأن الأدوات الاحترافية يجب أن تكون متاحة للجميع، وليس فقط للشركات الكبرى.
+                </p>
+                
+                <h2 data-lang-key="privacyTitle">التزامنا بالخصوصية</h2>
+                <p data-lang-key="privacyText1">
+                    (نص مؤقت) نحن نأخذ خصوصيتك على محمل الجد. تم تصميم غالبية أدواتنا لتعمل بالكامل "من جانب العميل" (Client-Side). هذا يعني أن ملفاتك وصورك لا تلمس خوادمنا أبداً، كل المعالجة تحدث على جهازك أنت.
+                </p>
+                <p data-lang-key="privacyText2">
+                    (نص مؤقت) بالنسبة للأدوات التي تتطلب رفع (مثل "صورة إلى رابط")، فإننا نستخدم واجهات برمجة تطبيقات (APIs) موثوقة ونوضح ذلك بشفافية كاملة في صفحة سياسة الخصوصية.
+                </p>
+            </div>
+
+            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
+        </main>
+        
+    </div> <footer style="margin-top: auto;">
+        </footer>
+
+
+    <script>
+        // --- 1. قاموس الترجمة ---
+        const translations = {
+            "ar": {
+                "pageTitle": "عن Skydata - Skydata",
+                "mainTitle": "عن Skydata",
+                "missionTitle": "مهمتنا",
+                "missionText1": "(هذا نص مؤقت، قم باستبداله بالنصوص الخاصة بك). مهمتنا في Skydata هي توفير أدوات صور سحابية قوية ومجانية وسهلة الاستخدام للجميع. نحن نؤمن بأن الأدوات الاحترافية يجب أن تكون متاحة للجميع، وليس فقط للشركات الكبرى.",
+                "privacyTitle": "التزامنا بالخصوصية",
+                "privacyText1": "(نص مؤقت) نحن نأخذ خصوصيتك على محمل الجد. تم تصميم غالبية أدواتنا لتعمل بالكامل \"من جانب العميل\" (Client-Side). هذا يعني أن ملفاتك وصورك لا تلمس خوادمنا أبداً، كل المعالجة تحدث على جهازك أنت.",
+                "privacyText2": "(نص مؤقت) بالنسبة للأدوات التي تتطلب رفع (مثل \"صورة إلى رابط\")، فإننا نستخدم واجهات برمجة تطبيقات (APIs) موثوقة ونوضح ذلك بشفافية كاملة في صفحة سياسة الخصوصية.",
+                "backToHome": "العودة للرئيسية"
+            },
+            "en": {
+                "pageTitle": "About Us - Skydata",
+                "mainTitle": "About Skydata",
+                "missionTitle": "Our Mission",
+                "missionText1": "(This is placeholder text, replace it with your own). Our mission at Skydata is to provide powerful, free, and easy-to-use cloud image tools for everyone. We believe professional tools should be accessible to all, not just large corporations.",
+                "privacyTitle": "Our Commitment to Privacy",
+                "privacyText1": "(Placeholder text) We take your privacy seriously. The majority of our tools are designed to be entirely \"Client-Side\". This means your files and images never touch our servers; all processing happens on your own device.",
+                "privacyText2": "(Placeholder text) For tools that require an upload (like \"Image to Link\"), we use trusted APIs and state this with full transparency in our privacy policy.",
+                "backToHome": "Back to Home"
+            }
+        };
+
+        // --- 2. متغير اللغة الحالي ---
+        let currentLang = 'ar'; 
+
+        // --- 3. دالة تبديل اللغة ---
+        window.setLanguage = function(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+        }
+        
+        // --- 4. تشغيل الصفحة ---
+        // (لا حاجة لـ DOMContentLoaded لأن السكريبت في نهاية الصفحة)
+        setLanguage(currentLang);
+        
+    </script>
+    </body>
+</html>

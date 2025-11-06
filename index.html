@@ -8,7 +8,7 @@
     <meta name="description" content="موقع Skydata يقدم أدوات مجانية لتحويل الصور، بما في ذلك تحويل الصور إلى PDF، وضغط WEBP، ورفع الصور للحصول على روابط. خدمات سحابية سريعة ومجانية.">
     <meta name="description" lang="en" content="Skydata offers free image tools, including Image to PDF converter, WEBP compressor, and Image to Link generator. Fast, free cloud services.">
     
-    <meta name="keywords" content="Skydata, تحويل صور, أدوات مجانية, سحابية, PDF, WEBP, صورة إلى رابط, ضغط صور, image converter, free tools, image to pdf, image to webp, image to link, cloud tools, free image hosting, convertir images, outils gratuits, image en pdf, image en webp, image en lien, servicios cloud, convertir imágenes, herramientas gratuitas, imagen a pdf, imagen a webp, imagen a enlace, servicios en la nube, convertire immagini, strumenti gratuiti, immagine in pdf, immagine in webp, immagine in link, servizi cloud, Bilder konvertieren, kostenlose Tools, Bild in PDF, Bild in WEBP, Bild in Link, Cloud-Dienste, конвертер изображений, бесплатные инструменты, изображение в PDF, изображение в WEBP, изображение в ссылку, облачные сервисы, 图像转换器, 免费工具, 图片转PDF, 图片转WEBP, 图片转链接, 云服务, इमेज कन्वर्टर, फ्री टूल्स, इमेज से पीडीएफ, इमेज से वेबपी, इमेज से लिंक, क्लाउड सेवाएं">
+    <meta name="keywords" content="Skydata, تحويل صور, أدوات مجانية, سحابية, PDF, WEBP, صورة إلى رابط, ضغط صور, إزالة خلفية, تكبير صور, صورة إلى وورد, صانع QR, image converter, free tools, image to pdf, image to webp, image to link, background remover, image upscaler, image to word, qr code generator, cloud tools, free image hosting, convertir images, outils gratuits, image en pdf, image en webp, image en lien, servicios cloud, convertir imágenes, herramientas gratuitas, imagen a pdf, imagen a webp, imagen a enlace, servicios en la nube, convertire immagini, strumenti gratuiti, immagine in pdf, immagine in webp, immagine in link, servizi cloud, Bilder konvertieren, kostenlose Tools, Bild in PDF, Bild in WEBP, Bild in Link, Cloud-Dienste, конвертер изображений, бесплатные инструменты, изображение в PDF, изображение в WEBP, изображение в ссылку, облачные сервисы, 图像转换器, 免费工具, 图片转PDF, 图片转WEBP, 图片转链接, 云服务, इमेज कन्वर्टर, फ्री टूल्स, इमेज से पीडीएफ, इमेज से वेबपी, इमेज से लिंक, क्लाउड सेवाएं">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -72,9 +72,7 @@
             display: inline-block; background-color: #007bff; color: #ffffff;
             padding: 12px 25px; font-size: 1.1em; font-weight: bold;
             text-decoration: none; border-radius: 5px;
-            margin-top: 20px;
-            margin-left: 10px;
-            margin-right: 10px;
+            margin: 10px; /* (معدل) مسافة متساوية */
             transition: all 0.3s ease;
         }
         .cta-button:hover { 
@@ -82,23 +80,19 @@
             transform: scale(1.03);
         }
         
-        /* لون الزر الأخضر */
-        .cta-button.green {
-            background-color: #28a745;
-        }
-        .cta-button.green:hover {
-            background-color: #218838;
-        }
+        .cta-button.green { background-color: #28a745; }
+        .cta-button.green:hover { background-color: #218838; }
         
-        /* (جديد) لون الزر البرتقالي */
-        .cta-button.orange {
-            background-color: #fd7e14;
-        }
-        .cta-button.orange:hover {
-            background-color: #e66900;
-        }
+        .cta-button.orange { background-color: #fd7e14; }
+        .cta-button.orange:hover { background-color: #e66900; }
 
+        /* ألوان إضافية للأزرار الجديدة */
+        .cta-button.purple { background-color: #6f42c1; }
+        .cta-button.purple:hover { background-color: #5a379a; }
 
+        .cta-button.teal { background-color: #20c997; }
+        .cta-button.teal:hover { background-color: #1a9973; }
+        
         /* الفوتر مع الأزرار والأيقونات */
         footer {
             background-color: #1e1e1e;
@@ -215,9 +209,12 @@
             </section>
 
             <section class="cta-section">
-                <a href="pdf.html" class="cta-button" data-lang-key="ctaButton">تحويل صور إلى PDF</a>
+                <a href="pdf.html" class="cta-button" data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</a>
                 <a href="imgdv.html" class="cta-button green" data-lang-key="ctaButtonWebp">تحويل الصور الى webp</a>
                 <a href="imgtag.html" class="cta-button orange" data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</a>
+                <a href="qr.html" class="cta-button purple" data-lang-key="ctaButtonQr">صانع QR Code</a>
+                <a href="size.html" class="cta-button teal" data-lang-key="ctaButtonSize">تغيير حجم الصور</a>
+                <a href="zoom.html" class="cta-button" data-lang-key="ctaButtonZoom">تكبير الصور (AI)</a>
             </section>
 
         </main>
@@ -254,9 +251,13 @@
                 "featureFormats": "دعم أكثر من 150 صيغة",
                 "featureSecurityTitle": "حماية وتشفير البيانات المتقدم",
                 "featureSecurityDesc": "يتم تشفير بيناتك حماية خصوصيتك 100%",
-                "ctaButton": "تحويل صور إلى PDF",
+                "ctaButtonPdf": "تحويل صور إلى PDF",
                 "ctaButtonWebp": "تحويل الصور الى webp",
                 "ctaButtonImgtag": "تحويل الصور الى روابط",
+                "ctaButtonQr": "صانع QR Code",
+                "ctaButtonSize": "تغيير حجم الصور",
+                "ctaButtonZoom": "تكبير الصور (AI)",
+                // (تم حذف) الأزرار
                 "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
                 "footerAbout": "عن Skydata"
             },
@@ -269,9 +270,13 @@
                 "featureFormats": "Support for over 150 formats",
                 "featureSecurityTitle": "Advanced Data Protection and Encryption",
                 "featureSecurityDesc": "Your data is encrypted, ensuring 100% privacy protection",
-                "ctaButton": "Convert Images to PDF",
+                "ctaButtonPdf": "Convert Images to PDF",
                 "ctaButtonWebp": "Convert Images to WEBP",
                 "ctaButtonImgtag": "Convert Images to Links",
+                "ctaButtonQr": "QR Code Generator",
+                "ctaButtonSize": "Image Resizer",
+                "ctaButtonZoom": "Image Upscaler (AI)",
+                // (تم حذف) الأزرار
                 "footerPolicy": "Terms of Use and Privacy Policy",
                 "footerAbout": "About Skydata"
             }

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">تحميل Skydata APK - Skydata</title>
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+        });
+      });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif; direction: rtl; 
+            background-color: #121212; color: #e0e0e0;
+            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; flex-grow: 1; }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { height: 40px; margin-left: 10px; }
+        .lang-switcher { display: flex; }
+        .lang-switcher a {
+            text-decoration: none; color: #007bff; margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+        }
+        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+
+        /* الفوتر (فارغ كما في صفحة pdf) */
+        footer {
+            background-color: #1e1e1e;
+            padding: 20px;
+            text-align: center;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+        
+        main { text-align: center; }
+        
+        /* (جديد) صندوق محتوى التحديث */
+        .content-box {
+            background-color: #1e1e1e; padding: 30px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+        .content-box h1 { color: #ffffff; margin-bottom: 20px; }
+        
+        /* (جديد) أيقونة التطبيق */
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 20px; /* حواف دائرية للأيقونة */
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        .version-text {
+            font-size: 1.1em;
+            color: #aaa;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+        
+        .download-text {
+            font-size: 1.2em;
+            color: #e0e0e0;
+            margin-bottom: 25px;
+        }
+
+        /* (جديد) صندوق التنويه/التحذير */
+        .warning-box {
+            background-color: #2a2a2a;
+            border: 1px solid #c0392b; /* إطار أحمر */
+            color: #e0e0e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 30px 0;
+            text-align: right;
+            line-height: 1.6;
+        }
+        .warning-box h3 {
+            color: #e74c3c; /* لون أحمر للنص */
+            margin: 0 0 10px 0;
+        }
+        
+        /* (جديد) قائمة الميزات */
+        .features-list {
+            list-style: none;
+            padding-right: 0;
+            text-align: right;
+            margin: 30px 0;
+        }
+        .features-list h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .features-list li {
+            position: relative;
+            padding-right: 35px; /* مسافة لعلامة الصح */
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .features-list li::before {
+            content: '✓'; /* علامة صح */
+            color: #28a745; /* لون أخضر */
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* أزرار CTA */
+        .cta-button {
+            display: inline-block; background-color: #007bff; color: #ffffff;
+            padding: 12px 25px; font-size: 1.2em; font-weight: bold;
+            text-decoration: none; border-radius: 5px; border: none;
+            cursor: pointer; transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .cta-button:hover { background-color: #0056b3; }
+
+        .back-button { 
+            background-color: #555; margin-top: 50px; 
+            font-size: 1.1em; padding: 10px 20px;
+        }
+        .back-button:hover { background-color: #444; }
+
+        /* ============================================
+         ==  CSS لتحسين الواجهة (Responsive)  ==
+         ============================================
+        */
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            header { padding: 10px 15px; }
+            .content-box { padding: 20px; }
+            .content-box h1 { font-size: 1.8em; }
+            .features-list li { text-align: right; }
+        }
+
+        @media (max-width: 380px) {
+            .logo-container img { height: 30px; }
+        }
+
+    </style>
+    </head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        </div>
+        <div class="lang-switcher">
+            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <main>
+            <div class="content-box">
+                
+                <h1 data-lang-key="mainTitle">تحميل تطبيق Skydata (APK)</h1>
+                
+                <img src="https://i.ibb.co/35pQsgp3/IMG-20251105-133326.jpg" alt="أيقونة تطبيق Skydata" class="app-icon">
+                
+                <p class="version-text" data-lang-key="version">الإصدار: 1.0.0</p>
+                
+                <p class="download-text" data-lang-key="downloadText">
+                    يمكنك تحميل اخر اصدار من التطبيق من هنا. الحجم 50 كيلوبايت.
+                </p>
+                
+                <a href="Skydata.apk" class="cta-button" data-lang-key="downloadButton" download>تحميل الآن (APK)</a>
+
+                <div class="warning-box">
+                    <h3 data-lang-key="warningTitle">تنويه هام!</h3>
+                    <p data-lang-key="warningText">
+                        هذا هو الاصدار الرسمي الوحيد. التحميل من مصادر غير معروفة ليس تحت مسؤوليتنا اذا تعرض جهازكم لفيروسات او اختراق. لذا، هذه هيا النسخة الرسمية من الموقع نفسه.
+                    </p>
+                </div>
+
+                <div class="features-list">
+                    <h2 data-lang-key="featuresTitle">ميزات الإصدار الجديد</h2>
+                    <ul>
+                        <li data-lang-key="feature1">أكثر سلاسة</li>
+                        <li data-lang-key="feature2">أكثر أمان</li>
+                        <li data-lang-key="feature3">تعطيل جميع أذونات التتبع و ملفات تعريف الارتباط</li>
+                        <li data-lang-key="feature4">اختصار في شاشة</li>
+                        <li data-lang-key="feature5">نسخة الـ PRO قريباً</li>
+                    </ul>
+                </div>
+                
+            </div>
+
+            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
+        </main>
+        
+    </div> <footer style="margin-top: auto;">
+        </footer>
+
+    <script>
+        // --- 1. قاموس الترجمة ---
+        const translations = {
+            "ar": {
+                "pageTitle": "تحميل Skydata APK - Skydata",
+                "mainTitle": "تحميل تطبيق Skydata (APK)",
+                "version": "الإصدار: 1.0.0",
+                "downloadText": "يمكنك تحميل اخر اصدار من التطبيق من هنا. الحجم 50 كيلوبايت.",
+                "downloadButton": "تحميل الآن (APK)",
+                "warningTitle": "تنويه هام!",
+                "warningText": "هذا هو الاصدار الرسمي الوحيد. التحميل من مصادر غير معروفة ليس تحت مسؤوليتنا اذا تعرض جهازكم لفيروسات او اختراق. لذا، هذه هيا النسخة الرسمية من الموقع نفسه.",
+                "featuresTitle": "ميزات الإصدار الجديد",
+                "feature1": "أكثر سلاسة",
+                "feature2": "أكثر أمان",
+                "feature3": "تعطيل جميع أذونات التتبع و ملفات تعريف الارتباط",
+                "feature4": "اختصار في شاشة",
+                "feature5": "نسخة الـ PRO قريباً",
+                "backToHome": "العودة للرئيسية"
+            },
+            "en": {
+                "pageTitle": "Download Skydata APK - Skydata",
+                "mainTitle": "Download Skydata App (APK)",
+                "version": "Version: 1.0.0",
+                "downloadText": "You can download the latest version of the app from here. Size: 50 KB.",
+                "downloadButton": "Download Now (APK)",
+                "warningTitle": "Important Notice!",
+                "warningText": "This is the only official version. Downloading from unknown sources is not our responsibility if your device gets viruses or is compromised. This is the official version from the site itself.",
+                "featuresTitle": "New Version Features",
+                "feature1": "Smoother performance",
+                "feature2": "More secure",
+                "feature3": "All tracking permissions and cookies disabled",
+                "feature4": "Home screen shortcut",
+                "feature5": "PRO version coming soon",
+                "backToHome": "Back to Home"
+            }
+        };
+
+        // --- 2. متغير اللغة الحالي ---
+        let currentLang = 'ar'; 
+
+        // --- 3. دالة تبديل اللغة ---
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    element.innerText = translations[lang][key];
+                }
+            });
+        }
+        
+        // تشغيل الترجمة عند تحميل الصفحة
+        setLanguage(currentLang);
+
+    </script>
+    </body>
+</html>

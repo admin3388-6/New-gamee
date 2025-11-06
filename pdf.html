@@ -38,25 +38,17 @@
         .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
 
         footer {
-            background-color: #1e1e1e; color: #fff; padding: 30px 20px;
+            background-color: #1e1e1e; padding: 20px;
             text-align: center; margin-top: auto;
+            border-top: 1px solid #333;
         }
-        .footer-links a {
-            color: #ffffff; background-color: #007bff; text-decoration: none;
-            margin: 0 10px 15px 10px; display: inline-block; padding: 10px 20px;
-            border-radius: 5px; font-size: 1.1em; font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        .footer-links a:hover { background-color: #0056b3; }
-        .social-icons { margin-top: 20px; }
-        .social-icons a { margin: 0 10px; }
-        .social-icons img { height: 30px; }
         
         main { text-align: center; }
         .pdf-tool-box {
             background-color: #1e1e1e; padding: 30px;
             border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             margin-top: 30px;
+            animation: fadeIn 0.5s ease;
         }
         .pdf-tool-box h1 { color: #ffffff; margin-bottom: 20px; }
 
@@ -64,75 +56,44 @@
         .file-upload-label {
             display: inline-block; background-color: #007bff; color: #ffffff;
             padding: 12px 25px; font-size: 1.1em; font-weight: bold;
-            border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;
+            border-radius: 5px; cursor: pointer;
             margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
-        .file-upload-label:hover { background-color: #0056b3; }
+        .file-upload-label:hover { 
+            background-color: #0056b3;
+            transform: scale(1.03);
+        }
         
-        /* --- حاوية المعاينة مع الأزرار --- */
-        .preview-controls-wrapper {
-            position: relative;
-            width: 100%;
+        #preview-area {
+            margin-top: 20px; min-height: 100px;
+            display: none; border: 1px solid #333;
+            background-color: #121212; padding: 10px; border-radius: 5px;
+        }
+        .preview-single-image {
+            height: 120px; width: auto; max-width: 100%;
+            border-radius: 5px; border: 2px solid #444;
+        }
+        #preview-multi-text {
+            font-size: 1.1em; color: #e0e0e0; margin-bottom: 15px;
+        }
+
+        #progress-area { padding: 20px; display: block; }
+        #progress-spinner {
             display: none;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        /* --- حاوية المعاينة (النافذة) --- */
-        .preview-container-wrapper {
-            width: 100%;
-            overflow: hidden; /* إخفاء كل ما يخرج عن الإطار */
-            border: 1px solid #333;
-            background-color: #121212;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        /* --- الشريط الداخلي (الذي يتحرك) --- */
-        .preview-container {
-            display: flex;
-            overflow-x: visible; /* لن يظهر شريط تمرير أبداً */
-            white-space: nowrap;
-            padding: 10px;
-            transition: transform 0.3s ease-out; /* حركة ناعمة */
-        }
-        .preview-image {
-            height: 100px; width: auto;
-            margin-left: 10px; border-radius: 5px;
-            border: 2px solid #444; flex-shrink: 0;
-        }
-
-        /* --- أزرار التحكم بالمعاينة --- */
-        .scroll-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-            background-color: rgba(0, 123, 255, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5em;
-            cursor: pointer;
-            display: none; /* مخفي افتراضياً */
-        }
-        .scroll-btn:hover {
-            background-color: rgba(0, 123, 255, 1);
-        }
-        .scroll-btn.left { left: 5px; }
-        .scroll-btn.right { right: 5px; }
-
-        #progress-area { padding: 20px; display: none; }
         .progress-circle {
-            width: 80px; height: 80px; border: 10px solid #333;
+            width: 60px; height: 60px; border: 8px solid #333;
             border-top-color: #007bff; border-radius: 50%;
             margin: 0 auto; animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         #progress-percent {
-            font-size: 1.5em; font-weight: bold;
-            color: #ffffff; margin-top: 15px; display: block;
+            font-size: 1.3em; font-weight: bold;
+            color: #ffffff; margin-top: 10px; display: block;
         }
-        #status-message { font-size: 1.1em; color: #e0e0e0; }
+        #progress-status { font-size: 1.1em; color: #e0e0e0; }
 
         #button-area { margin-top: 20px; min-height: 50px; }
         
@@ -142,19 +103,166 @@
             margin: 0 10px 10px 10px; direction: ltr; width: 70%;
         }
 
+        #reset-area {
+            margin-top: 20px; min-height: 50px; display: none;
+        }
+
         .cta-button {
             display: inline-block; background-color: #28a745; color: #ffffff;
             padding: 12px 25px; font-size: 1.1em; font-weight: bold;
             text-decoration: none; border-radius: 5px; border: none;
-            cursor: pointer; transition: background-color 0.3s ease;
+            cursor: pointer; 
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.03);
         }
         .cta-button.blue { background-color: #007bff; }
-        .cta-button:hover { background-color: #218838; }
+        .cta-button.orange { background-color: #fd7e14; }
+        .cta-button.red { background-color: #dc3545; }
+        
         .cta-button.blue:hover { background-color: #0056b3; }
+        .cta-button.green:hover { background-color: #218838; }
+        .cta-button.orange:hover { background-color: #e66900; }
+        .cta-button.red:hover { background-color: #c82333; }
+
         .cta-button:disabled { background-color: #555; cursor: not-allowed; }
 
-        .back-button { background-color: #555; margin-top: 50px; }
+        .back-button { 
+            background-color: #555; margin-top: 50px; 
+            font-size: 1.1em; padding: 10px 20px;
+        }
         .back-button:hover { background-color: #444; }
+
+        /* --- CSS الخاص بالنافذة المنبثقة (Modal) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; justify-content: center;
+            align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background-color: #1e1e1e; color: #e0e0e0;
+            border-radius: 8px; width: 90%; max-width: 600px;
+            max-height: 80vh; display: flex; flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            padding: 15px 20px; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-header h2 { margin: 0; color: #fff; }
+        .modal-close-btn {
+            font-size: 1.5em; font-weight: bold; color: #aaa;
+            cursor: pointer; background: none; border: none;
+        }
+        .modal-close-btn:hover { color: #fff; }
+        
+        .modal-body { padding: 20px; overflow-y: auto; }
+        .modal-image-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background-color: #121212; border: 1px solid #333;
+            border-radius: 5px; padding: 10px; margin-bottom: 10px;
+        }
+        .modal-image-item img {
+            height: 60px; width: auto; border-radius: 4px; margin-left: 10px;
+        }
+        .modal-image-item span {
+            flex-grow: 1; font-size: 0.9em;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px; border-top: 1px solid #333; text-align: left;
+        }
+        
+        /* --- كود CSS لزر سلة المهملات --- */
+        .delete-button {
+          position: relative;
+          padding: 0.5em;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          font-size: 1em;
+          transition: transform 0.2s ease;
+        }
+        .trash-svg {
+          width: 4em;
+          height: 4em;
+          transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+          overflow: visible;
+        }
+        #lid-group {
+          transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .delete-button:hover #lid-group {
+          transform: rotate(-28deg) translateY(2px);
+        }
+        .delete-button:active #lid-group {
+          transform: rotate(-12deg) scale(0.98);
+        }
+        .delete-button:hover .trash-svg {
+          transform: scale(1.08) rotate(3deg);
+        }
+        .delete-button:active .trash-svg {
+          transform: scale(0.96) rotate(-1deg);
+        }
+        .modal-image-item .delete-button {
+            font-size: 0.7em;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        
+        /* (جديد) تنسيق النص التعليمي */
+        .instruction-box {
+            background-color: #1e1e1e;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: right; /* ضمان النص لليمين */
+            animation: fadeIn 0.5s ease;
+        }
+        .instruction-box h2 {
+            color: #fff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .instruction-box h3 {
+            color: #007bff;
+            margin-top: 25px;
+        }
+        .instruction-box p, .instruction-box ul {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #e0e0e0;
+        }
+        .instruction-box ul {
+            padding-right: 20px;
+        }
+        .instruction-box .privacy-note {
+            font-weight: bold;
+            color: #28a745; /* أخضر */
+            margin-top: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            header { padding: 10px 15px; }
+            .pdf-tool-box { padding: 20px; }
+            .modal-content { width: 95%; max-height: 90vh; }
+            #filename-input { width: 80%; }
+            .cta-button { padding: 10px 20px; font-size: 1em; }
+            .back-button { margin-top: 30px; }
+            .instruction-box { padding: 20px; }
+        }
+
+        @media (max-width: 380px) {
+            .logo-container img { height: 30px; }
+        }
 
     </style>
     </head>
@@ -177,53 +285,74 @@
             <div class="pdf-tool-box">
                 <h1 data-lang-key="toolTitle">أداة تحويل الصور إلى PDF</h1>
                 
-                <label for="image-input" class="file-upload-label" data-lang-key="selectImages">اختر الصور</label>
+                <label for="image-input" class="file-upload-label" id="upload-label" data-lang-key="selectImages">اختر الصور</label>
                 <input type="file" id="image-input" multiple accept="image/*">
                 
-                <div class="preview-controls-wrapper" id="preview-wrapper">
-                    <div class="preview-container-wrapper">
-                        <div class="preview-container" id="preview-list">
-                            </div>
+                <div id="preview-area">
                     </div>
-                    <button class="scroll-btn left" id="scroll-left">&lt;</button>
-                    <button class="scroll-btn right" id="scroll-right">&gt;</button>
-                </div>
-
 
                 <div id="progress-area">
-                    <div class="progress-circle"></div>
-                    <span id="progress-percent">0%</span>
-                    <p id="status-message" data-lang-key="statusConverting">جاري التحويل...</p>
+                    <div id="progress-spinner" style="display: none;">
+                        <div class="progress-circle"></div>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <p id="progress-status" data-lang-key="statusReady">...</p>
                 </div>
 
                 <div id="button-area">
-                    <p id="initial-message" data-lang-key="statusReady">اختر صورة واحدة أو أكثر للبدء...</p>
-                </div>
+                    </div>
+
+                <div id="reset-area">
+                    </div>
                 
             </div>
+            
+            <div class="instruction-box">
+                <h2 data-lang-key="instructionTitle">دليل استخدام أداة PDF</h2>
+                
+                <p data-lang-key="whatIsPdf">
+                    أداة تحويل الصور إلى PDF تتيح لك دمج عدة صور (مثل JPG, PNG, WEBP) في ملف PDF واحد بسهولة وسرعة، جاهز للمشاركة أو الأرشفة.
+                </p>
+                
+                <h3 data-lang-key="howToUse">كيفية الاستخدام</h3>
+                <ul>
+                    <li data-lang-key="step1">1. اختر صورة واحدة أو أكثر.</li>
+                    <li data-lang-key="step2">2. (اختياري) إذا اخترت أكثر من صورة، اضغط "معاينة" لحذف أي صور لا تريدها.</li>
+                    <li data-lang-key="step3">3. اضغط على زر "ابدأ التحويل".</li>
+                    <li data-lang-key="step4">4. اكتب اسم الملف الذي تريده واضغط "تحميل".</li>
+                </ul>
+                
+                <p class="privacy-note" data-lang-key="privacyNote">
+                    + حماية خصوصيتك 100%: كل التحويل يتم على جهازك. صورك لا تترك المتصفح أبداً ولا يتم رفعها لأي خادم.
+                </p>
+            </div>
+
 
             <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
         </main>
         
     </div> <footer style="margin-top: auto;">
-        <div class="footer-links">
-            <a href="Safety.html" data-lang-key="footerPolicy">شروط الاستخدام وسياسة الخصوصية</a>
-            <a href="aboutus.html" data-lang-key="footerAbout">عن Skydata</a>
+        </footer>
+
+    <div class="modal-overlay" id="preview-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-lang-key="modalTitle">معاينة الصور</h2>
+                <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                </div>
+            <div class="modal-footer">
+                <button class="cta-button red" id="modal-delete-all" data-lang-key="modalDeleteAll">حذف الكل</button>
+            </div>
         </div>
-        <div class="social-icons">
-            <a href="https://www.youtube.com/@Skydataa" target="_blank" rel="noopener noreferrer">
-                <img src="https://i.ibb.co/KjqPWR0S/qm6aoefmjlhw2bhdgmss.webp" alt="يوتيوب">
-            </a>
-            <a href="https://discord.gg/6m3c2up4p3" target="_blank" rel="noopener noreferrer">
-                <img src="https://i.ibb.co/sdxTC105/qqoxsxvwoleec1dfbhew.webp" alt="ديسكورد">
-            </a>
-        </div>
-    </footer>
+    </div>
+
 
     <script>
         window.jsPDF = window.jspdf.jsPDF;
 
-        // --- 1. قاموس الترجمة ---
+        // --- 1. قاموس الترجمة (محدث) ---
         const translations = {
             "ar": {
                 "pageTitle": "تحويل صور إلى PDF - Skydata",
@@ -238,8 +367,20 @@
                 "statusError": "الرجاء اختيار ملفات صور أولاً.",
                 "statusDone": "تم التحويل بنجاح! جاهز للتحميل.",
                 "backToHome": "العودة للرئيسية",
-                "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
-                "footerAbout": "عن Skydata"
+                "previewButton": "معاينة ({count})",
+                "modalTitle": "معاينة الصور",
+                "modalDeleteAll": "حذف الكل",
+                "modalNoImages": "لا توجد صور لعرضها. سيتم إغلاق النافذة.",
+                "resetButton": "تحويل ملفات جديدة",
+                // (جديد)
+                "instructionTitle": "دليل استخدام أداة PDF",
+                "whatIsPdf": "أداة تحويل الصور إلى PDF تتيح لك دمج عدة صور (مثل JPG, PNG, WEBP) في ملف PDF واحد بسهولة وسرعة، جاهز للمشاركة أو الأرشفة.",
+                "howToUse": "كيفية الاستخدام",
+                "step1": "1. اختر صورة واحدة أو أكثر.",
+                "step2": "2. (اختياري) إذا اخترت أكثر من صورة، اضغط \"معاينة\" لحذف أي صور لا تريدها.",
+                "step3": "3. اضغط على زر \"ابدأ التحويل\".",
+                "step4": "4. اكتب اسم الملف الذي تريده واضغط \"تحميل\".",
+                "privacyNote": "+ حماية خصوصيتك 100%: كل التحويل يتم على جهازك. صورك لا تترك المتصفح أبداً ولا يتم رفعها لأي خادم."
             },
             "en": {
                 "pageTitle": "Image to PDF Converter - Skydata",
@@ -254,15 +395,27 @@
                 "statusError": "Please select image files first.",
                 "statusDone": "Conversion successful! Ready to download.",
                 "backToHome": "Back to Home",
-                "footerPolicy": "Terms of Use and Privacy Policy",
-                "footerAbout": "About Skydata"
+                "previewButton": "Preview ({count})",
+                "modalTitle": "Image Preview",
+                "modalDeleteAll": "Delete All",
+                "modalNoImages": "No images to display. Closing modal.",
+                "resetButton": "Convert New Files",
+                // (جديد)
+                "instructionTitle": "PDF Tool Guide",
+                "whatIsPdf": "The Image to PDF tool allows you to easily and quickly merge multiple images (like JPG, PNG, WEBP) into a single PDF file, ready for sharing or archiving.",
+                "howToUse": "How to Use",
+                "step1": "1. Select one or more images.",
+                "step2": "2. (Optional) If you select multiple images, press \"Preview\" to delete any unwanted images.",
+                "step3": "3. Press the \"Start Conversion\" button.",
+                "step4": "4. Type your desired file name and press \"Download\".",
+                "privacyNote": "+ 100% Privacy Protection: All conversion happens on your device. Your images never leave the browser and are not uploaded to any server."
             }
         };
 
         // --- 2. متغير اللغة الحالي ---
         let currentLang = 'ar'; 
 
-        // --- 3. دالة تبديل اللغة ---
+        // --- 3. دالة تبديل اللغة (كما هي) ---
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
@@ -273,148 +426,41 @@
             document.querySelectorAll('[data-lang-key]').forEach(element => {
                 const key = element.getAttribute('data-lang-key');
                 if (translations[lang][key]) {
-                    element.innerHTML = translations[lang][key];
+                    element.innerText = translations[lang][key].replace(/{count}/g, selectedFiles.length);
                 }
             });
-            updateStatusMessage(); 
+            renderPreviewArea();
         }
         
-        // --- 4. منطق تحويل PDF (محدث بالكامل) ---
+        // --- 4. منطق تحويل PDF (معدل) ---
 
+        // عناصر الصفحة
         const imageInput = document.getElementById('image-input');
-        const previewWrapper = document.getElementById('preview-wrapper');
-        const previewList = document.getElementById('preview-list');
+        const previewArea = document.getElementById('preview-area');
         const progressArea = document.getElementById('progress-area');
-        const progressPercent = document.getElementById('progress-percent');
-        const statusMsg = document.getElementById('status-message');
+        const progressSpinner = document.getElementById('progress-spinner'); // (جديد)
+        const progressPercent = document.getElementById('progress-percent'); // (جديد)
+        const progressStatus = document.getElementById('progress-status');
         const buttonArea = document.getElementById('button-area');
-        const initialMessage = document.getElementById('initial-message');
+        const resetArea = document.getElementById('reset-area');
+        const uploadLabel = document.getElementById('upload-label');
         
-        const scrollLeftBtn = document.getElementById('scroll-left');
-        const scrollRightBtn = document.getElementById('scroll-right');
-        const previewWindow = document.querySelector('.preview-container-wrapper');
+        // عناصر النافذة المنبثقة
+        const modal = document.getElementById('preview-modal');
+        const modalBody = document.getElementById('modal-body');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalDeleteAllBtn = document.getElementById('modal-delete-all');
 
-        let selectedFiles = [];
-        let objectUrls = [];
+        let selectedFiles = []; 
+        let objectUrls = []; 
         let generatedPdfBlob = null;
-        let currentScrollPosition = 0;
-        const scrollAmount = 300;
 
-        function updateStatusMessage(key = 'statusReady', values = {}) {
+        function updateStatusMessage(element, key, values = {}) {
             let text = translations[currentLang][key] || '';
             if (values.count) text = text.replace('{count}', values.count);
             if (values.percent) text = text.replace('{percent}', values.percent);
-            
-            if (progressArea.style.display === 'none') {
-                initialMessage.innerText = text;
-            } else {
-                statusMsg.innerText = text;
-            }
+            element.innerText = text;
         }
-
-        // --- (مُعدل) دالة لتحديث أزرار التمرير ---
-        function updateScrollButtons() {
-            const listWidth = previewList.scrollWidth; // العرض الكلي للصور
-            const windowWidth = previewWindow.clientWidth; // العرض المرئي
-            
-            // انتظر قليلاً ليتمكن المتصفح من حساب العرض الحقيقي
-            // هذا يضمن أن 'listWidth' له قيمة صحيحة
-            setTimeout(() => {
-                const listWidth = previewList.scrollWidth;
-                const windowWidth = previewWindow.clientWidth;
-
-                if (listWidth <= windowWidth) {
-                    scrollLeftBtn.style.display = 'none';
-                    scrollRightBtn.style.display = 'none';
-                    return;
-                }
-
-                // إظهار/إخفاء زر اليسار (للعودة للبداية)
-                scrollLeftBtn.style.display = (currentScrollPosition < 0) ? 'block' : 'none';
-
-                // إظهار/إخفاء زر اليمين (للمزيد)
-                const maxScroll = windowWidth - listWidth;
-                scrollRightBtn.style.display = (currentScrollPosition > maxScroll) ? 'block' : 'none';
-            }, 100); // تأخير بسيط
-        }
-
-        // --- أحداث النقر على أزرار التمرير ---
-        scrollRightBtn.addEventListener('click', () => {
-            const listWidth = previewList.scrollWidth;
-            const windowWidth = previewWindow.clientWidth;
-            const maxScroll = windowWidth - listWidth;
-
-            currentScrollPosition -= scrollAmount;
-            if (currentScrollPosition < maxScroll) {
-                currentScrollPosition = maxScroll;
-            }
-            previewList.style.transform = `translateX(${currentScrollPosition}px)`;
-            updateScrollButtons();
-        });
-
-        scrollLeftBtn.addEventListener('click', () => {
-            currentScrollPosition += scrollAmount;
-            if (currentScrollPosition > 0) {
-                currentScrollPosition = 0;
-            }
-            previewList.style.transform = `translateX(${currentScrollPosition}px)`;
-            updateScrollButtons();
-        });
-
-
-        // --- (هذا هو التعديل الأهم) الخطوة أ: عند اختيار الصور ---
-        imageInput.addEventListener('change', () => {
-            selectedFiles = Array.from(imageInput.files);
-            
-            previewList.innerHTML = '';
-            objectUrls.forEach(url => URL.revokeObjectURL(url));
-            objectUrls = [];
-            generatedPdfBlob = null;
-            
-            currentScrollPosition = 0;
-            previewList.style.transform = 'translateX(0px)';
-
-            if (selectedFiles.length === 0) {
-                previewWrapper.style.display = 'none';
-                buttonArea.innerHTML = '';
-                initialMessage.style.display = 'block';
-                updateStatusMessage('statusReady');
-                return;
-            }
-
-            previewWrapper.style.display = 'block';
-            initialMessage.style.display = 'none';
-
-            // (جديد) متغير لعد الصور التي تم تحميلها
-            let imagesLoaded = 0;
-
-            selectedFiles.forEach(file => {
-                const img = document.createElement('img');
-                img.classList.add('preview-image');
-                
-                // (جديد) إضافة مستمع 'onload'
-                // هذا هو مفتاح الحل
-                img.onload = () => {
-                    imagesLoaded++;
-                    // (جديد) فقط بعد تحميل كل الصور، قم بتحديث الأزرار
-                    if (imagesLoaded === selectedFiles.length) {
-                        updateScrollButtons();
-                    }
-                };
-
-                const url = URL.createObjectURL(file);
-                objectUrls.push(url);
-                img.src = url;
-                previewList.appendChild(img);
-            });
-            
-            // (تم حذف) إزالة 'setTimeout' الذي كان هنا
-            
-            buttonArea.innerHTML = `<button id="start-btn" class="cta-button blue">${translations[currentLang].startButton}</button>`;
-            updateStatusMessage('statusSelected', { count: selectedFiles.length });
-            
-            document.getElementById('start-btn').addEventListener('click', startConversion);
-        });
 
         function readImage(file) {
             return new Promise((resolve, reject) => {
@@ -424,22 +470,156 @@
                 reader.readAsDataURL(file);
             });
         }
+        
+        function clearObjectUrls() {
+            objectUrls.forEach(url => URL.revokeObjectURL(url));
+            objectUrls = [];
+        }
 
-        // --- الخطوة ب: عند الضغط على "ابدأ التحويل" ---
-        async function startConversion() {
+        // --- (مُصلح) دالة عرض المعاينة ---
+        function renderPreviewArea() {
+            previewArea.innerHTML = '';
+            buttonArea.innerHTML = '';
+
             if (selectedFiles.length === 0) {
-                updateStatusMessage('statusError');
+                previewArea.style.display = 'none'; // إخفاء المعاينة
+                progressArea.style.display = 'block'; // إظهار رسالة الحالة
+                progressSpinner.style.display = 'none';
+                updateStatusMessage(progressStatus, 'statusReady');
                 return;
             }
 
-            previewWrapper.style.display = 'none';
-            scrollLeftBtn.style.display = 'none';
-            scrollRightBtn.style.display = 'none';
-            buttonArea.innerHTML = '';
-            progressArea.style.display = 'block';
-            progressPercent.innerText = '0%';
-            updateStatusMessage('statusConverting', { percent: 0 });
+            progressArea.style.display = 'none'; // إخفاء رسالة "اختر صور"
+            previewArea.style.display = 'block'; // إظهار حاوية المعاينة
 
+            if (selectedFiles.length === 1) {
+                const file = selectedFiles[0];
+                const url = URL.createObjectURL(file);
+                objectUrls.push(url);
+                previewArea.innerHTML = `<img src="${url}" class="preview-single-image" alt="${file.name}">`;
+            
+            } else {
+                const text = document.createElement('p');
+                text.id = 'preview-multi-text';
+                updateStatusMessage(text, 'statusSelected', { count: selectedFiles.length });
+                
+                const previewButton = document.createElement('button');
+                previewButton.className = 'cta-button orange';
+                previewButton.id = 'open-modal-btn';
+                updateStatusMessage(previewButton, 'previewButton', { count: selectedFiles.length });
+                
+                previewButton.onclick = openModal;
+                
+                previewArea.appendChild(text);
+                previewArea.appendChild(previewButton);
+            }
+            
+            const startButton = document.createElement('button');
+            startButton.className = 'cta-button blue';
+            startButton.id = 'start-btn';
+            updateStatusMessage(startButton, 'startButton');
+            startButton.onclick = startConversion;
+            buttonArea.appendChild(startButton);
+        }
+
+        function openModal() {
+            renderModalBody(); 
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        function renderModalBody() {
+            modalBody.innerHTML = ''; 
+
+            if (selectedFiles.length === 0) {
+                updateStatusMessage(modalBody, 'modalNoImages');
+                setTimeout(closeModal, 1500); 
+                return;
+            }
+
+            selectedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'modal-image-item';
+                
+                const url = URL.createObjectURL(file);
+                objectUrls.push(url);
+                
+                const deleteButtonHTML = `
+                <button aria-label="Delete item" class="delete-button" data-index="${index}">
+                  <svg
+                    class="trash-svg"
+                    viewBox="0 -10 64 74"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g id="trash-can">
+                      <rect x="16" y="24" width="32" height="30" rx="3" ry="3" fill="#e74c3c"></rect>
+                      <g transform-origin="12 18" id="lid-group">
+                        <rect x="12" y="12" width="40" height="6" rx="2" ry="2" fill="#c0392b"></rect>
+                        <rect x="26" y="8" width="12" height="4" rx="2" ry="2" fill="#c0392b"></rect>
+                      </g>
+                    </g>
+                  </svg>
+                </button>
+                `;
+
+                item.innerHTML = `
+                    <img src="${url}" alt="${file.name}">
+                    <span>${file.name}</span>
+                    ${deleteButtonHTML}
+                `;
+                modalBody.appendChild(item);
+            });
+        }
+        
+        // --- (مُصلح) دالة إعادة الضبط ---
+        function resetTool() {
+            selectedFiles = [];
+            clearObjectUrls();
+            generatedPdfBlob = null;
+            imageInput.value = null; 
+            
+            previewArea.innerHTML = '';
+            previewArea.style.display = 'none';
+            progressArea.style.display = 'block'; // إظهار رسالة الحالة
+            progressSpinner.style.display = 'none';
+            resetArea.innerHTML = '';
+            resetArea.style.display = 'none';
+            buttonArea.innerHTML = '';
+            
+            uploadLabel.style.display = 'inline-block';
+            updateStatusMessage(progressStatus, 'statusReady');
+        }
+
+        // --- (مُصلح) مستمع اختيار الصور ---
+        imageInput.addEventListener('change', (e) => {
+            clearObjectUrls();
+            generatedPdfBlob = null;
+            resetArea.style.display = 'none';
+            resetArea.innerHTML = '';
+
+            let files = Array.from(e.target.files);
+            selectedFiles = files; // لا يوجد حد أقصى في PDF
+            
+            renderPreviewArea(); 
+        });
+
+        // --- (مُصلح) دالة بدء التحويل ---
+        async function startConversion() {
+            if (selectedFiles.length === 0) {
+                updateStatusMessage(progressStatus, 'statusError');
+                return;
+            }
+
+            previewArea.style.display = 'none';
+            buttonArea.innerHTML = '';
+            uploadLabel.style.display = 'none'; 
+            progressArea.style.display = 'block';
+            progressSpinner.style.display = 'block'; // إظهار الدائرة
+            progressPercent.innerText = '0%';
+            
             try {
                 const doc = new jsPDF('p', 'mm', 'a4');
                 const totalFiles = selectedFiles.length;
@@ -449,10 +629,9 @@
                     const percent = Math.round(((i + 1) / totalFiles) * 100);
                     
                     progressPercent.innerText = `${percent}%`;
-                    updateStatusMessage('statusConverting', { percent: percent });
+                    updateStatusMessage(progressStatus, 'statusConverting', { percent: percent });
 
                     const imageData = await readImage(file);
-                    
                     if (i > 0) doc.addPage();
                     
                     const imgProps = doc.getImageProperties(imageData);
@@ -463,20 +642,22 @@
                     const imgHeight = imgProps.height * ratio;
                     const x = (pdfWidth - imgWidth) / 2;
                     const y = (pdfHeight - imgHeight) / 2;
-
                     doc.addImage(imageData, imgProps.fileType, x, y, imgWidth, imgHeight);
                 }
 
-                // --- الخطوة ج: عند الانتهاء ---
-                progressArea.style.display = 'none';
+                progressSpinner.style.display = 'none';
+                progressPercent.innerText = '';
                 generatedPdfBlob = doc.output('blob');
 
                 buttonArea.innerHTML = `
                     <label for="filename-input" style="display:block; margin-bottom:10px;">${translations[currentLang].filenameLabel}</label>
                     <input type="text" id="filename-input" value="skydata_images.pdf">
-                    <button id="download-btn" class="cta-button">${translations[currentLang].downloadButton}</button>
+                    <button id="download-btn" class="cta-button green">${translations[currentLang].downloadButton}</button>
                 `;
                 
+                resetArea.style.display = 'block';
+                resetArea.innerHTML = `<button id="reset-btn" class="cta-button red">${translations[currentLang].resetButton}</button>`;
+
                 document.getElementById('download-btn').addEventListener('click', () => {
                     if (!generatedPdfBlob) return;
                     let filename = document.getElementById('filename-input').value;
@@ -490,21 +671,49 @@
                     document.body.removeChild(a);
                     URL.revokeObjectURL(downloadUrl);
                 });
+                
+                document.getElementById('reset-btn').addEventListener('click', resetTool);
 
-                initialMessage.style.display = 'block';
-                updateStatusMessage('statusDone');
+                updateStatusMessage(progressStatus, 'statusDone');
+                clearObjectUrls();
 
             } catch (error) {
                 console.error(error);
-                progressArea.style.display = 'none';
-                initialMessage.style.display = 'block';
-                updateStatusMessage('statusError');
+                progressSpinner.style.display = 'none';
+                progressPercent.innerText = '';
+                updateStatusMessage(progressStatus, 'statusError');
+                resetTool();
             }
         }
         
-        // تشغيل الترجمة عند تحميل الصفحة
-        setLanguage(currentLang);
+        modalCloseBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
 
+        modalDeleteAllBtn.addEventListener('click', () => {
+            selectedFiles = [];
+            clearObjectUrls();
+            renderModalBody();
+            renderPreviewArea();
+        });
+
+        modalBody.addEventListener('click', (e) => {
+            const deleteButton = e.target.closest('.delete-button');
+            
+            if (deleteButton) {
+                const index = parseInt(deleteButton.getAttribute('data-index'), 10);
+                selectedFiles.splice(index, 1);
+                clearObjectUrls();
+                renderModalBody();
+                renderPreviewArea();
+            }
+        });
+
+        // --- (مُصلح) تشغيل الصفحة ---
+        setLanguage(currentLang);
+        resetTool(); // يبدأ الصفحة بالحالة النظيفة (يُظهر "اختر...")
+        
     </script>
     </body>
 </html>

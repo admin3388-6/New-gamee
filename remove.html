@@ -1,164 +1,294 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+import streamlit as st
+from PIL import Image
+import torch
+from torchvision import transforms
+from transformers import AutoModelForImageSegmentation
+import io
+import os
+import requests
+from io import BytesIO
+
+# --- 1. إعدادات الصفحة ---
+st.set_page_config(
+    page_title="SkyData - Background Removal",
+    layout="wide"
+)
+
+# --- كود التصميم (كما هو) ---
+CUSTOM_CSS = """
+<style>
+    /* ... (نفس كود CSS الذي أصلحناه سابقاً) ... */
+    /* --- 1. الخلفية الرئيسية والخطوط --- */
+    body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+        background-color: #121212 !important; color: #e0e0e0 !important;
+    }
+    [data-testid="stHeader"] {
+        background-color: #1e1e1e !important; border-bottom: 1px solid #333;
+    }
+    h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
+    p, label, [data-testid="stMarkdownContainer"] { color: #e0e0e0 !important; }
+
+    /* --- 2. الشريط الجانبي (Sidebar) --- */
+    [data-testid="stSidebar"][aria-expanded="true"] {
+        background-color: #1e1e1e !important; border-right: 1px solid #333 !important;
+    }
+    [data-testid="stSidebar"][aria-expanded="true"] [data-testid="stRadio"] label { 
+        background-color: #2a2a2a; padding: 10px; border-radius: 5px;
+        margin: 5px 0; transition: all 0.3s ease;
+    }
+    [data-testid="stSidebar"][aria-expanded="true"] [data-testid="stRadio"] label:hover {
+        background-color: #333; color: #007bff;
+    }
+    [data-testid="stSidebar"][aria-expanded="true"] [data-testid="stRadio"] input:checked + div {
+         color: #007bff; 
+    }
+
+    /* --- 3. زر التحميل (Download Button) --- */
+    [data-testid="stDownloadButton"] > button {
+        background-color: #007bff !important; color: #ffffff !important;
+        border: none !important; border-radius: 5px !important;
+        font-weight: bold !important; padding: 12px 20px !important;
+        transition: all 0.3s ease !important; width: 100%; 
+    }
+    [data-testid="stDownloadButton"] > button:hover {
+        background-color: #0056b3 !important; transform: scale(1.03) !important;
+    }
     
-    <title data-lang-key="pageTitle">إزالة خلفية الصور بالذكاء الاصطناعي مجاناً | Skydata</title>
-    <meta name="description" content="أداة Skydata مجانية 100% لإزالة خلفية الصور أون لاين باستخدام الذكاء الاصطناعي. احصل على صورة شفافة (PNG) بضغطة زر.">
-    <meta name="description" lang="en" content="Skydata's 100% free AI Background Remover. Instantly remove the background from any image online. Get a transparent PNG with one click.">
-    <meta name="keywords" content="إزالة خلفية, حذف خلفية, صورة شفافة, AI background remover, remove background free, transparent background, PNG, skydata, إزالة خلفية الصور, إزالة خلفية الصور مجانا, إزالة خلفية الصور بالذكاء الاصطناعي">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#2196F3">
+    /* --- 4. زر رفع الملفات (File Uploader) --- */
+    [data-testid="stFileUploader"] section {
+        background-color: #1e1e1e !important; border: 1px dashed #333 !important;
+        border-radius: 8px !important;
+    }
+    [data-testid="stFileUploader"] section > button { 
+        background-color: #007bff !important; color: #ffffff !important;
+        border: none !important; border-radius: 5px !important;
+        font-weight: bold !important; transition: all 0.3s ease !important;
+    }
+    [data-testid="stFileUploader"] section > button:hover {
+        background-color: #0056b3 !important; transform: scale(1.03) !important;
+    }
+    [data-testid="stFileUploader"] label { color: #ffffff !important; }
+    [data-testid="stFileUploader"] section [data-testid="stMarkdownContainer"] p {
+         color: #aaa !important;
+    }
 
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
-        });
-      });
-    </script>
+    /* --- 5. عناصر أخرى --- */
+    [data-testid="stImage"] figcaption { color: #aaa !important; }
+    [data-testid="stSpinner"] > div { color: #e0e0e0 !important; }
+    [data-testid="stTextInput"] input { 
+        background-color: #1e1e1e !important; color: #e0e0e0 !important;
+        border: 1px solid #333 !important; border-radius: 5px !important;
+    }
+</style>
+"""
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+# --- نهاية كود التصميم ---
+
+
+# --- 2. قاموس الترجمة (عربي / إنجليزي) ---
+localization = {
+    'en': {
+        'brand_title': "",
+        'lang_select': "Select Language",
+        'input_method': "Select Input Method",
+        'tab_upload': "Image Upload",
+        'tab_url': "URL Input",
+        'tab_file': "File Output",
+        'upload_prompt': "Upload an image",
+        'upload_prompt_file': "Upload an image for file output",
+        'url_prompt': "Paste an image URL",
+        'processed_caption': "Processed Image",
+        'download_button': "Download PNG",
+        'error_fetching': "Error fetching image from URL:",
+        'error_processing': "Error processing image:",
+        'generic_error': "An error occurred:",
+        'page_title': "SkyData - Background Removal",
+        'spinner_text': "Processing image, please wait...",
+        'limit_warning': "You have reached the limit (10 attempts). Please try again later.", # <<< جديد
+    },
+    'ar': {
+        'brand_title': "",
+        'lang_select': "اختر اللغة",
+        'input_method': "اختر طريقة الإدخال",
+        'tab_upload': "رفع صورة",
+        'tab_url': "رابط صورة",
+        'tab_file': "تصدير ملف",
+        'upload_prompt': "ارفع صورة",
+        'upload_prompt_file': "ارفع صورة لتصدير الملف",
+        'url_prompt': "الصق رابط الصورة",
+        'processed_caption': "الصورة المعالجة",
+        'download_button': "تحميل بصيغة PNG",
+        'error_fetching': "خطأ في جلب الصورة من الرابط:",
+        'error_processing': "خطأ في معالجة الصورة:",
+        'generic_error': "حدث خطأ:",
+        'page_title': "SkyData - أداة إزالة الخلفية",
+        'spinner_text': "جاري معالجة الصورة، يرجى الانتظار...",
+        'limit_warning': "لقد وصلت إلى الحد الأقصى (10 محاولات). يرجى المحاولة مرة أخرى لاحقاً.", # <<< جديد
+    }
+}
+
+# --- 3. تحميل النموذج ---
+torch.set_float32_matmul_precision(["high", "highest"][0])
+use_cuda = torch.cuda.is_available()
+device = "cuda" if use_cuda else "cpu"
+
+@st.cache_resource
+def load_model():
+    model = AutoModelForImageSegmentation.from_pretrained("ZhengPeng7/BiRefNet", trust_remote_code=True)
+    model.to(device)
+    if use_cuda:
+        model = model.half()
+    return model
+
+birefnet = load_model()
+
+transform_image = transforms.Compose([
+    transforms.Resize((1024, 1024)), # الدقة العالية
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+])
+
+# --- 4. دالة المعالجة الرئيسية ---
+@st.cache_data
+def process(image):
+    image_size = image.size
+    input_images = transform_image(image).unsqueeze(0).to(device)
+    if use_cuda:
+        input_images = input_images.half()
+
+    with torch.no_grad():
+        preds = birefnet(input_images)[-1].sigmoid().cpu()
     
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        body {
-            font-family: Arial, sans-serif; direction: rtl; 
-            background-color: #121212; color: #e0e0e0;
-            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
-        }
-        
-        /* <<< تم التعديل: زيادة عرض الحاوية الرئيسية */
-        .container { max-width: 1100px; /* زادت من 900px */ margin: 0 auto; padding: 20px; flex-grow: 1; }
-        
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .logo-container { display: flex; align-items: center; }
-        .logo-container img { height: 40px; margin-left: 10px; }
-        .lang-switcher { display: flex; }
-        .lang-switcher a {
-            text-decoration: none; color: #007bff; margin: 0 5px;
-            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
-        }
-        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
-        footer {
-            background-color: #1e1e1e; padding: 20px;
-            text-align: center; margin-top: auto;
-            border-top: 1px solid #333;
-        }
-        main { text-align: center; }
-        
-        .iframe-container {
-            background-color: #1e1e1e;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease;
-            overflow: hidden;
-        }
-        .iframe-container iframe {
-            width: 100%;
-            height: 700px; 
-            border-radius: 5px;
-            border: none;
-            background-color: #121212;
-        }
-        
-        .cta-button {
-            display: inline-block; background-color: #007bff; color: #ffffff;
-            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
-            text-decoration: none; border-radius: 5px; border: none;
-            cursor: pointer; 
-            transition: all 0.3s ease;
-        }
-        .back-button { 
-            background-color: #555; margin-top: 50px; 
-            font-size: 1.1em; padding: 10px 20px;
-        }
-        .back-button:hover { background-color: #444; }
-        
-        @media (max-width: 600px) {
-            .container { padding: 10px; }
-            header { padding: 10px 15px; }
-            .iframe-container { padding: 5px; }
-        }
-        @media (max-width: 380px) {
-            .logo-container img { height: 30px; }
-        }
-    </style>
-    </head>
-<body>
-
-    <header>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
-        </div>
-        <div class="lang-switcher">
-            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
-        </div>
-    </header>
-
-    <div class="container">
-        
-        <main>
-            <h1 style="color: #ffffff;" data-lang-key="toolTitle">أداة إزالة الخلفية (AI)</h1>
-
-            <div class="iframe-container">
-                <iframe
-                    src="https://skydata001-crystal.hf.space?theme=dark&embed=true"
-                    width="100%"
-                    height="700"
-                ></iframe>
-            </div>
-
-            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
-        </main>
-        
-    </div> 
+    pred = preds[0].squeeze()
+    pred_pil = transforms.ToPILImage()(pred)
+    mask = pred_pil.resize(image_size)
+    image.putalpha(mask)
     
-    <footer style="margin-top: auto;">
-    </footer>
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format="PNG")
+    img_bytes = img_bytes.getvalue()
+    
+    return image, img_bytes
 
-    <script>
-        const translations = {
-            "ar": {
-                "pageTitle": "إزالة خلفية الصور - Skydata",
-                "toolTitle": "أداة إزالة الخلفية (AI)",
-                "backToHome": "العودة للرئيسية"
-            },
-            "en": {
-                "pageTitle": "Background Remover - Skydata",
-                "toolTitle": "AI Background Remover Tool",
-                "backToHome": "Back to Home"
-            }
-        };
+# --- 5. واجهة التطبيق (Sidebar) ---
 
-        let currentLang = 'ar'; 
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+lang_choice = st.sidebar.radio(
+    label="Select Language / اختر اللغة", 
+    options=["English", "العربية"], 
+    horizontal=True
+)
+lang_code = 'ar' if lang_choice == 'العربية' else 'en'
+loc = localization[lang_code]
 
-            document.querySelectorAll('[data-lang-key]').forEach(element => {
-                const key = element.getAttribute('data-lang-key');
-                if (translations[lang][key]) {
-                    element.innerText = translations[lang][key];
-                }
-            });
-        }
-        setLanguage(currentLang);
-    </script>
-</body>
-</html>
+# --- 6. واجهة التطبيق الرئيسية (Main App) ---
+
+LOGO_URL = "https://i.ibb.co/v4vwvcGq/skydatafull.webp"
+col1, col2 = st.columns([1, 6]) 
+with col1:
+    st.image(LOGO_URL, width=80) 
+with col2:
+    st.title(loc['page_title'])
+
+st.sidebar.title(loc['brand_title'])
+selected_tab = st.sidebar.radio(loc['input_method'], [loc['tab_upload'], loc['tab_url'], loc['tab_file']])
+
+# --- <<< جديد: تهيئة عداد المحاولات ---
+if 'attempt_count' not in st.session_state:
+    st.session_state.attempt_count = 0
+
+# --- منطق التبويبات (معدل) ---
+
+if selected_tab == loc['tab_upload']:
+    uploaded_file = st.file_uploader(loc['upload_prompt'], type=["jpg", "jpeg", "png"])
+    if uploaded_file is not None:
+        
+        # <<< جديد: التحقق من الحد
+        if st.session_state.attempt_count >= 10:
+            st.warning(loc['limit_warning'])
+        else:
+            try:
+                image = Image.open(uploaded_file).convert("RGB")
+                with st.spinner(loc['spinner_text']):
+                    processed_image, file_bytes = process(image)
+                
+                # <<< جديد: زيادة العداد بعد النجاح
+                st.session_state.attempt_count += 1
+                
+                st.image(processed_image, caption=loc['processed_caption'])
+                st.download_button(
+                    label=loc['download_button'],
+                    data=file_bytes,
+                    file_name=f"{uploaded_file.name.rsplit('.', 1)[0]}.png",
+                    mime="image/png",
+                )
+            except Exception as e:
+                st.error(f"{loc['generic_error']} {e}")
+
+
+elif selected_tab == loc['tab_url']:
+    image_url = st.text_input(loc['url_prompt'])
+    if image_url:
+        
+        # <<< جديد: التحقق من الحد
+        if st.session_state.attempt_count >= 10:
+            st.warning(loc['limit_warning'])
+        else:
+            try:
+                response = requests.get(image_url, stream=True)
+                response.raise_for_status()
+                image = Image.open(BytesIO(response.content)).convert("RGB")
+                
+                with st.spinner(loc['spinner_text']):
+                    processed_image, file_bytes = process(image)
+                
+                # <<< جديد: زيادة العداد بعد النجاح
+                st.session_state.attempt_count += 1
+                
+                st.image(processed_image, caption=loc['processed_caption'])
+                
+                try:
+                    file_name = image_url.split('/')[-1].rsplit('.', 1)[0] + ".png"
+                except Exception:
+                    file_name = "processed_image.png"
+                    
+                st.download_button(
+                    label=loc['download_button'],
+                    data=file_bytes,
+                    file_name=file_name,
+                    mime="image/png",
+                )
+            except requests.exceptions.RequestException as e:
+                st.error(f"{loc['error_fetching']} {e}")
+            except Exception as e:
+                st.error(f"{loc['error_processing']} {e}")
+
+
+elif selected_tab == loc['tab_file']:
+    uploaded_file = st.file_uploader(loc['upload_prompt_file'], type=["jpg", "jpeg", "png"])
+    if uploaded_file is not None:
+        
+        # <<< جديد: التحقق من الحد
+        if st.session_state.attempt_count >= 10:
+            st.warning(loc['limit_warning'])
+        else:
+            try:
+                image = Image.open(uploaded_file).convert("RGB")
+                
+                with st.spinner(loc['spinner_text']):
+                    processed_image, file_bytes = process(image)
+                
+                # <<< جديد: زيادة العداد بعد النجاح
+                st.session_state.attempt_count += 1
+                
+                st.image(processed_image, caption=loc['processed_caption'])
+                st.download_button(
+                    label=loc['download_button'],
+                    data=file_bytes,
+                    file_name=f"{uploaded_file.name.rsplit('.', 1)[0]}.png",
+                    mime="image/png",
+                )
+            except Exception as e:
+                st.error(f"{loc['generic_error']} {e}")
+
+# <<< جديد: إظهار العداد للمستخدم (اختياري، يمكنك حذف هذا السطر)
+st.sidebar.info(f"المحاولات المتبقية: {10 - st.session_state.attempt_count}")

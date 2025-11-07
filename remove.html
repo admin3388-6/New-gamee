@@ -22,7 +22,6 @@
     </script>
     
     <style>
-        /* (منسوخ) نفس الـ CSS من ملفاتك الأخرى لتوحيد التصميم */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
@@ -32,7 +31,10 @@
             background-color: #121212; color: #e0e0e0;
             margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; flex-grow: 1; }
+        
+        /* <<< تم التعديل: زيادة عرض الحاوية الرئيسية */
+        .container { max-width: 1100px; /* زادت من 900px */ margin: 0 auto; padding: 20px; flex-grow: 1; }
+        
         header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
@@ -53,22 +55,21 @@
         }
         main { text-align: center; }
         
-        /* (جديد) حاوية خاصة بالـ iframe لتطابق التصميم */
         .iframe-container {
-            background-color: #1e1e1e; /* نفس لون صندوق الأدوات */
+            background-color: #1e1e1e;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             margin-top: 30px;
             animation: fadeIn 0.5s ease;
-            overflow: hidden; /* لإخفاء أي زوائد */
+            overflow: hidden;
         }
         .iframe-container iframe {
             width: 100%;
-            height: 700px; /* (مُعدل) ارتفاع أطول لسهولة الاستخدام */
-            border-radius: 5px; /* حواف داخلية */
+            height: 700px; 
+            border-radius: 5px;
             border: none;
-            background-color: #121212; /* للتأكد من أن التحميل مظلم */
+            background-color: #121212;
         }
         
         .cta-button {
@@ -159,5 +160,5 @@
         }
         setLanguage(currentLang);
     </script>
-    </body>
+</body>
 </html>

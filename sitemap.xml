@@ -6,6 +6,11 @@
         <lastmod>2025-11-06</lastmod> 
         <priority>1.0</priority>
     </url>
+    <url>
+        <loc>https://www.skydata.kozow.com/remove.html</loc>
+        <lastmod>2025-11-06</lastmod> 
+        <priority>1.0</priority>
+    </url>
 
     <url>
         <loc>https://www.skydata.kozow.com/pdf.html</loc>
@@ -24,10 +29,17 @@
     </url>
 
     <url>
+        <loc>https://www.skydata.kozow.com/editor.html</loc>
+        <lastmod>2025-11-06</lastmod>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
         <loc>https://www.skydata.kozow.com/zoom.html</loc>
         <lastmod>2025-11-06</lastmod>
         <priority>0.8</priority>
     </url>
+    
     <url>
         <loc>https://www.skydata.kozow.com/qr.html</loc>
         <lastmod>2025-11-06</lastmod>

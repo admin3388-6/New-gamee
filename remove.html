@@ -294,28 +294,46 @@
         // الرابط الخاص بتطبيقك على Hugging Face
         const hf_space_url = "https://skydata001-crystal.hf.space";
 
+        // --- (جديد): "مستمع" عام لرسائل الـ iframe ---
+        window.addEventListener('message', (event) => {
+            // الأمان: تأكد أن الرسالة قادمة من الـ iframe الخاص بك
+            if (event.origin !== hf_space_url) {
+                return;
+            }
+
+            try {
+                const data = JSON.parse(event.data);
+
+                // تحقق إذا كانت هذه رسالة "أنا جاهز"
+                if (data.source === 'streamlit-ready') {
+                    
+                    // ممتاز، الـ iframe جاهز. الآن أرسل له رسالة المصادقة
+                    const authMessage = JSON.stringify({
+                        source: 'skydata-auth',
+                        domain: window.location.hostname // www.skydata.kozow.com
+                    });
+
+                    // إرسال الرسالة إلى الـ iframe
+                    appIframe.contentWindow.postMessage(authMessage, hf_space_url);
+                }
+            } catch (e) {
+                console.error("خطأ في معالجة الرسالة من الـ iframe:", e);
+            }
+        });
+
+
+        // --- (تعديل): دالة onload أصبحت أبسط ---
         appIframe.onload = function() {
-            // إخفاء التحميل وإظهار التطبيق
+            // فقط قم بإخفاء التحميل وإظهار التطبيق
+            // (لا نرسل رسالة المصادقة من هنا بعد الآن)
             loader.style.display = 'none';
             iframeContainer.style.display = 'block';
             iframeContainer.style.animation = 'fadeIn 0.5s ease';
-            
-            // --- كود المصادقة المضاف ---
-            // إنشاء الرسالة
-            const authMessage = JSON.stringify({
-                source: 'skydata-auth',
-                domain: window.location.hostname // www.skydata.kozow.com
-            });
-
-            // إرسال الرسالة إلى الـ iframe
-            // "hf_space_url" هو النطاق المستهدف للرسالة (لزيادة الأمان)
-            appIframe.contentWindow.postMessage(authMessage, hf_space_url);
-            // --- نهاية كود المصادقة ---
         };
         
-        // تحميل الـ iframe (تأكد من أن هذا الرابط هو الصحيح)
+        // تحميل الـ iframe (كما كان)
         appIframe.src = hf_space_url + "?theme=dark&embed=true";
         
     </script>
-</body>
+    </body>
 </html>

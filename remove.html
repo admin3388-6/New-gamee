@@ -297,35 +297,8 @@
         // **********************************************
 
 
-        // --- "مستمع" عام لرسائل الـ iframe ---
-        window.addEventListener('message', (event) => {
-            // الأمان: تأكد أن الرسالة قادمة من الـ iframe الخاص بك
-            if (event.origin !== hf_space_url) {
-                return;
-            }
-
-            try {
-                const data = JSON.parse(event.data);
-
-                // تحقق إذا كانت هذه رسالة "أنا جاهز" القادمة من Streamlit
-                if (data.source === 'streamlit-ready') {
-                    
-                    // ممتاز، الـ iframe جاهز. الآن أرسل له رسالة المصادقة
-                    const authMessage = JSON.stringify({
-                        source: 'skydata-auth',
-                        domain: window.location.hostname // www.skydata.kozow.com
-                    });
-
-                    // إرسال الرسالة إلى الـ iframe
-                    appIframe.contentWindow.postMessage(authMessage, hf_space_url);
-                }
-            } catch (e) {
-                console.error("خطأ في معالجة الرسالة من الـ iframe:", e);
-            }
-        });
-
-
         // --- دالة onload لإخفاء التحميل وإظهار التطبيق ---
+        // بما أن المصادقة لم تعد ضرورية، هذه الدالة كافية لإدارة حالة التحميل
         appIframe.onload = function() {
             // فقط قم بإخفاء التحميل وإظهار التطبيق بعد تحميل الـ iframe بالكامل
             loader.style.display = 'none';

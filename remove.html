@@ -291,10 +291,13 @@
         const iframeContainer = document.getElementById('iframe-container');
         const appIframe = document.getElementById('app-iframe');
 
+        // **********************************************
         // الرابط الخاص بتطبيقك على Hugging Face
         const hf_space_url = "https://skydata001-crystal.hf.space";
+        // **********************************************
 
-        // --- (جديد): "مستمع" عام لرسائل الـ iframe ---
+
+        // --- "مستمع" عام لرسائل الـ iframe ---
         window.addEventListener('message', (event) => {
             // الأمان: تأكد أن الرسالة قادمة من الـ iframe الخاص بك
             if (event.origin !== hf_space_url) {
@@ -304,7 +307,7 @@
             try {
                 const data = JSON.parse(event.data);
 
-                // تحقق إذا كانت هذه رسالة "أنا جاهز"
+                // تحقق إذا كانت هذه رسالة "أنا جاهز" القادمة من Streamlit
                 if (data.source === 'streamlit-ready') {
                     
                     // ممتاز، الـ iframe جاهز. الآن أرسل له رسالة المصادقة
@@ -322,16 +325,15 @@
         });
 
 
-        // --- (تعديل): دالة onload أصبحت أبسط ---
+        // --- دالة onload لإخفاء التحميل وإظهار التطبيق ---
         appIframe.onload = function() {
-            // فقط قم بإخفاء التحميل وإظهار التطبيق
-            // (لا نرسل رسالة المصادقة من هنا بعد الآن)
+            // فقط قم بإخفاء التحميل وإظهار التطبيق بعد تحميل الـ iframe بالكامل
             loader.style.display = 'none';
             iframeContainer.style.display = 'block';
             iframeContainer.style.animation = 'fadeIn 0.5s ease';
         };
         
-        // تحميل الـ iframe (كما كان)
+        // تحميل الـ iframe
         appIframe.src = hf_space_url + "?theme=dark&embed=true";
         
     </script>

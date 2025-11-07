@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8">
+  <title>أداة إزالة العلامة المائية الشخصية</title>
+  <style>
+    body{font-family:sans-serif;max-width:720px;margin:40px auto;padding:20px}
+    h2{color:#444;text-align:center}
+    form{background:#f8f8f8;padding:20px;border-radius:12px}
+    label{display:block;margin:10px 0}
+    button{padding:10px 16px;background:#0070f3;color:#fff;border:none;border-radius:8px;cursor:pointer}
+    button:hover{background:#0055cc}
+    #result{margin-top:20px;text-align:center}
+  </style>
+</head>
+<body>
+  <h2>معالجة الفيديو الشخصي</h2>
+  <form id="uploadForm">
+    <label>اختر الفيديو: <input type="file" name="video" accept="video/*" required></label>
+
+    <label>الطريقة:
+      <select name="method">
+        <option value="crop">قص (Crop)</option>
+        <option value="overlay">تغطية (Overlay)</option>
+        <option value="blur">طمس (Blur)</option>
+      </select>
+    </label>
+
+    <label>المعاملات (اختياري): <input type="text" name="params" placeholder="مثال: cropRight=100 أو x=10,y=10,w=200,h=80"></label>
+
+    <label><input type="checkbox" name="confirm" required> أؤكد أن الفيديو لي أو لدي الإذن لتعديله</label>
+
+    <button type="submit">ابدأ المعالجة</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const backendURL = "watermark-production-7331.up.railway.app"; // 🔗 غيّر بالرابط الحقيقي من Railway
+    const form = document.getElementById("uploadForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      document.getElementById("result").innerHTML = "⏳ جاري المعالجة...";
+      try {
+        const res = await fetch(`${backendURL}/process`, { method: "POST", body: data });
+        if (!res.ok) throw new Error("فشل في الاتصال بالسيرفر");
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "processed.mp4";
+        a.textContent = "⬇️ تحميل الفيديو الناتج";
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("result").appendChild(a);
+      } catch (err) {
+        document.getElementById("result").innerHTML = "❌ حدث خطأ: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

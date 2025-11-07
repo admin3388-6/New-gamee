@@ -1,60 +1,126 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="utf-8">
-  <title>أداة إزالة العلامة المائية الشخصية</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أداة إزالة العلامة المائية</title>
   <style>
-    body{font-family:sans-serif;max-width:720px;margin:40px auto;padding:20px}
-    h2{color:#444;text-align:center}
-    form{background:#f8f8f8;padding:20px;border-radius:12px}
-    label{display:block;margin:10px 0}
-    button{padding:10px 16px;background:#0070f3;color:#fff;border:none;border-radius:8px;cursor:pointer}
-    button:hover{background:#0055cc}
-    #result{margin-top:20px;text-align:center}
+    body {
+      font-family: sans-serif;
+      background: #0f0f0f;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: #1c1c1c;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px #000;
+      max-width: 400px;
+      margin: auto;
+    }
+    button {
+      padding: 10px 20px;
+      background: #0078ff;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0062cc;
+    }
+    #logs {
+      background: #111;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+      font-size: 14px;
+      max-height: 250px;
+      overflow-y: auto;
+      direction: ltr;
+    }
   </style>
 </head>
 <body>
-  <h2>معالجة الفيديو الشخصي</h2>
-  <form id="uploadForm">
-    <label>اختر الفيديو: <input type="file" name="video" accept="video/*" required></label>
 
-    <label>الطريقة:
-      <select name="method">
-        <option value="crop">قص (Crop)</option>
-        <option value="overlay">تغطية (Overlay)</option>
-        <option value="blur">طمس (Blur)</option>
-      </select>
-    </label>
+  <div class="card">
+    <h2>🧩 أداة إزالة العلامة المائية</h2>
+    <p>اختر فيديو من جهازك لإرساله إلى السيرفر</p>
 
-    <label>المعاملات (اختياري): <input type="text" name="params" placeholder="مثال: cropRight=100 أو x=10,y=10,w=200,h=80"></label>
+    <input type="file" id="fileInput" accept="video/*"><br><br>
+    <button id="uploadBtn">رفع ومعالجة</button>
 
-    <label><input type="checkbox" name="confirm" required> أؤكد أن الفيديو لي أو لدي الإذن لتعديله</label>
-
-    <button type="submit">ابدأ المعالجة</button>
-  </form>
-
-  <div id="result"></div>
+    <div id="logs"></div>
+  </div>
 
   <script>
-    const backendURL = "watermark-production-7331.up.railway.app"; // 🔗 غيّر بالرابط الحقيقي من Railway
-    const form = document.getElementById("uploadForm");
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const data = new FormData(form);
-      document.getElementById("result").innerHTML = "⏳ جاري المعالجة...";
+    const API_URL = "https://watermark-production-7331.up.railway.app";
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("fileInput");
+    const logs = document.getElementById("logs");
+
+    function log(msg, type = "info") {
+      const color = type === "error" ? "red" : type === "success" ? "lime" : "gray";
+      const time = new Date().toLocaleTimeString();
+      logs.innerHTML += `<div style="color:${color}">[${time}] ${msg}</div>`;
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    async function uploadVideo() {
+      const file = fileInput.files[0];
+      if (!file) return log("⚠️ لم يتم اختيار أي ملف.", "error");
+
+      log("📤 جاري رفع الملف إلى السيرفر...");
+
+      const formData = new FormData();
+      formData.append("video", file);
+
       try {
-        const res = await fetch(`${backendURL}/process`, { method: "POST", body: data });
-        if (!res.ok) throw new Error("فشل في الاتصال بالسيرفر");
-        const blob = await res.blob();
+        const response = await fetch(`${API_URL}/remove-watermark`, {
+          method: "POST",
+          body: formData,
+        });
+
+        log(`📡 تم الاتصال بالسيرفر: ${API_URL}`);
+
+        if (!response.ok) {
+          log(`❌ السيرفر أرجع خطأ (${response.status})`, "error");
+          const text = await response.text();
+          log(`🔍 محتوى الرد: ${text}`, "error");
+          return;
+        }
+
+        const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "processed.mp4";
-        a.textContent = "⬇️ تحميل الفيديو الناتج";
-        document.getElementById("result").innerHTML = "";
-        document.getElementById("result").appendChild(a);
+        log("✅ تمت معالجة الفيديو بنجاح!", "success");
+
+        const video = document.createElement("video");
+        video.src = url;
+        video.controls = true;
+        video.style.width = "100%";
+        logs.appendChild(video);
+
       } catch (err) {
-        document.getElementById("result").innerHTML = "❌ حدث خطأ: " + err.message;
+        log("❌ حدث خطأ أثناء الاتصال بالسيرفر", "error");
+        log(err.message, "error");
+        log("💡 تأكد أن السيرفر يعمل وأن الرابط صحيح.", "info");
+      }
+    }
+
+    uploadBtn.addEventListener("click", uploadVideo);
+
+    // اختبار فوري للاتصال
+    window.addEventListener("load", async () => {
+      try {
+        const test = await fetch(`${API_URL}/`);
+        if (test.ok) log("✅ الاتصال بالسيرفر ناجح عند التشغيل.");
+        else log(`⚠️ السيرفر رد برمز ${test.status}`, "error");
+      } catch {
+        log("❌ لا يمكن الاتصال بالسيرفر عند التشغيل.", "error");
       }
     });
   </script>

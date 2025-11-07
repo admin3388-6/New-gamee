@@ -22,115 +22,201 @@
     </script>
     
     <style>
+        /* --- الأنميشنات --- */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* <<< جديد: حركة التحميل الدائرية */
         @keyframes spin { 
             to { transform: rotate(360deg); } 
         }
+        /* <<< جديد: أنميشن النبض لشعار Crystal AI */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
 
+        /* --- التصميم الأساسي --- */
         body {
-            font-family: Arial, sans-serif; direction: rtl; 
-            background-color: #121212; color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* خط أحدث */
+            direction: rtl; 
+            background-color: #121212; /* خلفية أغمق قليلاً */
+            color: #e0e0e0;
             margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
         }
+        .container { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            flex-grow: 1; 
+            display: flex; /* لترتيب المحتوى داخله */
+            flex-direction: column;
+            align-items: center; /* لتوسيط المحتوى */
+        }
         
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; flex-grow: 1; }
-        
+        /* --- الهيدر --- */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 15px 25px; 
+            background-color: #1e1e1e; 
+            border-bottom: 1px solid #333;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3); /* ظل أعمق */
         }
-        .logo-container { display: flex; align-items: center; }
-        .logo-container img { height: 40px; margin-left: 10px; }
-        .lang-switcher { display: flex; }
+        .header-logo img { height: 45px; } /* حجم أكبر لشعار Skydata */
         .lang-switcher a {
-            text-decoration: none; color: #007bff; margin: 0 5px;
-            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+            text-decoration: none; color: #007bff; margin: 0 7px; /* مسافة أكبر */
+            font-weight: bold; cursor: pointer; padding: 6px 10px; border-radius: 6px;
+            transition: all 0.2s ease;
         }
         .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+        .lang-switcher a:hover:not(.active) { color: #4da6ff; } /* تأثير hover */
+
+        /* --- الفوتر --- */
         footer {
             background-color: #1e1e1e; padding: 20px;
             text-align: center; margin-top: auto;
             border-top: 1px solid #333;
         }
-        main { text-align: center; }
+        main { text-align: center; width: 100%; } /* لضمان أن Main يأخذ العرض الكامل */
         
-        /* <<< جديد: تصميم شاشة التحميل */
+        /* --- عنوان الأداة --- */
+        h1 { 
+            color: #ffffff; 
+            font-size: 2.8em; /* حجم أكبر */
+            margin-bottom: 10px; 
+            animation: fadeIn 0.8s ease-out; /* أنميشن للعنوان */
+        }
+        /* <<< جديد: تصميم شعار Crystal AI في الواجهة */
+        .crystal-ai-branding {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px; /* مسافة أكبر */
+            animation: fadeIn 1s ease-out;
+        }
+        .crystal-ai-branding img {
+            height: 90px; /* حجم كبير لشعار Crystal AI */
+            margin-left: 20px; /* مسافة بين الشعار والنص */
+            filter: drop-shadow(0 0 10px rgba(0, 123, 255, 0.4)); /* ظل حول الصورة */
+            animation: pulse 2s infinite ease-in-out; /* أنميشن النبض */
+        }
+        .crystal-ai-branding p {
+            font-size: 1.8em; /* نص Crystal AI */
+            font-weight: 600;
+            color: #007bff;
+            text-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* ظل نصي */
+        }
+
+
+        /* --- شاشة التحميل (Loader) --- */
         #loader {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 700px; /* نفس ارتفاع الأداة */
+            height: 600px; /* ارتفاع مناسب */
+            width: 100%; /* عرض كامل داخل الـ container */
             background-color: #1e1e1e;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease;
+            padding: 20px;
+            border-radius: 12px; /* حواف أكثر دائرية */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4); /* ظل أعمق */
+            margin-top: 40px; /* مسافة أكبر من الأعلى */
+            animation: fadeIn 0.7s ease;
         }
         .spinner {
-            width: 60px; height: 60px; border: 8px solid #333;
+            width: 80px; height: 80px; /* حجم أكبر للسبينر */
+            border: 10px solid #333;
             border-top-color: #007bff; border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin-bottom: 30px; /* مسافة من النص */
         }
         #loader p {
-            font-size: 1.2em;
+            font-size: 1.5em; /* حجم أكبر للنص */
             color: #e0e0e0;
-            margin-top: 20px;
+            margin-top: 0;
+            animation: pulse 1.5s infinite ease-in-out; /* أنميشن النبض للنص */
         }
         
+        /* --- حاوية الـ iframe --- */
         .iframe-container {
             background-color: #1e1e1e;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: 30px;
+            padding: 15px; /* مساحة داخلية أكبر */
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            margin-top: 40px;
             overflow: hidden;
-            display: none; /* <<< جديد: مخفي افتراضياً */
+            display: none;
+            width: 100%; /* عرض كامل */
+            max-width: 100%; /* لضمان عدم تجاوز الحد */
         }
         .iframe-container iframe {
             width: 100%;
             height: 700px; 
-            border-radius: 5px;
+            border-radius: 8px; /* حواف دائرية أكثر */
             border: none;
             background-color: #121212;
         }
         
+        /* --- الأزرار (العودة للرئيسية) --- */
         .cta-button {
             display: inline-block; background-color: #007bff; color: #ffffff;
-            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
-            text-decoration: none; border-radius: 5px; border: none;
+            padding: 14px 30px; /* حجم أكبر */
+            font-size: 1.2em; font-weight: bold;
+            text-decoration: none; border-radius: 7px; border: none;
             cursor: pointer; 
             transition: all 0.3s ease;
+            margin-top: 60px; /* مسافة أكبر */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* ظل أزرق */
+        }
+        .cta-button:hover { 
+            background-color: #0056b3; 
+            transform: translateY(-3px) scale(1.02); /* تأثير رفع بسيط */
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
         }
         .back-button { 
-            background-color: #555; margin-top: 50px; 
-            font-size: 1.1em; padding: 10px 20px;
+            background-color: #555; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* ظل رمادي */
         }
-        .back-button:hover { background-color: #444; }
+        .back-button:hover { 
+            background-color: #444; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
         
-        @media (max-width: 600px) {
-            .container { padding: 10px; }
+        /* --- التصميم المتجاوب (Responsive) --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2em; }
+            .crystal-ai-branding img { height: 70px; margin-left: 15px; }
+            .crystal-ai-branding p { font-size: 1.5em; }
+            #loader { height: 500px; margin-top: 30px; }
+            .spinner { width: 60px; height: 60px; border-width: 8px; }
+            #loader p { font-size: 1.3em; }
+            .iframe-container { padding: 10px; margin-top: 30px; }
+            .iframe-container iframe { height: 600px; }
+            .cta-button { padding: 12px 25px; font-size: 1.1em; margin-top: 40px; }
             header { padding: 10px 15px; }
-            .iframe-container { padding: 5px; }
-            #loader { height: 600px; }
+            .header-logo img { height: 35px; }
+            .lang-switcher a { margin: 0 4px; padding: 5px 8px; }
         }
-        @media (max-width: 380px) {
-            .logo-container img { height: 30px; }
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8em; }
+            .crystal-ai-branding img { height: 50px; margin-left: 10px; }
+            .crystal-ai-branding p { font-size: 1.2em; }
+            #loader { height: 400px; margin-top: 20px; }
+            .spinner { width: 50px; height: 50px; border-width: 6px; }
+            #loader p { font-size: 1.1em; }
+            .iframe-container { padding: 8px; margin-top: 20px; }
+            .iframe-container iframe { height: 500px; }
+            .cta-button { padding: 10px 20px; font-size: 1em; margin-top: 30px; }
+            .header-logo img { height: 30px; }
         }
     </style>
     </head>
 <body>
 
     <header>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        <div class="header-logo">
+            <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="شعار Skydata">
         </div>
         <div class="lang-switcher">
             <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
@@ -141,7 +227,12 @@
     <div class="container">
         
         <main>
-            <h1 style="color: #ffffff;" data-lang-key="toolTitle">أداة إزالة الخلفية (AI)</h1>
+            <h1 data-lang-key="toolTitle">أداة إزالة الخلفية</h1>
+
+            <div class="crystal-ai-branding">
+                <p data-lang-key="poweredBy">مدعوم بـ Crystal AI</p>
+                <img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="Crystal AI Logo">
+            </div>
 
             <div id="loader">
                 <div class="spinner"></div>
@@ -162,21 +253,23 @@
     </div> 
     
     <footer style="margin-top: auto;">
-    </footer>
+        </footer>
 
     <script>
         const translations = {
             "ar": {
                 "pageTitle": "إزالة خلفية الصور - Skydata",
-                "toolTitle": "أداة إزالة الخلفية (AI)",
+                "toolTitle": "أداة إزالة الخلفية",
                 "backToHome": "العودة للرئيسية",
-                "loadingAI": "جار تحميل الذكاء الاصطناعي..." // <<< جديد
+                "loadingAI": "جار تحميل الذكاء الاصطناعي...",
+                "poweredBy": "مدعوم بـ Crystal AI" // <<< جديد
             },
             "en": {
                 "pageTitle": "Background Remover - Skydata",
-                "toolTitle": "AI Background Remover Tool",
+                "toolTitle": "Background Remover Tool",
                 "backToHome": "Back to Home",
-                "loadingAI": "Loading AI..." // <<< جديد
+                "loadingAI": "Loading AI...",
+                "poweredBy": "Powered by Crystal AI" // <<< جديد
             }
         };
 
@@ -197,19 +290,16 @@
         }
         setLanguage(currentLang);
         
-        // --- <<< جديد: سكريبت إظهار الـ iframe بعد التحميل ---
         const loader = document.getElementById('loader');
         const iframeContainer = document.getElementById('iframe-container');
         const appIframe = document.getElementById('app-iframe');
 
-        // 1. عند تحميل الـ iframe
         appIframe.onload = function() {
-            loader.style.display = 'none'; // 2. إخفاء التحميل
-            iframeContainer.style.display = 'block'; // 3. إظهار الأداة
+            loader.style.display = 'none';
+            iframeContainer.style.display = 'block';
             iframeContainer.style.animation = 'fadeIn 0.5s ease';
         };
         
-        // 4. ابدأ تحميل الـ iframe (هذا يشغل الحدث 'onload' عند الانتهاء)
         appIframe.src = "https://skydata001-crystal.hf.space?theme=dark&embed=true";
         
     </script>

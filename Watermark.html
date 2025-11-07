@@ -3,124 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>أداة إزالة العلامة المائية</title>
+  <title>🎬 أداة إزالة/إضافة العلامة المائية</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #0f0f0f;
+      font-family: 'Tahoma', sans-serif;
+      background: linear-gradient(135deg, #121212, #1f1f1f);
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 30px;
+      direction: rtl;
     }
-    .card {
-      background: #1c1c1c;
+    h1 { color: #00e0ff; }
+    .container {
+      background: #222;
       padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px #000;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
       max-width: 400px;
       margin: auto;
     }
-    button {
-      padding: 10px 20px;
-      background: #0078ff;
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
       border: none;
       border-radius: 10px;
-      color: white;
-      cursor: pointer;
       font-size: 16px;
     }
-    button:hover {
-      background: #0062cc;
+    input[type="file"] { background: #333; color: #ccc; }
+    input[type="text"] { background: #444; color: #fff; }
+    button {
+      background: #00e0ff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    #logs {
-      background: #111;
-      padding: 10px;
+    button:hover { background: #00b3cc; }
+    .status { margin-top: 10px; color: #ffd000; }
+    video {
+      width: 100%;
+      margin-top: 15px;
       border-radius: 10px;
-      margin-top: 20px;
-      text-align: left;
-      font-size: 14px;
-      max-height: 250px;
-      overflow-y: auto;
-      direction: ltr;
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>🧩 أداة إزالة العلامة المائية</h2>
-    <p>اختر فيديو من جهازك لإرساله إلى السيرفر</p>
+  <h1>🎥 أداة إزالة العلامة المائية</h1>
 
-    <input type="file" id="fileInput" accept="video/*"><br><br>
-    <button id="uploadBtn">رفع ومعالجة</button>
+  <div class="container">
+    <form id="uploadForm">
+      <label>🎞️ اختر الفيديو:</label>
+      <input type="file" id="video" accept="video/*" required>
 
-    <div id="logs"></div>
+      <label>✏️ نص العلامة المائية لإزالتها (اختياري):</label>
+      <input type="text" id="watermarkText" placeholder="أدخل نص العلامة المائية...">
+
+      <button type="submit">🚀 ابدأ المعالجة</button>
+    </form>
+
+    <p class="status" id="status"></p>
+    <video id="resultVideo" controls></video>
   </div>
 
   <script>
-    const API_URL = "watermark-production-0ad1.up.railway.app";
-    const uploadBtn = document.getElementById("uploadBtn");
-    const fileInput = document.getElementById("fileInput");
-    const logs = document.getElementById("logs");
+    const form = document.getElementById("uploadForm");
+    const statusText = document.getElementById("status");
+    const resultVideo = document.getElementById("resultVideo");
 
-    function log(msg, type = "info") {
-      const color = type === "error" ? "red" : type === "success" ? "lime" : "gray";
-      const time = new Date().toLocaleTimeString();
-      logs.innerHTML += `<div style="color:${color}">[${time}] ${msg}</div>`;
-      logs.scrollTop = logs.scrollHeight;
-    }
+    // 🔧 عنوان السيرفر الخلفي على Railway
+    const API_URL = "https://watermark-production-0ad1.up.railway.app/upload";
 
-    async function uploadVideo() {
-      const file = fileInput.files[0];
-      if (!file) return log("⚠️ لم يتم اختيار أي ملف.", "error");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      log("📤 جاري رفع الملف إلى السيرفر...");
+      const videoFile = document.getElementById("video").files[0];
+      const text = document.getElementById("watermarkText").value.trim();
+
+      if (!videoFile) {
+        statusText.textContent = "⚠️ لم يتم اختيار أي ملف فيديو.";
+        return;
+      }
 
       const formData = new FormData();
-      formData.append("video", file);
+      formData.append("video", videoFile);
+      if (text) formData.append("text", text);
+
+      statusText.textContent = "📤 جاري رفع الملف إلى السيرفر...";
 
       try {
-        const response = await fetch(`${API_URL}/remove-watermark`, {
+        const response = await fetch(API_URL, {
           method: "POST",
-          body: formData,
+          body: formData
         });
 
-        log(`📡 تم الاتصال بالسيرفر: ${API_URL}`);
+        console.log("📡 الرد من السيرفر:", response);
 
         if (!response.ok) {
-          log(`❌ السيرفر أرجع خطأ (${response.status})`, "error");
-          const text = await response.text();
-          log(`🔍 محتوى الرد: ${text}`, "error");
+          statusText.textContent = `⚠️ السيرفر رد برمز ${response.status}`;
+          const textResp = await response.text();
+          console.log("🔍 محتوى الرد:", textResp);
           return;
         }
 
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        log("✅ تمت معالجة الفيديو بنجاح!", "success");
+        const data = await response.json();
+        console.log("✅ بيانات الرد:", data);
 
-        const video = document.createElement("video");
-        video.src = url;
-        video.controls = true;
-        video.style.width = "100%";
-        logs.appendChild(video);
+        if (data.videoUrl) {
+          statusText.textContent = "✅ تمت المعالجة بنجاح!";
+          resultVideo.src = data.videoUrl;
+          resultVideo.style.display = "block";
+        } else {
+          statusText.textContent = "⚠️ لم يتم العثور على رابط الفيديو الناتج.";
+        }
 
-      } catch (err) {
-        log("❌ حدث خطأ أثناء الاتصال بالسيرفر", "error");
-        log(err.message, "error");
-        log("💡 تأكد أن السيرفر يعمل وأن الرابط صحيح.", "info");
-      }
-    }
-
-    uploadBtn.addEventListener("click", uploadVideo);
-
-    // اختبار فوري للاتصال
-    window.addEventListener("load", async () => {
-      try {
-        const test = await fetch(`${API_URL}/`);
-        if (test.ok) log("✅ الاتصال بالسيرفر ناجح عند التشغيل.");
-        else log(`⚠️ السيرفر رد برمز ${test.status}`, "error");
-      } catch {
-        log("❌ لا يمكن الاتصال بالسيرفر عند التشغيل.", "error");
+      } catch (error) {
+        console.error("❌ خطأ أثناء الاتصال:", error);
+        statusText.textContent = "❌ حدث خطأ أثناء الاتصال بالسيرفر.";
       }
     });
   </script>

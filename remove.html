@@ -30,7 +30,6 @@
         @keyframes spin { 
             to { transform: rotate(360deg); } 
         }
-        /* <<< جديد: أنميشن النبض لشعار Crystal AI */
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -39,9 +38,9 @@
 
         /* --- التصميم الأساسي --- */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* خط أحدث */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             direction: rtl; 
-            background-color: #121212; /* خلفية أغمق قليلاً */
+            background-color: #121212; 
             color: #e0e0e0;
             margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
         }
@@ -50,9 +49,9 @@
             margin: 0 auto; 
             padding: 20px; 
             flex-grow: 1; 
-            display: flex; /* لترتيب المحتوى داخله */
+            display: flex;
             flex-direction: column;
-            align-items: center; /* لتوسيط المحتوى */
+            align-items: center; 
         }
         
         /* --- الهيدر --- */
@@ -61,16 +60,16 @@
             padding: 15px 25px; 
             background-color: #1e1e1e; 
             border-bottom: 1px solid #333;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3); /* ظل أعمق */
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
         }
-        .header-logo img { height: 45px; } /* حجم أكبر لشعار Skydata */
+        .header-logo img { height: 45px; }
         .lang-switcher a {
-            text-decoration: none; color: #007bff; margin: 0 7px; /* مسافة أكبر */
+            text-decoration: none; color: #007bff; margin: 0 7px;
             font-weight: bold; cursor: pointer; padding: 6px 10px; border-radius: 6px;
             transition: all 0.2s ease;
         }
         .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
-        .lang-switcher a:hover:not(.active) { color: #4da6ff; } /* تأثير hover */
+        .lang-switcher a:hover:not(.active) { color: #4da6ff; }
 
         /* --- الفوتر --- */
         footer {
@@ -78,36 +77,34 @@
             text-align: center; margin-top: auto;
             border-top: 1px solid #333;
         }
-        main { text-align: center; width: 100%; } /* لضمان أن Main يأخذ العرض الكامل */
+        main { text-align: center; width: 100%; }
         
         /* --- عنوان الأداة --- */
         h1 { 
             color: #ffffff; 
-            font-size: 2.8em; /* حجم أكبر */
+            font-size: 2.8em;
             margin-bottom: 10px; 
-            animation: fadeIn 0.8s ease-out; /* أنميشن للعنوان */
+            animation: fadeIn 0.8s ease-out;
         }
-        /* <<< جديد: تصميم شعار Crystal AI في الواجهة */
         .crystal-ai-branding {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 40px; /* مسافة أكبر */
+            margin-bottom: 40px;
             animation: fadeIn 1s ease-out;
         }
         .crystal-ai-branding img {
-            height: 90px; /* حجم كبير لشعار Crystal AI */
-            margin-left: 20px; /* مسافة بين الشعار والنص */
-            filter: drop-shadow(0 0 10px rgba(0, 123, 255, 0.4)); /* ظل حول الصورة */
-            animation: pulse 2s infinite ease-in-out; /* أنميشن النبض */
+            height: 90px;
+            margin-left: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 123, 255, 0.4));
+            animation: pulse 2s infinite ease-in-out;
         }
         .crystal-ai-branding p {
-            font-size: 1.8em; /* نص Crystal AI */
+            font-size: 1.8em;
             font-weight: 600;
             color: #007bff;
-            text-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* ظل نصي */
+            text-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
         }
-
 
         /* --- شاشة التحميل (Loader) --- */
         #loader {
@@ -115,45 +112,45 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 600px; /* ارتفاع مناسب */
-            width: 100%; /* عرض كامل داخل الـ container */
+            height: 600px; 
+            width: 100%; 
             background-color: #1e1e1e;
             padding: 20px;
-            border-radius: 12px; /* حواف أكثر دائرية */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4); /* ظل أعمق */
-            margin-top: 40px; /* مسافة أكبر من الأعلى */
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            margin-top: 40px;
             animation: fadeIn 0.7s ease;
         }
         .spinner {
-            width: 80px; height: 80px; /* حجم أكبر للسبينر */
+            width: 80px; height: 80px;
             border: 10px solid #333;
             border-top-color: #007bff; border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 30px; /* مسافة من النص */
+            margin-bottom: 30px;
         }
         #loader p {
-            font-size: 1.5em; /* حجم أكبر للنص */
+            font-size: 1.5em;
             color: #e0e0e0;
             margin-top: 0;
-            animation: pulse 1.5s infinite ease-in-out; /* أنميشن النبض للنص */
+            animation: pulse 1.5s infinite ease-in-out;
         }
         
         /* --- حاوية الـ iframe --- */
         .iframe-container {
             background-color: #1e1e1e;
-            padding: 15px; /* مساحة داخلية أكبر */
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
             margin-top: 40px;
             overflow: hidden;
             display: none;
-            width: 100%; /* عرض كامل */
-            max-width: 100%; /* لضمان عدم تجاوز الحد */
+            width: 100%;
+            max-width: 100%;
         }
         .iframe-container iframe {
             width: 100%;
-            height: 900px; /* <<< هذا هو التعديل: كان 700px */
-            border-radius: 8px; /* حواف دائرية أكثر */
+            height: 900px; /* الارتفاع المعدل لشاشات الحاسوب */
+            border-radius: 8px;
             border: none;
             background-color: #121212;
         }
@@ -161,22 +158,22 @@
         /* --- الأزرار (العودة للرئيسية) --- */
         .cta-button {
             display: inline-block; background-color: #007bff; color: #ffffff;
-            padding: 14px 30px; /* حجم أكبر */
+            padding: 14px 30px;
             font-size: 1.2em; font-weight: bold;
             text-decoration: none; border-radius: 7px; border: none;
             cursor: pointer; 
             transition: all 0.3s ease;
-            margin-top: 60px; /* مسافة أكبر */
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* ظل أزرق */
+            margin-top: 60px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
         .cta-button:hover { 
             background-color: #0056b3; 
-            transform: translateY(-3px) scale(1.02); /* تأثير رفع بسيط */
+            transform: translateY(-3px) scale(1.02);
             box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
         }
         .back-button { 
             background-color: #555; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* ظل رمادي */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .back-button:hover { 
             background-color: #444; 
@@ -192,7 +189,7 @@
             .spinner { width: 60px; height: 60px; border-width: 8px; }
             #loader p { font-size: 1.3em; }
             .iframe-container { padding: 10px; margin-top: 30px; }
-            .iframe-container iframe { height: 600px; } /* هذا الارتفاع للموبايل والتابلت (يبقى كما هو) */
+            .iframe-container iframe { height: 600px; } /* ارتفاع للموبايل */
             .cta-button { padding: 12px 25px; font-size: 1.1em; margin-top: 40px; }
             header { padding: 10px 15px; }
             .header-logo img { height: 35px; }
@@ -206,7 +203,7 @@
             .spinner { width: 50px; height: 50px; border-width: 6px; }
             #loader p { font-size: 1.1em; }
             .iframe-container { padding: 8px; margin-top: 20px; }
-            .iframe-container iframe { height: 500px; } /* هذا الارتفاع للموبايل الصغير (يبقى كما هو) */
+            .iframe-container iframe { height: 500px; } /* ارتفاع للموبايل الصغير */
             .cta-button { padding: 10px 20px; font-size: 1em; margin-top: 30px; }
             .header-logo img { height: 30px; }
         }
@@ -262,14 +259,14 @@
                 "toolTitle": "أداة إزالة الخلفية",
                 "backToHome": "العودة للرئيسية",
                 "loadingAI": "جار تحميل الذكاء الاصطناعي...",
-                "poweredBy": "مدعوم بـ Crystal AI" // <<< جديد
+                "poweredBy": "مدعوم بـ Crystal AI"
             },
             "en": {
                 "pageTitle": "Background Remover - Skydata",
                 "toolTitle": "Background Remover Tool",
                 "backToHome": "Back to Home",
                 "loadingAI": "Loading AI...",
-                "poweredBy": "Powered by Crystal AI" // <<< جديد
+                "poweredBy": "Powered by Crystal AI"
             }
         };
 
@@ -294,14 +291,30 @@
         const iframeContainer = document.getElementById('iframe-container');
         const appIframe = document.getElementById('app-iframe');
 
+        // الرابط الخاص بتطبيقك على Hugging Face
+        const hf_space_url = "https://skydata001-crystal.hf.space";
+
         appIframe.onload = function() {
+            // إخفاء التحميل وإظهار التطبيق
             loader.style.display = 'none';
             iframeContainer.style.display = 'block';
             iframeContainer.style.animation = 'fadeIn 0.5s ease';
+            
+            // --- كود المصادقة المضاف ---
+            // إنشاء الرسالة
+            const authMessage = JSON.stringify({
+                source: 'skydata-auth',
+                domain: window.location.hostname // www.skydata.kozow.com
+            });
+
+            // إرسال الرسالة إلى الـ iframe
+            // "hf_space_url" هو النطاق المستهدف للرسالة (لزيادة الأمان)
+            appIframe.contentWindow.postMessage(authMessage, hf_space_url);
+            // --- نهاية كود المصادقة ---
         };
         
-        // ملاحظة: تأكد من أن الرابط صحيح ويعمل
-        appIframe.src = "https://skydata001-crystal.hf.space?theme=dark&embed=true";
+        // تحميل الـ iframe (تأكد من أن هذا الرابط هو الصحيح)
+        appIframe.src = hf_space_url + "?theme=dark&embed=true";
         
     </script>
 </body>

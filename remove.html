@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إزالة الخلفية بالذكاء الاصطناعي</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h1 { 
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+    input[type="file"] {
+      padding: 10px;
+      background: #fff;
+      color: #000;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 25px;
+      background: #ff4b2b;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #ff6a4d;
+    }
+    img {
+      margin-top: 25px;
+      max-width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+    #result {
+      margin-top: 10px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>🪄 إزالة الخلفية من الصور</h1>
+  <input type="file" id="fileInput" accept="image/*">
+  <button onclick="removeBackground()">إزالة الخلفية</button>
+  <div id="result"></div>
+
+  <script>
+    async function removeBackground() {
+      const fileInput = document.getElementById('fileInput');
+      const result = document.getElementById('result');
+      result.innerHTML = '⏳ جاري المعالجة...';
+
+      if (!fileInput.files.length) {
+        alert('يرجى اختيار صورة أولاً');
+        result.innerHTML = '';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('image', fileInput.files[0]);
+
+      // ⚠️ ضع هنا رابط الـ API الخاص بك من Railway
+      const API_URL = 'https://removebg-production.up.railway.app/remove';
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: formData
+        });
+        if (!res.ok) throw new Error('فشل الاتصال بالسيرفر');
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        result.innerHTML = `<img src="${url}" alt="النتيجة">`;
+      } catch (err) {
+        result.innerHTML = '❌ حدث خطأ: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

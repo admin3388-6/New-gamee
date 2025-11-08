@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkyData - تسجيل الدخول</title>
+<style>
+  @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+  }
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+
+  body { 
+    font-family: Arial, sans-serif; background: #f4f4f4; margin:0; padding:0; 
+    display:flex; justify-content:center; align-items:center; min-height:100vh; 
+    direction: rtl; 
+  }
+  .container { 
+    background:#fff; padding:30px; border-radius:10px; 
+    box-shadow:0 0 20px rgba(0,0,0,0.15); width:100%; max-width:400px;
+    animation: fadeIn 0.5s ease-out;
+  }
+  h2 { text-align:center; margin-bottom:20px; color: #007BFF; }
+  input[type="email"], input[type="password"] { 
+    width:100%; padding:10px; margin:10px 0 15px 0; border-radius:5px; 
+    border:1px solid #ccc; box-sizing: border-box; 
+    direction: ltr;
+  }
+  label { display:block; margin:5px 0; font-weight: bold; }
+  
+  .cta-button { 
+    width:100%; padding:12px; background:#007BFF; color:#fff; border:none; 
+    border-radius:5px; cursor:pointer; margin-top:20px; transition: background 0.3s; 
+    font-size: 1.1em; font-weight: bold;
+  }
+  .cta-button:hover:not(:disabled) { background:#0056b3; }
+  .cta-button:disabled { background: #ccc; cursor: not-allowed; }
+  
+  .subscription-checkbox {
+    margin: 15px 0;
+    padding: 10px;
+    border: 1px dashed #ddd;
+    border-radius: 5px;
+  }
+  .subscription-checkbox label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .subscription-checkbox input[type="checkbox"] {
+    margin: 0 0 0 10px;
+    width: auto;
+  }
+
+  .terms { font-size:12px; margin-top:15px; text-align:center; }
+  .terms a { color: #007BFF; text-decoration: none; }
+  .verification { margin-top:20px; padding:10px; background:#e2f0d9; border:1px solid #b2d8a8; border-radius:5px; text-align:center; font-size: 0.9em; }
+  
+  .message, .error { padding: 10px; border-radius: 5px; margin-top: 15px; text-align: center; }
+  .message { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+  .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007BFF;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: none;
+    margin: 0 auto;
+  }
+  .toggle-link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #007BFF;
+    cursor: pointer;
+    font-size: 0.95em;
+    text-decoration: none;
+  }
+  .toggle-link:hover { text-decoration: underline; }
+
+</style>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+  // 🛑 إعدادات Firebase المحدثة (تستخدم الآن مشروع skydata-ai)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+    authDomain: "skydata-ai.firebaseapp.com",
+    databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "skydata-ai",
+    storageBucket: "skydata-ai.firebasestorage.app",
+    messagingSenderId: "165531796197",
+    appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+    measurementId: "G-JYS7P7FY3Z"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+
+  // تحديث الدالة لتخزين حالة الاشتراك (true/false)
+  function updateSubscription(uid, subscribe) {
+    update(ref(db, 'users/' + uid), { 
+      subscribe_marketing: subscribe,
+      timestamp: Date.now()
+    });
+  }
+
+  // وضع الدوال في النطاق العالمي
+  window.auth = auth;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.sendEmailVerification = sendEmailVerification;
+  window.updateSubscription = updateSubscription;
+  window.onAuthStateChanged = onAuthStateChanged; 
+  
+</script>
+
+<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
+<body>
+
+<div class="container" id="loginContainer">
+  <h2 id="formTitle">تسجيل الدخول</h2>
+  
+  <form id="authForm">
+    <label for="email">البريد الإلكتروني:</label>
+    <input type="email" id="email" required placeholder="example@skydata.com" autocomplete="email">
+
+    <label for="password">كلمة المرور:</label>
+    <input type="password" id="password" required placeholder="********" autocomplete="current-password">
+
+    <div class="subscription-checkbox" id="subscriptionBox" style="display: none;">
+      <label for="subscribeEmail">
+        <input type="checkbox" id="subscribeEmail" checked>
+        أوافق على استلام **البريد التسويقي**، الأخبار، والتحديثات غير المستعجلة.
+      </label>
+    </div>
+    
+    <button type="submit" class="cta-button" id="submitBtn">تسجيل الدخول</button>
+    
+    <div class="loader" id="loadingSpinner"></div>
+
+    <a href="#" class="toggle-link" id="toggleModeLink">إنشاء حساب جديد</a>
+  </form>
+
+  <div class="terms">
+    بالتسجيل أو تسجيل الدخول، أنت توافق على 
+    <a href="Safety.html" target="_blank">شروط الخدمة وسياسة الخصوصية</a>
+  </div>
+
+  <div class="verification">
+    رمز التحقق المطلوب من OneSignal: <strong>OS7K3L</strong>
+  </div>
+
+  <div class="message" id="msg"></div>
+  <div class="error" id="err"></div>
+</div>
+
+
+<script type="module">
+  // **************************************************
+  // منطق التطبيق
+  // **************************************************
+
+  // 🛑 إزالة المفاتيح الحساسة! سنستخدم الآن الـ Proxy فقط.
+  
+  // استيراد الدوال من النطاق العالمي
+  const auth = window.auth;
+  const signInWithEmailAndPassword = window.signInWithEmailAndPassword;
+  const createUserWithEmailAndPassword = window.createUserWithEmailAndPassword;
+  const sendEmailVerification = window.sendEmailVerification;
+  const updateSubscription = window.updateSubscription;
+  const onAuthStateChanged = window.onAuthStateChanged; 
+  
+  // عناصر الواجهة
+  const formTitle = document.getElementById('formTitle');
+  const authForm = document.getElementById('authForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const submitBtn = document.getElementById('submitBtn');
+  const toggleModeLink = document.getElementById('toggleModeLink');
+  const subscriptionBox = document.getElementById('subscriptionBox');
+  const subscribeEmailCheckbox = document.getElementById('subscribeEmail');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const msgEl = document.getElementById('msg');
+  const errEl = document.getElementById('err');
+  
+  // حالة التطبيق
+  let isLoginMode = true;
+
+  // **************************************************
+  // الدوال المساعدة
+  // **************************************************
+
+  // تبديل وضع تسجيل الدخول / إنشاء الحساب
+  function toggleMode() {
+    isLoginMode = !isLoginMode;
+    msgEl.textContent = '';
+    errEl.textContent = '';
+    
+    if (isLoginMode) {
+      formTitle.textContent = 'تسجيل الدخول';
+      submitBtn.textContent = 'تسجيل الدخول';
+      toggleModeLink.textContent = 'إنشاء حساب جديد';
+      subscriptionBox.style.display = 'none';
+      passwordInput.setAttribute('autocomplete', 'current-password');
+    } else {
+      formTitle.textContent = 'إنشاء حساب جديد';
+      submitBtn.textContent = 'إنشاء حساب و تسجيل الدخول';
+      toggleModeLink.textContent = 'لديك حساب بالفعل؟ سجل الدخول';
+      subscriptionBox.style.display = 'block';
+      passwordInput.setAttribute('autocomplete', 'new-password');
+    }
+  }
+  
+  // 🛑 إرسال رسالة شكر عبر API Proxy على Vercel
+  async function sendOneSignalEmail(email) {
+      try {
+        // 🛑 استدعاء وظيفة الخادم بدلاً من OneSignal مباشرة
+        const response = await fetch('/api/send-email', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({
+            email: email,
+            action: 'subscribe' // للإشارة إلى أن هذا اشتراك جديد
+          })
+        });
+
+        if (response.ok) {
+            console.log("Email sent successfully via Vercel Proxy.");
+        } else {
+            const errorDetails = await response.json();
+            console.error("Proxy Email failed:", errorDetails);
+        }
+      } catch (err){ 
+          console.error("Proxy Fetch Error:", err); 
+      }
+  }
+
+
+  // **************************************************
+  // معالجات الأحداث
+  // **************************************************
+
+  toggleModeLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleMode();
+  });
+  
+  // إرسال النموذج (تسجيل الدخول أو إنشاء حساب)
+  authForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    errEl.textContent=''; msgEl.textContent='';
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const subscribe = subscribeEmailCheckbox.checked;
+
+    submitBtn.disabled = true;
+    loadingSpinner.style.display = 'block';
+
+    try {
+      if (isLoginMode) {
+        // وضع تسجيل الدخول
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        updateSubscription(user.uid, subscribe); 
+        
+        window.location.href = "home.html";
+        
+      } else {
+        // وضع إنشاء الحساب
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        updateSubscription(user.uid, subscribe);
+        await sendEmailVerification(user);
+        
+        if (subscribe) {
+            await sendOneSignalEmail(email); // 🛑 انتظار إرسال البريد
+        }
+
+        msgEl.innerHTML = `✅ تم إنشاء الحساب بنجاح! تم إرسال **رابط التفعيل** إلى بريدك الإلكتروني: ${email}.<br>**تنبيه: يرجى التحقق من مجلد البريد العشوائي (Spam) إذا لم تصلك الرسالة خلال دقائق.**`;
+        
+        setTimeout(() => {
+             window.location.href = "home.html";
+        }, 3000); 
+      }
+
+    } catch(error){
+      let errorMessage = 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول.';
+      } else if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+        errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'كلمة المرور ضعيفة جداً. يجب أن تكون 6 أحرف على الأقل.';
+      }
+      errEl.textContent = `فشل العملية: ${errorMessage}`;
+      
+    } finally {
+      submitBtn.disabled = false;
+      loadingSpinner.style.display = 'none';
+    }
+  });
+
+  // التحقق من حالة المستخدم عند تحميل الصفحة
+  onAuthStateChanged(auth, user => {
+      if (user) {
+          window.location.href = "home.html";
+      } else {
+          toggleMode();
+      }
+  });
+</script>
+
+</body>
+</html>

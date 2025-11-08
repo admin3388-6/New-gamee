@@ -106,7 +106,7 @@
   .title::after { animation: pulse 1s linear infinite; }
 
 
-  .message-intro { 
+  .message-intro { 
       font-size: 14.5px;
       color: rgba(255, 255, 255, 0.7);
       margin-bottom: 5px;
@@ -209,8 +209,7 @@
   }
   .submit:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
 
-  /* * ⬇️⬇️⬇️ CSS جديد ⬇️⬇️⬇️ */
-  /* (إضافة ستايل لزر الإلغاء) */
+  /* (ستايل لزر الإلغاء) */
   .cancel-button {
       display: block; 
       width: 100%;
@@ -232,7 +231,6 @@
       background-color: #333;
       color: #fff;
   }
-  /* * ⬆️⬆️⬆️ CSS جديد ⬆️⬆️⬆️ */
 
   /* --- رابط التبديل و الاشتراك --- */
   .toggle-area { text-align: center; font-size: 0.95em; margin-top: 10px; }
@@ -606,6 +604,7 @@
     updateFormContent();
   }
   
+  // * ⬇️⬇️⬇️ التعديل هنا ⬇️⬇️⬇️ *
   // إرسال رسالة شكر عبر API Proxy على Vercel
   async function sendOneSignalEmail(email) {
       try {
@@ -614,7 +613,9 @@
           headers:{ 'Content-Type':'application/json' },
           body: JSON.stringify({
             email: email,
-            action: 'subscribe'
+            action: 'subscribe',
+            // (إضافة) تمرير المعرف الخاص بك إلى الخادم الوكيل
+            template_id: '78b49ef7-79e4-473d-bf3c-f04efa7e7f28' 
           })
         });
 
@@ -628,12 +629,13 @@
           console.error("Proxy Fetch Error:", err); 
       }
   }
+  // * ⬆️⬆️⬆️ نهاية التعديل ⬆️⬆️⬆️ *
 
   // **************************************************
   // معالجات الأحداث
   // **************************************************
   
-  // 🆕 منطق إظهار/إخفاء كلمة السر
+  // منطق إظهار/إخفاء كلمة السر
   document.querySelectorAll('.toggle-password').forEach(button => {
       button.addEventListener('click', () => {
           const targetId = button.dataset.target;
@@ -710,7 +712,6 @@
         msgEl.style.display = 'block';
         
         setTimeout(() => {
-             /* * ⬇️⬇️⬇️ تعديل ⬇️⬇️⬇️ */
              window.location.href = "menu.html";
         }, 1500); 
         
@@ -725,10 +726,10 @@
         });
         
         updateSubscription(user.uid, subscribe);
-        await sendEmailVerification(user);
+        await sendEmailVerification(user); // <-- 1. إرسال بريد التفعيل
         
         if (subscribe) {
-            await sendOneSignalEmail(email);
+            await sendOneSignalEmail(email); // <-- 2. إرسال بريد الاشتراك (كما طلبت)
         }
         
         const registerSuccessMsg = translations[currentLang].registerSuccess.replace('{email}', email);
@@ -736,7 +737,6 @@
         msgEl.style.display = 'block';
         
         setTimeout(() => {
-             /* * ⬇️⬇️⬇️ تعديل ⬇️⬇️⬇️ */
              window.location.href = "menu.html";
         }, 3000); 
       }
@@ -762,15 +762,16 @@
   // التحقق من حالة المستخدم عند تحميل الصفحة
   onAuthStateChanged(auth, user => {
       if (user) {
-          /* * ⬇️⬇️⬇️ تعديل ⬇️⬇️⬇️ */
           window.location.href = "menu.html";
       } else {
-          toggleMode();
-          window.onload = () => { setLanguage(currentLang); }; 
+          // (إصلاح بسيط) تأكد من تشغيل toggleMode() عند عدم وجود مستخدم
+          // وتعيين اللغة بعد تحميل الصفحة بالكامل
+          toggleMode(); 
+          window.onload = () => { setLanguage(currentLang); };
       }
   });
   
-  // تشغيل اللغة الافتراضية
+  // تشغيل اللغة الافتراضية عند بدء تحميل السكريبت
   setLanguage(currentLang);
 </script>
 

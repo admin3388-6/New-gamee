@@ -98,7 +98,7 @@
       /* * ⬇️⬇️⬇️ الإصلاح هنا ⬇️⬇️⬇️ */
       max-height: 85vh; /* (تحديد أقصى ارتفاع) */
       overflow-y: auto;   /* (إضافة سكرول عند الحاجة) */
-      /* * ⬆️⬆️⬆️ الإصلاح هنا ⬇️⬆️⬆️ */
+      /* * ⬆️⬆️⬆️ الإصلاح هنا ⬆️⬆️⬆️ */
   }
   
   .modal-overlay {
@@ -678,94 +678,16 @@
     margin-bottom: 20px;
     text-align: center; 
   }
-  /* START: Verification Banner Styles */
-.error {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  width: 100%; /* تعديل: لجعله يملأ الحاوية */
-  padding: 12px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  background: #EF665B; /* أحمر افتراضي */
-  border-radius: 8px;
-  box-shadow: 0px 0px 5px -3px #111;
-  margin-bottom: 20px; /* إضافة مسافة سفلية */
-  transition: background-color 0.5s ease; /* (جديد) */
-}
-
-/* (جديد) حالة النجاح (الخضراء) */
-.error.success-banner {
-  background: #28a745; 
-}
-
-.error__icon {
-  width: 20px;
-  height: 20px;
-  transform: translateY(-2px);
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-[dir="rtl"] .error__icon {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-.error__icon path {
-  fill: #fff;
-}
-
-.error__title {
-  font-weight: 500;
-  font-size: 14px;
-  color: #fff;
-  flex-grow: 1; /* (جديد) لجعل النص يأخذ المساحة المتاحة */
-}
-
-/* (جديد) تنسيق زر إعادة الإرسال */
-#resend-email-btn {
-  background: #fff;
-  color: #EF665B;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: auto; /* يدفع الزر إلى أقصى اليمين/اليسار */
-  flex-shrink: 0;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap; /* لمنع انكسار النص */
-}
-[dir="rtl"] #resend-email-btn {
-    margin-left: 0;
-    margin-right: auto;
-}
-
-#resend-email-btn:hover {
-    background: #f0f0f0;
-}
-
-#resend-email-btn:disabled {
-  background: #aaa;
-  color: #777;
-  cursor: not-allowed;
-}
-
-.error.success-banner #resend-email-btn {
-    background: #fff;
-    color: #28a745;
-}
-/* END: Verification Banner Styles */
+  
 </style>
 
 <script type="module">
     
     // --- IMPORTS (MUST BE AT TOP LEVEL) ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-    // ⬇️⬇️ تصحيح: قمت بإزالة الاستيراد المكرر لـ getAuth وما يليه ⬇️⬇️
-    import { getAuth, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, deleteUser, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+    import { getAuth, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, deleteUser } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
     import { getDatabase, ref, update, get, child, remove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-
+    
     // --- FIREBASE CONFIG (TOP LEVEL) ---
     const firebaseConfig = {
       apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
@@ -796,8 +718,6 @@
     const SUB_COOLDOWN = 5 * 60 * 1000;
     let toastTimer; 
     let isDeletePending = false; 
-    let lastVerificationEmailTime = 0;
-    let cooldownTimer = null;
 
     // --- TRANSLATIONS (TOP LEVEL) ---
     const translations = {
@@ -859,10 +779,6 @@
           "settingsSuccess": "تم حفظ التعديلات بنجاح",
           "settingsEmailSent": "تم إرسال رابط تغيير كلمة السر إلى بريدك الإلكتروني",
           "rateLimitMsg": "يمكنك تعديل الصورة أو الاسم مرة واحدة كل 24 ساعة. يتبقى {hours} ساعة و {minutes} دقيقة",
-          "verifyEmailWarning": "بريدك الإلكتروني غير مُفعّل. اضغط لإرسال رابط التفعيل. (تحقق من البريد العشوائي)",
-          "resendButton": "إعادة إرسال",
-          "resendButtonCooldown": "انتظر {seconds} ث",
-          "verificationSent": "تم إرسال الرابط! تحقق من بريدك.",
       },
       "en": {
           "pageTitle": "SkyData - Home",
@@ -922,10 +838,6 @@
           "settingsSuccess": "Changes saved successfully",
           "settingsEmailSent": "Password reset link sent to your email",
           "rateLimitMsg": "You can only change your profile picture or name once every 24 hours. Remaining: {hours}h {minutes}m",
-          "verifyEmailWarning": "Your email is not verified. Click to send activation link. (Check spam folder)",
-          "resendButton": "Resend",
-          "resendButtonCooldown": "Wait {seconds}s",
-          "verificationSent": "Link sent! Check your email.",
       }
     };
 
@@ -1088,25 +1000,6 @@
                 updateHomeSubscriptionUI(isSubscribed);
                 updateNotifStatusUI(isSubscribed, isWebPushSubscribed);
             }
-
-            // ⬇️⬇️ الكود الذي تم نقله إلى هنا ⬇️⬇️
-            // START: New Language Update for Banner
-            const verificationBanner = document.getElementById('email-verification-banner');
-            if (verificationBanner.style.display === 'flex') {
-            
-                if (verificationBanner.classList.contains('success-banner')) {
-                    document.getElementById('verification-message').innerHTML = translations[currentLang].verificationSent;
-                } else {
-                    document.getElementById('verification-message').innerHTML = translations[currentLang].verifyEmailWarning;
-                }
-            
-                const resendBtn = document.getElementById('resend-email-btn');
-                if (!resendBtn.disabled) {
-                    resendBtn.innerHTML = translations[currentLang].resendButton;
-                }
-            }
-            // END: New Language Update for Banner
-            // ⬆️⬆️ نهاية الكود المنقول ⬆️⬆️
         }
 
         async function uploadProfilePicture(file) {
@@ -1248,71 +1141,6 @@
         onAuthStateChanged(auth, async user => {
             if (user) {
                 currentUser = user;
-                
-                // ⬇️⬇️ كود التحقق من البريد (الخطوة 4) - مكانه صحيح هنا ⬇️⬇️
-                // START: New Verification Check
-                const verificationBanner = document.getElementById('email-verification-banner');
-                const verificationMessage = document.getElementById('verification-message');
-                const resendBtn = document.getElementById('resend-email-btn');
-
-                if (!user.emailVerified) {
-                    verificationBanner.style.display = 'flex';
-                    verificationMessage.innerHTML = translations[currentLang].verifyEmailWarning;
-
-                    resendBtn.onclick = () => {
-                        const now = Date.now();
-                        if (now - lastVerificationEmailTime < SUB_COOLDOWN) {
-                            // لا يزال في فترة التبريد
-                            showToast(translations[currentLang].cooldownMsg, 'warning');
-                            return;
-                        }
-
-                        // إرسال البريد
-                        sendEmailVerification(user)
-                            .then(() => {
-                                lastVerificationEmailTime = Date.now();
-
-                                // 1. تحويل البانر إلى أخضر
-                                verificationBanner.classList.add('success-banner');
-                                verificationMessage.innerHTML = translations[currentLang].verificationSent;
-                                resendBtn.disabled = true;
-
-                                // 2. بدء عداد تبريد الزر (5 دقائق)
-                                let secondsLeft = SUB_COOLDOWN / 1000;
-                                resendBtn.innerHTML = translations[currentLang].resendButtonCooldown.replace('{seconds}', secondsLeft);
-
-                                if(cooldownTimer) clearInterval(cooldownTimer);
-                                cooldownTimer = setInterval(() => {
-                                    secondsLeft--;
-                                    if (secondsLeft > 0) {
-                                        resendBtn.innerHTML = translations[currentLang].resendButtonCooldown.replace('{seconds}', secondsLeft);
-                                    } else {
-                                        clearInterval(cooldownTimer);
-                                        resendBtn.disabled = false;
-                                        resendBtn.innerHTML = translations[currentLang].resendButton;
-                                    }
-                                }, 1000);
-
-                                // 3. إخفاء البانر بعد 30 ثانية
-                                setTimeout(() => {
-                                    verificationBanner.style.display = 'none';
-                                    // إعادة البانر إلى لونه الأحمر استعداداً للظهور القادم
-                                    verificationBanner.classList.remove('success-banner'); 
-                                }, 30000); // 30 ثانية
-
-                            })
-                            .catch((error) => {
-                                showToast(`Error: ${error.message}`, 'error');
-                            });
-                    };
-
-                } else {
-                    // إذا كان المستخدم مُفعّل، تأكد من إخفاء البانر
-                    verificationBanner.style.display = 'none';
-                }
-                // END: New Verification Check
-                // ⬆️⬆️ نهاية كود التحقق من البريد ⬆️⬆️
-
                 const userData = await getSubscription(user.uid);
 
                 isSubscribed = userData.emailSub;
@@ -1554,15 +1382,6 @@
 
 
     <div class="container" id="contentContainer" style="margin-top: 80px;">
-     <div class="error" id="email-verification-banner" style="display: none;">
-    <div class="error__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#fff" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
-    </div>
-    <div class="error__title" id="verification-message" data-lang-key="verifyEmailWarning">
-        بريدك الإلكتروني غير مُفعّل.
-    </div>
-    <button id="resend-email-btn" data-lang-key="resendButton">إعادة إرسال</button>
-</div>
       <h2 data-lang-key="profileTitle">الـملف الـشخصي</h2>
       
       <div class="profile-info">

@@ -3,97 +3,302 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyData - تسجيل الدخول</title>
+<title data-lang-key="pageTitle">SkyData - تسجيل الدخول / إنشاء حساب</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
+  /* --- الأنيميشنات من Uiverse --- */
+  @keyframes pulse {
+      from { transform: scale(0.9); opacity: 1; }
+      to { transform: scale(1.8); opacity: 0; }
+  }
   @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
   }
   @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
   }
 
+  /* --- التصميم الأساسي (Dark Mode) --- */
+  * {
+      box-sizing: border-box;
+  }
   body { 
-    font-family: Arial, sans-serif; background: #f4f4f4; margin:0; padding:0; 
-    display:flex; justify-content:center; align-items:center; min-height:100vh; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     direction: rtl; 
+    background-color: #121212; 
+    color: #fff;
+    margin: 0; padding: 0; 
+    display:flex; flex-direction: column; 
+    align-items:center; min-height:100vh; 
   }
-  .container { 
-    background:#fff; padding:30px; border-radius:10px; 
-    box-shadow:0 0 20px rgba(0,0,0,0.15); width:100%; max-width:400px;
-    animation: fadeIn 0.5s ease-out;
-  }
-  h2 { text-align:center; margin-bottom:20px; color: #007BFF; }
-  input[type="email"], input[type="password"] { 
-    width:100%; padding:10px; margin:10px 0 15px 0; border-radius:5px; 
-    border:1px solid #ccc; box-sizing: border-box; 
-    direction: ltr;
-  }
-  label { display:block; margin:5px 0; font-weight: bold; }
   
-  .cta-button { 
-    width:100%; padding:12px; background:#007BFF; color:#fff; border:none; 
-    border-radius:5px; cursor:pointer; margin-top:20px; transition: background 0.3s; 
-    font-size: 1.1em; font-weight: bold;
+  /* --- شريط الرأس (Header) --- */
+  header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 20px; background-color: #1e1e1e;
+      border-bottom: 1px solid #333;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      width: 100%;
+      z-index: 100;
   }
-  .cta-button:hover:not(:disabled) { background:#0056b3; }
-  .cta-button:disabled { background: #ccc; cursor: not-allowed; }
+  .logo-container { display: flex; align-items: center; }
+  .logo-container img { height: 35px; margin-left: 10px; }
   
-  .subscription-checkbox {
-    margin: 15px 0;
-    padding: 10px;
-    border: 1px dashed #ddd;
-    border-radius: 5px;
+  .lang-switcher { display: flex; align-items: center; }
+  .lang-switcher a { 
+      text-decoration: none; 
+      color: #007bff; 
+      margin: 0 3px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      padding: 4px 7px; 
+      border-radius: 5px;
+      transition: all 0.2s ease;
   }
-  .subscription-checkbox label {
-    font-weight: normal;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  .subscription-checkbox input[type="checkbox"] {
-    margin: 0 0 0 10px;
-    width: auto;
+  .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+
+
+  /* --- حاوية الصفحة --- */
+  .main-wrapper {
+      max-width: 400px;
+      width: 95%; 
+      flex-grow: 1;
+      margin-top: 30px; 
+      margin-bottom: 30px;
   }
 
-  .terms { font-size:12px; margin-top:15px; text-align:center; }
-  .terms a { color: #007BFF; text-decoration: none; }
-  .verification { margin-top:20px; padding:10px; background:#e2f0d9; border:1px solid #b2d8a8; border-radius:5px; text-align:center; font-size: 0.9em; }
-  
-  .message, .error { padding: 10px; border-radius: 5px; margin-top: 15px; text-align: center; }
-  .message { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-  .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+  /* --- تصميم النموذج (Form) من Uiverse --- */
+  .form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 30px;
+      border-radius: 10px; 
+      position: relative;
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 1px solid #333;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      animation: fadeIn 0.5s ease-out;
+  }
 
-  .loader {
-    border: 4px solid #f3f3f3;
+  .title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      color: #007bff;
+      margin-bottom: 5px;
+      padding-right: 30px; 
+  }
+  .title::before, .title::after {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      right: 0px;
+      background-color: #007bff;
+  }
+  .title::after { animation: pulse 1s linear infinite; }
+
+
+  .message-intro { 
+      font-size: 14.5px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 5px;
+      text-align: right;
+  }
+  
+  /* --- عناصر الإدخال --- */
+  .input-label {
+      background-color: #333;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      display: flex;
+      flex-direction: column; 
+      gap: 5px;
+      margin-bottom: 5px;
+      transition: border-color 0.3s;
+      position: relative;
+  }
+  .input-label span {
+      font-size: 0.75em;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 600;
+  }
+  .input-label input {
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 1em;
+      direction: ltr;
+  }
+  .input-label:focus-within { border-color: #007bff; }
+  
+  /* --- تنسيق حقول الاسم الأول والأخير --- */
+  .flex-group {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: wrap; 
+  }
+  .flex-group > div {
+      flex: 1;
+      min-width: 140px;
+  }
+  @media (max-width: 350px) {
+      .flex-group {
+          flex-direction: column;
+          gap: 5px;
+      }
+      .flex-group > div {
+          min-width: 100%;
+      }
+  }
+
+  /* --- زر العين --- */
+  .toggle-password {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      font-size: 1.1em;
+      padding: 5px;
+      transition: color 0.2s;
+      z-index: 10;
+  }
+  .toggle-password:hover { color: #007bff; }
+
+
+  /* --- الأزرار --- */
+  .submit {
+      border: none;
+      outline: none;
+      padding: 14px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.2em;
+      font-weight: bold;
+      background-color: #007bff;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+      margin-top: 15px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  .submit i { margin-left: 10px; }
+  .submit:hover {
+      background-color: #0056b3;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+  }
+  .submit:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
+
+  /* * ⬇️⬇️⬇️ CSS جديد ⬇️⬇️⬇️ */
+  /* (إضافة ستايل لزر الإلغاء) */
+  .cancel-button {
+      display: block; 
+      width: 100%;
+      text-decoration: none;
+      border: 1px solid #555; /* (لون ثانوي) */
+      outline: none;
+      padding: 14px;
+      border-radius: 8px;
+      color: #aaa; /* (لون ثانوي) */
+      font-size: 1.2em;
+      font-weight: bold;
+      background-color: transparent;
+      cursor: pointer;
+      margin-top: 10px; /* (مسافة) */
+      transition: all 0.3s ease;
+      text-align: center;
+  }
+  .cancel-button:hover {
+      background-color: #333;
+      color: #fff;
+  }
+  /* * ⬆️⬆️⬆️ CSS جديد ⬆️⬆️⬆️ */
+
+  /* --- رابط التبديل و الاشتراك --- */
+  .toggle-area { text-align: center; font-size: 0.95em; margin-top: 10px; }
+  .toggle-area a { color: #007bff; text-decoration: none; font-weight: 600; transition: color 0.3s; }
+  .toggle-area a:hover { text-decoration: underline #007bff; color: #4da6ff; }
+  
+  /* --- خيارات إضافية والمربعات المُوحدة --- */
+  .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.9em;
+      text-align: right;
+  }
+  .terms-acceptance {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 8px;
+      background-color: #121212;
+  }
+  #subscriptionBox {
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 8px;
+      background-color: #121212;
+  }
+  
+  .checkbox-group label {
+      display: flex;
+      align-items: flex-start;
+      font-weight: normal;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      margin-top: 5px;
+  }
+  .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin: 0 0 0 8px;
+      flex-shrink: 0;
+  }
+  .terms-acceptance a { color: #007bff; text-decoration: none; font-weight: bold; }
+
+
+  .loader-spinner {
+    border: 4px solid #333;
     border-top: 4px solid #007BFF;
     border-radius: 50%;
     width: 20px;
     height: 20px;
     animation: spin 1s linear infinite;
     display: none;
-    margin: 0 auto;
+    margin: 10px auto 0;
   }
-  .toggle-link {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    color: #007BFF;
-    cursor: pointer;
-    font-size: 0.95em;
-    text-decoration: none;
-  }
-  .toggle-link:hover { text-decoration: underline; }
-
+  .status-box { padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; font-weight: 600; }
+  .status-message { background: #1a4d2e; color: #d4edda; border: 1px solid #28a845; }
+  .status-error { background: #5c1818; color: #f8d7da; border: 1px solid #dc3545; }
+  .verification-code { padding: 10px; background:#121212; border:1px solid #007bff; border-radius:5px; text-align:center; font-size: 0.8em; color: #91d5ff; margin-top: 20px; }
 </style>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
   import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-  // 🛑 إعدادات Firebase المحدثة (تستخدم الآن مشروع skydata-ai)
+  // 🛑 إعدادات Firebase المحدثة
   const firebaseConfig = {
     apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
     authDomain: "skydata-ai.firebaseapp.com",
@@ -109,7 +314,6 @@
   const auth = getAuth(app);
   const db = getDatabase(app);
 
-  // تحديث الدالة لتخزين حالة الاشتراك (true/false)
   function updateSubscription(uid, subscribe) {
     update(ref(db, 'users/' + uid), { 
       subscribe_marketing: subscribe,
@@ -124,48 +328,102 @@
   window.sendEmailVerification = sendEmailVerification;
   window.updateSubscription = updateSubscription;
   window.onAuthStateChanged = onAuthStateChanged; 
+  window.updateProfile = updateProfile;
   
 </script>
 
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 
 <body>
+  <header>
+      <div class="logo-container">
+          <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+          <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+      </div>
+      
+      <div class="lang-switcher">
+          <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+          <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+      </div>
+  </header>
 
-<div class="container" id="loginContainer">
-  <h2 id="formTitle">تسجيل الدخول</h2>
+<div class="main-wrapper" id="loginWrapper">
   
-  <form id="authForm">
-    <label for="email">البريد الإلكتروني:</label>
-    <input type="email" id="email" required placeholder="example@skydata.com" autocomplete="email">
+  <form class="form" id="authForm">
+      
+      <p class="title" id="formTitle" dir="rtl" data-lang-key="formTitleLogin">تسجيل الدخول</p>
+      <p class="message-intro" id="messageIntro" data-lang-key="messageLogin">مرحباً بك مجدداً! سجل الدخول للوصول لخدماتنا</p>
+      
+      <div class="flex-group" id="nameFields" style="display: none;">
+          <div>
+              <div class="input-label">
+                  <span id="spanFirstName" data-lang-key="spanFirstName">الاسم الأول</span>
+                  <input type="text" id="firstName" placeholder="" autocomplete="given-name">
+              </div>
+          </div>
+          <div>
+              <div class="input-label">
+                  <span id="spanLastName" data-lang-key="spanLastName">اسم العائلة</span>
+                  <input type="text" id="lastName" placeholder="" autocomplete="family-name">
+              </div>
+          </div>
+      </div>
+      
+      <div class="input-label">
+          <span id="spanEmail" data-lang-key="spanEmail">البريد الإلكتروني</span>
+          <input type="email" id="email" required placeholder="" autocomplete="email">
+      </div>
+      
+      <div class="input-label">
+          <span id="spanPassword" data-lang-key="spanPassword">كلمة المرور</span>
+          <input type="password" id="password" required placeholder="" autocomplete="current-password">
+          <button type="button" class="toggle-password" data-target="password">
+              <i class="fas fa-eye-slash"></i>
+          </button>
+      </div>
 
-    <label for="password">كلمة المرور:</label>
-    <input type="password" id="password" required placeholder="********" autocomplete="current-password">
+      <div class="input-label" id="confirmPasswordField" style="display: none;">
+          <span id="spanConfirmPassword" data-lang-key="spanConfirmPassword">تأكيد كلمة المرور</span>
+          <input type="password" id="confirmPassword" placeholder="" autocomplete="new-password">
+          <button type="button" class="toggle-password" data-target="confirmPassword">
+              <i class="fas fa-eye-slash"></i>
+          </button>
+      </div>
 
-    <div class="subscription-checkbox" id="subscriptionBox" style="display: none;">
-      <label for="subscribeEmail">
-        <input type="checkbox" id="subscribeEmail" checked>
-        أوافق على استلام **البريد التسويقي**، الأخبار، والتحديثات غير المستعجلة.
-      </label>
-    </div>
-    
-    <button type="submit" class="cta-button" id="submitBtn">تسجيل الدخول</button>
-    
-    <div class="loader" id="loadingSpinner"></div>
 
-    <a href="#" class="toggle-link" id="toggleModeLink">إنشاء حساب جديد</a>
+      <div class="checkbox-group terms-acceptance" id="subscriptionBox" style="display: none;">
+          <label>
+              <input type="checkbox" id="subscribeEmail" checked>
+              <span data-lang-key="subMarketing">أوافق على استلام البريد التسويقي والأخبار (اختياري)</span>
+          </label>
+      </div>
+
+      <div class="checkbox-group terms-acceptance">
+          <label>
+              <input type="checkbox" id="acceptTerms" required>
+              <span data-lang-key="acceptTermsText">أوافق على <a href="Safety.html" target="_blank">شروط الخدمة وسياسة الخصوصية</a> (إجباري)</span>
+          </label>
+      </div>
+      
+      <button type="submit" class="submit" id="submitBtn">
+          تسجيل الدخول <i class="fas fa-sign-in-alt"></i>
+      </button>
+
+      <a href="index.html" class="cancel-button" id="cancelBtn" data-lang-key="cancelBtn">إلغاء</a>
+      <div class="loader-spinner" id="loadingSpinner"></div>
+
+      <p class="toggle-area">
+          <span data-lang-key="togglePrompt">لا تمتلك حساب؟ </span>
+          <a href="#" id="toggleModeLink" data-lang-key="toggleLink">إنشاء حساب جديد</a>
+      </p>
   </form>
 
-  <div class="terms">
-    بالتسجيل أو تسجيل الدخول، أنت توافق على 
-    <a href="Safety.html" target="_blank">شروط الخدمة وسياسة الخصوصية</a>
+  <div class="verification-code">
+      رمز التحقق المطلوب من OneSignal: <strong>OS7K3L</strong>
   </div>
 
-  <div class="verification">
-    رمز التحقق المطلوب من OneSignal: <strong>OS7K3L</strong>
-  </div>
-
-  <div class="message" id="msg"></div>
-  <div class="error" id="err"></div>
+  <div class="status-box status-message" id="msg" style="display: none;"></div>
+  <div class="status-box status-error" id="err" style="display: none;"></div>
 </div>
 
 
@@ -174,7 +432,7 @@
   // منطق التطبيق
   // **************************************************
 
-  // 🛑 إزالة المفاتيح الحساسة! سنستخدم الآن الـ Proxy فقط.
+  const ONESIGNAL_APP_ID = "9bc8ff80-a325-4935-ba4d-03e362a3cc5f";
   
   // استيراد الدوال من النطاق العالمي
   const auth = window.auth;
@@ -183,22 +441,140 @@
   const sendEmailVerification = window.sendEmailVerification;
   const updateSubscription = window.updateSubscription;
   const onAuthStateChanged = window.onAuthStateChanged; 
+  const updateProfile = window.updateProfile;
   
   // عناصر الواجهة
   const formTitle = document.getElementById('formTitle');
+  const messageIntro = document.getElementById('messageIntro');
   const authForm = document.getElementById('authForm');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const firstNameInput = document.getElementById('firstName');
+  const lastNameInput = document.getElementById('lastName');
+  const nameFields = document.getElementById('nameFields');
+  const confirmPasswordField = document.getElementById('confirmPasswordField');
+  
+  const spanEmail = document.getElementById('spanEmail');
+  const spanPassword = document.getElementById('spanPassword');
+  const spanConfirmPassword = document.getElementById('spanConfirmPassword');
+  const spanFirstName = document.getElementById('spanFirstName');
+  const spanLastName = document.getElementById('spanLastName');
+
   const submitBtn = document.getElementById('submitBtn');
   const toggleModeLink = document.getElementById('toggleModeLink');
   const subscriptionBox = document.getElementById('subscriptionBox');
   const subscribeEmailCheckbox = document.getElementById('subscribeEmail');
+  const acceptTermsCheckbox = document.getElementById('acceptTerms');
   const loadingSpinner = document.getElementById('loadingSpinner');
   const msgEl = document.getElementById('msg');
   const errEl = document.getElementById('err');
   
   // حالة التطبيق
   let isLoginMode = true;
+
+  // --- قاموس الترجمة (تمت إزالة النقاط من نهاية كل جملة) ---
+  const translations = {
+      "ar": {
+          "pageTitle": "SkyData - تسجيل الدخول / إنشاء حساب",
+          "formTitleLogin": "تسجيل الدخول",
+          "formTitleRegister": "إنشاء حساب",
+          "messageLogin": "مرحباً بك مجدداً! سجل الدخول للوصول لخدماتنا",
+          "messageRegister": "انضم الآن واحصل على وصول كامل لجميع أدواتنا",
+          "spanEmail": "البريد الإلكتروني",
+          "spanPassword": "كلمة المرور",
+          "spanConfirmPassword": "تأكيد كلمة المرور",
+          "spanFirstName": "الاسم الأول",
+          "spanLastName": "اسم العائلة",
+          "submitBtnLogin": "تسجيل الدخول",
+          "submitBtnRegister": "إنشاء حساب و تسجيل الدخول",
+          "togglePrompt": "لا تمتلك حساب؟",
+          "toggleLink": "إنشاء حساب جديد",
+          "togglePromptHasAccount": "لديك حساب بالفعل؟",
+          "toggleLinkHasAccount": "سجل الدخول",
+          "subMarketing": "أوافق على استلام البريد التسويقي والأخبار (اختياري)",
+          "acceptTermsText": "أوافق على <a href='Safety.html' target='_blank'>شروط الخدمة وسياسة الخصوصية</a> (إجباري)",
+          "termsError": "يجب الموافقة على شروط الخدمة وسياسة الخصوصية",
+          "passwordMatchError": "كلمتا المرور غير متطابقتين",
+          "nameRequiredError": "الرجاء إدخال الاسم الأول واسم العائلة",
+          "loginSuccess": "تم تسجيل الدخول بنجاح! جاري التوجيه",
+          "registerSuccess": "تم إنشاء الحساب بنجاح! تم إرسال رابط التفعيل إلى بريدك الإلكتروني: {email}<br>تنبيه: يرجى التحقق من مجلد البريد العشوائي (Spam) إذا لم تصلك الرسالة خلال دقائق",
+          "cancelBtn": "إلغاء" // 🆕 (إضافة)
+      },
+      "en": {
+          "pageTitle": "SkyData - Login / Sign Up",
+          "formTitleLogin": "Sign In",
+          "formTitleRegister": "Register",
+          "messageLogin": "Welcome back! Sign in to access our services",
+          "messageRegister": "Sign up now and get full access to all our tools",
+          "spanEmail": "Email",
+          "spanPassword": "Password",
+          "spanConfirmPassword": "Confirm Password",
+          "spanFirstName": "First Name",
+          "spanLastName": "Last Name",
+          "submitBtnLogin": "Sign In",
+          "submitBtnRegister": "Sign Up and Sign In",
+          "togglePrompt": "Don't have an account?",
+          "toggleLink": "Create New Account",
+          "togglePromptHasAccount": "Already have an account?",
+          "toggleLinkHasAccount": "Sign In",
+          "subMarketing": "I agree to receive marketing emails and news (optional)",
+          "acceptTermsText": "I agree to the <a href='Safety.html' target='_blank'>Terms of Service and Privacy Policy</a> (required)",
+          "termsError": "You must agree to the Terms of Service and Privacy Policy",
+          "passwordMatchError": "Passwords do not match",
+          "nameRequiredError": "Please enter your first and last name",
+          "loginSuccess": "Login successful! Redirecting",
+          "registerSuccess": "Account created successfully! A verification link has been sent to your email: {email}<br>Note: Please check your spam folder if the message does not arrive within minutes",
+          "cancelBtn": "Cancel" // 🆕 (إضافة)
+      }
+  };
+  
+  let currentLang = 'ar'; 
+
+  window.setLanguage = function(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+      
+      document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+      document.querySelectorAll('[data-lang-key]').forEach(element => {
+          const key = element.getAttribute('data-lang-key');
+          if (translations[lang][key]) {
+              element.innerHTML = translations[lang][key];
+          }
+      });
+      // تحديث العناصر غير المترجمة بالـ data-lang-key
+      updateFormContent();
+  }
+  
+  function updateFormContent() {
+      // تحديث محتوى الـ SPAN الذي يمثل الـ placeholder
+      spanEmail.innerText = translations[currentLang].spanEmail;
+      spanPassword.innerText = translations[currentLang].spanPassword;
+      spanConfirmPassword.innerText = translations[currentLang].spanConfirmPassword;
+      spanFirstName.innerText = translations[currentLang].spanFirstName;
+      spanLastName.innerText = translations[currentLang].spanLastName;
+      
+      // تحديث محتوى الفورم بناءً على الوضع الحالي
+      if (isLoginMode) {
+          formTitle.innerText = translations[currentLang].formTitleLogin;
+          messageIntro.innerText = translations[currentLang].messageLogin;
+          submitBtn.innerHTML = `${translations[currentLang].submitBtnLogin} <i class="fas fa-sign-in-alt"></i>`;
+          // رابط التبديل
+          document.querySelector('.toggle-area span').innerText = translations[currentLang].togglePrompt;
+          toggleModeLink.innerText = translations[currentLang].toggleLink;
+      } else {
+          formTitle.innerText = translations[currentLang].formTitleRegister;
+          messageIntro.innerText = translations[currentLang].messageRegister;
+          submitBtn.innerHTML = `${translations[currentLang].submitBtnRegister} <i class="fas fa-user-plus"></i>`;
+          // رابط التبديل
+          document.querySelector('.toggle-area span').innerText = translations[currentLang].togglePromptHasAccount;
+          toggleModeLink.innerText = translations[currentLang].toggleLinkHasAccount;
+      }
+  }
+
 
   // **************************************************
   // الدوال المساعدة
@@ -207,34 +583,38 @@
   // تبديل وضع تسجيل الدخول / إنشاء الحساب
   function toggleMode() {
     isLoginMode = !isLoginMode;
-    msgEl.textContent = '';
-    errEl.textContent = '';
+    errEl.style.display = 'none'; 
+    msgEl.style.display = 'none';
     
     if (isLoginMode) {
-      formTitle.textContent = 'تسجيل الدخول';
-      submitBtn.textContent = 'تسجيل الدخول';
-      toggleModeLink.textContent = 'إنشاء حساب جديد';
       subscriptionBox.style.display = 'none';
+      nameFields.style.display = 'none';
+      confirmPasswordField.style.display = 'none';
       passwordInput.setAttribute('autocomplete', 'current-password');
+      firstNameInput.removeAttribute('required');
+      lastNameInput.removeAttribute('required');
+      confirmPasswordInput.removeAttribute('required');
     } else {
-      formTitle.textContent = 'إنشاء حساب جديد';
-      submitBtn.textContent = 'إنشاء حساب و تسجيل الدخول';
-      toggleModeLink.textContent = 'لديك حساب بالفعل؟ سجل الدخول';
-      subscriptionBox.style.display = 'block';
+      subscriptionBox.style.display = 'flex';
+      nameFields.style.display = 'flex';
+      confirmPasswordField.style.display = 'flex';
       passwordInput.setAttribute('autocomplete', 'new-password');
+      firstNameInput.setAttribute('required', 'required');
+      lastNameInput.setAttribute('required', 'required');
+      confirmPasswordInput.setAttribute('required', 'required');
     }
+    updateFormContent();
   }
   
-  // 🛑 إرسال رسالة شكر عبر API Proxy على Vercel
+  // إرسال رسالة شكر عبر API Proxy على Vercel
   async function sendOneSignalEmail(email) {
       try {
-        // 🛑 استدعاء وظيفة الخادم بدلاً من OneSignal مباشرة
         const response = await fetch('/api/send-email', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
           body: JSON.stringify({
             email: email,
-            action: 'subscribe' // للإشارة إلى أن هذا اشتراك جديد
+            action: 'subscribe'
           })
         });
 
@@ -249,10 +629,29 @@
       }
   }
 
-
   // **************************************************
   // معالجات الأحداث
   // **************************************************
+  
+  // 🆕 منطق إظهار/إخفاء كلمة السر
+  document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', () => {
+          const targetId = button.dataset.target;
+          const targetInput = document.getElementById(targetId);
+          const icon = button.querySelector('i');
+          
+          if (targetInput.type === 'password') {
+              targetInput.type = 'text';
+              icon.classList.remove('fa-eye-slash');
+              icon.classList.add('fa-eye');
+          } else {
+              targetInput.type = 'password';
+              icon.classList.remove('fa-eye');
+              icon.classList.add('fa-eye-slash');
+          }
+      });
+  });
+
 
   toggleModeLink.addEventListener('click', (e) => {
     e.preventDefault();
@@ -262,10 +661,39 @@
   // إرسال النموذج (تسجيل الدخول أو إنشاء حساب)
   authForm.addEventListener('submit', async function(e){
     e.preventDefault();
-    errEl.textContent=''; msgEl.textContent='';
+    errEl.style.display = 'none'; 
+    msgEl.style.display = 'none';
+    errEl.textContent=''; 
+    msgEl.textContent='';
+    
     const email = emailInput.value;
     const password = passwordInput.value;
     const subscribe = subscribeEmailCheckbox.checked;
+
+    // 🛑 التحقق الإجباري من الموافقة على الشروط
+    if (!acceptTermsCheckbox.checked) {
+        errEl.textContent = translations[currentLang].termsError;
+        errEl.style.display = 'block';
+        return;
+    }
+    
+    // 🆕 تحقق من مطابقة كلمات المرور (في وضع إنشاء الحساب)
+    if (!isLoginMode) {
+        const confirmPassword = confirmPasswordInput.value;
+        const firstName = firstNameInput.value.trim();
+        const lastName = lastNameInput.value.trim();
+
+        if (password !== confirmPassword) {
+            errEl.textContent = translations[currentLang].passwordMatchError;
+            errEl.style.display = 'block';
+            return;
+        }
+        if (!firstName || !lastName) {
+             errEl.textContent = translations[currentLang].nameRequiredError;
+             errEl.style.display = 'block';
+             return;
+        }
+    }
 
     submitBtn.disabled = true;
     loadingSpinner.style.display = 'block';
@@ -278,24 +706,38 @@
         
         updateSubscription(user.uid, subscribe); 
         
-        window.location.href = "home.html";
+        msgEl.textContent = translations[currentLang].loginSuccess;
+        msgEl.style.display = 'block';
+        
+        setTimeout(() => {
+             /* * ⬇️⬇️⬇️ تعديل ⬇️⬇️⬇️ */
+             window.location.href = "menu.html";
+        }, 1500); 
         
       } else {
         // وضع إنشاء الحساب
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        const fullName = `${firstNameInput.value.trim()} ${lastNameInput.value.trim()}`;
+        
+        await updateProfile(user, {
+            displayName: fullName
+        });
         
         updateSubscription(user.uid, subscribe);
         await sendEmailVerification(user);
         
         if (subscribe) {
-            await sendOneSignalEmail(email); // 🛑 انتظار إرسال البريد
+            await sendOneSignalEmail(email);
         }
-
-        msgEl.innerHTML = `✅ تم إنشاء الحساب بنجاح! تم إرسال **رابط التفعيل** إلى بريدك الإلكتروني: ${email}.<br>**تنبيه: يرجى التحقق من مجلد البريد العشوائي (Spam) إذا لم تصلك الرسالة خلال دقائق.**`;
+        
+        const registerSuccessMsg = translations[currentLang].registerSuccess.replace('{email}', email);
+        msgEl.innerHTML = `✅ ${registerSuccessMsg}`;
+        msgEl.style.display = 'block';
         
         setTimeout(() => {
-             window.location.href = "home.html";
+             /* * ⬇️⬇️⬇️ تعديل ⬇️⬇️⬇️ */
+             window.location.href = "menu.html";
         }, 3000); 
       }
 
@@ -309,6 +751,7 @@
         errorMessage = 'كلمة المرور ضعيفة جداً. يجب أن تكون 6 أحرف على الأقل.';
       }
       errEl.textContent = `فشل العملية: ${errorMessage}`;
+      errEl.style.display = 'block';
       
     } finally {
       submitBtn.disabled = false;
@@ -319,11 +762,16 @@
   // التحقق من حالة المستخدم عند تحميل الصفحة
   onAuthStateChanged(auth, user => {
       if (user) {
-          window.location.href = "home.html";
+          /* * ⬇️⬇️⬇️ تعديل ⬇️⬇️⬇️ */
+          window.location.href = "menu.html";
       } else {
           toggleMode();
+          window.onload = () => { setLanguage(currentLang); }; 
       }
   });
+  
+  // تشغيل اللغة الافتراضية
+  setLanguage(currentLang);
 </script>
 
 </body>

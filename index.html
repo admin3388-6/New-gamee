@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <mame="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-key="pageTitle">Skydata - خدمات سحابية وأدوات مجانية</title>
 
     <meta name="description" content="موقع Skydata يقدم أدوات مجانية لتحويل الصور، بما في ذلك تحويل الصور إلى PDF، وضغط WEBP، ورفع الصور للحصول على روابط. خدمات سحابية سريعة ومجانية.">
@@ -51,6 +51,35 @@
         }
         .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
 
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .auth-button {
+            display: flex; /* لإظهار الأيقونة والنص جنباً إلى جنب */
+            align-items: center;
+            text-decoration: none; 
+            color: #007bff; 
+            margin: 0 5px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            padding: 5px 10px; 
+            border-radius: 5px;
+            border: 1px solid #007bff;
+            background-color: transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap; /* لمنع انكسار النص */
+        }
+        .auth-button:hover {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .auth-button i {
+            margin-inline-end: 8px; /* مسافة بين الأيقونة والنص */
+        }
+
+
         main { text-align: center; padding: 30px 0; }
         .intro-text { margin-bottom: 30px; }
         .intro-text h1 { font-size: 2em; color: #ffffff; }
@@ -60,7 +89,6 @@
             margin: 15px 0; display: block;
         }
 
-        /* لوحة الإحصائيات */
         .stats-panel {
             background-color: #1e1e1e;
             border-radius: 8px;
@@ -110,18 +138,17 @@
         .feature-section h2 { font-size: 1.5em; margin-bottom: 10px; color: #ffffff; }
         .feature-section p { font-size: 1.1em; }
 
-        /* (مُعدل) تصميم الأزرار مع الأيقونات */
         .cta-section {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px; /* مسافة بين الأزرار */
+            gap: 15px; 
         }
         .cta-button {
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            background-color: #007bff; /* (مُعدل) اللون الأزرق الموحد */
+            background-color: #007bff; 
             color: #ffffff;
             padding: 12px 20px; 
             font-size: 1.1em; font-weight: bold;
@@ -131,17 +158,14 @@
             flex-grow: 1;
         }
         .cta-button:hover { 
-            background-color: #0056b3; /* (مُعدل) لون أزرق أغمق */
+            background-color: #0056b3; 
             transform: scale(1.03);
         }
         
-        /* (مُعدل) تصميم الأيقونة داخل الزر */
         .btn-icon {
-            font-size: 1.2em; /* حجم الأيقونة */
-            margin-inline-end: 10px; /* مسافة بين الأيقونة والنص */
+            font-size: 1.2em; 
+            margin-inline-end: 10px; 
         }
-        
-        /* (تم الحذف) كل الألوان الأخرى مثل .green .orange .purple */
         
         footer {
             background-color: #1e1e1e;
@@ -179,7 +203,6 @@
             transform: scale(1.1);
         }
 
-        /* تصميم نافذة التقييم */
         .rating-widget {
             margin-top: 30px;
             border-top: 1px solid #333;
@@ -212,6 +235,77 @@
             font-size: 1.2em;
         }
 
+        /* * ⬇️⬇️⬇️ CSS جديد: تنسيقات الزر الجديد ⬇️⬇️⬇️ */
+        .uiverse-btn-wrapper {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem; /* 16px */
+          margin-top: 30px; /* مسافة إضافية فوقه */
+        }
+        .uiverse-btn-glow {
+          position: absolute;
+          top: 0; right: 0; bottom: 0; left: 0;
+          opacity: 0.6;
+          transition: opacity 1s;
+          background: linear-gradient(to right, #6366f1, #ec4899, #f59e0b); /* from-indigo-500 via-pink-500 to-yellow-400 */
+          border-radius: 0.75rem; /* 12px */
+          filter: blur(1.5rem); /* 24px */
+        }
+        .uiverse-btn-wrapper:hover .uiverse-btn-glow {
+          opacity: 1;
+          transition-duration: 0.2s;
+        }
+        .uiverse-btn-anchor {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem; /* 16px */
+          border-radius: 0.75rem; /* 12px */
+          background-color: #111827; /* bg-gray-900 */
+          padding: 0.75rem 2rem; /* 12px 32px */
+          font-weight: 600; /* font-semibold */
+          color: white;
+          transition: all 0.2s;
+          text-decoration: none; /* إزالة الخط */
+        }
+        .uiverse-btn-anchor:hover {
+          background-color: #1f2937; /* hover:bg-gray-800 */
+          box-shadow: 0 10px 15px -3px rgba(107, 114, 128, 0.3), 0 4px 6px -2px rgba(107, 114, 128, 0.3); /* hover:shadow-lg hover:shadow-gray-600/30 */
+          transform: translateY(-0.25rem); /* hover:-translate-y-0.5 */
+        }
+        .uiverse-btn-anchor svg {
+          margin-top: 2px; /* mt-0.5 */
+          margin-left: 0.5rem; /* ml-2 */
+          margin-right: -0.25rem; /* -mr-1 */
+          stroke: white;
+          stroke-width: 2;
+        }
+        [dir="rtl"] .uiverse-btn-anchor svg {
+            /* تعديل للغة العربية */
+            margin-left: -0.25rem;
+            margin-right: 0.5rem;
+        }
+        .uiverse-btn-anchor svg path:first-child {
+          transition: opacity 0.2s;
+          opacity: 0;
+        }
+        .uiverse-btn-anchor:hover svg path:first-child {
+          opacity: 1;
+        }
+        .uiverse-btn-anchor svg path:last-child {
+          transition: transform 0.2s;
+        }
+        .uiverse-btn-anchor:hover svg path:last-child {
+          transform: translateX(3px);
+        }
+        [dir="rtl"] .uiverse-btn-anchor:hover svg path:last-child {
+            transform: translateX(-3px); /* تعديل للغة العربية */
+        }
+        /* * ⬆️⬆️⬆️ CSS جديد ⬆️⬆️⬆️ */
+
         
         /* Responsive */
         @media (max-width: 600px) {
@@ -239,6 +333,14 @@
                 width: 80%;
                 margin: 10px auto;
             }
+
+            .auth-button span {
+                display: none; /* إخفاء النص في الشاشات الصغيرة */
+            }
+            .auth-button i {
+                margin-inline-end: 0; /* إزالة المسافة عند إخفاء النص */
+                font-size: 1.1em;
+            }
         }
         
         @media (max-width: 380px) {
@@ -248,6 +350,9 @@
             .lang-switcher a {
                 padding: 3px 5px;
                 font-size: 0.9em;
+            }
+            .auth-button {
+                padding: 3px 6px;
             }
         }
 
@@ -261,10 +366,24 @@
             <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
         </div>
         
-        <div class="lang-switcher">
-            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+        <div class="header-controls">
+            <div class="lang-switcher">
+                <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+                <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+            </div>
+            
+            <div class="auth-controls">
+                <a href="login.html" class="auth-button" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span data-lang-key="loginButton">تسجيل الدخول</span>
+                </a>
+                <a href="menu.html" class="auth-button" id="menu-btn" style="display: none;">
+                    <i class="fas fa-bars"></i>
+                    <span data-lang-key="menuButton">القائمة</span>
+                </a>
+            </div>
         </div>
+
     </header>
 
     <div class="container">
@@ -351,7 +470,35 @@
 
             </section>
 
-        </main>
+            <div class="uiverse-btn-wrapper">
+              <div class="uiverse-btn-glow"></div>
+              <a
+                role="button"
+                class="uiverse-btn-anchor"
+                title="payment"
+                href="login.html"
+                >
+                <span data-lang-key="ctaButtonStartFree">اشترك مجاناً</span>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 10 10"
+                  height="10"
+                  width="10"
+                  fill="none"
+                  class="mt-0.5 ml-2 -mr-1 stroke-white stroke-2"
+                >
+                  <path
+                    d="M0 5h7"
+                    class="transition opacity-0 group-hover:opacity-100"
+                  ></path>
+                  <path
+                    d="M1 1l4 4-4 4"
+                    class="transition group-hover:translate-x-[3px]"
+                  ></path>
+                </svg>
+              </a>
+            </div>
+            </main>
         
     </div> <footer>
         <div class="footer-links">
@@ -386,15 +533,16 @@
 
 
     <script type="module">
-        // 1. استيراد المكتبات (App و Realtime Database)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        // 1. استيراد المكتبات
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
         // 2. كود الإعداد الخاص بك
         const firebaseConfig = {
           apiKey: "AIzaSyD7QnPaJTYiawCz6SrtdBGT_NDeAPX9bBc",
           authDomain: "pixelrpg-5ebc3.firebaseapp.com",
-          databaseURL: "https://pixelrpg-5ebc3-default-rtdb.europe-west1.firebasedatabase.app",
+          databaseURL: "https://pixelrpg-5ebc3-default-rtdb.europe-west1.firebasedabase.app",
           projectId: "pixelrpg-5ebc3",
           storageBucket: "pixelrpg-5ebc3.firebasestorage.app",
           messagingSenderId: "1041585714383",
@@ -405,6 +553,7 @@
         // 3. تشغيل فايربيس
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
+        const auth = getAuth(app);
 
         // --- 4. منطق الترجمة (مُعدل) ---
         const translations = {
@@ -417,20 +566,23 @@
                 "featureFormats": "دعم أكثر من 150 صيغة",
                 "featureSecurityTitle": "حماية وتشفير البيانات المتقدم",
                 "featureSecurityDesc": "يتم تشفير بيناتك حماية خصوصيتك 100%",
-                "ctaButtonRemoveBg": "إزالة خلفية الصور (AI)", // 🆕 تمت الإضافة هنا
+                "ctaButtonRemoveBg": "إزالة خلفية الصور (AI)",
                 "ctaButtonPdf": "تحويل صور إلى PDF",
                 "ctaButtonWebp": "تحويل الصور الى webp",
                 "ctaButtonImgtag": "تحويل الصور الى روابط",
                 "ctaButtonQr": "صانع QR Code",
                 "ctaButtonSize": "تغيير حجم الصور",
                 "ctaButtonZoom": "تكبير الصور (AI)",
-                "ctaButtonEditor": "محرر الصور", // (جديد)
+                "ctaButtonEditor": "محرر الصور",
+                "ctaButtonStartFree": "اشترك مجاناً", // * ⬅️ إضافة جديدة
                 "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
                 "footerAbout": "عن Skydata",
                 "visitors": "عدد زوار الموقع",
                 "ratings": "من ({count} تقييمات)",
                 "rateUs": "قم بتقييم خدمتنا",
-                "thanks": "شكراً لتقييمك!"
+                "thanks": "شكراً لتقييمك!",
+                "loginButton": "تسجيل الدخول",
+                "menuButton": "القائمة"
             },
             "en": {
                 "pageTitle": "Skydata - Cloud Services and Free Tools",
@@ -441,20 +593,23 @@
                 "featureFormats": "Support for over 150 formats",
                 "featureSecurityTitle": "Advanced Data Protection and Encryption",
                 "featureSecurityDesc": "Your data is encrypted, ensuring 100% privacy protection",
-                "ctaButtonRemoveBg": "Remove Background (AI)", // 🆕 تمت الإضافة هنا
+                "ctaButtonRemoveBg": "Remove Background (AI)",
                 "ctaButtonPdf": "Convert Images to PDF",
                 "ctaButtonWebp": "Convert Images to WEBP",
                 "ctaButtonImgtag": "Convert Images to Links",
                 "ctaButtonQr": "QR Code Generator",
                 "ctaButtonSize": "Image Resizer",
                 "ctaButtonZoom": "Image Upscaler (AI)",
-                "ctaButtonEditor": "Photo Editor", // (جديد)
+                "ctaButtonEditor": "Photo Editor",
+                "ctaButtonStartFree": "Get Started For Free", // * ⬅️ إضافة جديدة
                 "footerPolicy": "Terms of Use and Privacy Policy",
                 "footerAbout": "About Skydata",
                 "visitors": "Total Site Visitors",
                 "ratings": "from ({count} ratings)",
                 "rateUs": "Rate Our Service",
-                "thanks": "Thanks for your rating!"
+                "thanks": "Thanks for your rating!",
+                "loginButton": "Login",
+                "menuButton": "Menu"
             }
         };
 
@@ -473,10 +628,37 @@
                     if (text.includes('{count}')) {
                          // سيتم تحديثه بواسطة onValue
                     } else {
-                        element.innerHTML = text;
+                        // تعديل للتعامل مع الأزرار التي تحتوي على span
+                        let target = element.classList.contains('auth-button') || element.getAttribute('data-lang-key') === 'ctaButtonStartFree'
+                                   ? element.querySelector('span') || element 
+                                   : element;
+                        
+                        // حالة خاصة للزر الجديد الذي قد لا يحتوي على span في البداية
+                        if (element.getAttribute('data-lang-key') === 'ctaButtonStartFree') {
+                            target = element;
+                        }
+
+                        // إذا كان الزر يحتوي على SPAN (مثل أزرار الهيدر)
+                        if (element.querySelector('span')) {
+                            element.querySelector('span').innerHTML = text;
+                        } else {
+                            element.innerHTML = text;
+                        }
                     }
                 }
             });
+            
+            // تحديث ترجمة زر "اشترك مجانا" (لأنه لا يحتوي على span)
+            const startFreeBtn = document.querySelector('[data-lang-key="ctaButtonStartFree"]');
+            if (startFreeBtn) {
+                // نحافظ على SVG
+                const svgIcon = startFreeBtn.querySelector('svg');
+                startFreeBtn.innerHTML = translations[lang].ctaButtonStartFree;
+                if (svgIcon) {
+                    startFreeBtn.appendChild(svgIcon);
+                }
+            }
+
             const ratingsData = window.currentRatingsData || { count: 0 };
             document.getElementById('rating-count').innerText = translations[currentLang].ratings.replace('{count}', ratingsData.count);
         }
@@ -496,21 +678,19 @@
         const visitorsRef = ref(database, 'statistics/visitors');
         const ratingsRef = ref(database, 'statistics/ratings');
 
-        // (جديد) دالة تنسيق الأرقام K/M/B
         function formatLargeNumber(num) {
-          if (num >= 1000000000) { // Billion
+          if (num >= 1000000000) { 
              return (num / 1000000000).toFixed(1).replace('.0', '') + 'B';
           }
-          if (num >= 1000000) { // Million
+          if (num >= 1000000) { 
              return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
           }
-          if (num >= 1000) { // Thousand
+          if (num >= 1000) { 
              return (num / 1000).toFixed(1).replace('.0', '') + 'K';
           }
-          return num.toString(); // 0-999
+          return num.toString();
         }
 
-        // (مُعدل) نظام التحقق من التقييم
         const voteTimestamp = localStorage.getItem('skydataVoteTimestamp');
         const fifteenDaysInMillis = 15 * 24 * 60 * 60 * 1000;
         let canVote = true;
@@ -525,7 +705,6 @@
             }
         }
 
-        // زيادة عدد الزوار
         function incrementVisitor() {
             if (sessionStorage.getItem('skydataVisitor')) {
                 return;
@@ -537,15 +716,12 @@
             });
         }
 
-        // (مُعدل) جلب البيانات وعرضها
         function loadData() {
-            // جلب الزوار
             onValue(visitorsRef, (snapshot) => {
                 const count = snapshot.val() || 0;
-                visitorCountEl.innerText = formatLargeNumber(count); // تطبيق الدالة هنا
+                visitorCountEl.innerText = formatLargeNumber(count);
             });
 
-            // جلب التقييمات
             onValue(ratingsRef, (snapshot) => {
                 const data = snapshot.val() || { totalScore: 0, count: 0 };
                 window.currentRatingsData = data;
@@ -560,7 +736,6 @@
             });
         }
 
-        // إرسال التقييم
         function submitRating(starValue) {
             if (!canVote) {
                 showThanks();
@@ -628,6 +803,22 @@
         if (!canVote) {
             showThanks();
         }
+
+        // --- 8. التحقق من تسجيل الدخول ---
+        const loginBtn = document.getElementById('login-btn');
+        const menuBtn = document.getElementById('menu-btn');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // المستخدم مسجل دخوله
+                loginBtn.style.display = 'none';
+                menuBtn.style.display = 'flex';
+            } else {
+                // المستخدم غير مسجل دخوله
+                loginBtn.style.display = 'flex';
+                menuBtn.style.display = 'none';
+            }
+        });
 
     </script>
     </body>

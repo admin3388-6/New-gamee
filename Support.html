@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">الدعم الفني - Sky Data</title>
+    
+    <meta name="description" content="اتصل بفريق دعم Sky Data. أرسل استفسارك أو مشكلتك عبر النموذج وسنتواصل معك.">
+    <meta name="description" lang="en" content="Contact the Sky Data support team. Send your inquiry or issue via the form and we will get back to you.">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+        });
+      });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+
+        body {
+            font-family: Arial, sans-serif; direction: rtl; 
+            background-color: #121212; color: #e0e0e0;
+            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; flex-grow: 1; }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { height: 40px; margin-left: 10px; }
+        .lang-switcher { display: flex; }
+        .lang-switcher a {
+            text-decoration: none; color: #007bff; margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+        }
+        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+
+        footer {
+            background-color: #1e1e1e; padding: 20px;
+            text-align: center; margin-top: auto;
+            border-top: 1px solid #333;
+        }
+        
+        main { text-align: right; }
+        .content-box {
+            background-color: #1e1e1e; padding: 30px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+            line-height: 1.7;
+        }
+        .content-box h1 { 
+            color: #ffffff; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .content-box h2 {
+            color: #007bff;
+            margin-top: 30px;
+        }
+        .content-box p {
+            font-size: 1.1em;
+            color: #e0e0e0;
+        }
+        .content-box a {
+            color: #4da6ff; 
+            text-decoration: none;
+        }
+        .content-box a:hover {
+            text-decoration: underline;
+        }
+
+        /* تنسيقات النموذج */
+        .support-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-size: 1.1em;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .form-group input[type="email"],
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            background-color: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box; /* لضمان عدم تجاوز العرض */
+        }
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-group .char-counter {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .cta-button {
+            display: inline-flex; /* (جديد) */
+            align-items: center;
+            justify-content: center;
+            background-color: #007bff; color: #ffffff;
+            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
+            text-decoration: none; border-radius: 5px; border: none;
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .cta-button:hover { 
+            background-color: #0056b3; 
+        }
+        .cta-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        
+        /* (جديد) سبينر التحميل داخل الزر */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-inline-end: 10px;
+            display: none; /* مخفي افتراضياً */
+        }
+
+        /* رسائل الحالة */
+        #form-status {
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* مخفي افتراضياً */
+        }
+        #form-status.success {
+            color: #28a745;
+            background-color: #1a4d2e;
+        }
+        #form-status.error {
+            color: #e74c3c;
+            background-color: #5c1818;
+        }
+        
+        /* صندوق معلومات التواصل الأخرى */
+        .contact-info-box {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .contact-info-box i {
+            margin-inline-end: 8px;
+            color: #007bff;
+        }
+
+        .back-button { 
+            background-color: #555; margin-top: 50px; 
+            font-size: 1.1em; padding: 10px 20px;
+            display: inline-block;
+        }
+        .back-button:hover { background-color: #444; }
+
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            header { padding: 10px 15px; }
+            .content-box { padding: 20px; }
+        }
+        @media (max-width: 380px) {
+            .logo-container img { height: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        </div>
+        <div class="lang-switcher">
+            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <main>
+            <div class="content-box">
+                <h1 data-lang-key="mainTitle">اتصل بنا - الدعم الفني</h1>
+                <p data-lang-key="introText">
+                    هل تواجه مشكلة أو لديك استفسار؟ يرجى ملء النموذج أدناه وسيقوم فريق الدعم بالرد عليك في أقرب وقت ممكن.
+                </p>
+
+                <form id="support-form" class="support-form">
+                    
+                    <div class="form-group">
+                        <label for="email" data-lang-key="emailLabel">بريدك الإلكتروني (مطلوب)</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="title" data-lang-key="titleLabel">عنوان المشكلة</label>
+                        <input type="text" id="title" maxlength="30" required>
+                        <span class="char-counter" id="title-counter" data-lang-key="charCounter">0 / 30</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description" data-lang-key="descLabel">وصف المشكلة</label>
+                        <textarea id="description" maxlength="150" required></textarea>
+                        <span class="char-counter" id="desc-counter" data-lang-key="charCounter">0 / 150</span>
+                    </div>
+                    
+                    <button type="submit" id="submit-btn" class="cta-button">
+                        <div class="spinner" id="spinner"></div>
+                        <span id="submit-btn-text" data-lang-key="submitButton">إرسال الرسالة</span>
+                    </button>
+                    
+                </form>
+
+                <div id="form-status"></div>
+
+                <div class="contact-info-box">
+                    <h2 data-lang-key="otherMethodsTitle">طرق تواصل أخرى</h2>
+                    <p data-lang-key="emailInfo">
+                        <i class="fas fa-envelope"></i> البريد المباشر: 
+                        <a href="mailto:support@skydata.abrdns.com">support@skydata.abrdns.com</a>
+                    </p>
+                    <p data-lang-key="discordInfo">
+                        <i class="fab fa-discord"></i> انضم إلينا على ديسكورد: 
+                        <a href="https://discord.gg/6m3c2up4p3" target="_blank">رابط السيرفر</a>
+                    </p>
+                    <p data-lang-key="hoursInfo">
+                        <i class="fas fa-clock"></i> ساعات الدعم: 24/7 (بتوقيت الجزائر UTC+1)
+                    </p>
+                </div>
+            </div>
+
+            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
+        </main>
+        
+    </div> 
+    
+    <footer style="margin-top: auto;">
+        </footer>
+
+    <script type="module">
+        // --- 1. استيراد مكتبات Firebase ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+        // --- 2. إعدادات Firebase ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+          authDomain: "skydata-ai.firebaseapp.com",
+          databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "skydata-ai",
+          storageBucket: "skydata-ai.firebasestorage.app",
+          messagingSenderId: "165531796197",
+          appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+          measurementId: "G-JYS7P7FY3Z"
+        };
+
+        // --- 3. تشغيل Firebase ---
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- 4. قاموس الترجمة (مُحدّث) ---
+        const translations = {
+            "ar": {
+                "pageTitle": "الدعم الفني - Sky Data",
+                "mainTitle": "اتصل بنا - الدعم الفني",
+                "introText": "هل تواجه مشكلة أو لديك استفسار؟ يرجى ملء النموذج أدناه وسيقوم فريق الدعم بالرد عليك في أقرب وقت ممكن.",
+                "emailLabel": "بريدك الإلكتروني (مطلوب)",
+                "titleLabel": "عنوان المشكلة",
+                "descLabel": "وصف المشكلة",
+                "charCounter": "{count} / {max}",
+                "submitButton": "إرسال الرسالة",
+                "submittingButton": "جاري الإرسال...",
+                "successMsg": "تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.",
+                "errorMsg": "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقاً.",
+                "validationError": "يرجى ملء جميع الحقول المطلوبة.",
+                "spamError": "لقد أرسلت طلب دعم بالفعل. يرجى الانتظار {hours} ساعة و {minutes} دقيقة قبل إرسال طلب جديد.", // ⬅️ إضافة جديدة
+                "otherMethodsTitle": "طرق تواصل أخرى",
+                "emailInfo": "<i class='fas fa-envelope'></i> البريد المباشر: <a href='mailto:support@skydata.abrdns.com'>support@skydata.abrdns.com</a>",
+                "discordInfo": "<i class='fab fa-discord'></i> انضم إلينا على ديسكورد: <a href='https://discord.gg/6m3c2up4p3' target='_blank'>رابط السيرفر</a>",
+                "hoursInfo": "<i class='fas fa-clock'></i> ساعات الدعم: 24/7 (بتوقيت الجزائر UTC+1)",
+                "backToHome": "العودة للرئيسية"
+            },
+            "en": {
+                "pageTitle": "Support - Sky Data",
+                "mainTitle": "Contact Us - Technical Support",
+                "introText": "Are you facing an issue or have an inquiry? Please fill out the form below and our support team will get back to you as soon as possible.",
+                "emailLabel": "Your Email (Required)",
+                "titleLabel": "Problem Title",
+                "descLabel": "Problem Description",
+                "charCounter": "{count} / {max}",
+                "submitButton": "Send Message",
+                "submittingButton": "Sending...",
+                "successMsg": "Your message has been sent successfully! We will contact you soon.",
+                "errorMsg": "An error occurred while sending. Please try again later.",
+                "validationError": "Please fill in all required fields.",
+                "spamError": "You have already submitted a support request. Please wait {hours} hours and {minutes} minutes before sending a new one.", // ⬅️ إضافة جديدة
+                "otherMethodsTitle": "Other Contact Methods",
+                "emailInfo": "<i class='fas fa-envelope'></i> Direct Email: <a href='mailto:support@skydata.abrdns.com'>support@skydata.abrdns.com</a>",
+                "discordInfo": "<i class='fab fa-discord'></i> Join us on Discord: <a href='https://discord.gg/6m3c2up4p3' target='_blank'>Server Link</a>",
+                "hoursInfo": "<i class='fas fa-clock'></i> Support Hours: 24/7 (Algeria Time UTC+1)",
+                "backToHome": "Back to Home"
+            }
+        };
+
+        // --- 5. متغير اللغة الحالي ---
+        let currentLang = 'ar'; 
+
+        // --- 6. دالة تبديل اللغة ---
+        window.setLanguage = function(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    // تحديث العدادات إذا كانت موجودة
+                    if (key === 'charCounter') {
+                        // لا تفعل شيئاً هنا، العدادات لها منطق خاص
+                    } else {
+                        element.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            
+            // تحديث العدادات عند تغيير اللغة
+            updateCounter('title', 30);
+            updateCounter('desc', 150);
+        }
+        
+        // --- 7. منطق الأداة (مُحدّث) ---
+        
+        // * ⬇️⬇️⬇️ كود جديد: تعريف ثوابت الحماية ⬇️⬇️⬇️ *
+        const STORAGE_KEY = 'skydata_support_timestamp';
+        const COOLDOWN_PERIOD = 24 * 60 * 60 * 1000; // 24 ساعة بالمللي ثانية
+        // * ⬆️⬆️⬆️ نهاية الكود الجديد ⬆️⬆️⬆️ *
+
+        // عناصر الصفحة
+        const supportForm = document.getElementById('support-form');
+        const emailInput = document.getElementById('email');
+        const titleInput = document.getElementById('title');
+        const descInput = document.getElementById('description');
+        const titleCounter = document.getElementById('title-counter');
+        const descCounter = document.getElementById('desc-counter');
+        const submitBtn = document.getElementById('submit-btn');
+        const submitBtnText = document.getElementById('submit-btn-text');
+        const spinner = document.getElementById('spinner');
+        const formStatus = document.getElementById('form-status');
+        
+        // دالة تحديث العداد
+        function updateCounter(type, max) {
+            let element, counterElement;
+            if (type === 'title') {
+                element = titleInput;
+                counterElement = titleCounter;
+            } else {
+                element = descInput;
+                counterElement = descCounter;
+            }
+            const count = element.value.length;
+            counterElement.innerHTML = translations[currentLang].charCounter
+                .replace('{count}', count)
+                .replace('{max}', max);
+        }
+
+        // ربط عدادات الحروف
+        titleInput.addEventListener('input', () => updateCounter('title', 30));
+        descInput.addEventListener('input', () => updateCounter('desc', 150));
+
+        // إرسال النموذج (مُعدل)
+        supportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            formStatus.style.display = 'none'; // إخفاء الرسائل القديمة
+
+            // * ⬇️⬇️⬇️ كود جديد: التحقق من السبام أولاً ⬇️⬇️⬇️ *
+            const currentTime = new Date().getTime();
+            const lastSubmitTime = localStorage.getItem(STORAGE_KEY);
+
+            if (lastSubmitTime) {
+                const timePassed = currentTime - Number(lastSubmitTime);
+
+                if (timePassed < COOLDOWN_PERIOD) {
+                    const timeLeft = COOLDOWN_PERIOD - timePassed;
+                    const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+                    const minutesLeft = Math.ceil((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    let errorMsg = translations[currentLang].spamError
+                        .replace('{hours}', hoursLeft)
+                        .replace('{minutes}', minutesLeft);
+                    
+                    formStatus.innerText = errorMsg;
+                    formStatus.className = 'error';
+                    formStatus.style.display = 'block';
+                    return; // إيقاف الإرسال
+                } else {
+                    // إذا مر الوقت، احذف المفتاح القديم للسماح بالإرسال
+                    localStorage.removeItem(STORAGE_KEY);
+                }
+            }
+            // * ⬆️⬆️⬆️ نهاية الكود الجديد ⬆️⬆️⬆️ *
+            
+            const email = emailInput.value;
+            const title = titleInput.value;
+            const description = descInput.value;
+
+            // التحقق من أن الحقول ليست فارغة
+            if (!email || !title || !description) {
+                formStatus.innerText = translations[currentLang].validationError;
+                formStatus.className = 'error';
+                formStatus.style.display = 'block';
+                return;
+            }
+
+            // تعطيل الزر وإظهار التحميل
+            submitBtn.disabled = true;
+            spinner.style.display = 'inline-block';
+            submitBtnText.innerText = translations[currentLang].submittingButton;
+
+            try {
+                // ... (نفس كود الإرسال السابق)
+                const ticketsRef = ref(db, 'supportTickets');
+                const newTicket = {
+                    email: email,
+                    title: title,
+                    description: description,
+                    status: "new", 
+                    createdAt: serverTimestamp() 
+                };
+                await push(ticketsRef, newTicket);
+
+                // إظهار رسالة النجاح
+                formStatus.innerText = translations[currentLang].successMsg;
+                formStatus.className = 'success';
+                formStatus.style.display = 'block';
+                
+                // * ⬇️⬇️⬇️ كود جديد: حفظ الطابع الزمني عند النجاح ⬇️⬇️⬇️ *
+                localStorage.setItem(STORAGE_KEY, new Date().getTime().toString());
+                // * ⬆️⬆️⬆️ نهاية الكود الجديد ⬆️⬆️⬆️ *
+
+                // تفريغ النموذج
+                supportForm.reset();
+                updateCounter('title', 30);
+                updateCounter('desc', 150);
+
+            } catch (error) {
+                // ... (نفس كود معالجة الخطأ)
+                console.error("Error sending support ticket:", error);
+                formStatus.innerText = translations[currentLang].errorMsg;
+                formStatus.className = 'error';
+                formStatus.style.display = 'block';
+            } finally {
+                // ... (نفس كود finally)
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+                submitBtnText.innerText = translations[currentLang].submitButton;
+            }
+        });
+
+        // --- 8. تشغيل الصفحة ---
+        setLanguage(currentLang);
+        updateCounter('title', 30); // تهيئة العدادات عند التحميل
+        updateCounter('desc', 150);
+        
+    </script>
+</body>
+</html>

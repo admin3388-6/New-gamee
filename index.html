@@ -8,7 +8,6 @@
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
     <style>
-        /* ... (نفس التنسيقات السابقة، لا تغيير) ... */
         body { font-family: Arial, sans-serif; display: grid; place-items: center; min-height: 100vh; background-color: #f4f4f4; margin: 0; }
         .container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 350px; min-height: 300px; }
         h2 { text-align: center; color: #333; margin-top: 0; }
@@ -76,7 +75,7 @@
     </div>
 
     <script type="module">
-        // استيراد الدوال (كما هي)
+        // استيراد الدوال التي نحتاجها
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { 
             getAuth, 
@@ -87,12 +86,25 @@
             onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
         
-        // إعدادات Firebase (كما هي)
-        const firebaseConfig = { /* ... (نفس الإعدادات السابقة) ... */ };
+
+        // --- // (هذا هو الكائن الذي سألت عنه) // ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
+        };
+        // --- // (نهاية كائن الإعدادات) // ---
+
+        // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // تهيئة OneSignal (كما هي)
+        // تهيئة OneSignal 
         window.OneSignal = window.OneSignal || [];
         OneSignal.push(function() {
             OneSignal.init({
@@ -101,7 +113,7 @@
             });
         });
 
-        // --- ربط عناصر الواجهتين (معدل) ---
+        // --- ربط عناصر الواجهتين ---
         const loginView = document.getElementById("loginView");
         const dashboardView = document.getElementById("dashboardView");
         const messageEl = document.getElementById("message");
@@ -110,35 +122,47 @@
         const btnSignUp = document.getElementById("btnSignUp");
         const btnLogin = document.getElementById("btnLogin");
         const btnLogout = document.getElementById("btnLogout"); 
-        
-        // عناصر لوحة التحكم المحدثة
         const userEmail = document.getElementById("userEmail");
         const userVerified = document.getElementById("userVerified");
         const userLinked = document.getElementById("userLinked");
         const userEmailRegistered = document.getElementById("userEmailRegistered");
         const userMessageSent = document.getElementById("userMessageSent");
 
-        // --- دوال مساعدة (كما هي) ---
-        function showMessage(text, type = "error") { /* ... (نفس الدالة) ... */ }
-        function handleAuthError(error) { /* ... (نفس الدالة) ... */ }
-        function showLoginUI() { /* ... (نفس الدالة) ... */ }
+        // --- دوال مساعدة ---
+        function showMessage(text, type = "error") {
+            messageEl.textContent = text;
+            messageEl.className = type;
+        }
 
-        // --- // (جديد: تم تعديل هذه الدالة بالكامل) ---
+        function handleAuthError(error) {
+            console.error(error.code, error.message);
+            switch (error.code) {
+                case 'auth/invalid-email': showMessage("البريد الإلكتروني غير صالح."); break;
+                case 'auth/user-not-found': showMessage("هذا الحساب غير موجود."); break;
+                case 'auth/wrong-password': showMessage("كلمة المرور خاطئة."); break;
+                case 'auth/email-already-in-use': showMessage("هذا البريد مستخدم بالفعل."); break;
+                case 'auth/weak-password': showMessage("كلمة المرور ضعيفة (6 أحرف على الأقل)."); break;
+                default: showMessage("حدث خطأ غير متوقع.");
+            }
+        }
+        function showLoginUI() {
+            loginView.style.display = "block";
+            dashboardView.style.display = "none";
+            emailInput.value = "";
+            passwordInput.value = "";
+        }
+
         /** دالة تبديل الواجهة إلى "لوحة التحكم" */
         async function showDashboardUI(user) {
             loginView.style.display = "none";
             dashboardView.style.display = "block";
             
-            // 1. ملء بيانات Firebase
             userEmail.textContent = user.email;
             userVerified.textContent = user.emailVerified ? 'نعم (مفعل)' : 'لا (غير مفعل)';
 
-            // 2. إعداد OneSignal (لخدمة الإيميل)
-            // نستخدم async/await لضمان الترتيب
             try {
                 // الخطوة 1: ربط معرف Firebase (External ID)
                 userLinked.textContent = 'جاري الربط...';
-                // نستخدم `addAlias` لتعريف المستخدم
                 await OneSignal.User.addAlias("external_id", user.uid);
                 userLinked.textContent = 'نعم (تم الربط)';
 
@@ -154,46 +178,60 @@
 
             } catch (err) {
                 console.error("OneSignal setup failed:", err);
-                // تحديث الواجهة لإظهار مكان حدوث الخطأ
                 if (userLinked.textContent === 'جاري الربط...') userLinked.textContent = 'فشل (خطأ)';
                 if (userEmailRegistered.textContent === 'جاري التسجيل...') userEmailRegistered.textContent = 'فشل (خطأ)';
                 if (userMessageSent.textContent === 'جاري إرسال الوسم...') userMessageSent.textContent = 'فشل (خطأ)';
             }
         }
 
-        // --- المستمع الرئيسي لـ Firebase (معدل لاستخدام async) ---
+        // --- المستمع الرئيسي لـ Firebase ---
         onAuthStateChanged(auth, async (user) => {
             messageEl.style.display = "none"; 
             if (user) {
                 console.log("المستخدم مسجل دخوله:", user.uid);
-                await showDashboardUI(user); // نستخدم await هنا
+                await showDashboardUI(user);
             } else {
                 console.log("المستخدم قام بتسجيل الخروج");
                 showLoginUI();
             }
         });
 
-        // --- ربط وظائف الأزرار (إنشاء وحساب وتسجيل دخول - كما هي) ---
-        btnSignUp.addEventListener("click", () => { /* ... (نفس الكود) ... */ });
-        btnLogin.addEventListener("click", () => { /* ... (نفس الكود) ... */ });
+        // --- ربط وظائف الأزرار ---
+        btnSignUp.addEventListener("click", () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            showMessage("جاري إنشاء الحساب...", "success");
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    showMessage("تم إنشاء الحساب! تم إرسال إيميل تفعيل.", "success");
+                    sendEmailVerification(userCredential.user); 
+                })
+                .catch(handleAuthError);
+        });
 
-        // --- // (جديد: تم تعديل دالة تسجيل الخروج) ---
+        btnLogin.addEventListener("click", () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            showMessage("جاري تسجيل الدخول...", "success");
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // onAuthStateChanged سيهتم بالباقي
+                })
+                .catch(handleAuthError);
+        });
+
         btnLogout.addEventListener("click", async () => {
             try {
                 const user = auth.currentUser;
                 
-                // الخطوة 1: حذف الإيميل من OneSignal
                 if (user && user.email) {
                     console.log("Removing OneSignal email...");
                     await OneSignal.User.removeEmails([user.email]);
                 }
                 
-                // الخطوة 2: تسجيل الخروج من OneSignal (لحذف External ID)
-                // `logout` هي الطريقة القديمة ولكنها لا تزال تعمل لحذف الـ ID
                 console.log("Logging out of OneSignal (removing ID)...");
                 await OneSignal.logout(); 
 
-                // الخطوة 3: تسجيل الخروج من Firebase
                 console.log("Signing out of Firebase...");
                 await signOut(auth);
 

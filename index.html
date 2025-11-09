@@ -8,111 +8,25 @@
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: grid;
-            place-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-            margin: 0;
-        }
-        .container {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 350px;
-            min-height: 300px; /* تحديد ارتفاع أدنى */
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-top: 0;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box; 
-        }
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            flex: 1; 
-        }
-        #btnSignUp {
-            background-color: #28a745;
-            color: white;
-            margin-left: 5px;
-        }
-        #btnLogin {
-            background-color: #007bff;
-            color: white;
-            margin-right: 5px;
-        }
-        #btnLogout {
-            width: 100%;
-            background-color: #dc3545; /* لون أحمر */
-            color: white;
-            margin-top: 20px;
-        }
-        
-        /* --- جديد: تنسيق رسائل الخطأ/النجاح --- */
-        #message {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 0.9em;
-            padding: 10px;
-            border-radius: 4px;
-            display: none; /* مخفية بشكل افتراضي */
-        }
-        #message.success { 
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-        #message.error { 
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            display: block;
-        }
-
-        /* --- جديد: تنسيق واجهة تسجيل الدخول --- */
-        #dashboardView {
-            display: none; /* مخفية بشكل افتراضي */
-        }
-        #dashboardView h2 {
-            color: #007bff;
-        }
-        .info-list {
-            list-style: none;
-            padding: 0;
-            margin-top: 20px;
-        }
-        .info-list li {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .info-list li span:first-child {
-            font-weight: bold;
-            color: #555;
-        }
-        .info-list li span:last-child {
-            color: #333;
-        }
+        /* ... (نفس التنسيقات السابقة، لا تغيير) ... */
+        body { font-family: Arial, sans-serif; display: grid; place-items: center; min-height: 100vh; background-color: #f4f4f4; margin: 0; }
+        .container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 350px; min-height: 300px; }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .buttons { display: flex; justify-content: space-between; }
+        button { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; flex: 1; }
+        #btnSignUp { background-color: #28a745; color: white; margin-left: 5px; }
+        #btnLogin { background-color: #007bff; color: white; margin-right: 5px; }
+        #btnLogout { width: 100%; background-color: #dc3545; color: white; margin-top: 20px; }
+        #message { text-align: center; margin-top: 15px; font-size: 0.9em; padding: 10px; border-radius: 4px; display: none; }
+        #message.success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; display: block; }
+        #message.error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; display: block; }
+        #dashboardView { display: none; }
+        #dashboardView h2 { color: #007bff; }
+        .info-list { list-style: none; padding: 0; margin-top: 20px; }
+        .info-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .info-list li span:first-child { font-weight: bold; color: #555; }
+        .info-list li span:last-child { color: #333; }
     </style>
 </head>
 <body>
@@ -166,7 +80,7 @@
             signInWithEmailAndPassword,
             signOut,
             sendEmailVerification,
-            onAuthStateChanged // <-- // جديد: المستمع الرئيسي لحالة المستخدم
+            onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
         
         // إعدادات Firebase الخاصة بك
@@ -198,63 +112,43 @@
         const loginView = document.getElementById("loginView");
         const dashboardView = document.getElementById("dashboardView");
         const messageEl = document.getElementById("message");
-
-        // عناصر واجهة تسجيل الدخول
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
         const btnSignUp = document.getElementById("btnSignUp");
         const btnLogin = document.getElementById("btnLogin");
         const btnLogout = document.getElementById("btnLogout"); 
-
-        // عناصر واجهة لوحة التحكم
         const userEmail = document.getElementById("userEmail");
         const userVerified = document.getElementById("userVerified");
         const userSubscribed = document.getElementById("userSubscribed");
         const userMessageSent = document.getElementById("userMessageSent");
 
-        // --- دوال مساعدة (جديد) ---
-
-        /** دالة لإظهار الرسائل (أخطاء أو نجاح) */
+        // --- دوال مساعدة (كما هي) ---
         function showMessage(text, type = "error") {
             messageEl.textContent = text;
-            messageEl.className = type; // 'error' or 'success'
+            messageEl.className = type;
         }
 
-        /** دالة لترجمة أخطاء Firebase إلى العربية */
         function handleAuthError(error) {
             console.error(error.code, error.message);
             switch (error.code) {
-                case 'auth/invalid-email':
-                    showMessage("البريد الإلكتروني غير صالح.");
-                    break;
-                case 'auth/user-not-found':
-                    showMessage("هذا الحساب غير موجود.");
-                    break;
-                case 'auth/wrong-password':
-                    showMessage("كلمة المرور خاطئة.");
-                    break;
-                case 'auth/email-already-in-use':
-                    showMessage("هذا البريد مستخدم بالفعل.");
-                    break;
-                case 'auth/weak-password':
-                    showMessage("كلمة المرور ضعيفة (يجب أن تكون 6 أحرف على الأقل).");
-                    break;
-                default:
-                    showMessage("حدث خطأ غير متوقع. حاول مرة أخرى.");
+                case 'auth/invalid-email': showMessage("البريد الإلكتروني غير صالح."); break;
+                case 'auth/user-not-found': showMessage("هذا الحساب غير موجود."); break;
+                case 'auth/wrong-password': showMessage("كلمة المرور خاطئة."); break;
+                case 'auth/email-already-in-use': showMessage("هذا البريد مستخدم بالفعل."); break;
+                case 'auth/weak-password': showMessage("كلمة المرور ضعيفة (6 أحرف على الأقل)."); break;
+                default: showMessage("حدث خطأ غير متوقع.");
             }
         }
 
-        // --- الدوال الرئيسية للتحكم بالواجهة (جديد) ---
-
-        /** دالة تبديل الواجهة إلى "تسجيل الدخول" */
+        // --- الدوال الرئيسية للتحكم بالواجهة ---
         function showLoginUI() {
             loginView.style.display = "block";
             dashboardView.style.display = "none";
-            // مسح الحقول عند تسجيل الخروج
             emailInput.value = "";
             passwordInput.value = "";
         }
 
+        // --- // (جديد: تم تعديل هذه الدالة) ---
         /** دالة تبديل الواجهة إلى "لوحة التحكم" */
         function showDashboardUI(user) {
             loginView.style.display = "none";
@@ -264,92 +158,78 @@
             userEmail.textContent = user.email;
             userVerified.textContent = user.emailVerified ? 'نعم (مفعل)' : 'لا (غير مفعل)';
             
-            // 2. ملء بيانات OneSignal (الاشتراك)
+            // 2. ملء بيانات OneSignal (بالترتيب الصحيح)
             userSubscribed.textContent = 'جاري التحقق...';
+            userMessageSent.textContent = '...'; // انتظار الاشتراك أولاً
+
+            // الخطوة 1: تسجيل الدخول لـ OneSignal
             OneSignal.login(user.uid)
                 .then(() => {
+                    // نجاح تسجيل الدخول
+                    console.log("OneSignal login successful.");
                     userSubscribed.textContent = 'نعم (مشترك)';
+                    
+                    // الخطوة 2: الآن، بعد النجاح، نرسل الوسم
+                    userMessageSent.textContent = 'جاري إرسال الوسم...';
+                    return OneSignal.sendTag("new_signup", "true"); // 'return' لمواصلة السلسلة
                 })
-                .catch(err => {
-                    console.error("خطأ ربط OneSignal:", err);
-                    userSubscribed.textContent = 'لا (فشل الاشتراك)';
-                });
-
-            // 3. ملء بيانات رسالة الترحيب
-            // ملاحظة: هذه الحالة لا تحفظ، ستظهر "لم يرسل" عند الدخول مجددا
-            // إلا إذا قمنا بإرسال الوسم في كل مرة (وهو ما سنفعله للتبسيط)
-            userMessageSent.textContent = 'جاري الإرسال...';
-            OneSignal.sendTag("new_signup", "true")
                 .then(() => {
+                    // نجاح إرسال الوسم
+                    console.log("OneSignal sendTag successful.");
                     userMessageSent.textContent = 'تم إرسال طلب الترحيب';
                 })
                 .catch(err => {
+                    // هذا سيلتقط الخطأ سواء من login أو sendTag
+                    console.error("خطأ في OneSignal (login أو sendTag):", err);
+                    userSubscribed.textContent = 'فشل (خطأ)';
                     userMessageSent.textContent = 'فشل إرسال الطلب';
                 });
         }
 
-
-        // --- 4. المستمع الرئيسي لـ Firebase (هو الذي يدير كل شيء) ---
+        // --- 4. المستمع الرئيسي لـ Firebase (كما هو) ---
         onAuthStateChanged(auth, (user) => {
-            messageEl.style.display = "none"; // إخفاء أي رسالة قديمة
+            messageEl.style.display = "none"; 
             if (user) {
-                // المستخدم قام بتسجيل الدخول
                 console.log("المستخدم مسجل دخوله:", user.uid);
                 showDashboardUI(user);
             } else {
-                // المستخدم قام بتسجيل الخروج
                 console.log("المستخدم قام بتسجيل الخروج");
                 showLoginUI();
             }
         });
 
-
-        // --- 5. ربط وظائف الأزرار ---
-
-        /** دالة إنشاء حساب */
+        // --- 5. ربط وظائف الأزرار (كما هي) ---
         btnSignUp.addEventListener("click", () => {
             const email = emailInput.value;
             const password = passwordInput.value;
-            
             showMessage("جاري إنشاء الحساب...", "success");
-
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // تم إنشاء الحساب
-                    // onAuthStateChanged سيتكفل بالباقي
                     showMessage("تم إنشاء الحساب! تم إرسال إيميل تفعيل.", "success");
-                    sendEmailVerification(userCredential.user); // إرسال إيميل التفعيل
+                    sendEmailVerification(userCredential.user); 
                 })
-                .catch(handleAuthError); // معالجة الأخطاء
+                .catch(handleAuthError);
         });
 
-        /** دالة تسجيل الدخول */
         btnLogin.addEventListener("click", () => {
             const email = emailInput.value;
             const password = passwordInput.value;
-            
             showMessage("جاري تسجيل الدخول...", "success");
-
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // تم تسجيل الدخول
-                    // onAuthStateChanged سيتكفل بالباقي
+                    // onAuthStateChanged سيهتم بالباقي
                 })
-                .catch(handleAuthError); // معالجة الأخطاء
+                .catch(handleAuthError);
         });
 
-        /** دالة تسجيل الخروج */
         btnLogout.addEventListener("click", () => {
-            // الخطوة 1: إلغاء ربط OneSignal
             OneSignal.logout()
                 .then(() => {
                     console.log("تم إلغاء ربط OneSignal.");
-                    // الخطوة 2: تسجيل الخروج من Firebase
                     return signOut(auth);
                 })
                 .then(() => {
                     showMessage("تم تسجيل الخروج بنجاح.", "success");
-                    // onAuthStateChanged سيتكفل بتبديل الواجهة
                 })
                 .catch((error) => {
                     console.error("خطأ الخروج:", error);

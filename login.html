@@ -436,7 +436,7 @@
   const auth = window.auth;
   const signInWithEmailAndPassword = window.signInWithEmailAndPassword;
   const createUserWithEmailAndPassword = window.createUserWithEmailAndPassword;
-  const sendEmailVerification = window.sendEmailVerification;
+  const sendEmailVerification = window.sendEmailVerification; // (لن نستخدمها، لكن نبقيها للاحتياط)
   const updateSubscription = window.updateSubscription;
   const onAuthStateChanged = window.onAuthStateChanged; 
   const updateProfile = window.updateProfile;
@@ -555,7 +555,7 @@
       spanFirstName.innerText = translations[currentLang].spanFirstName;
       spanLastName.innerText = translations[currentLang].spanLastName;
       
-      // تحديث محتوى الفورم بناءً على الوضع الحالي
+      // تحديث محتوى الفورم بناءً ...
       if (isLoginMode) {
           formTitle.innerText = translations[currentLang].formTitleLogin;
           messageIntro.innerText = translations[currentLang].messageLogin;
@@ -604,32 +604,10 @@
     updateFormContent();
   }
   
-  // * ⬇️⬇️⬇️ التعديل هنا ⬇️⬇️⬇️ *
-  // إرسال رسالة شكر عبر API Proxy على Vercel
-  async function sendOneSignalEmail(email) {
-      try {
-        const response = await fetch('/api/send-email', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({
-            email: email,
-            action: 'subscribe',
-            // (إضافة) تمرير المعرف الخاص بك إلى الخادم الوكيل
-            template_id: '78b49ef7-79e4-473d-bf3c-f04efa7e7f28' 
-          })
-        });
-
-        if (response.ok) {
-            console.log("Email sent successfully via Vercel Proxy.");
-        } else {
-            const errorDetails = await response.json();
-            console.error("Proxy Email failed:", errorDetails);
-        }
-      } catch (err){ 
-          console.error("Proxy Fetch Error:", err); 
-      }
-  }
-  // * ⬆️⬆️⬆️ نهاية التعديل ⬆️⬆️⬆️ *
+  // * ⬇️⬇️⬇️ التعديل هنا (1): حذف الدالة القديمة ⬇️⬇️⬇️ *
+  // تم حذف دالة "sendOneSignalEmail" القديمة بالكامل
+  // لأننا سنستدعي الـ API الجديد مباشرة
+  // * ⬆️⬆️⬆️ نهاية التعديل (1) ⬆️⬆️⬆️ *
 
   // **************************************************
   // معالجات الأحداث
@@ -702,11 +680,20 @@
 
     try {
       if (isLoginMode) {
-        // وضع تسجيل الدخول
+        // ********************************
+        // * وضع تسجيل الدخول
+        // ********************************
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        updateSubscription(user.uid, subscribe); 
+        // (اختياري) يمكنك أيضاً تعريف المستخدم لـ OneSignal عند تسجيل الدخول
+        if (window.OneSignal) {
+             window.OneSignal.login(user.uid);
+             window.OneSignal.User.addEmail(email);
+        }
+        
+        // (ملاحظة: updateSubscription غير ضروري هنا إلا إذا أردت تحديث حالة الاشتراك عند كل دخول)
+        // updateSubscription(user.uid, subscribe); 
         
         msgEl.textContent = translations[currentLang].loginSuccess;
         msgEl.style.display = 'block';
@@ -716,26 +703,60 @@
         }, 1500); 
         
       } else {
-        // وضع إنشاء الحساب
+        // ********************************
+        // * وضع إنشاء الحساب (تم التعديل بالكامل)
+        // ********************************
+        
+        // 1. إنشاء المستخدم في Firebase
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         const fullName = `${firstNameInput.value.trim()} ${lastNameInput.value.trim()}`;
         
+        // 2. تحديث ملفه الشخصي (الاسم)
         await updateProfile(user, {
             displayName: fullName
         });
         
+        // 3. تحديث قاعدة بياناته (حالة الاشتراك)
         updateSubscription(user.uid, subscribe);
-        await sendEmailVerification(user); // <-- 1. إرسال بريد التفعيل
         
-        if (subscribe) {
-            await sendOneSignalEmail(email); // <-- 2. إرسال بريد الاشتراك (كما طلبت)
+        // 4. (هام) تعريف المستخدم وبريده لـ OneSignal SDK
+        //    يجب أن يتم هذا *قبل* إرسال البريد
+        //    نستخدم user.uid كـ "External User ID"
+        if (window.OneSignal) {
+             window.OneSignal.login(user.uid);
+             window.OneSignal.User.addEmail(email);
+        } else {
+            console.warn("OneSignal SDK not loaded yet.");
+        }
+
+        // 5. (هام) استدعاء الخادم الآمن لإرسال بريد التفعيل
+        //    (لقد أزلنا sendEmailVerification(user) من هنا)
+        try {
+            await fetch('/api/send-verification-email', {
+              method:'POST',
+              headers:{ 'Content-Type':'application/json' },
+              body: JSON.stringify({
+                email: email, // إرسال الإيميل ليقوم الخادم بإنشاء الرابط له
+                
+                // ❗️❗️ هام جداً: استبدل هذا بالـ ID الخاص بقالب التفعيل ❗️❗️
+                // ❗️❗️ الذي نسخته في الخطوة 1 ❗️❗️
+                template_id: '8d8dadee-e790-45f1-b2b5-d71616af4ba2' 
+              })
+            });
+            console.log("Verification email request sent to Vercel API.");
+        } catch (apiError) {
+            console.error("Failed to trigger Vercel API:", apiError);
+            // ملاحظة: حتى لو فشل إرسال البريد، سيتم إنشاء الحساب
+            // يمكنك إضافة رسالة خطأ إضافية هنا إذا أردت
         }
         
+        // 6. عرض رسالة النجاح (الرسالة الموجودة في ملفك مناسبة جداً)
         const registerSuccessMsg = translations[currentLang].registerSuccess.replace('{email}', email);
         msgEl.innerHTML = `✅ ${registerSuccessMsg}`;
         msgEl.style.display = 'block';
         
+        // 7. تسجيل الدخول والانتقال
         setTimeout(() => {
              window.location.href = "menu.html";
         }, 3000); 

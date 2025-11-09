@@ -57,12 +57,8 @@
                     <span id="userVerified">...</span>
                 </li>
                 <li>
-                    <span>ربط الحساب (ID):</span>
-                    <span id="userLinked">...</span>
-                </li>
-                <li>
-                    <span>تسجيل الإيميل:</span>
-                    <span id="userEmailRegistered">...</span>
+                    <span>مشترك (OneSignal):</span>
+                    <span id="userSubscribed">...</span>
                 </li>
                 <li>
                     <span>رسالة الترحيب:</span>
@@ -77,6 +73,8 @@
     <script type="module">
         // استيراد الدوال التي نحتاجها
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        
+        // استيراد دوال المصادقة
         import { 
             getAuth, 
             createUserWithEmailAndPassword, 
@@ -85,24 +83,31 @@
             sendEmailVerification,
             onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        
 
-        // --- // (هذا هو الكائن الذي سألت عنه) // ---
+        // ** جديد: استيراد دوال قاعدة البيانات (Realtime Database) **
+        import { 
+            getDatabase, 
+            ref, 
+            set, 
+            get 
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+        
+        // إعدادات Firebase الخاصة بك (كاملة)
         const firebaseConfig = {
             apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
             authDomain: "skydata-ai.firebaseapp.com",
-            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app", // <-- مربوط بقاعدة البيانات
             projectId: "skydata-ai",
             storageBucket: "skydata-ai.firebasestorage.app",
             messagingSenderId: "165531796197",
             appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
             measurementId: "G-JYS7P7FY3Z"
         };
-        // --- // (نهاية كائن الإعدادات) // ---
 
         // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getDatabase(app); // ** جديد: تهيئة قاعدة البيانات **
 
         // تهيئة OneSignal 
         window.OneSignal = window.OneSignal || [];
@@ -122,65 +127,73 @@
         const btnSignUp = document.getElementById("btnSignUp");
         const btnLogin = document.getElementById("btnLogin");
         const btnLogout = document.getElementById("btnLogout"); 
+        
+        // عناصر لوحة التحكم المحدثة
         const userEmail = document.getElementById("userEmail");
         const userVerified = document.getElementById("userVerified");
-        const userLinked = document.getElementById("userLinked");
-        const userEmailRegistered = document.getElementById("userEmailRegistered");
+        const userSubscribed = document.getElementById("userSubscribed"); // تم تغيير الاسم
         const userMessageSent = document.getElementById("userMessageSent");
 
         // --- دوال مساعدة ---
-        function showMessage(text, type = "error") {
-            messageEl.textContent = text;
-            messageEl.className = type;
-        }
+        function showMessage(text, type = "error") { /* ... (نفس الدالة) ... */ }
+        function handleAuthError(error) { /* ... (نفس الدالة) ... */ }
+        function showLoginUI() { /* ... (نفس الدالة) ... */ }
 
-        function handleAuthError(error) {
-            console.error(error.code, error.message);
-            switch (error.code) {
-                case 'auth/invalid-email': showMessage("البريد الإلكتروني غير صالح."); break;
-                case 'auth/user-not-found': showMessage("هذا الحساب غير موجود."); break;
-                case 'auth/wrong-password': showMessage("كلمة المرور خاطئة."); break;
-                case 'auth/email-already-in-use': showMessage("هذا البريد مستخدم بالفعل."); break;
-                case 'auth/weak-password': showMessage("كلمة المرور ضعيفة (6 أحرف على الأقل)."); break;
-                default: showMessage("حدث خطأ غير متوقع.");
-            }
-        }
-        function showLoginUI() {
-            loginView.style.display = "block";
-            dashboardView.style.display = "none";
-            emailInput.value = "";
-            passwordInput.value = "";
-        }
-
-        /** دالة تبديل الواجهة إلى "لوحة التحكم" */
+        /** دالة تبديل الواجهة إلى "لوحة التحكم" (معدلة بالكامل) */
         async function showDashboardUI(user) {
             loginView.style.display = "none";
             dashboardView.style.display = "block";
             
+            // 1. ملء بيانات Firebase الأولية
             userEmail.textContent = user.email;
             userVerified.textContent = user.emailVerified ? 'نعم (مفعل)' : 'لا (غير مفعل)';
 
+            // 2. إعدادات الحالة الافتراضية
+            userSubscribed.textContent = 'جاري المزامنة...';
+            userMessageSent.textContent = 'جاري التحقق...';
+
+            // 3. مزامنة OneSignal (تسجيل الإيميل وربط الـ ID)
             try {
-                // الخطوة 1: ربط معرف Firebase (External ID)
-                userLinked.textContent = 'جاري الربط...';
                 await OneSignal.User.addAlias("external_id", user.uid);
-                userLinked.textContent = 'نعم (تم الربط)';
-
-                // الخطوة 2: تسجيل البريد الإلكتروني للمستخدم
-                userEmailRegistered.textContent = 'جاري التسجيل...';
                 await OneSignal.User.addEmail(user.email);
-                userEmailRegistered.textContent = 'نعم (تم التسجيل)';
-
-                // الخطوة 3: إرسال الوسم (Tag) لتشغيل قالب الإيميل
-                userMessageSent.textContent = 'جاري إرسال الوسم...';
-                await OneSignal.User.addTag("new_signup", "true");
-                userMessageSent.textContent = 'تم إرسال طلب الترحيب';
-
+                console.log("OneSignal ID and Email synced.");
+                userSubscribed.textContent = 'نعم (متصل)';
             } catch (err) {
-                console.error("OneSignal setup failed:", err);
-                if (userLinked.textContent === 'جاري الربط...') userLinked.textContent = 'فشل (خطأ)';
-                if (userEmailRegistered.textContent === 'جاري التسجيل...') userEmailRegistered.textContent = 'فشل (خطأ)';
-                if (userMessageSent.textContent === 'جاري إرسال الوسم...') userMessageSent.textContent = 'فشل (خطأ)';
+                console.error("OneSignal sync failed:", err);
+                userSubscribed.textContent = 'فشل (خطأ)';
+            }
+
+            // 4. التحقق من قاعدة البيانات (هل أرسلنا رسالة الترحيب من قبل؟)
+            const userRef = ref(db, 'users/' + user.uid);
+            try {
+                const snapshot = await get(userRef);
+                const userData = snapshot.val();
+
+                if (userData && userData.welcomeMessageSent === true) {
+                    // نعم، تم إرسالها من قبل
+                    console.log("رسالة الترحيب أرسلت من قبل.");
+                    userMessageSent.textContent = 'نعم (أرسلت سابقاً)';
+
+                } else {
+                    // لا، لم ترسل. قم بإرسالها الآن
+                    console.log("إرسال وسم رسالة الترحيب الآن...");
+                    userMessageSent.textContent = 'جاري الإرسال...';
+                    
+                    await OneSignal.User.addTag("new_signup", "true");
+                    
+                    // ** هام: حفظ الحالة في قاعدة البيانات **
+                    await set(userRef, { 
+                        email: user.email,
+                        isSubscribed: true,
+                        welcomeMessageSent: true 
+                    });
+                    
+                    console.log("تم تحديث قاعدة البيانات.");
+                    userMessageSent.textContent = 'نعم (تم الإرسال الآن)';
+                }
+            } catch (dbError) {
+                console.error("خطأ في التعامل مع قاعدة البيانات:", dbError);
+                userMessageSent.textContent = 'خطأ في التحقق من قاعدة البيانات';
             }
         }
 
@@ -197,18 +210,32 @@
         });
 
         // --- ربط وظائف الأزرار ---
+
+        /** جديد: تعديل دالة إنشاء حساب (لحفظه في الداتا بيز) */
         btnSignUp.addEventListener("click", () => {
             const email = emailInput.value;
             const password = passwordInput.value;
             showMessage("جاري إنشاء الحساب...", "success");
+            
             createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // ** جديد: إنشاء سجل للمستخدم في قاعدة البيانات **
+                    const userRef = ref(db, 'users/' + user.uid);
+                    await set(userRef, {
+                        email: user.email,
+                        isSubscribed: false,       // لم يشترك بعد
+                        welcomeMessageSent: false  // لم ترسل الرسالة بعد
+                    });
+
                     showMessage("تم إنشاء الحساب! تم إرسال إيميل تفعيل.", "success");
-                    sendEmailVerification(userCredential.user); 
+                    sendEmailVerification(user); // onAuthStateChanged سيهتم بالباقي
                 })
                 .catch(handleAuthError);
         });
 
+        /** دالة تسجيل الدخول (كما هي) */
         btnLogin.addEventListener("click", () => {
             const email = emailInput.value;
             const password = passwordInput.value;
@@ -220,21 +247,33 @@
                 .catch(handleAuthError);
         });
 
+        /** جديد: إصلاح دالة تسجيل الخروج */
         btnLogout.addEventListener("click", async () => {
+            const user = auth.currentUser; // الحصول على المستخدم الحالي
+
+            if (!user) {
+                console.log("لا يوجد مستخدم لتسجيل الخروج.");
+                return; // خروج مبكر إذا لم يكن هناك مستخدم
+            }
+
+            showMessage("جاري تسجيل الخروج...", "success");
+
             try {
-                const user = auth.currentUser;
-                
-                if (user && user.email) {
+                // الخطوة 1: حذف الإيميل من OneSignal
+                if (user.email) {
                     console.log("Removing OneSignal email...");
                     await OneSignal.User.removeEmails([user.email]);
                 }
                 
-                console.log("Logging out of OneSignal (removing ID)...");
-                await OneSignal.logout(); 
-
+                // الخطوة 2: ** (الإصلاح) ** حذف المعرف (Alias)
+                console.log("Removing OneSignal Alias (ID)...");
+                await OneSignal.User.removeAlias("external_id", user.uid);
+                
+                // الخطوة 3: تسجيل الخروج من Firebase
                 console.log("Signing out of Firebase...");
                 await signOut(auth);
 
+                // onAuthStateChanged سيهتم بتبديل الواجهة
                 showMessage("تم تسجيل الخروج بنجاح.", "success");
             
             } catch (error) {

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">تفعيل الحساب - SkyData</title>
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 450px;
+            width: 95%;
+        }
+        h2 {
+            color: #ffffff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 6px solid #333;
+            border-top-color: #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        .message {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .message.success { color: #28a745; }
+        .message.error { color: #dc3545; }
+        .cta-button {
+            display: none; /* مخفي افتراضياً */
+            text-decoration: none;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 25px;
+            transition: background-color 0.3s ease;
+        }
+        .cta-button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 data-lang-key="title">تفعيل الحساب</h2>
+        
+        <div id="loader">
+            <div class="spinner"></div>
+            <p class="message" data-lang-key="loading">جاري تفعيل حسابك، يرجى الانتظار...</p>
+        </div>
+
+        <div id="successMessage" class="message success" style="display: none;">
+            <p data-lang-key="success">✅ تم تفعيل حسابك بنجاح!</p>
+            <a href="menu.html" class="cta-button" id="loginButton" data-lang-key="loginButton">الانتقال إلى القائمة</a>
+        </div>
+
+        <div id="errorMessage" class="message error" style="display: none;">
+            <p data-lang-key="error">❌ فشل تفعيل الحساب.</p>
+            <p id="errorDetails"></p>
+            <a href="login.html" class="cta-button" id="registerButton" data-lang-key="registerButton">العودة للتسجيل</a>
+        </div>
+    </div>
+
+    <script type(="module")>
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, applyActionCode, checkActionCode } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        // 1. إعدادات Firebase (نفس الإعدادات من ملف login.html)
+        const firebaseConfig = {
+          apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+          authDomain: "skydata-ai.firebaseapp.com",
+          databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "skydata-ai",
+          storageBucket: "skydata-ai.firebasestorage.app",
+          messagingSenderId: "165531796197",
+          appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+          measurementId: "G-JYS7P7FY3Z"
+        };
+
+        // 2. تشغيل التطبيق
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // 3. عناصر الواجهة
+        const loader = document.getElementById('loader');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorDetails = document.getElementById('errorDetails');
+        const loginButton = document.getElementById('loginButton');
+        const registerButton = document.getElementById('registerButton');
+
+        // 4. قاموس الترجمة المصغر لهذه الصفحة
+        const translations = {
+            "ar": {
+                "pageTitle": "تفعيل الحساب - SkyData",
+                "title": "تفعيل الحساب",
+                "loading": "جاري تفعيل حسابك، يرجى الانتظار...",
+                "success": "✅ تم تفعيل حسابك بنجاح!",
+                "error": "❌ فشل تفعيل الحساب.",
+                "loginButton": "الانتقال إلى القائمة",
+                "registerButton": "العودة للتسجيل",
+                "errorExpired": "رابط التفعيل منتهي الصلاحية أو تم استخدامه.",
+                "errorInvalid": "رابط التفعيل غير صالح."
+            },
+            "en": {
+                "pageTitle": "Verify Account - SkyData",
+                "title": "Account Verification",
+                "loading": "Verifying your account, please wait...",
+                "success": "✅ Your account has been verified successfully!",
+                "error": "❌ Account verification failed.",
+                "loginButton": "Go to Menu",
+                "registerButton": "Back to Register",
+                "errorExpired": "Verification link expired or already used.",
+                "errorInvalid": "Invalid verification link."
+            }
+        };
+        
+        // (لا نحتاج دالة setLanguage هنا لأن الصفحة مؤقتة، ستعمل باللغة الافتراضية)
+
+        // 5. منطق التفعيل
+        document.addEventListener("DOMContentLoaded", async () => {
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode');
+            const oobCode = params.get('oobCode'); // هذا هو الرمز الذي يرسله Firebase
+
+            if (mode === 'verifyEmail' && oobCode) {
+                try {
+                    // أولاً، تحقق من صلاحية الرمز (اختياري لكن جيد)
+                    await checkActionCode(auth, oobCode);
+                    
+                    // ثانياً، قم بتطبيق الرمز لتفعيل البريد
+                    await applyActionCode(auth, oobCode);
+                    
+                    // نجح التفعيل
+                    loader.style.display = 'none';
+                    errorMessage.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    loginButton.style.display = 'inline-block';
+
+                } catch (error) {
+                    // فشل التفعيل
+                    loader.style.display = 'none';
+                    successMessage.style.display = 'none';
+                    errorMessage.style.display = 'block';
+                    registerButton.style.display = 'inline-block';
+                    
+                    console.error("Verification Error:", error.code);
+                    if (error.code === 'auth/expired-action-code') {
+                        errorDetails.innerText = translations['ar'].errorExpired;
+                    } else if (error.code === 'auth/invalid-action-code') {
+                        errorDetails.innerText = translations['ar'].errorInvalid;
+                    } else {
+                        errorDetails.innerText = error.message;
+                    }
+                }
+            } else {
+                // الرابط غير صالح أو لا يحتوي على الرمز
+                loader.style.display = 'none';
+                errorMessage.style.display = 'block';
+                registerButton.style.display = 'inline-block';
+                errorDetails.innerText = translations['ar'].errorInvalid;
+            }
+        });
+    </script>
+</body>
+</html>

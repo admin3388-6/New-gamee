@@ -8,60 +8,17 @@
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: grid;
-            place-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-            margin: 0;
-        }
-        .container {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box; /* ليضمن أن padding لا يؤثر على العرض */
-        }
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            flex: 1; /* يجعل الزرين يأخذان نفس المساحة */
-        }
-        #btnSignUp {
-            background-color: #28a745;
-            color: white;
-            margin-left: 5px;
-        }
-        #btnLogin {
-            background-color: #007bff;
-            color: white;
-            margin-right: 5px;
-        }
-        #message {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 0.9em;
-        }
+        /* ... (نفس التنسيقات السابقة، لا تغيير) ... */
+        body { font-family: Arial, sans-serif; display: grid; place-items: center; min-height: 100vh; background-color: #f4f4f4; margin: 0; }
+        .container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 350px; }
+        h2 { text-align: center; color: #333; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .buttons { display: flex; justify-content: space-between; }
+        button { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; flex: 1; }
+        #btnSignUp { background-color: #28a745; color: white; margin-left: 5px; }
+        #btnLogin { background-color: #007bff; color: white; margin-right: 5px; }
+        #btnLogout { width: 100%; background-color: #dc3545; color: white; margin-top: 10px; flex: none; }
+        #message { text-align: center; margin-top: 15px; font-size: 0.9em; }
         .success { color: green; }
         .error { color: red; }
     </style>
@@ -78,20 +35,23 @@
             <button id="btnSignUp">إنشاء حساب</button>
         </div>
 
+        <button id="btnLogout">تسجيل الخروج (وإلغاء الربط)</button>
+
         <p id="message"></p>
     </div>
 
     <script type="module">
         // استيراد الدوال التي نحتاجها
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        // ** استيراد دوال المصادقة (Authentication) **
         import { 
             getAuth, 
             createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword 
+            signInWithEmailAndPassword,
+            signOut,
+            sendEmailVerification // سنحتفظ بها لإرسال إيميل التفعيل
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
         
-        // إعدادات Firebase الخاصة بك (التي قدمتها)
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
             authDomain: "skydata-ai.firebaseapp.com",
@@ -105,86 +65,105 @@
 
         // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
-        // تهيئة خدمة المصادقة
         const auth = getAuth(app);
 
-        // 3. تهيئة OneSignal (باستخدام App ID الخاص بك)
+        // تهيئة OneSignal 
         window.OneSignal = window.OneSignal || [];
         OneSignal.push(function() {
             OneSignal.init({
-                appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", // <-- الـ App ID الخاص بك
-                allowLocalhostAsSecureOrigin: true // للسماح بالتجربة على localhost
+                appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+                allowLocalhostAsSecureOrigin: true 
             });
         });
 
-        // 4. ربط عناصر الـ HTML بالكود
+        // ربط عناصر الـ HTML بالكود
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
         const btnSignUp = document.getElementById("btnSignUp");
         const btnLogin = document.getElementById("btnLogin");
+        const btnLogout = document.getElementById("btnLogout"); 
         const messageEl = document.getElementById("message");
 
-        // 5. دالة لربط المستخدم بـ OneSignal
-        function subscribeUserToOneSignal(firebaseUser) {
-            console.log("ربط المستخدم بـ OneSignal:", firebaseUser.uid);
-            
-            // نستخدم دالة "login" من OneSignal (كانت تسمى setExternalUserId)
-            // لربط هذا الجهاز (المتصفح) بمعرف المستخدم الفريد من Firebase
-            OneSignal.login(firebaseUser.uid)
-                .then(() => {
-                    console.log("تم ربط المستخدم بنجاح في OneSignal.");
-                    messageEl.textContent = "تم تسجيل الدخول وربط الإشعارات بنجاح!";
-                    messageEl.className = "success";
-                })
-                .catch((error) => {
-                    console.error("خطأ في ربط OneSignal:", error);
-                    messageEl.textContent = "تم تسجيل الدخول، لكن فشل ربط الإشعارات.";
-                    messageEl.className = "error";
-                });
-        }
-
-        // 6. إضافة وظائف الأزرار
-        
-        // --- دالة إنشاء حساب ---
+        // --- // جديد: تعديل دالة إنشاء حساب (حسب طلبك الأخير) ---
         btnSignUp.addEventListener("click", () => {
             const email = emailInput.value;
             const password = passwordInput.value;
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // تم إنشاء الحساب بنجاح
                     const user = userCredential.user;
-                    console.log("تم إنشاء حساب:", user);
+                    console.log("تم إنشاء حساب:", user.uid);
                     
-                    // ** الخطوة الأهم: ربط المستخدم بـ OneSignal **
-                    subscribeUserToOneSignal(user);
+                    // --- هذا هو المنطق الجديد ---
+                    // 1. ربط المستخدم بـ OneSignal
+                    OneSignal.login(user.uid)
+                        .then(() => {
+                            console.log("تم ربط المستخدم بـ OneSignal.");
+                            
+                            // 2. إرسال الوسم (Tag) الذي سيطلق القالب
+                            // سنستخدم "new_signup" لتمييزه
+                            OneSignal.sendTag("new_signup", "true");
+                            console.log("تم إرسال وسم 'new_signup'.");
+
+                            messageEl.textContent = "تم إنشاء الحساب وربط الإشعارات بنجاح!";
+                            messageEl.className = "success";
+                        })
+                        .catch(err => console.error("خطأ ربط OneSignal:", err));
+                    
+                    // 3. (اختياري ولكن موصى به) إرسال إيميل التفعيل
+                    sendEmailVerification(user); 
+                    console.log("تم إرسال إيميل التفعيل.");
                 })
                 .catch((error) => {
-                    // حدث خطأ
                     console.error("خطأ في إنشاء الحساب:", error.message);
                     messageEl.textContent = `خطأ: ${error.message}`;
                     messageEl.className = "error";
                 });
         });
 
-        // --- دالة تسجيل الدخول ---
+        // --- دالة تسجيل الدخول (الآن هي فقط لتسجيل الدخول) ---
         btnLogin.addEventListener("click", () => {
             const email = emailInput.value;
             const password = passwordInput.value;
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // تم تسجيل الدخول بنجاح
                     const user = userCredential.user;
-                    console.log("تم تسجيل الدخول:", user);
+                    console.log("تم تسجيل الدخول:", user.uid);
 
-                    // ** الخطوة الأهم: ربط المستخدم بـ OneSignal **
-                    subscribeUserToOneSignal(user);
+                    // ربط المستخدم بـ OneSignal عند تسجيل الدخول
+                    // هذا يضمن أنه إذا استخدم جهازا آخر، يتم ربطه أيضا
+                    OneSignal.login(user.uid)
+                        .then(() => {
+                            console.log("تم ربط المستخدم بـ OneSignal.");
+                            messageEl.textContent = "تم تسجيل الدخول بنجاح.";
+                            messageEl.className = "success";
+                        });
                 })
                 .catch((error) => {
-                    // حدث خطأ
                     console.error("خطأ في تسجيل الدخول:", error.message);
                     messageEl.textContent = `خطأ: ${error.message}`;
+                    messageEl.className = "error";
+                });
+        });
+
+        // --- دالة تسجيل الخروج (كما هي) ---
+        btnLogout.addEventListener("click", () => {
+            OneSignal.logout()
+                .then(() => {
+                    console.log("تم إلغاء ربط المستخدم من OneSignal.");
+                    return signOut(auth); 
+                })
+                .then(() => {
+                    console.log("تم تسجيل الخروج من Firebase.");
+                    messageEl.textContent = "تم تسجيل الخروج وإلغاء الربط بنجاح.";
+                    messageEl.className = "success";
+                    emailInput.value = "";
+                    passwordInput.value = "";
+                })
+                .catch((error) => {
+                    console.error("خطأ أثناء تسجيل الخروج:", error);
+                    messageEl.textContent = "حدث خطأ أثناء محاولة تسجيل الخروج.";
                     messageEl.className = "error";
                 });
         });

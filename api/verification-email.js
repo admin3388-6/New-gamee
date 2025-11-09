@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     // 4. [جديد] إنشاء رابط تفعيل Firebase
     // هذا الرابط يشير إلى صفحة verify.html التي أنشأناها
     const actionLink = await admin.auth().generateEmailVerificationLink(email, {
-      url: 'https://YOUR_WEBSITE_DOMAIN/verify.html', // ❗️ استبدل هذا برابط موقعك
+      url: 'https://skydata.kozow.com/verify.html', // ❗️ استبدل هذا برابط موقعك
     });
 
     // 5. تجهيز الطلب إلى OneSignal

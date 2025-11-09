@@ -760,12 +760,13 @@
 
 <script type="module">
     
-    // --- IMPORTS ---
+    // --- IMPORTS (MUST BE AT TOP LEVEL) ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    // ⬇️⬇️ تصحيح: قمت بإزالة الاستيراد المكرر لـ getAuth وما يليه ⬇️⬇️
     import { getAuth, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, deleteUser, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
     import { getDatabase, ref, update, get, child, remove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-    // --- FIREBASE CONFIG ---
+    // --- FIREBASE CONFIG (TOP LEVEL) ---
     const firebaseConfig = {
       apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
       authDomain: "skydata-ai.firebaseapp.com",
@@ -783,7 +784,7 @@
 
     const IMGBB_API_KEY = "f0ff703738276bb67fcc6b7f0a6778d5";
 
-    // --- GLOBAL VARS ---
+    // --- GLOBAL VARS (TOP LEVEL) ---
     let currentLang = 'ar'; 
     let currentUser = null;
     let isSubscribed = false;
@@ -792,36 +793,34 @@
     let lastSubChange = 0;
     let lastWebPushSubChange = 0; 
     const UPDATE_RATE_LIMIT = 24 * 60 * 60 * 1000;
-    const SUB_COOLDOWN = 5 * 60 * 1000; // 5 دقائق
+    const SUB_COOLDOWN = 5 * 60 * 1000;
     let toastTimer; 
     let isDeletePending = false; 
     let lastVerificationEmailTime = 0;
     let cooldownTimer = null;
 
-    // --- ❗️❗️❗️ ضع معرف القالب هنا ❗️❗️❗️ ---
-    // (هذا هو معرف قالب "شكراً لاشتراكك" الذي أرسلته لي)
-    const WELCOME_TEMPLATE_ID = "78b49ef7-79e4-473d-bf3c-f04efa7e7f28";
-    // -------------------------------------------
-
-    // --- TRANSLATIONS (نفس الكود) ---
+    // --- TRANSLATIONS (TOP LEVEL) ---
     const translations = {
       "ar": {
           "pageTitle": "SkyData - الصفحة الرئيسية",
-          "profileTitle": "الـملف الـشخصي",
+          "profileTitle": "الـملف الـشخصي", // 🆕
           "notifTitle": "إدارة الإشعارات والبريد",
           "subStatus": "حالة الاشتراك:",
           "subYes": "مشترك: تصلك رسائل البريد التسويقي والتحديثات",
           "subNo": "غير مشترك: لا تصلك أي رسائل بريد تسويقي",
-          "logoutBtn": "خروج",
+          "logoutBtn": "خروج", // 🆕 (لزر الخروج الجديد)
           "settingsTitle": "إعدادات",
+          // 🆕 (قائمة الإعدادات الجديدة)
           "settingsMenuProfile": "الملف الشخصي",
           "settingsMenuNotifications": "الإشعارات",
           "settingsMenuSupport": "الدعم",
           "settingsMenuDelete": "حذف الحساب",
+          // 🆕 (نافذة البروفايل)
           "profileSettingsTitle": "تعديل الملف الشخصي",
           "profileChangePic": "تغيير الصورة",
           "profileBioLabel": "نبذة عني",
           "profileBioPlaceholder": "اكتب شيئاً عن نفسك...",
+          // 🆕 (نافذة الإشعارات)
           "notifModalTitle": "إدارة الإشعارات",
           "notifModalEmailHeader": "إشعارات البريد الإلكتروني",
           "notifModalEmailText": "إدارة رسائل البريد التسويقي والتحديثات.",
@@ -830,10 +829,12 @@
           "notifStatusLabel": "حالة الاشتراك:",
           "notifStatusSubbed": "مشترك",
           "notifStatusUnsubbed": "غير مشترك",
+          // 🆕 (نافذة تسجيل الخروج)
           "logoutConfirmTitle": "تأكيد تسجيل الخروج",
           "logoutConfirmText": "هل أنت متأكد من تسجيل الخروج؟",
           "confirmYes": "نعم",
           "confirmNo": "لا",
+          // 🆕 (نوافذ حذف الحساب)
           "deleteModalTitle1": "تأكيد حذف الحساب",
           "deleteModalText1": "هل أنت متأكد من حذف حسابك؟ سيتم حذف جميع بياناتك نهائياً. بريدك الإلكتروني:",
           "deleteModalTitle2": "تأكيد نهائي",
@@ -842,6 +843,7 @@
           "deleteModalConfirmBtn": "تأكيد الحذف",
           "deleteInProgress": "جاري الحذف...",
           "deleteSuccess": "تم حذف الحساب بنجاح. جاري تسجيل الخروج...",
+          // 🆕 (ترجمات سابقة + جديدة)
           "subYesToast": "تم الاشتراك بنجاح!",
           "subNoToast": "تم إلغاء الاشتراك.",
           "cooldownMsg": "يرجى الانتظار 5 دقائق قبل تغيير حالة الاشتراك مرة أخرى.",
@@ -853,7 +855,7 @@
           "settingsPassTitle": "تغيير كلمة المرور",
           "settingsPassText": "لتغيير كلمة السر، سنرسل رابطاً على بريدك الإلكتروني",
           "settingsPassBtn": "إرسال رابط تغيير كلمة السر",
-          "settingsSaveBtn": "حفظ",
+          "settingsSaveBtn": "حفظ", // 🆕 (لزر الحفظ الجديد)
           "settingsSuccess": "تم حفظ التعديلات بنجاح",
           "settingsEmailSent": "تم إرسال رابط تغيير كلمة السر إلى بريدك الإلكتروني",
           "rateLimitMsg": "يمكنك تعديل الصورة أو الاسم مرة واحدة كل 24 ساعة. يتبقى {hours} ساعة و {minutes} دقيقة",
@@ -864,21 +866,24 @@
       },
       "en": {
           "pageTitle": "SkyData - Home",
-          "profileTitle": "Profile",
+          "profileTitle": "Profile", // 🆕
           "notifTitle": "Manage Notifications & Email",
           "subStatus": "Subscription Status:",
           "subYes": "Subscribed: You will receive marketing emails and updates",
           "subNo": "Unsubscribed: You will not receive any marketing emails",
-          "logoutBtn": "Logout",
+          "logoutBtn": "Logout", // 🆕
           "settingsTitle": "Settings",
+          // 🆕 (New Settings Menu)
           "settingsMenuProfile": "Profile",
           "settingsMenuNotifications": "Notifications",
           "settingsMenuSupport": "Support",
           "settingsMenuDelete": "Delete Account",
+          // 🆕 (Profile Modal)
           "profileSettingsTitle": "Edit Profile",
           "profileChangePic": "Change Picture",
           "profileBioLabel": "About Me",
           "profileBioPlaceholder": "Write something about yourself...",
+          // 🆕 (Notifications Modal)
           "notifModalTitle": "Notification Management",
           "notifModalEmailHeader": "Email Notifications",
           "notifModalEmailText": "Manage marketing emails and updates.",
@@ -887,10 +892,12 @@
           "notifStatusLabel": "Subscription Status:",
           "notifStatusSubbed": "Subscribed",
           "notifStatusUnsubbed": "Unsubscribed",
+          // 🆕 (Logout Modal)
           "logoutConfirmTitle": "Confirm Logout",
           "logoutConfirmText": "Are you sure you want to log out?",
           "confirmYes": "Yes",
           "confirmNo": "No",
+          // 🆕 (Delete Account Modals)
           "deleteModalTitle1": "Confirm Account Deletion",
           "deleteModalText1": "Are you sure you want to delete your account? All your data will be permanently removed. Your email:",
           "deleteModalTitle2": "Final Confirmation",
@@ -899,6 +906,7 @@
           "deleteModalConfirmBtn": "Confirm Deletion",
           "deleteInProgress": "Deleting...",
           "deleteSuccess": "Account deleted successfully. Logging out...",
+          // 🆕 (Previous + New)
           "subYesToast": "Subscribed successfully!",
           "subNoToast": "Unsubscribed.",
           "cooldownMsg": "Please wait 5 minutes before changing your subscription status again.",
@@ -910,7 +918,7 @@
           "settingsPassTitle": "Change Password",
           "settingsPassText": "To change your password, we will send a reset link to your email",
           "settingsPassBtn": "Send Password Reset Link",
-          "settingsSaveBtn": "Save",
+          "settingsSaveBtn": "Save", // 🆕
           "settingsSuccess": "Changes saved successfully",
           "settingsEmailSent": "Password reset link sent to your email",
           "rateLimitMsg": "You can only change your profile picture or name once every 24 hours. Remaining: {hours}h {minutes}m",
@@ -921,7 +929,7 @@
       }
     };
 
-    // --- HELPER FUNCTIONS (نفس الكود) ---
+    // --- HELPER FUNCTIONS (TOP LEVEL) ---
     async function getSubscription(uid) {
         const dbRef = ref(db);
         try {
@@ -929,8 +937,6 @@
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 return {
-                    // (جديد) إضافة الحقل الذي سنتحقق منه
-                    welcomeSent: data.welcome_sent === true,
                     emailSub: data.subscribe_marketing === true,
                     webPushSub: data.subscribe_webpush === true, 
                     bio: data.bio || "", 
@@ -939,12 +945,11 @@
                     lastWebPushSubChange: data.lastWebPushSubChange || 0 
                 };
             } else {
-                // القيمة الافتراضية
-                return { welcomeSent: false, emailSub: false, webPushSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 };
+                return { emailSub: false, webPushSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 };
             }
         } catch (error) {
             console.error("Error getting user data:", error);
-            return { welcomeSent: false, emailSub: false, webPushSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 };
+            return { emailSub: false, webPushSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 };
         }
     }
 
@@ -965,7 +970,7 @@
     // --- 🆕 WRAP DOM-DEPENDENT CODE ---
     document.addEventListener('DOMContentLoaded', () => {
 
-        // --- DOM ELEMENT VARIABLES (نفس الكود) ---
+        // --- DOM ELEMENT VARIABLES ---
         const contentContainer = document.getElementById('contentContainer');
         const loaderContainer = document.getElementById('loaderContainer');
         const profileImgEl = document.getElementById('profile-img');
@@ -974,6 +979,8 @@
         const currentSubscriptionEl = document.getElementById('currentSubscription');
         const settingsBtn = document.getElementById('settings-btn');
         const logoutBtn = document.getElementById('logoutBtn');
+        
+        // (Modals)
         const profileModal = document.getElementById('profile-upload-modal');
         const settingsModal = document.getElementById('settings-modal'); 
         const profileSettingsModal = document.getElementById('profile-settings-modal'); 
@@ -981,9 +988,13 @@
         const logoutConfirmModal = document.getElementById('logout-confirm-modal'); 
         const deleteModalStep1 = document.getElementById('delete-account-modal-step1'); 
         const deleteModalStep2 = document.getElementById('delete-account-modal-step2'); 
+
+        // (Profile Upload Modal)
         const uploadImageInput = document.getElementById('upload-image-input');
         const modalStatus = document.getElementById('modal-status');
         const modalSpinner = document.getElementById('modal-spinner');
+
+        // (Profile Settings Modal)
         const settingsForm = document.getElementById('settings-form');
         const settingsNameInput = document.getElementById('settings-display-name');
         const settingsBioInput = document.getElementById('settings-bio'); 
@@ -993,12 +1004,18 @@
         const settingsSpinner = document.getElementById('settings-spinner');
         const profileChangePicBtn = document.getElementById('profile-change-pic-btn'); 
         const profileImgPreview = document.getElementById('profile-img-preview'); 
+
+        // (Notifications Modal)
         const emailSubToggle = document.getElementById('email-sub-toggle'); 
         const webPushToggle = document.getElementById('web-push-toggle'); 
         const emailStatusText = document.getElementById('email-status-text'); 
         const webPushStatusText = document.getElementById('web-push-status-text'); 
+
+        // (Logout Confirm Modal)
         const logoutConfirmYes = document.getElementById('logout-confirm-yes'); 
         const logoutConfirmNo = document.getElementById('logout-confirm-no'); 
+        
+        // (Delete Account Modals)
         const deleteEmailDisplay1 = document.getElementById('delete-email-display-1'); 
         const deleteConfirmYes = document.getElementById('delete-confirm-yes'); 
         const deleteConfirmNo = document.getElementById('delete-confirm-no'); 
@@ -1006,11 +1023,14 @@
         const deleteEmailInput = document.getElementById('delete-email-input'); 
         const deleteConfirmFinalBtn = document.getElementById('delete-confirm-final-btn'); 
         const deleteStatus = document.getElementById('delete-status'); 
+
+        // (Toast Notification)
         const toastEl = document.getElementById('toast-notification');
         const toastTitle = document.getElementById('toast-title');
         const toastClose = document.getElementById('toast-close');
 
-        // --- DOM-DEPENDENT FUNCTIONS (نفس الكود) ---
+        // --- DOM-DEPENDENT FUNCTIONS ---
+
         function showToast(message, type = 'success') {
             if (toastTimer) clearTimeout(toastTimer);
             toastTitle.textContent = message;
@@ -1069,6 +1089,8 @@
                 updateNotifStatusUI(isSubscribed, isWebPushSubscribed);
             }
 
+            // ⬇️⬇️ الكود الذي تم نقله إلى هنا ⬇️⬇️
+            // START: New Language Update for Banner
             const verificationBanner = document.getElementById('email-verification-banner');
             if (verificationBanner.style.display === 'flex') {
             
@@ -1083,6 +1105,8 @@
                     resendBtn.innerHTML = translations[currentLang].resendButton;
                 }
             }
+            // END: New Language Update for Banner
+            // ⬆️⬆️ نهاية الكود المنقول ⬆️⬆️
         }
 
         async function uploadProfilePicture(file) {
@@ -1163,89 +1187,97 @@
                 settingsForm.querySelector('#settings-save-btn').disabled = false;
             }
         }
-        
-        // ⬇️⬇️ (جديد) دالة إرسال الترحيب ⬇️⬇️
-        async function sendWelcomeEmail() {
-            if (!currentUser) return;
-            
-            console.log("Attempting to send Welcome Email...");
-
-            try {
-                // استدعاء الخادم الآمن الذي أنشأناه
-                const response = await fetch('/api/send-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        external_user_id: currentUser.uid,
-                        template_id: WELCOME_TEMPLATE_ID
-                    })
-                });
-                
-                if (response.ok) {
-                    console.log("OneSignal Welcome Email triggered successfully.");
-                    // (هام) إخبار قاعدة بياناتنا بأن الترحيب قد أُرسل
-                    updateUserProfileDB(currentUser.uid, { welcome_sent: true });
-                } else {
-                    console.error("Failed to trigger OneSignal via proxy:", await response.json());
-                }
-            } catch (error) {
-                console.error("Error calling /api/send-email:", error);
-            }
-        }
-        // ⬆️⬆️ نهاية الدالة الجديدة ⬆️⬆️
 
         // --- EVENT LISTENERS ---
-        toastClose.addEventListener('click', () => { /* ... */ });
-        settingsForm.addEventListener('submit', async (e) => { /* ... */ });
-        document.getElementById('reset-password-btn').addEventListener('click', async () => { /* ... */ });
+        toastClose.addEventListener('click', () => {
+            if (toastTimer) clearTimeout(toastTimer);
+            toastEl.style.display = 'none';
+        });
 
-        // ⬇️⬇️ (تعديل هام) في onAuthStateChanged ⬇️⬇️
+        settingsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            settingsSpinner.style.display = 'block';
+            settingsStatus.style.display = 'none';
+            const newName = settingsNameInput.value.trim();
+            const newBio = settingsBioInput.value.trim(); 
+            const newLastUpdated = Date.now();
+            
+            let profileDataChanged = false;
+            let dbDataChanged = false;
+            
+            try {
+                if (newName !== currentUser.displayName) {
+                    await updateProfile(currentUser, { displayName: newName });
+                    profileNameEl.textContent = newName;
+                    profileDataChanged = true;
+                }
+                
+                const dbUpdates = {};
+                if (profileDataChanged) {
+                    dbUpdates.lastUpdated = newLastUpdated;
+                    dbDataChanged = true;
+                }
+                
+                dbUpdates.bio = newBio;
+                dbDataChanged = true; 
+                
+                if (dbDataChanged) {
+                    updateUserProfileDB(currentUser.uid, dbUpdates);
+                    lastProfileUpdate = newLastUpdated;
+                }
+                
+                settingsStatus.textContent = translations[currentLang].settingsSuccess;
+                settingsStatus.style.color = '#28a745';
+                settingsStatus.style.display = 'block';
+                
+                setTimeout(() => { profileSettingsModal.classList.remove('active'); }, 1500);
+
+            } catch (error) {
+                settingsStatus.textContent = `Error: ${error.message}`;
+                settingsStatus.style.color = '#dc3545';
+                settingsStatus.style.display = 'block';
+            } finally {
+                settingsSpinner.style.display = 'none';
+            }
+        });
+
+        document.getElementById('reset-password-btn').addEventListener('click', async () => {
+             // ... (نفس الكود)
+        });
+
         onAuthStateChanged(auth, async user => {
             if (user) {
                 currentUser = user;
                 
-                // (جديد) إعادة تحميل بيانات المستخدم من Firebase
-                // هذا ضروري للتأكد من أننا نرى حالة "emailVerified" المحدثة
-                await user.reload();
-                currentUser = auth.currentUser; // تحديث المتغير global
-
+                // ⬇️⬇️ كود التحقق من البريد (الخطوة 4) - مكانه صحيح هنا ⬇️⬇️
+                // START: New Verification Check
                 const verificationBanner = document.getElementById('email-verification-banner');
                 const verificationMessage = document.getElementById('verification-message');
                 const resendBtn = document.getElementById('resend-email-btn');
 
-                // جلب بيانات المستخدم من قاعدة البيانات (بما في ذلك حالة الاشتراك)
-                const userData = await getSubscription(user.uid);
-                
-                // 1. التحقق من التفعيل وإرسال الترحيب (المنطق الجديد)
-                if (user.emailVerified) {
-                    // المستخدم مُفعّل
-                    verificationBanner.style.display = 'none'; // إخفاء بانر التفعيل
-                    
-                    // التحقق مما إذا كان مشتركاً ولم نرسل له ترحيباً
-                    if (userData.emailSub && !userData.welcomeSent) {
-                        // ❗️ هذا هو! أرسل رسالة "شكراً"
-                        sendWelcomeEmail();
-                    }
-                    
-                } else {
-                    // المستخدم غير مُفعّل
+                if (!user.emailVerified) {
                     verificationBanner.style.display = 'flex';
                     verificationMessage.innerHTML = translations[currentLang].verifyEmailWarning;
 
                     resendBtn.onclick = () => {
                         const now = Date.now();
                         if (now - lastVerificationEmailTime < SUB_COOLDOWN) {
+                            // لا يزال في فترة التبريد
                             showToast(translations[currentLang].cooldownMsg, 'warning');
                             return;
                         }
-                        
+
+                        // إرسال البريد
                         sendEmailVerification(user)
                             .then(() => {
                                 lastVerificationEmailTime = Date.now();
+
+                                // 1. تحويل البانر إلى أخضر
                                 verificationBanner.classList.add('success-banner');
                                 verificationMessage.innerHTML = translations[currentLang].verificationSent;
                                 resendBtn.disabled = true;
 
+                                // 2. بدء عداد تبريد الزر (5 دقائق)
                                 let secondsLeft = SUB_COOLDOWN / 1000;
                                 resendBtn.innerHTML = translations[currentLang].resendButtonCooldown.replace('{seconds}', secondsLeft);
 
@@ -1261,19 +1293,28 @@
                                     }
                                 }, 1000);
 
+                                // 3. إخفاء البانر بعد 30 ثانية
                                 setTimeout(() => {
                                     verificationBanner.style.display = 'none';
+                                    // إعادة البانر إلى لونه الأحمر استعداداً للظهور القادم
                                     verificationBanner.classList.remove('success-banner'); 
-                                }, 30000); 
+                                }, 30000); // 30 ثانية
 
                             })
                             .catch((error) => {
                                 showToast(`Error: ${error.message}`, 'error');
                             });
                     };
+
+                } else {
+                    // إذا كان المستخدم مُفعّل، تأكد من إخفاء البانر
+                    verificationBanner.style.display = 'none';
                 }
-                
-                // 2. تحديث بقية الواجهة كالمعتاد
+                // END: New Verification Check
+                // ⬆️⬆️ نهاية كود التحقق من البريد ⬆️⬆️
+
+                const userData = await getSubscription(user.uid);
+
                 isSubscribed = userData.emailSub;
                 isWebPushSubscribed = userData.webPushSub; 
                 lastProfileUpdate = userData.lastProfileUpdate;
@@ -1301,21 +1342,69 @@
                 window.location.href = "login.html";
             }
         });
-        // ⬆️⬆️ نهاية onAuthStateChanged ⬆️⬆️
 
-        settingsBtn.addEventListener('click', () => { /* ... */ });
-        document.getElementById('settings-menu-profile').addEventListener('click', (e) => { /* ... */ });
-        document.getElementById('settings-menu-notifications').addEventListener('click', (e) => { /* ... */ });
-        document.getElementById('settings-menu-support').addEventListener('click', (e) => { /* ... */ });
-        document.getElementById('settings-menu-delete').addEventListener('click', (e) => { /* ... */ });
-        profileImgEl.addEventListener('click', () => { /* ... */ });
-        profileChangePicBtn.addEventListener('click', () => { /* ... */ });
-        document.getElementById('upload-profile-btn').addEventListener('click', () => { /* ... */ });
-        uploadImageInput.addEventListener('change', (e) => { /* ... */ });
-        document.querySelectorAll('.modal-overlay').forEach(overlay => { /* ... */ });
-        document.querySelectorAll('.modal-close-btn').forEach(btn => { /* ... */ });
+        // 1. (زر الإعدادات - الترس)
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('active');
+        });
         
-        // ⬇️⬇️ (إصلاح زر الاشتراك) ⬇️⬇️
+        // 2. (أزرار بطاقة الإعدادات الجديدة)
+        document.getElementById('settings-menu-profile').addEventListener('click', (e) => {
+            e.preventDefault();
+            settingsModal.classList.remove('active'); 
+            profileSettingsModal.classList.add('active'); 
+        });
+        
+        document.getElementById('settings-menu-notifications').addEventListener('click', (e) => {
+            e.preventDefault();
+            settingsModal.classList.remove('active'); 
+            notifModal.classList.add('active'); 
+        });
+
+        document.getElementById('settings-menu-support').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('Support.html', '_blank'); 
+        });
+
+        document.getElementById('settings-menu-delete').addEventListener('click', (e) => {
+            e.preventDefault();
+            settingsModal.classList.remove('active'); 
+            deleteModalStep1.classList.add('active'); 
+        });
+        
+        // 3. (أزرار رفع الصورة)
+        profileImgEl.addEventListener('click', () => {
+            profileModal.classList.add('active');
+        });
+        profileChangePicBtn.addEventListener('click', () => {
+            profileSettingsModal.classList.remove('active');
+            profileModal.classList.add('active');
+        });
+        document.getElementById('upload-profile-btn').addEventListener('click', () => {
+          uploadImageInput.click();
+        });
+        uploadImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) { uploadProfilePicture(file); }
+        });
+        
+        // 4. (إغلاق النوافذ بالخلفية)
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // 5. (جديد: إغلاق النوافذ بالزر X)
+        document.querySelectorAll('.modal-close-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.target.closest('.modal-overlay').classList.remove('active');
+            });
+        });
+
+        // 6. (أزرار نافذة الإشعارات)
         emailSubToggle.addEventListener('change', async (e) => {
             if (!currentUser) return;
             const timeSinceLastChange = Date.now() - lastSubChange;
@@ -1330,24 +1419,11 @@
             const newLastSubChange = Date.now();
             
             try {
-                // 1. تحديث Firebase
                 await updateUserProfileDB(currentUser.uid, { 
                     subscribe_marketing: newSubState,
                     lastSubChange: newLastSubChange
                 });
                 lastSubChange = newLastSubChange;
-                
-                // 2. (هام) تحديث OneSignal
-                if (window.OneSignal) {
-                    if (newSubState) {
-                        window.OneSignal.User.addTag("subscribed", "true");
-                    } else {
-                        // (إصلاح) التأكد من الحذف عند إلغاء الاشتراك
-                        window.OneSignal.User.removeTag("subscribed");
-                    }
-                }
-
-                // 3. تحديث الواجهة
                 updateHomeSubscriptionUI(newSubState); 
                 updateNotifStatusUI(newSubState, isWebPushSubscribed); 
                 
@@ -1360,16 +1436,98 @@
                 showToast(`Error: ${error.message}`, 'error');
             }
         });
-        // ⬆️⬆️ نهاية إصلاح زر الاشتراك ⬆️⬆️
 
-        webPushToggle.addEventListener('change', async (e) => { /* ... */ });
-        logoutBtn.addEventListener('click', () => { /* ... */ });
-        logoutConfirmYes.addEventListener('click', () => { /* ... */ });
-        logoutConfirmNo.addEventListener('click', () => { /* ... */ });
-        deleteConfirmYes.addEventListener('click', () => { /* ... */ });
-        deleteConfirmNo.addEventListener('click', () => { /* ... */ });
-        deleteEmailInput.addEventListener('input', () => { /* ... */ });
-        deleteConfirmFinalBtn.addEventListener('click', async () => { /* ... */ });
+        webPushToggle.addEventListener('change', async (e) => {
+            if (!currentUser) return;
+            const timeSinceLastChange = Date.now() - lastWebPushSubChange;
+            
+            if (timeSinceLastChange < SUB_COOLDOWN) {
+                e.target.checked = !e.target.checked; 
+                showToast(translations[currentLang].cooldownMsg, 'warning');
+                return;
+            }
+            
+            const newSubState = e.target.checked;
+            const newLastWebPushSubChange = Date.now();
+            
+            try {
+                await updateUserProfileDB(currentUser.uid, { 
+                    subscribe_webpush: newSubState,
+                    lastWebPushSubChange: newLastWebPushSubChange
+                });
+                lastWebPushSubChange = newLastWebPushSubChange;
+                isWebPushSubscribed = newSubState; 
+                updateNotifStatusUI(isSubscribed, newSubState);
+                
+                showToast(
+                    newSubState ? translations[currentLang].subYesToast : translations[currentLang].subNoToast,
+                    newSubState ? 'success' : 'error'
+                );
+            } catch (error) {
+                e.target.checked = !e.target.checked; 
+                showToast(`Error: ${error.message}`, 'error');
+            }
+        });
+        
+        // 7. (زر تسجيل الخروج الجديد)
+        logoutBtn.addEventListener('click', () => {
+            logoutConfirmModal.classList.add('active');
+        });
+        logoutConfirmYes.addEventListener('click', () => {
+            signOut(auth).catch((error) => {
+                console.error("Sign out error", error);
+                showToast(`Sign out error: ${error.message}`, 'error');
+            });
+        });
+        logoutConfirmNo.addEventListener('click', () => {
+            logoutConfirmModal.classList.remove('active');
+        });
+
+        // 8. (أزرار حذف الحساب)
+        deleteConfirmYes.addEventListener('click', () => {
+            deleteModalStep1.classList.remove('active');
+            deleteModalStep2.classList.add('active');
+        });
+        deleteConfirmNo.addEventListener('click', () => {
+            deleteModalStep1.classList.remove('active');
+        });
+        
+        deleteEmailInput.addEventListener('input', () => {
+            if (deleteEmailInput.value === currentUser.email) {
+                deleteConfirmFinalBtn.disabled = false;
+            } else {
+                deleteConfirmFinalBtn.disabled = true;
+            }
+        });
+        
+        deleteConfirmFinalBtn.addEventListener('click', async () => {
+            if (isDeletePending || deleteEmailInput.value !== currentUser.email) return;
+
+            isDeletePending = true;
+            deleteConfirmFinalBtn.disabled = true;
+            deleteStatus.textContent = translations[currentLang].deleteInProgress;
+            deleteStatus.style.display = 'block';
+
+            try {
+                // * ⬇️⬇️⬇️ إصلاح الخطأ 893 ⬇️⬇️⬇️
+                await remove(ref(db, 'users/' + currentUser.uid));
+                
+                await deleteUser(currentUser);
+                
+                showToast(translations[currentLang].deleteSuccess, 'success');
+                
+            } catch (error) {
+                console.error("Delete account error:", error);
+                if (error.code === 'auth/requires-recent-login') {
+                    showToast('Please log out and log back in to delete your account.', 'error');
+                } else {
+                    showToast(`Error: ${error.message}`, 'error');
+                }
+                deleteStatus.style.display = 'none';
+                isDeletePending = false;
+                deleteConfirmFinalBtn.disabled = false;
+            }
+        });
 
 
         // --- INITIAL CALL ---
@@ -1397,15 +1555,15 @@
 
     <div class="container" id="contentContainer" style="margin-top: 80px;">
      <div class="error" id="email-verification-banner" style="display: none;">
-        <div class="error__icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#fff" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
-        </div>
-        <div class="error__title" id="verification-message" data-lang-key="verifyEmailWarning">
-            بريدك الإلكتروني غير مُفعّل.
-        </div>
-        <button id="resend-email-btn" data-lang-key="resendButton">إعادة إرسال</button>
+    <div class="error__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#fff" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
     </div>
-    <h2 data-lang-key="profileTitle">الـملف الـشخصي</h2>
+    <div class="error__title" id="verification-message" data-lang-key="verifyEmailWarning">
+        بريدك الإلكتروني غير مُفعّل.
+    </div>
+    <button id="resend-email-btn" data-lang-key="resendButton">إعادة إرسال</button>
+</div>
+      <h2 data-lang-key="profileTitle">الـملف الـشخصي</h2>
       
       <div class="profile-info">
         <div class="profile-details">

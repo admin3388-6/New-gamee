@@ -1,6 +1,2 @@
-# السماح لجميع برامج الزحف بالوصول إلى الموقع
 User-agent: *
-Allow: /
-
-# تحديد موقع خريطة الموقع (Sitemap)
-Sitemap: https://www.skydata.kozow.com/sitemap.xml
+Disallow: /

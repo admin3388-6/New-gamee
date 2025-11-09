@@ -1,286 +1,825 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول مع Firebase و OneSignal</title>
+    <title data-lang-key="pageTitle">Skydata - خدمات سحابية وأدوات مجانية</title>
+
+    <meta name="description" content="موقع Skydata يقدم أدوات مجانية لتحويل الصور، بما في ذلك تحويل الصور إلى PDF، وضغط WEBP، ورفع الصور للحصول على روابط. خدمات سحابية سريعة ومجانية.">
+    <meta name="description" lang="en" content="Skydata offers free image tools, including Image to PDF converter, WEBP compressor, and Image to Link generator. Fast, free cloud services.">
+    
+    <meta name="keywords" content="Skydata, تحويل صور, أدوات مجانية, سحابية, PDF, WEBP, صورة إلى رابط, ضغط صور, إزالة خلفية, تكبير صور, صورة إلى وورد, صانع QR, image converter, free tools, image to pdf, image to webp, image to link, background remover, image upscaler, image to word, qr code generator, cloud tools, free image hosting, convertir images, outils gratuits, image en pdf, image en webp, image en lien, servicios cloud, convertir imágenes, herramientas gratuitas, imagen a pdf, imagen a webp, imagen a enlace, servicios en la nube, convertire immagini, strumenti gratuiti, immagine in pdf, immagine in webp, immagine in link, servizi cloud, Bilder konvertieren, kostenlose Tools, Bild in PDF, Bild in WEBP, Bild in Link, Cloud-Dienste, конвертер изображений, бесплатные инструменты, изображение в PDF, изображение в WEBP, изображение в ссылку, облачные сервисы, 图像转换器, 免费工具, 图片转PDF, 图片转WEBP, 图片转链接, 云服务, イメージコンバータ, フリーツール, イメージからPDF, イメージからWEBP, イメージからリンク, クラウドサービス">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
+        });
+      });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378041273892848"
+     crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
     <style>
-        body { font-family: Arial, sans-serif; display: grid; place-items: center; min-height: 100vh; background-color: #f4f4f4; margin: 0; }
-        .container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 350px; min-height: 300px; }
-        h2 { text-align: center; color: #333; margin-top: 0; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .buttons { display: flex; justify-content: space-between; }
-        button { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; flex: 1; }
-        #btnSignUp { background-color: #28a745; color: white; margin-left: 5px; }
-        #btnLogin { background-color: #007bff; color: white; margin-right: 5px; }
-        #btnLogout { width: 100%; background-color: #dc3545; color: white; margin-top: 20px; }
-        #message { text-align: center; margin-top: 15px; font-size: 0.9em; padding: 10px; border-radius: 4px; display: none; }
-        #message.success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; display: block; }
-        #message.error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; display: block; }
-        #dashboardView { display: none; }
-        #dashboardView h2 { color: #007bff; }
-        .info-list { list-style: none; padding: 0; margin-top: 20px; }
-        .info-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-        .info-list li span:first-child { font-weight: bold; color: #555; }
-        .info-list li span:last-child { color: #333; }
-    </style>
-</head>
-<body>
+        body {
+            font-family: Arial, sans-serif; direction: rtl; 
+            background-color: #121212; color: #e0e0e0;
+            margin: 0; padding: 0;
+        }
 
-    <div class="container">
+        .container {
+            max-width: 900px; margin: 0 auto; padding: 20px;
+        }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { height: 40px; margin-left: 10px; }
+        .lang-switcher { display: flex; }
+        .lang-switcher a {
+            text-decoration: none; color: #007bff; margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+        }
+        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .auth-button {
+            display: flex; /* لإظهار الأيقونة والنص جنباً إلى جنب */
+            align-items: center;
+            text-decoration: none; 
+            color: #007bff; 
+            margin: 0 5px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            padding: 5px 10px; 
+            border-radius: 5px;
+            border: 1px solid #007bff;
+            background-color: transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap; /* لمنع انكسار النص */
+        }
+        .auth-button:hover {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .auth-button i {
+            margin-inline-end: 8px; /* مسافة بين الأيقونة والنص */
+        }
+
+
+        main { text-align: center; padding: 30px 0; }
+        .intro-text { margin-bottom: 30px; }
+        .intro-text h1 { font-size: 2em; color: #ffffff; }
+        .intro-text p { font-size: 1.1em; color: #e0e0e0; line-height: 1.6; }
+        .free-badge {
+            font-size: 1.5em; color: #28a745; font-weight: bold;
+            margin: 15px 0; display: block;
+        }
+
+        .stats-panel {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .stat-item {
+            text-align: center;
+            min-width: 150px;
+        }
+        .stat-item .stat-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .stat-item .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1;
+        }
+        .stat-item .label {
+            font-size: 1em;
+            color: #aaa;
+        }
+        .stars-display {
+            color: #ffc107;
+            font-size: 1.2em;
+        }
+
+        .feature-section {
+            background-color: #1e1e1e; border-radius: 8px;
+            padding: 20px; margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .feature-section img {
+            max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 15px;
+        }
+        .feature-section h2 { font-size: 1.5em; margin-bottom: 10px; color: #ffffff; }
+        .feature-section p { font-size: 1.1em; }
+
+        .cta-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px; 
+        }
+        .cta-button {
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: #007bff; 
+            color: #ffffff;
+            padding: 12px 20px; 
+            font-size: 1.1em; font-weight: bold;
+            text-decoration: none; border-radius: 5px;
+            transition: all 0.3s ease;
+            flex-basis: 250px; 
+            flex-grow: 1;
+        }
+        .cta-button:hover { 
+            background-color: #0056b3; 
+            transform: scale(1.03);
+        }
         
-        <div id="message"></div>
-
-        <div id="loginView">
-            <h2>صفحة التسجيل</h2>
-            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-            <input type="password" id="password" placeholder="كلمة المرور" required>
-            
-            <div class="buttons">
-                <button id="btnLogin">تسجيل الدخول</button>
-                <button id="btnSignUp">إنشاء حساب</button>
-            </div>
-        </div>
-
-        <div id="dashboardView">
-            <h2>أهلاً بك مجدداً</h2>
-            <ul class="info-list">
-                <li>
-                    <span>الإيميل:</span>
-                    <span id="userEmail">...</span>
-                </li>
-                <li>
-                    <span>الحساب مفعل:</span>
-                    <span id="userVerified">...</span>
-                </li>
-                <li>
-                    <span>مشترك (OneSignal):</span>
-                    <span id="userSubscribed">...</span>
-                </li>
-                <li>
-                    <span>رسالة الترحيب:</span>
-                    <span id="userMessageSent">...</span>
-                </li>
-            </ul>
-            <button id="btnLogout">تسجيل الخروج</button>
-        </div>
-
-    </div>
-
-    <script type="module">
-        // استيراد الدوال التي نحتاجها
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        .btn-icon {
+            font-size: 1.2em; 
+            margin-inline-end: 10px; 
+        }
         
-        // استيراد دوال المصادقة
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword,
-            signOut,
-            sendEmailVerification,
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-        // ** جديد: استيراد دوال قاعدة البيانات (Realtime Database) **
-        import { 
-            getDatabase, 
-            ref, 
-            set, 
-            get 
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+        footer {
+            background-color: #1e1e1e;
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #333;
+        }
+        .footer-links a {
+            color: #ffffff; background-color: #007bff;
+            text-decoration: none;
+            margin: 0 10px 15px 10px; display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.1em; font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .footer-links a:hover {
+            background-color: #0056b3;
+            transform: scale(1.03);
+        }
         
-        // إعدادات Firebase الخاصة بك (كاملة)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-            authDomain: "skydata-ai.firebaseapp.com",
-            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app", // <-- مربوط بقاعدة البيانات
-            projectId: "skydata-ai",
-            storageBucket: "skydata-ai.firebasestorage.app",
-            messagingSenderId: "165531796197",
-            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
-            measurementId: "G-JYS7P7FY3Z"
-        };
+        .social-icons {
+            margin-top: 20px;
+        }
+        .social-icons a {
+            margin: 0 10px;
+        }
+        .social-icons img {
+            height: 30px;
+            transition: transform 0.2s ease;
+        }
+        .social-icons img:hover {
+            transform: scale(1.1);
+        }
 
-        // تهيئة Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app); // ** جديد: تهيئة قاعدة البيانات **
+        .rating-widget {
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+        .rating-widget h3 {
+            margin: 0 0 15px 0;
+            color: #fff;
+        }
+        .rating-stars {
+            display: inline-block;
+        }
+        .rating-stars .star {
+            font-size: 2.5em;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .rating-stars .star:hover,
+        .rating-stars .star.hovered {
+            color: #ffc107;
+        }
+        .rating-stars .star.selected {
+            color: #ffc107;
+        }
+        #rating-thanks {
+            display: none;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
 
-        // تهيئة OneSignal 
-        window.OneSignal = window.OneSignal || [];
-        OneSignal.push(function() {
-            OneSignal.init({
-                appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
-                allowLocalhostAsSecureOrigin: true 
-            });
-        });
+        /* * ⬇️⬇️⬇️ CSS جديد: تنسيقات الزر الجديد ⬇️⬇️⬇️ */
+        .uiverse-btn-wrapper {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem; /* 16px */
+          margin-top: 30px; /* مسافة إضافية فوقه */
+        }
+        .uiverse-btn-glow {
+          position: absolute;
+          top: 0; right: 0; bottom: 0; left: 0;
+          opacity: 0.6;
+          transition: opacity 1s;
+          background: linear-gradient(to right, #6366f1, #ec4899, #f59e0b); /* from-indigo-500 via-pink-500 to-yellow-400 */
+          border-radius: 0.75rem; /* 12px */
+          filter: blur(1.5rem); /* 24px */
+        }
+        .uiverse-btn-wrapper:hover .uiverse-btn-glow {
+          opacity: 1;
+          transition-duration: 0.2s;
+        }
+        .uiverse-btn-anchor {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem; /* 16px */
+          border-radius: 0.75rem; /* 12px */
+          background-color: #111827; /* bg-gray-900 */
+          padding: 0.75rem 2rem; /* 12px 32px */
+          font-weight: 600; /* font-semibold */
+          color: white;
+          transition: all 0.2s;
+          text-decoration: none; /* إزالة الخط */
+        }
+        .uiverse-btn-anchor:hover {
+          background-color: #1f2937; /* hover:bg-gray-800 */
+          box-shadow: 0 10px 15px -3px rgba(107, 114, 128, 0.3), 0 4px 6px -2px rgba(107, 114, 128, 0.3); /* hover:shadow-lg hover:shadow-gray-600/30 */
+          transform: translateY(-0.25rem); /* hover:-translate-y-0.5 */
+        }
+        .uiverse-btn-anchor svg {
+          margin-top: 2px; /* mt-0.5 */
+          margin-left: 0.5rem; /* ml-2 */
+          margin-right: -0.25rem; /* -mr-1 */
+          stroke: white;
+          stroke-width: 2;
+        }
+        [dir="rtl"] .uiverse-btn-anchor svg {
+            /* تعديل للغة العربية */
+            margin-left: -0.25rem;
+            margin-right: 0.5rem;
+        }
+        .uiverse-btn-anchor svg path:first-child {
+          transition: opacity 0.2s;
+          opacity: 0;
+        }
+        .uiverse-btn-anchor:hover svg path:first-child {
+          opacity: 1;
+        }
+        .uiverse-btn-anchor svg path:last-child {
+          transition: transform 0.2s;
+        }
+        .uiverse-btn-anchor:hover svg path:last-child {
+          transform: translateX(3px);
+        }
+        [dir="rtl"] .uiverse-btn-anchor:hover svg path:last-child {
+            transform: translateX(-3px); /* تعديل للغة العربية */
+        }
+        /* * ⬆️⬆️⬆️ CSS جديد ⬆️⬆️⬆️ */
 
-        // --- ربط عناصر الواجهتين ---
-        const loginView = document.getElementById("loginView");
-        const dashboardView = document.getElementById("dashboardView");
-        const messageEl = document.getElementById("message");
-        const emailInput = document.getElementById("email");
-        const passwordInput = document.getElementById("password");
-        const btnSignUp = document.getElementById("btnSignUp");
-        const btnLogin = document.getElementById("btnLogin");
-        const btnLogout = document.getElementById("btnLogout"); 
         
-        // عناصر لوحة التحكم المحدثة
-        const userEmail = document.getElementById("userEmail");
-        const userVerified = document.getElementById("userVerified");
-        const userSubscribed = document.getElementById("userSubscribed"); // تم تغيير الاسم
-        const userMessageSent = document.getElementById("userMessageSent");
-
-        // --- دوال مساعدة ---
-        function showMessage(text, type = "error") { /* ... (نفس الدالة) ... */ }
-        function handleAuthError(error) { /* ... (نفس الدالة) ... */ }
-        function showLoginUI() { /* ... (نفس الدالة) ... */ }
-
-        /** دالة تبديل الواجهة إلى "لوحة التحكم" (معدلة بالكامل) */
-        async function showDashboardUI(user) {
-            loginView.style.display = "none";
-            dashboardView.style.display = "block";
-            
-            // 1. ملء بيانات Firebase الأولية
-            userEmail.textContent = user.email;
-            userVerified.textContent = user.emailVerified ? 'نعم (مفعل)' : 'لا (غير مفعل)';
-
-            // 2. إعدادات الحالة الافتراضية
-            userSubscribed.textContent = 'جاري المزامنة...';
-            userMessageSent.textContent = 'جاري التحقق...';
-
-            // 3. مزامنة OneSignal (تسجيل الإيميل وربط الـ ID)
-            try {
-                await OneSignal.User.addAlias("external_id", user.uid);
-                await OneSignal.User.addEmail(user.email);
-                console.log("OneSignal ID and Email synced.");
-                userSubscribed.textContent = 'نعم (متصل)';
-            } catch (err) {
-                console.error("OneSignal sync failed:", err);
-                userSubscribed.textContent = 'فشل (خطأ)';
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            header {
+                padding: 10px 15px;
+            }
+            .intro-text h1 {
+                font-size: 1.8em;
+            }
+            .feature-section {
+                padding: 15px;
+            }
+            .stats-panel {
+                flex-direction: column;
+            }
+            .cta-section .cta-button {
+                flex-basis: 100%;
+                margin: 8px 0;
+            }
+            .footer-links a {
+                display: block;
+                width: 80%;
+                margin: 10px auto;
             }
 
-            // 4. التحقق من قاعدة البيانات (هل أرسلنا رسالة الترحيب من قبل؟)
-            const userRef = ref(db, 'users/' + user.uid);
-            try {
-                const snapshot = await get(userRef);
-                const userData = snapshot.val();
-
-                if (userData && userData.welcomeMessageSent === true) {
-                    // نعم، تم إرسالها من قبل
-                    console.log("رسالة الترحيب أرسلت من قبل.");
-                    userMessageSent.textContent = 'نعم (أرسلت سابقاً)';
-
-                } else {
-                    // لا، لم ترسل. قم بإرسالها الآن
-                    console.log("إرسال وسم رسالة الترحيب الآن...");
-                    userMessageSent.textContent = 'جاري الإرسال...';
-                    
-                    await OneSignal.User.addTag("new_signup", "true");
-                    
-                    // ** هام: حفظ الحالة في قاعدة البيانات **
-                    await set(userRef, { 
-                        email: user.email,
-                        isSubscribed: true,
-                        welcomeMessageSent: true 
-                    });
-                    
-                    console.log("تم تحديث قاعدة البيانات.");
-                    userMessageSent.textContent = 'نعم (تم الإرسال الآن)';
-                }
-            } catch (dbError) {
-                console.error("خطأ في التعامل مع قاعدة البيانات:", dbError);
-                userMessageSent.textContent = 'خطأ في التحقق من قاعدة البيانات';
+            .auth-button span {
+                display: none; /* إخفاء النص في الشاشات الصغيرة */
+            }
+            .auth-button i {
+                margin-inline-end: 0; /* إزالة المسافة عند إخفاء النص */
+                font-size: 1.1em;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .logo-container img {
+                height: 30px;
+            }
+            .lang-switcher a {
+                padding: 3px 5px;
+                font-size: 0.9em;
+            }
+            .auth-button {
+                padding: 3px 6px;
             }
         }
 
-        // --- المستمع الرئيسي لـ Firebase ---
-        onAuthStateChanged(auth, async (user) => {
-            messageEl.style.display = "none"; 
-            if (user) {
-                console.log("المستخدم مسجل دخوله:", user.uid);
-                await showDashboardUI(user);
-            } else {
-                console.log("المستخدم قام بتسجيل الخروج");
-                showLoginUI();
-            }
-        });
+    </style>
+    </head>
+<body>
 
-        // --- ربط وظائف الأزرار ---
-
-        /** جديد: تعديل دالة إنشاء حساب (لحفظه في الداتا بيز) */
-        btnSignUp.addEventListener("click", () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            showMessage("جاري إنشاء الحساب...", "success");
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
+            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+        </div>
+        
+        <div class="header-controls">
+            <div class="lang-switcher">
+                <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+                <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+            </div>
             
-            createUserWithEmailAndPassword(auth, email, password)
-                .then(async (userCredential) => {
-                    const user = userCredential.user;
-                    
-                    // ** جديد: إنشاء سجل للمستخدم في قاعدة البيانات **
-                    const userRef = ref(db, 'users/' + user.uid);
-                    await set(userRef, {
-                        email: user.email,
-                        isSubscribed: false,       // لم يشترك بعد
-                        welcomeMessageSent: false  // لم ترسل الرسالة بعد
-                    });
+            <div class="auth-controls">
+                <a href="login.html" class="auth-button" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span data-lang-key="loginButton">تسجيل الدخول</span>
+                </a>
+                <a href="menu.html" class="auth-button" id="menu-btn" style="display: none;">
+                    <i class="fas fa-bars"></i>
+                    <span data-lang-key="menuButton">القائمة</span>
+                </a>
+            </div>
+        </div>
 
-                    showMessage("تم إنشاء الحساب! تم إرسال إيميل تفعيل.", "success");
-                    sendEmailVerification(user); // onAuthStateChanged سيهتم بالباقي
-                })
-                .catch(handleAuthError);
-        });
+    </header>
 
-        /** دالة تسجيل الدخول (كما هي) */
-        btnLogin.addEventListener("click", () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            showMessage("جاري تسجيل الدخول...", "success");
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // onAuthStateChanged سيهتم بالباقي
-                })
-                .catch(handleAuthError);
-        });
+    <div class="container">
+        
+        <main>
+            
+            <section class="intro-text">
+                <h1 data-lang-key="introTitle">تقدم لك Skydata المئات من الخدمات و الادوات تعمل من أجل العميل</h1>
+                <p data-lang-key="introSubTitle">بالإضافة إلى خدمات سحابية متقدمة وخدمات احترافية</p>
+                <span class="free-badge" data-lang-key="introFree">مجانا</span>
+                <p data-lang-key="introDesc">تحويل الملفات و الصور و تعديل الصور ادوات الصور رفع الصور تحويلها الى روابط مجانا بدون بطاقة بدون اشتراكات</p>
+            </section>
 
-        /** جديد: إصلاح دالة تسجيل الخروج */
-        btnLogout.addEventListener("click", async () => {
-            const user = auth.currentUser; // الحصول على المستخدم الحالي
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <img src="https://i.ibb.co/vv1hJnvV/890418c34dbf109935cad4bc58064fc2.png" alt="Visitors" class="stat-icon">
+                    <div class="number" id="visitor-count">0</div>
+                    <div class="label" data-lang-key="visitors">عدد زوار الموقع</div>
+                </div>
+                <div class="stat-item">
+                    <img src="https://i.ibb.co/1tm4Fj8B/Picsart-25-11-06-14-38-15-248.webp" alt="Rating" class="stat-icon">
+                    <div class="number" id="rating-average">0.0</div>
+                    <div class="label" id="rating-count" data-lang-key="ratings">من (0 تقييمات)</div>
+                </div>
+            </div>
 
-            if (!user) {
-                console.log("لا يوجد مستخدم لتسجيل الخروج.");
-                return; // خروج مبكر إذا لم يكن هناك مستخدم
+
+            <section class="feature-section">
+                <img src="https://i.ibb.co/HT2mXkhS/13fa98a87cf632cca045cfc9ebefe0a3.jpg" alt="دعم صيغ متعددة">
+                <h2 data-lang-key="featureFormats">دعم أكثر من 150 صيغة</h2>
+            </section>
+
+            <section class="feature-section">
+                <img src="https://i.ibb.co/3m54vv8V/1271bc403bfb8db01a68f4d87679395b.webp" alt="ميزة سحابية">
+            </section>
+
+            <section class="feature-section">
+                <h2 data-lang-key="featureSecurityTitle">حماية وتشفير البيانات المتقدم</h2>
+                <p data-lang-key="featureSecurityDesc">يتم تشفير بيناتك حماية خصوصيتك 100%</p>
+                <img src="https://i.ibb.co/0ygjpskG/22027b8a2b10228783284f13454681aa.jpg" alt="حماية وتشفير">
+            </section>
+
+            <section class="cta-section">
+                
+                <a href="remove.html" class="cta-button">
+                    <i class="fas fa-cut btn-icon"></i>
+                    <span data-lang-key="ctaButtonRemoveBg">إزالة خلفية الصور (AI)</span>
+                </a>
+
+                <a href="pdf.html" class="cta-button">
+                    <i class="fas fa-file-pdf btn-icon"></i>
+                    <span data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</span>
+                </a>
+                
+                <a href="imgdv.html" class="cta-button">
+                    <i class="fas fa-compress-arrows-alt btn-icon"></i>
+                    <span data-lang-key="ctaButtonWebp">تحويل الصور الى webp</span>
+                </a>
+                
+                <a href="imgtag.html" class="cta-button">
+                    <i class="fas fa-link btn-icon"></i>
+                    <span data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</span>
+                </a>
+                
+                <a href="qr.html" class="cta-button">
+                    <i class="fas fa-qrcode btn-icon"></i>
+                    <span data-lang-key="ctaButtonQr">صانع QR Code</span>
+                </a>
+                
+                <a href="size.html" class="cta-button">
+                    <i class="fas fa-ruler-combined btn-icon"></i>
+                    <span data-lang-key="ctaButtonSize">تغيير حجم الصور</span>
+                </a>
+                
+                <a href="zoom.html" class="cta-button">
+                    <i class="fas fa-search-plus btn-icon"></i>
+                    <span data-lang-key="ctaButtonZoom">تكبير الصور (AI)</span>
+                </a>
+                
+                <a href="editor.html" class="cta-button">
+                    <i class="fas fa-magic btn-icon"></i>
+                    <span data-lang-key="ctaButtonEditor">محرر الصور</span>
+                </a>
+
+            </section>
+
+            <div class="uiverse-btn-wrapper">
+              <div class="uiverse-btn-glow"></div>
+              <a
+                role="button"
+                class="uiverse-btn-anchor"
+                title="payment"
+                href="login.html"
+                >
+                <span data-lang-key="ctaButtonStartFree">اشترك مجاناً</span>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 10 10"
+                  height="10"
+                  width="10"
+                  fill="none"
+                  class="mt-0.5 ml-2 -mr-1 stroke-white stroke-2"
+                >
+                  <path
+                    d="M0 5h7"
+                    class="transition opacity-0 group-hover:opacity-100"
+                  ></path>
+                  <path
+                    d="M1 1l4 4-4 4"
+                    class="transition group-hover:translate-x-[3px]"
+                  ></path>
+                </svg>
+              </a>
+            </div>
+            </main>
+        
+    </div> <footer>
+        <div class="footer-links">
+            <a href="Safety.html" data-lang-key="footerPolicy">شروط الاستخدام وسياسة الخصوصية</a>
+            <a href="aboutus.html" data-lang-key="footerAbout">عن Skydata</a>
+        </div>
+        
+        <div class="social-icons">
+            <a href="https://www.youtube.com/@Skydataa" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/KjqPWR0S/qm6aoefmjlhw2bhdgmss.webp" alt="يوتيوب">
+            </a>
+            <a href="https://discord.gg/6m3c2up4p3" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/sdxTC105/qqoxsxvwoleec1dfbhew.webp" alt="ديسكورد">
+            </a>
+            <a href="update.html">
+                <img src="https://i.ibb.co/fQc3YFk/download-white.png" alt="صفحة التحديثات" style="height: 30px; width: 30px;">
+            </a>
+        </div>
+
+        <div class="rating-widget">
+            <h3 data-lang-key="rateUs">قم بتقييم خدمتنا</h3>
+            <div class="rating-stars" id="rating-stars">
+                <span class="star" data-value="1">☆</span>
+                <span class="star" data-value="2">☆</span>
+                <span class="star" data-value="3">☆</span>
+                <span class="star" data-value="4">☆</span>
+                <span class="star" data-value="5">☆</span>
+            </div>
+            <p id="rating-thanks" data-lang-key="thanks">شكراً لتقييمك!</p>
+        </div>
+    </footer>
+
+
+    <script type="module">
+        // 1. استيراد المكتبات
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        // 2. كود الإعداد الخاص بك
+        const firebaseConfig = {
+          apiKey: "AIzaSyD7QnPaJTYiawCz6SrtdBGT_NDeAPX9bBc",
+          authDomain: "pixelrpg-5ebc3.firebaseapp.com",
+          databaseURL: "https://pixelrpg-5ebc3-default-rtdb.europe-west1.firebasedabase.app",
+          projectId: "pixelrpg-5ebc3",
+          storageBucket: "pixelrpg-5ebc3.firebasestorage.app",
+          messagingSenderId: "1041585714383",
+          appId: "1:1041585714383:web:3f6912a5d6bddebe5573ba",
+          measurementId: "G-8MENZDEGB1"
+        };
+
+        // 3. تشغيل فايربيس
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+
+        // --- 4. منطق الترجمة (مُعدل) ---
+        const translations = {
+            "ar": {
+                "pageTitle": "Skydata - خدمات سحابية وأدوات مجانية",
+                "introTitle": "تقدم لك Skydata المئات من الخدمات و الادوات تعمل من أجل العميل",
+                "introSubTitle": "بالإضافة إلى خدمات سحابية متقدمة وخدمات احترافية",
+                "introFree": "مجانا",
+                "introDesc": "تحويل الملفات و الصور و تعديل الصور ادوات الصور رفع الصور تحويلها الى روابط مجانا بدون بطاقة بدون اشتراكات",
+                "featureFormats": "دعم أكثر من 150 صيغة",
+                "featureSecurityTitle": "حماية وتشفير البيانات المتقدم",
+                "featureSecurityDesc": "يتم تشفير بيناتك حماية خصوصيتك 100%",
+                "ctaButtonRemoveBg": "إزالة خلفية الصور (AI)",
+                "ctaButtonPdf": "تحويل صور إلى PDF",
+                "ctaButtonWebp": "تحويل الصور الى webp",
+                "ctaButtonImgtag": "تحويل الصور الى روابط",
+                "ctaButtonQr": "صانع QR Code",
+                "ctaButtonSize": "تغيير حجم الصور",
+                "ctaButtonZoom": "تكبير الصور (AI)",
+                "ctaButtonEditor": "محرر الصور",
+                "ctaButtonStartFree": "اشترك مجاناً", // * ⬅️ إضافة جديدة
+                "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
+                "footerAbout": "عن Skydata",
+                "visitors": "عدد زوار الموقع",
+                "ratings": "من ({count} تقييمات)",
+                "rateUs": "قم بتقييم خدمتنا",
+                "thanks": "شكراً لتقييمك!",
+                "loginButton": "تسجيل الدخول",
+                "menuButton": "القائمة"
+            },
+            "en": {
+                "pageTitle": "Skydata - Cloud Services and Free Tools",
+                "introTitle": "Skydata offers hundreds of services and tools working for the client",
+                "introSubTitle": "In addition to advanced cloud services and professional services",
+                "introFree": "Free",
+                "introDesc": "Convert files, images, edit photos, image tools, upload images, and convert them to links for free, without cards or subscriptions",
+                "featureFormats": "Support for over 150 formats",
+                "featureSecurityTitle": "Advanced Data Protection and Encryption",
+                "featureSecurityDesc": "Your data is encrypted, ensuring 100% privacy protection",
+                "ctaButtonRemoveBg": "Remove Background (AI)",
+                "ctaButtonPdf": "Convert Images to PDF",
+                "ctaButtonWebp": "Convert Images to WEBP",
+                "ctaButtonImgtag": "Convert Images to Links",
+                "ctaButtonQr": "QR Code Generator",
+                "ctaButtonSize": "Image Resizer",
+                "ctaButtonZoom": "Image Upscaler (AI)",
+                "ctaButtonEditor": "Photo Editor",
+                "ctaButtonStartFree": "Get Started For Free", // * ⬅️ إضافة جديدة
+                "footerPolicy": "Terms of Use and Privacy Policy",
+                "footerAbout": "About Skydata",
+                "visitors": "Total Site Visitors",
+                "ratings": "from ({count} ratings)",
+                "rateUs": "Rate Our Service",
+                "thanks": "Thanks for your rating!",
+                "loginButton": "Login",
+                "menuButton": "Menu"
+            }
+        };
+
+        let currentLang = 'ar';
+        window.setLanguage = function(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    const text = translations[lang][key];
+                    if (text.includes('{count}')) {
+                         // سيتم تحديثه بواسطة onValue
+                    } else {
+                        // تعديل للتعامل مع الأزرار التي تحتوي على span
+                        let target = element.classList.contains('auth-button') || element.getAttribute('data-lang-key') === 'ctaButtonStartFree'
+                                   ? element.querySelector('span') || element 
+                                   : element;
+                        
+                        // حالة خاصة للزر الجديد الذي قد لا يحتوي على span في البداية
+                        if (element.getAttribute('data-lang-key') === 'ctaButtonStartFree') {
+                            target = element;
+                        }
+
+                        // إذا كان الزر يحتوي على SPAN (مثل أزرار الهيدر)
+                        if (element.querySelector('span')) {
+                            element.querySelector('span').innerHTML = text;
+                        } else {
+                            element.innerHTML = text;
+                        }
+                    }
+                }
+            });
+            
+            // تحديث ترجمة زر "اشترك مجانا" (لأنه لا يحتوي على span)
+            const startFreeBtn = document.querySelector('[data-lang-key="ctaButtonStartFree"]');
+            if (startFreeBtn) {
+                // نحافظ على SVG
+                const svgIcon = startFreeBtn.querySelector('svg');
+                startFreeBtn.innerHTML = translations[lang].ctaButtonStartFree;
+                if (svgIcon) {
+                    startFreeBtn.appendChild(svgIcon);
+                }
             }
 
-            showMessage("جاري تسجيل الخروج...", "success");
+            const ratingsData = window.currentRatingsData || { count: 0 };
+            document.getElementById('rating-count').innerText = translations[currentLang].ratings.replace('{count}', ratingsData.count);
+        }
+        setLanguage(currentLang);
 
-            try {
-                // الخطوة 1: حذف الإيميل من OneSignal
-                if (user.email) {
-                    console.log("Removing OneSignal email...");
-                    await OneSignal.User.removeEmails([user.email]);
+        // --- 5. (مُعدل) منطق قاعدة البيانات ---
+
+        // عناصر الواجهة
+        const visitorCountEl = document.getElementById('visitor-count');
+        const ratingAverageEl = document.getElementById('rating-average');
+        const ratingCountEl = document.getElementById('rating-count');
+        const ratingStarsContainer = document.getElementById('rating-stars');
+        const allStars = ratingStarsContainer.querySelectorAll('.star');
+        const thanksMessage = document.getElementById('rating-thanks');
+
+        // مراجع قاعدة البيانات
+        const visitorsRef = ref(database, 'statistics/visitors');
+        const ratingsRef = ref(database, 'statistics/ratings');
+
+        function formatLargeNumber(num) {
+          if (num >= 1000000000) { 
+             return (num / 1000000000).toFixed(1).replace('.0', '') + 'B';
+          }
+          if (num >= 1000000) { 
+             return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
+          }
+          if (num >= 1000) { 
+             return (num / 1000).toFixed(1).replace('.0', '') + 'K';
+          }
+          return num.toString();
+        }
+
+        const voteTimestamp = localStorage.getItem('skydataVoteTimestamp');
+        const fifteenDaysInMillis = 15 * 24 * 60 * 60 * 1000;
+        let canVote = true;
+
+        if (voteTimestamp) {
+            const timeSinceVote = new Date().getTime() - Number(voteTimestamp);
+            if (timeSinceVote < fifteenDaysInMillis) {
+                canVote = false;
+            } else {
+                localStorage.removeItem('skydataVoteTimestamp');
+                canVote = true;
+            }
+        }
+
+        function incrementVisitor() {
+            if (sessionStorage.getItem('skydataVisitor')) {
+                return;
+            }
+            sessionStorage.setItem('skydataVisitor', 'true');
+            
+            runTransaction(visitorsRef, (currentData) => {
+                return (currentData || 0) + 1;
+            });
+        }
+
+        function loadData() {
+            onValue(visitorsRef, (snapshot) => {
+                const count = snapshot.val() || 0;
+                visitorCountEl.innerText = formatLargeNumber(count);
+            });
+
+            onValue(ratingsRef, (snapshot) => {
+                const data = snapshot.val() || { totalScore: 0, count: 0 };
+                window.currentRatingsData = data;
+                let average = 0;
+                
+                if (data.count > 0) {
+                    average = (data.totalScore / data.count).toFixed(1);
                 }
                 
-                // الخطوة 2: ** (الإصلاح) ** حذف المعرف (Alias)
-                console.log("Removing OneSignal Alias (ID)...");
-                await OneSignal.User.removeAlias("external_id", user.uid);
-                
-                // الخطوة 3: تسجيل الخروج من Firebase
-                console.log("Signing out of Firebase...");
-                await signOut(auth);
+                ratingAverageEl.innerText = average;
+                ratingCountEl.innerText = translations[currentLang].ratings.replace('{count}', data.count);
+            });
+        }
 
-                // onAuthStateChanged سيهتم بتبديل الواجهة
-                showMessage("تم تسجيل الخروج بنجاح.", "success");
-            
-            } catch (error) {
-                console.error("خطأ الخروج:", error);
-                handleAuthError(error);
+        function submitRating(starValue) {
+            if (!canVote) {
+                showThanks();
+                return;
+            }
+
+            runTransaction(ratingsRef, (currentData) => {
+                if (currentData === null) {
+                    return { totalScore: starValue, count: 1 };
+                } else {
+                    return {
+                        totalScore: (currentData.totalScore || 0) + starValue,
+                        count: (currentData.count || 0) + 1
+                    };
+                }
+            }).then(() => {
+                localStorage.setItem('skydataVoteTimestamp', new Date().getTime().toString());
+                canVote = false;
+                showThanks();
+            }).catch((error) => {
+                console.error("Firebase transaction failed: ", error);
+            });
+        }
+        
+        function showThanks() {
+            ratingStarsContainer.style.display = 'none';
+            thanksMessage.style.display = 'block';
+        }
+
+        // --- 6. (مُعدل) ربط الأحداث ---
+        
+        allStars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                if (!canVote) return;
+                highlightStars(star.dataset.value);
+            });
+            star.addEventListener('mouseout', () => {
+                if (!canVote) return;
+                highlightStars(0);
+            });
+            star.addEventListener('click', () => {
+                if (!canVote) return;
+                const value = parseInt(star.dataset.value, 10);
+                highlightStars(value, true);
+                submitRating(value);
+            });
+        });
+
+        function highlightStars(value, isSelected = false) {
+            allStars.forEach(star => {
+                if (star.dataset.value <= value) {
+                    star.classList.add(isSelected ? 'selected' : 'hovered');
+                    star.innerHTML = '★';
+                } else {
+                    star.classList.remove('hovered');
+                    star.innerHTML = '☆';
+                }
+            });
+        }
+
+        // --- 7. بدء التشغيل ---
+        loadData();
+        incrementVisitor();
+        
+        if (!canVote) {
+            showThanks();
+        }
+
+        // --- 8. التحقق من تسجيل الدخول ---
+        const loginBtn = document.getElementById('login-btn');
+        const menuBtn = document.getElementById('menu-btn');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // المستخدم مسجل دخوله
+                loginBtn.style.display = 'none';
+                menuBtn.style.display = 'flex';
+            } else {
+                // المستخدم غير مسجل دخوله
+                loginBtn.style.display = 'flex';
+                menuBtn.style.display = 'none';
             }
         });
+
     </script>
-</body>
+    </body>
 </html>

@@ -1,186 +1,193 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>الصفحة تحت الصيانة / Maintenance</title>
-<style>
-  :root{
-    --bg1: #00111a;
-    --bg2: #000;
-    --text: #fff;
-    --muted: #ccc;
-    --btn-bg: rgba(255,255,255,0.08);
-    --btn-border: rgba(255,255,255,0.12);
-  }
-  *{box-sizing:border-box}
-  body {
-    margin: 0;
-    padding: 0;
-    background: radial-gradient(circle at 20% 20%, var(--bg1), var(--bg2));
-    overflow: hidden;
-    color: var(--text);
-    font-family: "Tajawal", "Noto Sans", system-ui, sans-serif;
-    min-height: 100vh;
-    position: relative;
-    transition: direction 0.2s;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول مع Firebase و OneSignal</title>
 
-  .lang-switch {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    z-index: 999;
-    background: var(--btn-bg);
-    border: 1px solid var(--btn-border);
-    color: var(--text);
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    backdrop-filter: blur(6px);
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    font-weight: 600;
-  }
-  [dir="ltr"] .lang-switch { right: auto; left: 18px; }
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
-  .content {
-    position: relative;
-    z-index: 20;
-    padding: 40px 20px;
-    text-align: center;
-  }
-  h1 { font-size: 2.3em; margin: 60px 0 12px; }
-  p { font-size: 1.15em; color: var(--muted); margin: 0 0 24px; }
-
-  /* ===== النجوم و رائد الفضاء ===== */
-  @keyframes snow { 0% { opacity: 0; transform: translateY(0px); } 20% { opacity: 1; } 100% { opacity: 1; transform: translateY(650px); } }
-  @keyframes astronaut { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-  .box-of-star1, .box-of-star2, .box-of-star3, .box-of-star4 {
-    width: 100%; position: absolute; z-index: 10; left: 0; top: 0;
-    transform: translateY(0px); height: 700px;
-  }
-  .box-of-star1 { animation: snow 5s linear infinite; }
-  .box-of-star2 { animation: snow 5s -1.64s linear infinite; }
-  .box-of-star3 { animation: snow 5s -2.30s linear infinite; }
-  .box-of-star4 { animation: snow 5s -3.30s linear infinite; }
-
-  .star { width: 3px; height: 3px; border-radius: 50%; background-color: #FFF; position: absolute; z-index: 10; opacity: 0.7; }
-  .star:before { content: ""; width: 6px; height: 6px; border-radius: 50%; background-color: #FFF; position: absolute; z-index: 10; top: 80px; left: 70px; opacity: .7; }
-  .star:after { content: ""; width: 8px; height: 8px; border-radius: 50%; background-color: #FFF; position: absolute; z-index: 10; top: 8px; left: 170px; opacity: .9; }
-
-  .star-position1 { top: 30px; left: 20px; }
-  .star-position2 { top: 110px; left: 250px; }
-  .star-position3 { top: 60px; left: 570px; }
-  .star-position4 { top: 120px; left: 900px; }
-  .star-position5 { top: 20px; left: 1120px; }
-  .star-position6 { top: 90px; left: 1280px; }
-  .star-position7 { top: 30px; left: 1480px; }
-
-  .astronaut { width: 250px; height: 300px; position: absolute; z-index: 11; top: calc(50% - 150px); left: calc(50% - 125px); animation: astronaut 8s linear infinite; }
-  .schoolbag { width: 100px; height: 150px; position: absolute; z-index: 1; top: calc(50% - 75px); left: calc(50% - 50px); background-color: #94b7ca; border-radius: 50px 50px 0 0 / 30px 30px 0 0; }
-  .head { width: 97px; height: 80px; position: absolute; z-index: 3; background: linear-gradient(to right, #e3e8eb 50%, #fbfdfa 50%); border-radius: 50%; top: 34px; left: calc(50% - 47.5px); }
-  .head:after { content: ""; width: 60px; height: 50px; position: absolute; top: calc(50% - 25px); left: calc(50% - 30px); background: linear-gradient(to bottom, #15aece 50%, #0391bf 50%); border-radius: 15px; }
-  .head:before { content: ""; width: 12px; height: 25px; position: absolute; top: calc(50% - 12.5px); left: -4px; background-color: #618095; border-radius: 5px; box-shadow: 92px 0px 0px #618095; }
-  .body { width: 85px; height: 100px; position: absolute; z-index: 2; background-color: #fffbff; border-radius: 40px / 20px; top: 105px; left: calc(50% - 41px); background: linear-gradient(to right, #e3e8eb 50%, #fbfdfa 50%); }
-  .panel { width: 60px; height: 40px; position: absolute; top: 20px; left: calc(50% - 30px); background-color: #b7cceb; }
-  .panel:before { content: ""; width: 30px; height: 5px; position: absolute; top: 9px; left: 7px; background-color: #fbfdfa; box-shadow: 0px 9px 0px #fbfdfa, 0px 18px 0px #fbfdfa; }
-  .panel:after { content: ""; width: 8px; height: 8px; position: absolute; top: 9px; right: 7px; background-color: #fbfdfa; border-radius: 50%; box-shadow: 0px 14px 0px 2px #fbfdfa; }
-
-  .arm { width: 80px; height: 30px; position: absolute; top: 121px; z-index: 2; }
-  .arm-left { left: 30px; background-color: #e3e8eb; border-radius: 0 0 0 39px; }
-  .arm-right { right: 30px; background-color: #fbfdfa; border-radius: 0 0 39px 0; }
-  .arm-left:before, .arm-right:before { content: ""; width: 30px; height: 70px; position: absolute; top: -40px; }
-  .arm-left:before { border-radius: 50px 50px 0px 120px / 50px 50px 0 110px; left: 0; background-color: #e3e8eb; }
-  .arm-right:before { border-radius: 50px 50px 120px 0 / 50px 50px 110px 0; right: 0; background-color: #fbfdfa; }
-  .arm-left:after, .arm-right:after { content: ""; width: 30px; height: 10px; position: absolute; top: -24px; }
-  .arm-left:after { background-color: #6e91a4; left: 0; }
-  .arm-right:after { right: 0; background-color: #b6d2e0; }
-
-  .leg { width: 30px; height: 40px; position: absolute; z-index: 2; bottom: 70px; }
-  .leg-left { left: 76px; background-color: #e3e8eb; transform: rotate(20deg); }
-  .leg-right { right: 73px; background-color: #fbfdfa; transform: rotate(-20deg); }
-  .leg-left:before, .leg-right:before { content: ""; width: 50px; height: 25px; position: absolute; bottom: -26px; }
-  .leg-left:before { left: -20px; background-color: #e3e8eb; border-radius: 30px 0 0 0; border-bottom: 10px solid #6d96ac; }
-  .leg-right:before { right: -20px; background-color: #fbfdfa; border-radius: 0 30px 0 0; border-bottom: 10px solid #b0cfe4; }
-
-  @media (max-width:600px){
-    h1{font-size:1.6rem}
-    .astronaut{width:180px;height:220px;top: calc(50% - 110px); left: calc(50% - 90px);}
-  }
-</style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* ليضمن أن padding لا يؤثر على العرض */
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            flex: 1; /* يجعل الزرين يأخذان نفس المساحة */
+        }
+        #btnSignUp {
+            background-color: #28a745;
+            color: white;
+            margin-left: 5px;
+        }
+        #btnLogin {
+            background-color: #007bff;
+            color: white;
+            margin-right: 5px;
+        }
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
 </head>
 <body>
 
-<button id="langSwitch" class="lang-switch" aria-live="polite" title="تبديل اللغة">
-  <span id="langIcon">🌐</span>
-  <span id="langLabel">عربى</span>
-</button>
+    <div class="container">
+        <h2>صفحة التسجيل</h2>
+        <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+        <input type="password" id="password" placeholder="كلمة المرور" required>
+        
+        <div class="buttons">
+            <button id="btnLogin">تسجيل الدخول</button>
+            <button id="btnSignUp">إنشاء حساب</button>
+        </div>
 
-<div class="content">
-  <h1 id="title">🚧 الصفحة تحت الصيانة 🚧</h1>
-  <p id="subtitle">نعتذر عن الإزعاج، ستكون صفحتنا جاهزة قريبًا جدًا!</p>
-</div>
+        <p id="message"></p>
+    </div>
 
-<!-- النجوم -->
-<div class="box-of-star1">
-  <div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div>
-  <div class="star star-position4"></div><div class="star star-position5"></div><div class="star star-position6"></div>
-  <div class="star star-position7"></div>
-</div>
-<div class="box-of-star2">
-  <div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div>
-  <div class="star star-position4"></div><div class="star star-position5"></div><div class="star star-position6"></div>
-  <div class="star star-position7"></div>
-</div>
-<div class="box-of-star3">
-  <div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div>
-  <div class="star star-position4"></div><div class="star star-position5"></div><div class="star star-position6"></div>
-  <div class="star star-position7"></div>
-</div>
-<div class="box-of-star4">
-  <div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div>
-  <div class="star star-position4"></div><div class="star star-position5"></div><div class="star star-position6"></div>
-  <div class="star star-position7"></div>
-</div>
+    <script type="module">
+        // استيراد الدوال التي نحتاجها
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        // ** استيراد دوال المصادقة (Authentication) **
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword 
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        
+        // إعدادات Firebase الخاصة بك (التي قدمتها)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
+        };
 
-<div data-js="astro" class="astronaut" aria-hidden="true">
-  <div class="head"></div>
-  <div class="arm arm-left"></div>
-  <div class="arm arm-right"></div>
-  <div class="body"><div class="panel"></div></div>
-  <div class="leg class="leg-left"></div>
-  <div class="leg class="leg-right"></div>
-  <div class="schoolbag"></div>
-</div>
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        // تهيئة خدمة المصادقة
+        const auth = getAuth(app);
 
-<script>
-  const TEXT = {
-    ar: { title: "🚧 الصفحة تحت الصيانة 🚧", subtitle: "نعتذر عن الإزعاج، ستكون صفحتنا جاهزة قريبًا جدًا!", switchLabel: "عربى" },
-    en: { title: "🚧 Site Under Maintenance 🚧", subtitle: "Sorry for the inconvenience — we'll be back online very soon!", switchLabel: "EN" }
-  };
-  const els = {
-    title: document.getElementById('title'),
-    subtitle: document.getElementById('subtitle'),
-    langSwitch: document.getElementById('langSwitch'),
-    langLabel: document.getElementById('langLabel'),
-    langIcon: document.getElementById('langIcon')
-  };
-  let lang = localStorage.getItem('site_lang') || 'ar';
-  function applyLang(l){
-    const t = TEXT[l];
-    document.documentElement.lang = l;
-    document.documentElement.dir = (l === 'ar') ? 'rtl' : 'ltr';
-    els.title.textContent = t.title;
-    els.subtitle.textContent = t.subtitle;
-    els.langLabel.textContent = t.switchLabel;
-    els.langIcon.textContent = '🌐';
-    localStorage.setItem('site_lang', l);
-  }
-  els.langSwitch.addEventListener('click', () => { lang = (lang==='ar')?'en':'ar'; applyLang(lang); });
-  applyLang(lang);
-</script>
+        // 3. تهيئة OneSignal (باستخدام App ID الخاص بك)
+        window.OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+                appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", // <-- الـ App ID الخاص بك
+                allowLocalhostAsSecureOrigin: true // للسماح بالتجربة على localhost
+            });
+        });
+
+        // 4. ربط عناصر الـ HTML بالكود
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const btnSignUp = document.getElementById("btnSignUp");
+        const btnLogin = document.getElementById("btnLogin");
+        const messageEl = document.getElementById("message");
+
+        // 5. دالة لربط المستخدم بـ OneSignal
+        function subscribeUserToOneSignal(firebaseUser) {
+            console.log("ربط المستخدم بـ OneSignal:", firebaseUser.uid);
+            
+            // نستخدم دالة "login" من OneSignal (كانت تسمى setExternalUserId)
+            // لربط هذا الجهاز (المتصفح) بمعرف المستخدم الفريد من Firebase
+            OneSignal.login(firebaseUser.uid)
+                .then(() => {
+                    console.log("تم ربط المستخدم بنجاح في OneSignal.");
+                    messageEl.textContent = "تم تسجيل الدخول وربط الإشعارات بنجاح!";
+                    messageEl.className = "success";
+                })
+                .catch((error) => {
+                    console.error("خطأ في ربط OneSignal:", error);
+                    messageEl.textContent = "تم تسجيل الدخول، لكن فشل ربط الإشعارات.";
+                    messageEl.className = "error";
+                });
+        }
+
+        // 6. إضافة وظائف الأزرار
+        
+        // --- دالة إنشاء حساب ---
+        btnSignUp.addEventListener("click", () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // تم إنشاء الحساب بنجاح
+                    const user = userCredential.user;
+                    console.log("تم إنشاء حساب:", user);
+                    
+                    // ** الخطوة الأهم: ربط المستخدم بـ OneSignal **
+                    subscribeUserToOneSignal(user);
+                })
+                .catch((error) => {
+                    // حدث خطأ
+                    console.error("خطأ في إنشاء الحساب:", error.message);
+                    messageEl.textContent = `خطأ: ${error.message}`;
+                    messageEl.className = "error";
+                });
+        });
+
+        // --- دالة تسجيل الدخول ---
+        btnLogin.addEventListener("click", () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // تم تسجيل الدخول بنجاح
+                    const user = userCredential.user;
+                    console.log("تم تسجيل الدخول:", user);
+
+                    // ** الخطوة الأهم: ربط المستخدم بـ OneSignal **
+                    subscribeUserToOneSignal(user);
+                })
+                .catch((error) => {
+                    // حدث خطأ
+                    console.error("خطأ في تسجيل الدخول:", error.message);
+                    messageEl.textContent = `خطأ: ${error.message}`;
+                    messageEl.className = "error";
+                });
+        });
+    </script>
 </body>
 </html>

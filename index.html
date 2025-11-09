@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="pageTitle">Skydata - خدمات سحابية وأدوات مجانية</title>
-
-    <meta name="description" content="موقع Skydata يقدم أدوات مجانية لتحويل الصور، بما في ذلك تحويل الصور إلى PDF، وضغط WEBP، ورفع الصور للحصول على روابط. خدمات سحابية سريعة ومجانية.">
-    <meta name="description" lang="en" content="Skydata offers free image tools, including Image to PDF converter, WEBP compressor, and Image to Link generator. Fast, free cloud services.">
+    
+    <title data-lang-key="pageTitle">Skydata - أدوات سحابية متقدمة</title>
+    <meta name="description" content="موقع Skydata يقدم مجموعة أدوات سحابية مجانية متقدمة في واجهة عصرية. خدمات سريعة وآمنة.">
+    <meta name="description" lang="en" content="Skydata offers a suite of advanced free cloud tools in a modern interface. Fast and secure services.">
     
     <meta name="keywords" content="Skydata, تحويل صور, أدوات مجانية, سحابية, PDF, WEBP, صورة إلى رابط, ضغط صور, إزالة خلفية, تكبير صور, صورة إلى وورد, صانع QR, image converter, free tools, image to pdf, image to webp, image to link, background remover, image upscaler, image to word, qr code generator, cloud tools, free image hosting, convertir images, outils gratuits, image en pdf, image en webp, image en lien, servicios cloud, convertir imágenes, herramientas gratuitas, imagen a pdf, imagen a webp, imagen a enlace, servicios en la nube, convertire immagini, strumenti gratuiti, immagine in pdf, immagine in webp, immagine in link, servizi cloud, Bilder konvertieren, kostenlose Tools, Bild in PDF, Bild in WEBP, Bild in Link, Cloud-Dienste, конвертер изображений, бесплатные инструменты, изображение в PDF, изображение в WEBP, изображение в ссылку, облачные сервисы, 图像转换器, 免费工具, 图片转PDF, 图片转WEBP, 图片转链接, 云服务, イメージコンバータ, フリーツール, イメージからPDF, イメージからWEBP, イメージからリンク, クラウドサービス">
 
@@ -21,237 +22,363 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378041273892848"
      crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 
     <style>
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --glow-color-1: #6366f1;
+            --glow-color-2: #ec4899;
+            --glow-color-3: #f59e0b;
+            --dark-bg: #0d0d1a; 
+            --bg-surface: #1a1a2e;
+            --text-color: #e0e0e0;
+            --text-muted: #aaa;
+            --border-color: #333;
+            --ai-glow-yellow: #f59e0b;
+            --ai-glow-orange: #ec4899;
+        }
+
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+
+        #app-container {
+            width: 100%;
+            overflow-x: hidden;
+            position: relative; 
+            transform: translate3d(0, 0, 0);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        html { }
+
         body {
-            font-family: Arial, sans-serif; direction: rtl; 
-            background-color: #121212; color: #e0e0e0;
+            font-family: Arial, sans-serif; 
+            direction: rtl; 
+            background-color: var(--dark-bg);
+            color: var(--text-color);
             margin: 0; padding: 0;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(var(--glow-color-1), 0.15),
+                rgba(var(--glow-color-2), 0.1),
+                rgba(var(--glow-color-3), 0.15)
+            );
+            background-size: 400% 400%;
+            animation: glowingBackground 20s ease infinite;
+            z-index: -1;
+            filter: blur(50px);
+        }
+
+        @keyframes glowingBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
-            max-width: 900px; margin: 0 auto; padding: 20px;
+            max-width: 1100px; margin: 0 auto; padding: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background-color: #1e1e1e;
-            border-bottom: 1px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 15px 20px; 
+            background-color: rgba(26, 26, 46, 0.7); 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .logo-container { display: flex; align-items: center; }
         .logo-container img { height: 40px; margin-left: 10px; }
-        .lang-switcher { display: flex; }
-        .lang-switcher a {
-            text-decoration: none; color: #007bff; margin: 0 5px;
-            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+        
+        .logo-shine {
+            position: relative;
+            overflow: hidden;
         }
-        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+        .logo-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: skewX(-25deg);
+            animation: shine-effect 5s infinite linear;
+        }
+        @keyframes shine-effect {
+            0% { left: -100%; }
+            50% { left: 150%; }
+            100% { left: 150%; }
+        }
+
 
         .header-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
+        
+        .lang-switcher { display: flex; }
+        .lang-switcher a {
+            text-decoration: none; color: var(--primary-color); margin: 0 5px;
+            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+        .lang-switcher a:hover { background-color: rgba(255,255,255,0.1); }
+        .lang-switcher a.active { background-color: var(--primary-color); color: #ffffff; }
+
         .auth-button {
-            display: flex; /* لإظهار الأيقونة والنص جنباً إلى جنب */
+            display: flex; 
             align-items: center;
             text-decoration: none; 
-            color: #007bff; 
-            margin: 0 5px; 
+            color: var(--primary-color); 
             font-weight: bold; 
             cursor: pointer; 
-            padding: 5px 10px; 
+            padding: 7px 12px; 
             border-radius: 5px;
-            border: 1px solid #007bff;
+            border: 1px solid var(--primary-color);
             background-color: transparent;
             transition: all 0.2s ease;
-            white-space: nowrap; /* لمنع انكسار النص */
+            white-space: nowrap;
         }
         .auth-button:hover {
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: #ffffff;
         }
-        .auth-button i {
-            margin-inline-end: 8px; /* مسافة بين الأيقونة والنص */
-        }
+        .auth-button i { margin-inline-end: 8px; }
 
-
-        main { text-align: center; padding: 30px 0; }
-        .intro-text { margin-bottom: 30px; }
-        .intro-text h1 { font-size: 2em; color: #ffffff; }
-        .intro-text p { font-size: 1.1em; color: #e0e0e0; line-height: 1.6; }
-        .free-badge {
-            font-size: 1.5em; color: #28a745; font-weight: bold;
-            margin: 15px 0; display: block;
-        }
-
-        .stats-panel {
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .stat-item {
-            text-align: center;
-            min-width: 150px;
-        }
-        .stat-item .stat-icon {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 10px;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-        .stat-item .number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #fff;
-            line-height: 1;
-        }
-        .stat-item .label {
-            font-size: 1em;
-            color: #aaa;
-        }
-        .stars-display {
-            color: #ffc107;
+        .sidebar-toggle-btn {
+            background: none;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
             font-size: 1.2em;
-        }
-
-        .feature-section {
-            background-color: #1e1e1e; border-radius: 8px;
-            padding: 20px; margin-bottom: 25px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .feature-section img {
-            max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 15px;
-        }
-        .feature-section h2 { font-size: 1.5em; margin-bottom: 10px; color: #ffffff; }
-        .feature-section p { font-size: 1.1em; }
-
-        .cta-section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px; 
-        }
-        .cta-button {
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background-color: #007bff; 
-            color: #ffffff;
-            padding: 12px 20px; 
-            font-size: 1.1em; font-weight: bold;
-            text-decoration: none; border-radius: 5px;
-            transition: all 0.3s ease;
-            flex-basis: 250px; 
-            flex-grow: 1;
-        }
-        .cta-button:hover { 
-            background-color: #0056b3; 
-            transform: scale(1.03);
-        }
-        
-        .btn-icon {
-            font-size: 1.2em; 
-            margin-inline-end: 10px; 
-        }
-        
-        footer {
-            background-color: #1e1e1e;
-            color: #fff;
-            padding: 30px 20px;
-            text-align: center;
-            margin-top: 30px;
-            border-top: 1px solid #333;
-        }
-        .footer-links a {
-            color: #ffffff; background-color: #007bff;
-            text-decoration: none;
-            margin: 0 10px 15px 10px; display: inline-block;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1.1em; font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .footer-links a:hover {
-            background-color: #0056b3;
-            transform: scale(1.03);
-        }
-        
-        .social-icons {
-            margin-top: 20px;
-        }
-        .social-icons a {
-            margin: 0 10px;
-        }
-        .social-icons img {
-            height: 30px;
-            transition: transform 0.2s ease;
-        }
-        .social-icons img:hover {
-            transform: scale(1.1);
-        }
-
-        .rating-widget {
-            margin-top: 30px;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-        }
-        .rating-widget h3 {
-            margin: 0 0 15px 0;
-            color: #fff;
-        }
-        .rating-stars {
-            display: inline-block;
-        }
-        .rating-stars .star {
-            font-size: 2.5em;
-            color: #555;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
         }
-        .rating-stars .star:hover,
-        .rating-stars .star.hovered {
-            color: #ffc107;
+        .sidebar-toggle-btn:hover {
+            color: var(--text-color);
+            border-color: var(--text-color);
+            box-shadow: 0 0 10px rgba(var(--glow-color-1), 0.5);
         }
-        .rating-stars .star.selected {
-            color: #ffc107;
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--bg-surface);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            z-index: 1001;
+            padding: 20px;
+            overflow-y: auto; 
+            box-sizing: border-box;
+            
+            right: -350px; 
+            left: auto;
+            transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        #rating-thanks {
-            display: none;
-            color: #28a745;
-            font-weight: bold;
-            font-size: 1.2em;
+        
+        [dir="ltr"] .sidebar {
+            right: auto;
+            left: -350px; 
+            transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .sidebar.open {
+            right: 0;
+            left: auto;
         }
 
-        /* * ⬇️⬇️⬇️ CSS جديد: تنسيقات الزر الجديد ⬇️⬇️⬇️ */
+        [dir="ltr"] .sidebar.open {
+            right: auto;
+            left: 0;
+        }
+
+        .sidebar h3 {
+            color: #fff;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar h3 i { font-size: 1.1em; }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar li {
+            margin: 10px 0;
+        }
+        .sidebar li a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.1em;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+            position: relative; 
+        }
+        .sidebar li a:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+            transform: translateX(-5px);
+        }
+        [dir="ltr"] .sidebar li a:hover {
+            transform: translateX(5px);
+        }
+        .sidebar li a i {
+            font-size: 1.2em;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar li a.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        [dir="ltr"] .sidebar li a.loading::after {
+            right: auto;
+            left: 15px;
+        }
+        @keyframes spin {
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .ai-icon {
+            height: 20px;
+            width: 20px;
+            margin-inline-start: 8px; 
+            filter: drop-shadow(0 0 3px var(--ai-glow-yellow));
+        }
+        
+        .ai-button-glow {
+            animation: ai-glow-pulse 2s infinite ease-in-out;
+            border: 1px solid transparent; 
+        }
+        
+        @keyframes ai-glow-pulse {
+            0% {
+                box-shadow: 0 0 5px var(--ai-glow-yellow), 0 0 10px var(--ai-glow-yellow);
+                border-color: var(--ai-glow-yellow);
+            }
+            50% {
+                box-shadow: 0 0 10px var(--ai-glow-orange), 0 0 20px var(--ai-glow-orange);
+                border-color: var(--ai-glow-orange);
+            }
+            100% {
+                box-shadow: 0 0 5px var(--ai-glow-yellow), 0 0 10px var(--ai-glow-yellow);
+                border-color: var(--ai-glow-yellow);
+            }
+        }
+
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
+        }
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        main {
+            text-align: center;
+            padding: 80px 0;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1; 
+        }
+
+        .hero-section {
+            max-width: 700px;
+        }
+        .hero-section h1 {
+            font-size: 2.8em;
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(var(--glow-color-1), 0.5);
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 1.3em;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+        
         .uiverse-btn-wrapper {
           position: relative;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 1rem; /* 16px */
-          margin-top: 30px; /* مسافة إضافية فوقه */
+          gap: 1rem;
+          margin-top: 20px;
         }
         .uiverse-btn-glow {
           position: absolute;
           top: 0; right: 0; bottom: 0; left: 0;
           opacity: 0.6;
           transition: opacity 1s;
-          background: linear-gradient(to right, #6366f1, #ec4899, #f59e0b); /* from-indigo-500 via-pink-500 to-yellow-400 */
-          border-radius: 0.75rem; /* 12px */
-          filter: blur(1.5rem); /* 24px */
+          background: linear-gradient(to right, var(--glow-color-1), var(--glow-color-2), var(--glow-color-3));
+          border-radius: 0.75rem;
+          filter: blur(1.5rem);
         }
         .uiverse-btn-wrapper:hover .uiverse-btn-glow {
           opacity: 1;
@@ -262,354 +389,392 @@
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          font-size: 1rem; /* 16px */
-          border-radius: 0.75rem; /* 12px */
-          background-color: #111827; /* bg-gray-900 */
-          padding: 0.75rem 2rem; /* 12px 32px */
-          font-weight: 600; /* font-semibold */
+          font-size: 1.1rem; 
+          border-radius: 0.75rem;
+          background-color: #111827;
+          padding: 0.85rem 2.2rem; 
+          font-weight: 600;
           color: white;
           transition: all 0.2s;
-          text-decoration: none; /* إزالة الخط */
+          text-decoration: none;
         }
         .uiverse-btn-anchor:hover {
-          background-color: #1f2937; /* hover:bg-gray-800 */
-          box-shadow: 0 10px 15px -3px rgba(107, 114, 128, 0.3), 0 4px 6px -2px rgba(107, 114, 128, 0.3); /* hover:shadow-lg hover:shadow-gray-600/30 */
-          transform: translateY(-0.25rem); /* hover:-translate-y-0.5 */
+          background-color: #1f2937;
+          box-shadow: 0 10px 15px -3px rgba(107, 114, 128, 0.3), 0 4px 6px -2px rgba(107, 114, 128, 0.3);
+          transform: translateY(-0.25rem);
         }
+        
+        .uiverse-btn-anchor.logged-in {
+            background-color: #1f2937; 
+        }
+
         .uiverse-btn-anchor svg {
-          margin-top: 2px; /* mt-0.5 */
-          margin-left: 0.5rem; /* ml-2 */
-          margin-right: -0.25rem; /* -mr-1 */
-          stroke: white;
-          stroke-width: 2;
+          margin-top: 2px; margin-left: 0.5rem; margin-right: -0.25rem;
+          stroke: white; stroke-width: 2;
         }
         [dir="rtl"] .uiverse-btn-anchor svg {
-            /* تعديل للغة العربية */
-            margin-left: -0.25rem;
-            margin-right: 0.5rem;
+            margin-left: -0.25rem; margin-right: 0.5rem;
         }
         .uiverse-btn-anchor svg path:first-child {
-          transition: opacity 0.2s;
-          opacity: 0;
+          transition: opacity 0.2s; opacity: 0;
         }
-        .uiverse-btn-anchor:hover svg path:first-child {
-          opacity: 1;
-        }
-        .uiverse-btn-anchor svg path:last-child {
-          transition: transform 0.2s;
-        }
-        .uiverse-btn-anchor:hover svg path:last-child {
-          transform: translateX(3px);
-        }
-        [dir="rtl"] .uiverse-btn-anchor:hover svg path:last-child {
-            transform: translateX(-3px); /* تعديل للغة العربية */
-        }
-        /* * ⬆️⬆️⬆️ CSS جديد ⬆️⬆️⬆️ */
-
+        .uiverse-btn-anchor:hover svg path:first-child { opacity: 1; }
+        .uiverse-btn-anchor svg path:last-child { transition: transform 0.2s; }
+        .uiverse-btn-anchor:hover svg path:last-child { transform: translateX(3px); }
+        [dir="rtl"] .uiverse-btn-anchor:hover svg path:last-child { transform: translateX(-3px); }
         
-        /* Responsive */
+        footer {
+            background-color: rgba(26, 26, 46, 0.7); 
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .rating-widget {
+            margin: 20px auto 40px auto;
+            border: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.2);
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        .rating-widget h3 {
+            margin: 0 0 20px 0;
+            color: #fff;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .rating-widget h3 i {
+            color: var(--primary-color);
+        }
+        .rating-stars { display: inline-block; }
+        .rating-stars .star {
+            font-size: 2.8em; 
+            color: var(--border-color);
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.1s ease;
+            display: inline-block; 
+        }
+        .rating-stars .star:hover {
+            color: var(--glow-color-3);
+            transform: scale(1.1);
+        }
+        .rating-stars .star.hovered,
+        .rating-stars .star.selected {
+            color: var(--glow-color-3);
+            text-shadow: 0 0 15px var(--glow-color-3);
+        }
+        #rating-thanks {
+            display: none;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+        
+        /* * ⬇️⬇️⬇️ CSS جديد: بطاقة الروابط (طلب 1) ⬇️⬇️⬇️ * */
+        .footer-links-card {
+            margin: 20px auto 25px auto;
+            border: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        .footer-links-card a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.2s ease;
+            display: block; /* لجعل كل رابط في سطر */
+            margin: 10px 0; /* مسافة بين الروابط */
+        }
+        .footer-links-card a:hover {
+            color: var(--primary-color);
+        }
+        /* * ⬆️⬆️⬆️ نهاية CSS الجديد ⬆️⬆️⬆️ * */
+
+        /* (تم حذف كود .footer-links القديم) */
+        
+        /* * ⬇️⬇️⬇️ CSS جديد: الأيقونات (طلب 2) ⬇️⬇️⬇️ * */
+        .social-icons { 
+            margin-top: 20px; 
+        }
+        .social-icons a { 
+            margin: 0 15px; 
+            display: inline-block;
+            font-size: 2em; /* حجم الأيقونة */
+            color: var(--text-muted);
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .social-icons a:hover {
+            transform: scale(1.15);
+            color: #fff; 
+        }
+        /* ألوان خاصة عند الهوفر */
+        .social-icons a:hover .fa-youtube { color: #FF0000; }
+        .social-icons a:hover .fa-discord { color: #5865F2; }
+        .social-icons a:hover .fa-history { color: var(--primary-color); }
+        /* * ⬆️⬆️⬆️ نهاية CSS الجديد ⬆️⬆️⬆️ * */
+
+        /* (تم حذف كود .social-icons img القديم) */
+        
         @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-            header {
-                padding: 10px 15px;
-            }
-            .intro-text h1 {
-                font-size: 1.8em;
-            }
-            .feature-section {
-                padding: 15px;
-            }
-            .stats-panel {
-                flex-direction: column;
-            }
-            .cta-section .cta-button {
-                flex-basis: 100%;
-                margin: 8px 0;
-            }
-            .footer-links a {
-                display: block;
-                width: 80%;
-                margin: 10px auto;
-            }
+            .container { padding: 10px; }
+            header { padding: 10px 15px; }
+            .hero-section h1 { font-size: 2.2em; }
+            .hero-section p { font-size: 1.1em; }
 
             .auth-button span {
-                display: none; /* إخفاء النص في الشاشات الصغيرة */
+                display: none; 
             }
             .auth-button i {
-                margin-inline-end: 0; /* إزالة المسافة عند إخفاء النص */
+                margin-inline-end: 0; 
                 font-size: 1.1em;
+            }
+            .sidebar {
+                width: 280px;
+                right: -320px;
+            }
+            [dir="ltr"] .sidebar {
+                right: auto;
+                left: -320px;
             }
         }
         
         @media (max-width: 380px) {
-            .logo-container img {
-                height: 30px;
-            }
-            .lang-switcher a {
-                padding: 3px 5px;
-                font-size: 0.9em;
-            }
-            .auth-button {
-                padding: 3px 6px;
-            }
+            .logo-container img { height: 30px; }
+            .lang-switcher a { padding: 3px 5px; font-size: 0.9em; }
+            .auth-button { padding: 3px 6px; }
+            .header-controls { gap: 8px; }
         }
 
     </style>
-    </head>
+</head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
-        </div>
-        
-        <div class="header-controls">
-            <div class="lang-switcher">
-                <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-                <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+    <div id="app-container">
+
+        <header>
+            <div class="logo-container">
+                <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData" class="logo-shine">
+                <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata" class="logo-shine">
             </div>
             
-            <div class="auth-controls">
-                <a href="login.html" class="auth-button" id="login-btn">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span data-lang-key="loginButton">تسجيل الدخول</span>
-                </a>
-                <a href="menu.html" class="auth-button" id="menu-btn" style="display: none;">
-                    <i class="fas fa-bars"></i>
-                    <span data-lang-key="menuButton">القائمة</span>
-                </a>
+            <div class="header-controls">
+                <div class="lang-switcher">
+                    <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
+                    <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+                </div>
+                
+                <div class="auth-controls">
+                    <a href="login.html" class="auth-button" id="login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span data-lang-key="loginButton">تسجيل الدخول</span>
+                    </a>
+                    <a href="menu.html" class="auth-button" id="menu-btn" style="display: none;">
+                        <i class="fas fa-bars"></i>
+                        <span data-lang-key="menuButton">القائمة</span>
+                    </a>
+                </div>
+
+                <button class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Open tools menu">
+                    <i class="fas fa-tools"></i>
+                </button>
             </div>
-        </div>
+        </header>
 
-    </header>
+        <nav class="sidebar" id="tools-sidebar">
+            <h3 data-lang-key="toolsTitle"><i class="fas fa-cogs"></i> <span data-lang-key="toolsTitle">أدواتنا السحابية</span></h3>
+            <ul>
+                <li>
+                    <a href="remove.html" class="tool-link ai-button-glow">
+                        <i class="fas fa-cut"></i>
+                        <span data-lang-key="ctaButtonRemoveBg">إزالة خلفية الصور</span>
+                        <img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="AI Icon" class="ai-icon">
+                    </a>
+                </li>
+                <li>
+                    <a href="pdf.html" class="tool-link">
+                        <i class="fas fa-file-pdf"></i>
+                        <span data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="imgdv.html" class="tool-link">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        <span data-lang-key="ctaButtonWebp">تحويل الصور الى webp</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="imgtag.html" class="tool-link">
+                        <i class="fas fa-link"></i>
+                        <span data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="qr.html" class="tool-link">
+                        <i class="fas fa-qrcode"></i>
+                        <span data-lang-key="ctaButtonQr">صانع QR Code</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="size.html" class="tool-link">
+                        <i class="fas fa-ruler-combined"></i>
+                        <span data-lang-key="ctaButtonSize">تغيير حجم الصور</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zoom.html" class="tool-link ai-button-glow">
+                        <i class="fas fa-search-plus"></i>
+                        <span data-lang-key="ctaButtonZoom">تكبير الصور</span>
+                        <img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="AI Icon" class="ai-icon">
+                    </a>
+                </li>
+                <li>
+                    <a href="editor.html" class="tool-link">
+                        <i class="fas fa-magic"></i>
+                        <span data-lang-key="ctaButtonEditor">محرر الصور</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="overlay" id="sidebar-overlay"></div>
 
-    <div class="container">
-        
-        <main>
+
+        <div class="container">
             
-            <section class="intro-text">
-                <h1 data-lang-key="introTitle">تقدم لك Skydata المئات من الخدمات و الادوات تعمل من أجل العميل</h1>
-                <p data-lang-key="introSubTitle">بالإضافة إلى خدمات سحابية متقدمة وخدمات احترافية</p>
-                <span class="free-badge" data-lang-key="introFree">مجانا</span>
-                <p data-lang-key="introDesc">تحويل الملفات و الصور و تعديل الصور ادوات الصور رفع الصور تحويلها الى روابط مجانا بدون بطاقة بدون اشتراكات</p>
-            </section>
-
-            <div class="stats-panel">
-                <div class="stat-item">
-                    <img src="https://i.ibb.co/vv1hJnvV/890418c34dbf109935cad4bc58064fc2.png" alt="Visitors" class="stat-icon">
-                    <div class="number" id="visitor-count">0</div>
-                    <div class="label" data-lang-key="visitors">عدد زوار الموقع</div>
+            <main>
+                <section class="hero-section">
+                    <h1 data-lang-key="heroTitle">مستقبلك السحابي يبدأ هنا</h1>
+                    <p data-lang-key="heroSubtitle">أدوات سريعة، آمنة، ومدعومة بالذكاء الاصطناعي لإدارة ملفاتك وصورك بسهولة. كل ما تحتاجه في مكان واحد.</p>
+                </section>
+                
+                <div class="uiverse-btn-wrapper">
+                  <div class="uiverse-btn-glow"></div>
+                  <a
+                    role="button"
+                    class="uiverse-btn-anchor"
+                    title="payment"
+                    href="login.html"
+                    id="main-cta-link"
+                    >
+                    <span data-lang-key="ctaButtonStartFree" id="main-cta-span">اشترك مجاناً</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 10 10"
+                      height="10"
+                      width="10"
+                      fill="none"
+                      class="mt-0.5 ml-2 -mr-1 stroke-white stroke-2"
+                    >
+                      <path
+                        d="M0 5h7"
+                        class="transition opacity-0 group-hover:opacity-100"
+                      ></path>
+                      <path
+                        d="M1 1l4 4-4 4"
+                        class="transition group-hover:translate-x-[3px]"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
-                <div class="stat-item">
-                    <img src="https://i.ibb.co/1tm4Fj8B/Picsart-25-11-06-14-38-15-248.webp" alt="Rating" class="stat-icon">
-                    <div class="number" id="rating-average">0.0</div>
-                    <div class="label" id="rating-count" data-lang-key="ratings">من (0 تقييمات)</div>
-                </div>
-            </div>
-
-
-            <section class="feature-section">
-                <img src="https://i.ibb.co/HT2mXkhS/13fa98a87cf632cca045cfc9ebefe0a3.jpg" alt="دعم صيغ متعددة">
-                <h2 data-lang-key="featureFormats">دعم أكثر من 150 صيغة</h2>
-            </section>
-
-            <section class="feature-section">
-                <img src="https://i.ibb.co/3m54vv8V/1271bc403bfb8db01a68f4d87679395b.webp" alt="ميزة سحابية">
-            </section>
-
-            <section class="feature-section">
-                <h2 data-lang-key="featureSecurityTitle">حماية وتشفير البيانات المتقدم</h2>
-                <p data-lang-key="featureSecurityDesc">يتم تشفير بيناتك حماية خصوصيتك 100%</p>
-                <img src="https://i.ibb.co/0ygjpskG/22027b8a2b10228783284f13454681aa.jpg" alt="حماية وتشفير">
-            </section>
-
-            <section class="cta-section">
-                
-                <a href="remove.html" class="cta-button">
-                    <i class="fas fa-cut btn-icon"></i>
-                    <span data-lang-key="ctaButtonRemoveBg">إزالة خلفية الصور (AI)</span>
-                </a>
-
-                <a href="pdf.html" class="cta-button">
-                    <i class="fas fa-file-pdf btn-icon"></i>
-                    <span data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</span>
-                </a>
-                
-                <a href="imgdv.html" class="cta-button">
-                    <i class="fas fa-compress-arrows-alt btn-icon"></i>
-                    <span data-lang-key="ctaButtonWebp">تحويل الصور الى webp</span>
-                </a>
-                
-                <a href="imgtag.html" class="cta-button">
-                    <i class="fas fa-link btn-icon"></i>
-                    <span data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</span>
-                </a>
-                
-                <a href="qr.html" class="cta-button">
-                    <i class="fas fa-qrcode btn-icon"></i>
-                    <span data-lang-key="ctaButtonQr">صانع QR Code</span>
-                </a>
-                
-                <a href="size.html" class="cta-button">
-                    <i class="fas fa-ruler-combined btn-icon"></i>
-                    <span data-lang-key="ctaButtonSize">تغيير حجم الصور</span>
-                </a>
-                
-                <a href="zoom.html" class="cta-button">
-                    <i class="fas fa-search-plus btn-icon"></i>
-                    <span data-lang-key="ctaButtonZoom">تكبير الصور (AI)</span>
-                </a>
-                
-                <a href="editor.html" class="cta-button">
-                    <i class="fas fa-magic btn-icon"></i>
-                    <span data-lang-key="ctaButtonEditor">محرر الصور</span>
-                </a>
-
-            </section>
-
-            <div class="uiverse-btn-wrapper">
-              <div class="uiverse-btn-glow"></div>
-              <a
-                role="button"
-                class="uiverse-btn-anchor"
-                title="payment"
-                href="login.html"
-                >
-                <span data-lang-key="ctaButtonStartFree">اشترك مجاناً</span>
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 10 10"
-                  height="10"
-                  width="10"
-                  fill="none"
-                  class="mt-0.5 ml-2 -mr-1 stroke-white stroke-2"
-                >
-                  <path
-                    d="M0 5h7"
-                    class="transition opacity-0 group-hover:opacity-100"
-                  ></path>
-                  <path
-                    d="M1 1l4 4-4 4"
-                    class="transition group-hover:translate-x-[3px]"
-                  ></path>
-                </svg>
-              </a>
-            </div>
             </main>
+            
+        </div> 
         
-    </div> <footer>
-        <div class="footer-links">
-            <a href="Safety.html" data-lang-key="footerPolicy">شروط الاستخدام وسياسة الخصوصية</a>
-            <a href="aboutus.html" data-lang-key="footerAbout">عن Skydata</a>
-        </div>
-        
-        <div class="social-icons">
-            <a href="https://www.youtube.com/@Skydataa" target="_blank" rel="noopener noreferrer">
-                <img src="https://i.ibb.co/KjqPWR0S/qm6aoefmjlhw2bhdgmss.webp" alt="يوتيوب">
-            </a>
-            <a href="https://discord.gg/6m3c2up4p3" target="_blank" rel="noopener noreferrer">
-                <img src="https://i.ibb.co/sdxTC105/qqoxsxvwoleec1dfbhew.webp" alt="ديسكورد">
-            </a>
-            <a href="update.html">
-                <img src="https://i.ibb.co/fQc3YFk/download-white.png" alt="صفحة التحديثات" style="height: 30px; width: 30px;">
-            </a>
-        </div>
-
-        <div class="rating-widget">
-            <h3 data-lang-key="rateUs">قم بتقييم خدمتنا</h3>
-            <div class="rating-stars" id="rating-stars">
-                <span class="star" data-value="1">☆</span>
-                <span class="star" data-value="2">☆</span>
-                <span class="star" data-value="3">☆</span>
-                <span class="star" data-value="4">☆</span>
-                <span class="star" data-value="5">☆</span>
+        <footer>
+            
+            <div class="rating-widget">
+                <h3 data-lang-key="rateUs"><i class="fas fa-star-half-alt"></i> <span>قم بتقييم خدمتنا</span></h3>
+                <div class="rating-stars" id="rating-stars">
+                    <span class="star" data-value="1">☆</span>
+                    <span class="star" data-value="2">☆</span>
+                    <span class="star" data-value="3">☆</span>
+                    <span class="star" data-value="4">☆</span>
+                    <span class="star" data-value="5">☆</span>
+                </div>
+                <p id="rating-thanks" data-lang-key="thanks">شكراً لتقييمك!</p>
             </div>
-            <p id="rating-thanks" data-lang-key="thanks">شكراً لتقييمك!</p>
-        </div>
-    </footer>
 
+            <div class="footer-links-card">
+                <a href="Safety.html" data-lang-key="footerPolicy">شروط الاستخدام وسياسة الخصوصية</a>
+                <a href="aboutus.html" data-lang-key="footerAbout">عن Skydata</a>
+            </div>
+            <div class="social-icons">
+                <a href="https://www.youtube.com/@Skydataa" target="_blank" rel="noopener noreferrer" aria-label="Youtube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+                    <i class="fab fa-discord"></i>
+                </a>
+                <a href="update.html" aria-label="Updates">
+                    <i class="fas fa-history"></i> </a>
+            </div>
+            </footer>
 
-    <script type="module">
-        // 1. استيراد المكتبات
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-        // 2. كود الإعداد الخاص بك
-        const firebaseConfig = {
-          apiKey: "AIzaSyD7QnPaJTYiawCz6SrtdBGT_NDeAPX9bBc",
-          authDomain: "pixelrpg-5ebc3.firebaseapp.com",
-          databaseURL: "https://pixelrpg-5ebc3-default-rtdb.europe-west1.firebasedabase.app",
-          projectId: "pixelrpg-5ebc3",
-          storageBucket: "pixelrpg-5ebc3.firebasestorage.app",
-          messagingSenderId: "1041585714383",
-          appId: "1:1041585714383:web:3f6912a5d6bddebe5573ba",
-          measurementId: "G-8MENZDEGB1"
-        };
-
-        // 3. تشغيل فايربيس
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const auth = getAuth(app);
-
-        // --- 4. منطق الترجمة (مُعدل) ---
+    </div> <script type="module">
+        // --- 1. استيراد (كما هو) ---
+        import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
+        import { ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        
+        // --- 2. منطق الترجمة (كما هو) ---
         const translations = {
             "ar": {
-                "pageTitle": "Skydata - خدمات سحابية وأدوات مجانية",
-                "introTitle": "تقدم لك Skydata المئات من الخدمات و الادوات تعمل من أجل العميل",
-                "introSubTitle": "بالإضافة إلى خدمات سحابية متقدمة وخدمات احترافية",
-                "introFree": "مجانا",
-                "introDesc": "تحويل الملفات و الصور و تعديل الصور ادوات الصور رفع الصور تحويلها الى روابط مجانا بدون بطاقة بدون اشتراكات",
-                "featureFormats": "دعم أكثر من 150 صيغة",
-                "featureSecurityTitle": "حماية وتشفير البيانات المتقدم",
-                "featureSecurityDesc": "يتم تشفير بيناتك حماية خصوصيتك 100%",
-                "ctaButtonRemoveBg": "إزالة خلفية الصور (AI)",
+                "pageTitle": "Skydata - أدوات سحابية متقدمة",
+                "heroTitle": "مستقبلك السحابي يبدأ هنا",
+                "heroSubtitle": "أدوات سريعة، آمنة، ومدعومة بالذكاء الاصطناعي لإدارة ملفاتك وصورك بسهولة. كل ما تحتاجه في مكان واحد.",
+                "toolsTitle": "أدواتنا السحابية",
+                "ctaButtonRemoveBg": "إزالة خلفية الصور", 
                 "ctaButtonPdf": "تحويل صور إلى PDF",
                 "ctaButtonWebp": "تحويل الصور الى webp",
                 "ctaButtonImgtag": "تحويل الصور الى روابط",
                 "ctaButtonQr": "صانع QR Code",
                 "ctaButtonSize": "تغيير حجم الصور",
-                "ctaButtonZoom": "تكبير الصور (AI)",
+                "ctaButtonZoom": "تكبير الصور", 
                 "ctaButtonEditor": "محرر الصور",
-                "ctaButtonStartFree": "اشترك مجاناً", // * ⬅️ إضافة جديدة
+                "ctaButtonStartFree": "اشترك مجاناً",
+                "discoverPlans": "اكتشف الخطوط", 
                 "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
                 "footerAbout": "عن Skydata",
-                "visitors": "عدد زوار الموقع",
-                "ratings": "من ({count} تقييمات)",
                 "rateUs": "قم بتقييم خدمتنا",
                 "thanks": "شكراً لتقييمك!",
                 "loginButton": "تسجيل الدخول",
-                "menuButton": "القائمة"
+                "menuButton": "القائمة",
+                "visitors": "عدد زوار الموقع",
+                "ratings": "من ({count} تقييمات)",
             },
             "en": {
-                "pageTitle": "Skydata - Cloud Services and Free Tools",
-                "introTitle": "Skydata offers hundreds of services and tools working for the client",
-                "introSubTitle": "In addition to advanced cloud services and professional services",
-                "introFree": "Free",
-                "introDesc": "Convert files, images, edit photos, image tools, upload images, and convert them to links for free, without cards or subscriptions",
-                "featureFormats": "Support for over 150 formats",
-                "featureSecurityTitle": "Advanced Data Protection and Encryption",
-                "featureSecurityDesc": "Your data is encrypted, ensuring 100% privacy protection",
-                "ctaButtonRemoveBg": "Remove Background (AI)",
+                "pageTitle": "Skydata - Advanced Cloud Tools",
+                "heroTitle": "Your Cloud Future Starts Here",
+                "heroSubtitle": "Fast, secure, and AI-powered tools to manage your files and images with ease. Everything you need in one place.",
+                "toolsTitle": "Our Cloud Tools",
+                "ctaButtonRemoveBg": "Remove Background", 
                 "ctaButtonPdf": "Convert Images to PDF",
                 "ctaButtonWebp": "Convert Images to WEBP",
                 "ctaButtonImgtag": "Convert Images to Links",
                 "ctaButtonQr": "QR Code Generator",
                 "ctaButtonSize": "Image Resizer",
-                "ctaButtonZoom": "Image Upscaler (AI)",
+                "ctaButtonZoom": "Image Upscaler", 
                 "ctaButtonEditor": "Photo Editor",
-                "ctaButtonStartFree": "Get Started For Free", // * ⬅️ إضافة جديدة
+                "ctaButtonStartFree": "Get Started For Free",
+                "discoverPlans": "Discover Plans", 
                 "footerPolicy": "Terms of Use and Privacy Policy",
                 "footerAbout": "About Skydata",
-                "visitors": "Total Site Visitors",
-                "ratings": "from ({count} ratings)",
                 "rateUs": "Rate Our Service",
                 "thanks": "Thanks for your rating!",
                 "loginButton": "Login",
-                "menuButton": "Menu"
+                "menuButton": "Menu",
+                "visitors": "Total Site Visitors",
+                "ratings": "from ({count} ratings)",
             }
         };
 
@@ -623,125 +788,68 @@
 
             document.querySelectorAll('[data-lang-key]').forEach(element => {
                 const key = element.getAttribute('data-lang-key');
+                
+                if (key === 'ctaButtonStartFree' || key === 'discoverPlans') {
+                    return;
+                }
+
                 if (translations[lang][key]) {
                     const text = translations[lang][key];
-                    if (text.includes('{count}')) {
-                         // سيتم تحديثه بواسطة onValue
-                    } else {
-                        // تعديل للتعامل مع الأزرار التي تحتوي على span
-                        let target = element.classList.contains('auth-button') || element.getAttribute('data-lang-key') === 'ctaButtonStartFree'
-                                   ? element.querySelector('span') || element 
-                                   : element;
-                        
-                        // حالة خاصة للزر الجديد الذي قد لا يحتوي على span في البداية
-                        if (element.getAttribute('data-lang-key') === 'ctaButtonStartFree') {
-                            target = element;
-                        }
-
-                        // إذا كان الزر يحتوي على SPAN (مثل أزرار الهيدر)
-                        if (element.querySelector('span')) {
-                            element.querySelector('span').innerHTML = text;
-                        } else {
-                            element.innerHTML = text;
-                        }
+                    let target = element.querySelector('span') || element;
+                    
+                    if (element.classList.contains('tool-link')) {
+                        target = element.querySelector('span');
+                    }
+                    
+                    if (target) {
+                        target.innerHTML = text;
                     }
                 }
             });
             
-            // تحديث ترجمة زر "اشترك مجانا" (لأنه لا يحتوي على span)
-            const startFreeBtn = document.querySelector('[data-lang-key="ctaButtonStartFree"]');
-            if (startFreeBtn) {
-                // نحافظ على SVG
-                const svgIcon = startFreeBtn.querySelector('svg');
-                startFreeBtn.innerHTML = translations[lang].ctaButtonStartFree;
-                if (svgIcon) {
-                    startFreeBtn.appendChild(svgIcon);
+            const mainCtaSpan = document.getElementById('main-cta-span');
+            if (mainCtaSpan) {
+                const currentCtaKey = mainCtaSpan.getAttribute('data-lang-key'); 
+                if (translations[lang] && translations[lang][currentCtaKey]) {
+                    mainCtaSpan.textContent = translations[lang][currentCtaKey];
                 }
             }
 
             const ratingsData = window.currentRatingsData || { count: 0 };
-            document.getElementById('rating-count').innerText = translations[currentLang].ratings.replace('{count}', ratingsData.count);
+            const ratingCountEl = document.getElementById('rating-count'); 
+            if (ratingCountEl) {
+                ratingCountEl.innerText = translations[currentLang].ratings.replace('{count}', ratingsData.count);
+            }
         }
-        setLanguage(currentLang);
+        setLanguage(currentLang); 
 
-        // --- 5. (مُعدل) منطق قاعدة البيانات ---
-
-        // عناصر الواجهة
-        const visitorCountEl = document.getElementById('visitor-count');
-        const ratingAverageEl = document.getElementById('rating-average');
-        const ratingCountEl = document.getElementById('rating-count');
+        // --- 3. منطق قاعدة البيانات (كما هو) ---
         const ratingStarsContainer = document.getElementById('rating-stars');
         const allStars = ratingStarsContainer.querySelectorAll('.star');
         const thanksMessage = document.getElementById('rating-thanks');
-
-        // مراجع قاعدة البيانات
         const visitorsRef = ref(database, 'statistics/visitors');
         const ratingsRef = ref(database, 'statistics/ratings');
-
-        function formatLargeNumber(num) {
-          if (num >= 1000000000) { 
-             return (num / 1000000000).toFixed(1).replace('.0', '') + 'B';
-          }
-          if (num >= 1000000) { 
-             return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
-          }
-          if (num >= 1000) { 
-             return (num / 1000).toFixed(1).replace('.0', '') + 'K';
-          }
-          return num.toString();
-        }
-
         const voteTimestamp = localStorage.getItem('skydataVoteTimestamp');
         const fifteenDaysInMillis = 15 * 24 * 60 * 60 * 1000;
         let canVote = true;
-
         if (voteTimestamp) {
             const timeSinceVote = new Date().getTime() - Number(voteTimestamp);
-            if (timeSinceVote < fifteenDaysInMillis) {
-                canVote = false;
-            } else {
-                localStorage.removeItem('skydataVoteTimestamp');
-                canVote = true;
-            }
+            if (timeSinceVote < fifteenDaysInMillis) { canVote = false; } 
+            else { localStorage.removeItem('skydataVoteTimestamp'); canVote = true; }
         }
-
         function incrementVisitor() {
-            if (sessionStorage.getItem('skydataVisitor')) {
-                return;
-            }
+            if (sessionStorage.getItem('skydataVisitor')) return;
             sessionStorage.setItem('skydataVisitor', 'true');
-            
-            runTransaction(visitorsRef, (currentData) => {
-                return (currentData || 0) + 1;
-            });
+            runTransaction(visitorsRef, (currentData) => (currentData || 0) + 1);
         }
-
         function loadData() {
-            onValue(visitorsRef, (snapshot) => {
-                const count = snapshot.val() || 0;
-                visitorCountEl.innerText = formatLargeNumber(count);
-            });
-
+            onValue(visitorsRef, (snapshot) => {});
             onValue(ratingsRef, (snapshot) => {
-                const data = snapshot.val() || { totalScore: 0, count: 0 };
-                window.currentRatingsData = data;
-                let average = 0;
-                
-                if (data.count > 0) {
-                    average = (data.totalScore / data.count).toFixed(1);
-                }
-                
-                ratingAverageEl.innerText = average;
-                ratingCountEl.innerText = translations[currentLang].ratings.replace('{count}', data.count);
+                window.currentRatingsData = snapshot.val() || { totalScore: 0, count: 0 };
             });
         }
-
         function submitRating(starValue) {
-            if (!canVote) {
-                showThanks();
-                return;
-            }
-
+            if (!canVote) { showThanks(); return; }
             runTransaction(ratingsRef, (currentData) => {
                 if (currentData === null) {
                     return { totalScore: starValue, count: 1 };
@@ -755,18 +863,14 @@
                 localStorage.setItem('skydataVoteTimestamp', new Date().getTime().toString());
                 canVote = false;
                 showThanks();
-            }).catch((error) => {
-                console.error("Firebase transaction failed: ", error);
             });
         }
-        
         function showThanks() {
             ratingStarsContainer.style.display = 'none';
             thanksMessage.style.display = 'block';
         }
 
-        // --- 6. (مُعدل) ربط الأحداث ---
-        
+        // --- 4. ربط الأحداث (كما هو) ---
         allStars.forEach(star => {
             star.addEventListener('mouseover', () => {
                 if (!canVote) return;
@@ -774,7 +878,7 @@
             });
             star.addEventListener('mouseout', () => {
                 if (!canVote) return;
-                highlightStars(0);
+                highlightStars(0); 
             });
             star.addEventListener('click', () => {
                 if (!canVote) return;
@@ -783,43 +887,81 @@
                 submitRating(value);
             });
         });
-
         function highlightStars(value, isSelected = false) {
             allStars.forEach(star => {
+                star.classList.remove('hovered', 'selected');
                 if (star.dataset.value <= value) {
                     star.classList.add(isSelected ? 'selected' : 'hovered');
                     star.innerHTML = '★';
                 } else {
-                    star.classList.remove('hovered');
                     star.innerHTML = '☆';
                 }
             });
         }
 
-        // --- 7. بدء التشغيل ---
+        // --- 5. بدء التشغيل (كما هو) ---
         loadData();
         incrementVisitor();
-        
         if (!canVote) {
             showThanks();
         }
 
-        // --- 8. التحقق من تسجيل الدخول ---
+        // --- 6. التحقق من تسجيل الدخول (كما هو) ---
         const loginBtn = document.getElementById('login-btn');
         const menuBtn = document.getElementById('menu-btn');
-
+        const mainCtaLink = document.getElementById('main-cta-link');
+        const mainCtaSpan = document.getElementById('main-cta-span');
+        
         onAuthStateChanged(auth, (user) => {
+            let currentCtaKey;
             if (user) {
                 // المستخدم مسجل دخوله
                 loginBtn.style.display = 'none';
                 menuBtn.style.display = 'flex';
+                
+                mainCtaLink.href = "plans.html"; 
+                mainCtaSpan.setAttribute('data-lang-key', 'discoverPlans');
+                currentCtaKey = 'discoverPlans';
+                mainCtaLink.classList.add('logged-in'); 
+
             } else {
                 // المستخدم غير مسجل دخوله
                 loginBtn.style.display = 'flex';
                 menuBtn.style.display = 'none';
+
+                mainCtaLink.href = "login.html";
+                mainCtaSpan.setAttribute('data-lang-key', 'ctaButtonStartFree');
+                currentCtaKey = 'ctaButtonStartFree';
+                mainCtaLink.classList.remove('logged-in'); 
             }
+            
+            if (translations[currentLang] && translations[currentLang][currentCtaKey]) {
+                mainCtaSpan.textContent = translations[currentLang][currentCtaKey];
+            }
+        });
+        
+        // --- 7. منطق الشريط الجانبي (كما هو) ---
+        const sidebar = document.getElementById('tools-sidebar');
+        const toggleBtn = document.getElementById('sidebar-toggle');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toolLinks = document.querySelectorAll('.tool-link');
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        }
+        toggleBtn.addEventListener('click', openSidebar);
+        overlay.addEventListener('click', closeSidebar);
+        toolLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                this.classList.add('loading');
+                setTimeout(closeSidebar, 100); 
+            });
         });
 
     </script>
-    </body>
+</body>
 </html>

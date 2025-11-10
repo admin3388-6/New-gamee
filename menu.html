@@ -751,7 +751,7 @@
     // * ⬅️ قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
     import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
     
-    // * ⬅️ قمنا بحذف (initializeApp, getAuth, getDatabase) لأنها أصبحت في الملف الخارجي
+    // * ⬅️ استيراد الدوال التي نحتاجها فقط
     import { signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, deleteUser, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
     import { get, ref, update, child, remove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
@@ -1291,10 +1291,8 @@
                 contentContainer.style.display = 'block';
                 
             } else {
-                // * ⬇️⬇️⬇️ التعديل الثاني هنا ⬇️⬇️⬇️ *
-                // * ⬅️ يمنعك من العودة لهذه الصفحة بعد الخروج
+                // * ⬅️ (الإصلاح الثاني) - تغيير أمر الخروج
                 window.location.replace("login.html"); 
-                // * ⬆️⬆️⬆️ نهاية التعديل ⬆️⬆️⬆️ *
             }
         });
 
@@ -1505,7 +1503,6 @@
         </div>
     </header>
 
-
     <div class="container" id="contentContainer" style="margin-top: 80px;">
      <div class="error" id="email-verification-banner" style="display: none;">
     <div class="error__icon">
@@ -1557,28 +1554,207 @@
     </div>
 
     <div class="modal-overlay" id="profile-upload-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3 data-lang-key="profileUploadTitle">رفع صورتك الشخصية</h3>
+            <input type="file" id="upload-image-input" accept="image/jpeg, image/png, image/gif" style="display: none;">
+            <button id="upload-profile-btn" class="cta-button" type="button">
+                اختيار ورفع الصورة <i class="fas fa-upload"></i>
+            </button>
+            <div class="spinner" id="modal-spinner" style="display: none;"></div>
+            <p class="modal-status" id="modal-status"></p>
         </div>
+    </div>
 
     <div class="modal-overlay" id="settings-modal">
+        <div class="modal-content" style="background: none; box-shadow: none; max-width: 250px; padding: 0;">
+            <div class="settings-card">
+              <ul
+                class="list"
+                style="--color:#5353ff;--hover-storke:#fff; --hover-color:#fff"
+              >
+                <li class="element">
+                  <a href="#" id="settings-menu-profile" data-lang-key="settingsMenuProfile">
+                    <i class="fas fa-user-edit" style="width: 19px; height: 19px; text-align: center;"></i>
+                    الملف الشخصي
+                  </a>
+                </li>
+                <li class="element">
+                  <a href="#" id="settings-menu-notifications" data-lang-key="settingsMenuNotifications">
+                    <i class="fas fa-bell" style="width: 19px; height: 19px; text-align: center;"></i>
+                    الإشعارات
+                  </a>
+                </li>
+                <li class="element">
+                  <a href="#" id="settings-menu-support" data-lang-key="settingsMenuSupport">
+                    <i class="fas fa-question-circle" style="width: 19px; height: 19px; text-align: center;"></i>
+                    الدعم
+                  </a>
+                </li>
+                <div class="separator"></div>
+                <li class="element delete" style="--color:#8e2a2a; --hover-storke:#fff;">
+                  <a href="#" id="settings-menu-delete" data-lang-key="settingsMenuDelete">
+                    <i class="fas fa-trash-alt" style="width: 19px; height: 19px; text-align: center;"></i>
+                    حذف الحساب
+                  </a>
+                </li>
+              </ul>
+            </div>
         </div>
+    </div>
     
     <div class="modal-overlay" id="profile-settings-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3 data-lang-key="profileSettingsTitle">تعديل الملف الشخصي</h3>
+            
+            <form id="settings-form">
+                
+                <div class="profile-pic-container">
+                  <img id="profile-img-preview" src="https://i.ibb.co/6y45s1f/default.webp" alt="Preview" class="profile-img default">
+                  <label class="upload-pic-btn" id="profile-change-pic-btn" data-lang-key="profileChangePic">
+                      <i class="fas fa-camera"></i> تغيير الصورة
+                  </label>
+                </div>
+
+                <label for="settings-display-name" data-lang-key="settingsNameLabel">الاسم المعروض</label>
+                <input type="text" id="settings-display-name" required>
+
+                <label data-lang-key="settingsEmailLabel">البريد الإلكتروني</label>
+                <p id="settings-email-display" style="background: #1e1e1e; padding: 10px; border-radius: 5px; color: #aaa; margin-top: 5px;"></p>
+                
+                <label for="settings-bio" data-lang-key="profileBioLabel">نبذة عني</label>
+                <textarea id="settings-bio" rows="3" data-lang-key="profileBioPlaceholder" placeholder="اكتب شيئاً..."></textarea>
+                
+                <p class="rate-limit-msg" id="settings-rate-limit" style="display: none;"></p>
+
+                <h4 style="color: #fff; margin-top: 20px;" data-lang-key="settingsPassTitle">تغيير كلمة المرور</h4>
+                <p style="font-size: 0.9em; color: #aaa;" data-lang-key="settingsPassText">...</p>
+                <button type="button" id="reset-password-btn" class="cta-button" style="background-color: #fd7e14;" data-lang-key="settingsPassBtn">
+                    إرسال رابط تغيير كلمة السر <i class="fas fa-unlock-alt"></i>
+                </button>
+
+                <button type="submit" id="settings-save-btn" class="save-button" data-lang-key="settingsSaveBtn">
+                  <div class="svg-wrapper-1">
+                    <div class="svg-wrapper">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z"></path>
+                        <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.522-.634-.01l-4.243-16.075-16.075-4.243z"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <span>Save</span>
+                </button>
+                
+                <div class="spinner" id="settings-spinner" style="display: none;"></div>
+                <p class="modal-status" id="settings-status"></p>
+            </form>
         </div>
+    </div>
+
 
     <div class="modal-overlay" id="notifications-settings-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3 data-lang-key="notifModalTitle">إدارة الإشعارات</h3>
+            
+            <hr style="border-color: #444; margin: 20px 0;">
+
+            <h4 data-lang-key="notifModalEmailHeader">إشعارات البريد الإلكتروني</h4>
+            <div class="setting-row">
+              <p data-lang-key="notifStatusLabel">الحالة:</p>
+              <span class="status-text unsubscribed" id="email-status-text" data-lang-key="notifStatusUnsubbed"></span>
+            </div>
+            <div class="setting-row">
+              <p data-lang-key="notifModalEmailText">...</p>
+              <label class="switch">
+                  <input id="email-sub-toggle" type="checkbox"> 
+                  <div class="slider">
+                      <div class="circle">
+                          <svg class="cross" xml:space="preserve" viewBox="0 0 365.696 365.696" height="6" width="6" xmlns="http://www.w3.org/2000/svg">
+                              <path fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                          </svg>
+                          <svg class="checkmark" xml:space="preserve" viewBox="0 0 24 24" height="10" width="10" xmlns="http://www.w3.org/2000/svg">
+                              <path fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                          </svg>
+                      </div>
+                  </div>
+              </label>
+            </div>
+            
+            <hr style="border-color: #444; margin: 20px 0;">
+
+            <h4 data-lang-key="notifModalWebHeader">إشعارات المتصفح (Web Push)</h4>
+            <div class="setting-row">
+              <p data-lang-key="notifStatusLabel">الحالة:</p>
+              <span class="status-text unsubscribed" id="web-push-status-text" data-lang-key="notifStatusUnsubbed"></span>
+            </div>
+            <div class="setting-row">
+              <p data-lang-key="notifModalWebText">...</p>
+              <label class="switch">
+                  <input id="web-push-toggle" type="checkbox"> 
+                  <div class="slider">
+                      <div class="circle">
+                          <svg class="cross" xml:space="preserve" viewBox="0 0 365.696 365.696" height="6" width="6" xmlns="http://www.w3.org/2000/svg">
+                              <path fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                          </svg>
+                          <svg class="checkmark" xml:space="preserve" viewBox="0 0 24 24" height="10" width="10" xmlns="http://www.w3.org/2000/svg">
+                              <path fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                          </svg>
+                      </div>
+                  </div>
+              </label>
+            </div>
         </div>
+    </div>
     
     <div class="modal-overlay" id="logout-confirm-modal">
+        <div class="modal-content confirm-modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3 data-lang-key="logoutConfirmTitle">تأكيد تسجيل الخروج</h3>
+            <p data-lang-key="logoutConfirmText">...</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn no-btn" id="logout-confirm-no" data-lang-key="confirmNo">لا</button>
+                <button class="confirm-btn yes-btn" id="logout-confirm-yes" data-lang-key="confirmYes">نعم</button>
+            </div>
         </div>
+    </div>
 
     <div class="modal-overlay" id="delete-account-modal-step1">
+        <div class="modal-content confirm-modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <div class="icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3 data-lang-key="deleteModalTitle1">تأكيد حذف الحساب</h3>
+            <p data-lang-key="deleteModalText1">...</p>
+            <p id="delete-email-display-1" class="user-email-display"></p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn no-btn" id="delete-confirm-no" data-lang-key="confirmNo">لا</button>
+                <button class="confirm-btn yes-btn" id="delete-confirm-yes" data-lang-key="confirmYes">نعم</button>
+            </div>
         </div>
+    </div>
     
     <div class="modal-overlay" id="delete-account-modal-step2">
+        <div class="modal-content confirm-modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3 data-lang-key="deleteModalTitle2">تأكيد نهائي</h3>
+            <p data-lang-key="deleteModalText2">...</p>
+            <p id="delete-email-display-2" class="user-email-display"></p>
+            <input type="email" id="delete-email-input" data-lang-key="deleteModalPlaceholder" placeholder="اكتب بريدك الإلكتروني للتأكيد">
+            <button class="confirm-btn delete-btn" id="delete-confirm-final-btn" data-lang-key="deleteModalConfirmBtn" disabled>
+                تأكيد الحذف
+            </button>
+            <p class="modal-status" id="delete-status" style="display: none;"></p>
         </div>
+    </div>
     
     <div id="toast-notification" style="display: none;">
+      <div class="toast-icon" id="toast-icon">
+          <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
       </div>
+      <div class="toast-title" id="toast-title"></div>
+      <div class="toast-close" id="toast-close"><svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z" fill="#393a37"></path></svg></div>
+    </div>
     
      <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
         </main>

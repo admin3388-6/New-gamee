@@ -21,7 +21,7 @@
 
   * {
       box-sizing: border-box;
-  }
+  }import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
   body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     direction: rtl; 
@@ -381,7 +381,7 @@
   // **************************************************
   
   // * ⬅️ قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
-  import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
+  import { app, database as db, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
 
   // * ⬅️ قمنا بحذف (initializeApp, getAuth, getDatabase) لأنها أصبحت في الملف الخارجي
   import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";

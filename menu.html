@@ -751,13 +751,12 @@
     background: #fff;
     color: #28a745;
 }
-/* (جديد) زر العودة للرئيسية */
 .back-button {
-  display: inline-block; /* لجعله يظهر */
+  display: inline-block; 
   width: 100%;
   text-align: center;
-  margin-top: 15px; /* مسافة من الأعلى */
-  background-color: #333; /* لون مختلف */
+  margin-top: 15px; 
+  background-color: #333; 
   font-size: 1.1em;
 }
 .back-button:hover {
@@ -775,18 +774,17 @@
     import { signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, deleteUser, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
     import { get, ref, update, child, remove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-    // --- 2. FIREBASE CONFIG (TOP LEVEL) ---
-    // * ⬅️ تم حذف القسم المكرر من هنا
-    
+    // --- 2. (تم حذف إعدادات Firebase المكررة) ---
+
     // --- 3. GLOBAL VARS (TOP LEVEL) ---
     const IMGBB_API_KEY = "f0ff703738276bb67fcc6b7f0a6778d5";
     let currentLang = 'ar'; 
     let currentUser = null;
     let isSubscribed = false;
-    let isWebPushSubscribed = false; 
+    // let isWebPushSubscribed = false; // * ⬅️ (حذف 1) تم حذف متغير الويب
     let lastProfileUpdate = 0;
     let lastSubChange = 0;
-    let lastWebPushSubChange = 0; 
+    // let lastWebPushSubChange = 0; // * ⬅️ (حذف 2) تم حذف متغير الويب
     const UPDATE_RATE_LIMIT = 24 * 60 * 60 * 1000;
     const SUB_COOLDOWN = 5 * 60 * 1000;
     let toastTimer; 
@@ -816,8 +814,7 @@
           "notifModalTitle": "إدارة الإشعارات",
           "notifModalEmailHeader": "إشعارات البريد الإلكتروني",
           "notifModalEmailText": "إدارة رسائل البريد التسويقي والتحديثات.",
-          "notifModalWebHeader": "إشعارات المتصفح (Web Push)",
-          "notifModalWebText": "تلقي تنبيهات فورية من المتصفح.",
+          // * ⬅️ (حذف 3) تم حذف ترجمات الويب
           "notifStatusLabel": "حالة الاشتراك:",
           "notifStatusSubbed": "مشترك",
           "notifStatusUnsubbed": "غير مشترك",
@@ -874,8 +871,7 @@
           "notifModalTitle": "Notification Management",
           "notifModalEmailHeader": "Email Notifications",
           "notifModalEmailText": "Manage marketing emails and updates.",
-          "notifModalWebHeader": "Web Push Notifications",
-          "notifModalWebText": "Receive instant browser alerts.",
+          // * ⬅️ (حذف 4) تم حذف ترجمات الويب
           "notifStatusLabel": "Subscription Status:",
           "notifStatusSubbed": "Subscribed",
           "notifStatusUnsubbed": "Unsubscribed",
@@ -923,19 +919,20 @@
                 const data = snapshot.val();
                 return {
                     emailSub: data.subscribe_marketing === true,
-                    webPushSub: data.subscribe_webpush === true, 
+                    // webPushSub: data.subscribe_webpush === true, // * ⬅️ (حذف 5)
                     bio: data.bio || "", 
                     lastProfileUpdate: data.lastUpdated || 0,
                     lastSubChange: data.lastSubChange || 0,
-                    lastWebPushSubChange: data.lastWebPushSubChange || 0 
+                    // lastWebPushSubChange: data.lastWebPushSubChange || 0 // * ⬅️ (حذف 6)
                 };
             } else {
-                return { emailSub: false, webPushSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 };
+                // * ⬅️ (إصلاح 7) - هذا هو الوضع الافتراضي للمستخدم الجديد
+                return { emailSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0 };
             }
         } catch (error) {
             console.error("Error getting user data:", error);
-            // * ⬅️ (إصلاح إضافي) - أضفنا throw error هنا ليتم التقاطه في try/catch
-            throw error; 
+            // * ⬅️ (إصلاح 8) - تم حذف throw error، سنرجع القيم الافتراضية
+            return { emailSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0 };
         }
     }
 
@@ -993,9 +990,9 @@
 
         // (Notifications Modal)
         const emailSubToggle = document.getElementById('email-sub-toggle'); 
-        const webPushToggle = document.getElementById('web-push-toggle'); 
+        // const webPushToggle = document.getElementById('web-push-toggle'); // * ⬅️ (حذف 9)
         const emailStatusText = document.getElementById('email-status-text'); 
-        const webPushStatusText = document.getElementById('web-push-status-text'); 
+        // const webPushStatusText = document.getElementById('web-push-status-text'); // * ⬅️ (حذف 10)
 
         // (Logout Confirm Modal)
         const logoutConfirmYes = document.getElementById('logout-confirm-yes'); 
@@ -1034,15 +1031,13 @@
             currentSubscriptionEl.className = subscribed ? 'subscription-status' : 'subscription-status unsubscribed';
         }
         
-        function updateNotifStatusUI(emailSub, webPushSub) {
+        function updateNotifStatusUI(emailSub) { // * ⬅️ (حذف 11) - إزالة webPushSub
             emailSubToggle.checked = emailSub;
-            webPushToggle.checked = webPushSub;
             
             emailStatusText.textContent = emailSub ? translations[currentLang].notifStatusSubbed : translations[currentLang].notifStatusUnsubbed;
             emailStatusText.className = emailSub ? 'status-text subscribed' : 'status-text unsubscribed';
 
-            webPushStatusText.textContent = webPushSub ? translations[currentLang].notifStatusSubbed : translations[currentLang].notifStatusUnsubbed;
-            webPushStatusText.className = webPushSub ? 'status-text subscribed' : 'status-text unsubscribed';
+            // * ⬅️ (حذف 12) - إزالة كود تحديث واجهة الويب
         }
         
         window.setLanguage = function(lang) {
@@ -1072,7 +1067,7 @@
             if (currentUser) {
                 profileNameEl.textContent = currentUser.displayName || translations[currentLang].noName;
                 updateHomeSubscriptionUI(isSubscribed);
-                updateNotifStatusUI(isSubscribed, isWebPushSubscribed);
+                updateNotifStatusUI(isSubscribed); // * ⬅️ (حذف 13)
             }
 
             const verificationBanner = document.getElementById('email-verification-banner');
@@ -1228,16 +1223,15 @@
         });
 
         // --- 8. (AUTH LOGIC) ---
-        // * ⬅️ (الإصلاح الثالث) - إعادة هيكلة هذا الكود
         onAuthStateChanged(auth, async user => {
             if (user) {
                 currentUser = user;
 
-                // * الخطوة 1: إظهار الصفحة فوراً
+                // * ⬅️ (إصلاح 14) - إظهار الصفحة فوراً
                 loaderContainer.style.display = 'none';
                 contentContainer.style.display = 'block';
                 
-                // * الخطوة 2: التعامل مع تفعيل البريد (آمن)
+                // * ⬅️ (إصلاح 15) - التعامل مع تفعيل البريد
                 const verificationBanner = document.getElementById('email-verification-banner');
                 const verificationMessage = document.getElementById('verification-message');
                 const resendBtn = document.getElementById('resend-email-btn');
@@ -1290,26 +1284,31 @@
                     verificationBanner.style.display = 'none';
                 }
 
-                // * الخطوة 3: جلب البيانات (محمي بـ try/catch)
+                // * ⬅️ (إصلاح 16) - جلب البيانات (محمي بـ try/catch)
                 try {
                     const userData = await getSubscription(user.uid);
                     isSubscribed = userData.emailSub;
-                    isWebPushSubscribed = userData.webPushSub; 
+                    // isWebPushSubscribed = userData.webPushSub; // * ⬅️ (حذف)
                     lastProfileUpdate = userData.lastProfileUpdate;
                     lastSubChange = userData.lastSubChange; 
-                    lastWebPushSubChange = userData.lastWebPushSubChange;
+                    // lastWebPushSubChange = userData.lastWebPushSubChange; // * ⬅️ (حذف)
                     
-                    // ملء نافذة الإعدادات بالبيانات
                     populateProfileForm(userData);
+
+                    // * ⬅️ (إصلاح 17) - مزامنة OneSignal عند التحميل
+                    if (window.OneSignal) {
+                        window.OneSignal.login(user.uid); // تسجيل الدخول لـ OneSignal
+                        // ضبط الوسم بناءً على ما هو موجود في قاعدة بياناتنا
+                        window.OneSignal.User.addTag("subscribed", isSubscribed.toString());
+                    }
 
                 } catch (error) {
                     console.error("Failed to get user subscription data:", error);
                     showToast("فشل تحميل بيانات المستخدم. تحقق من إعدادات قاعدة البيانات.", 'error');
-                    // سيبقى على القيم الافتراضية (false)
-                    populateProfileForm({ bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 }); // ملء النافذة ببيانات فارغة
+                    populateProfileForm({ bio: "", lastProfileUpdate: 0, lastSubChange: 0 }); // ملء النافذة ببيانات فارغة
                 }
-
-                // * الخطوة 4: تحديث الواجهة بالبيانات (الآمنة والمحتملة)
+                
+                // * ⬅️ (إصلاح 18) - تحديث الواجهة
                 window.setLanguage(currentLang); 
                 
                 profileNameEl.textContent = user.displayName || translations[currentLang].noName;
@@ -1318,13 +1317,13 @@
                 if (!user.photoURL) profileImgEl.classList.add('default');
 
                 updateHomeSubscriptionUI(isSubscribed);
-                updateNotifStatusUI(isSubscribed, isWebPushSubscribed); 
+                updateNotifStatusUI(isSubscribed); // * ⬅️ (حذف)
                 
                 deleteEmailDisplay1.textContent = user.email;
                 deleteEmailDisplay2.textContent = user.email;
                 
             } else {
-                // * ⬅️ (الإصلاح الثاني) - تغيير أمر الخروج
+                // * ⬅️ (إصلاح زر العودة)
                 window.location.replace("login.html"); 
             }
         });
@@ -1391,6 +1390,7 @@
         });
 
         // 6. (أزرار نافذة الإشعارات)
+        // * ⬅️ (إصلاح 19) - تعديل زر البريد الإلكتروني
         emailSubToggle.addEventListener('change', async (e) => {
             if (!currentUser) return;
             const timeSinceLastChange = Date.now() - lastSubChange;
@@ -1405,13 +1405,21 @@
             const newLastSubChange = Date.now();
             
             try {
+                // * ⬅️ (إصلاح 20) - نرسل الأمرين معاً
+                // الأمر الأول: تحديث قاعدة بياناتنا
                 await updateUserProfileDB(currentUser.uid, { 
                     subscribe_marketing: newSubState,
                     lastSubChange: newLastSubChange
                 });
+                
+                // الأمر الثاني: تحديث OneSignal (بشكل حقيقي)
+                if (window.OneSignal) {
+                    window.OneSignal.User.addTag("subscribed", newSubState.toString());
+                }
+
                 lastSubChange = newLastSubChange;
                 updateHomeSubscriptionUI(newSubState); 
-                updateNotifStatusUI(newSubState, isWebPushSubscribed); 
+                updateNotifStatusUI(newSubState); 
                 
                 showToast(
                     newSubState ? translations[currentLang].subYesToast : translations[currentLang].subNoToast,
@@ -1423,37 +1431,7 @@
             }
         });
 
-        webPushToggle.addEventListener('change', async (e) => {
-            if (!currentUser) return;
-            const timeSinceLastChange = Date.now() - lastWebPushSubChange;
-            
-            if (timeSinceLastChange < SUB_COOLDOWN) {
-                e.target.checked = !e.target.checked; 
-                showToast(translations[currentLang].cooldownMsg, 'warning');
-                return;
-            }
-            
-            const newSubState = e.target.checked;
-            const newLastWebPushSubChange = Date.now();
-            
-            try {
-                await updateUserProfileDB(currentUser.uid, { 
-                    subscribe_webpush: newSubState,
-                    lastWebPushSubChange: newLastWebPushSubChange
-                });
-                lastWebPushSubChange = newLastWebPushSubChange;
-                isWebPushSubscribed = newSubState; 
-                updateNotifStatusUI(isSubscribed, newSubState);
-                
-                showToast(
-                    newSubState ? translations[currentLang].subYesToast : translations[currentLang].subNoToast,
-                    newSubState ? 'success' : 'error'
-                );
-            } catch (error) {
-                e.target.checked = !e.target.checked; 
-                showToast(`Error: ${error.message}`, 'error');
-            }
-        });
+        // * ⬅️ (حذف 21) - تم حذف المستمع الخاص بـ webPushToggle
         
         // 7. (زر تسجيل الخروج الجديد)
         logoutBtn.addEventListener('click', () => {
@@ -1535,6 +1513,7 @@
             <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
         </div>
     </header>
+
 
     <div class="container" id="contentContainer">
      <div class="error" id="email-verification-banner" style="display: none;">
@@ -1717,30 +1696,7 @@
               </label>
             </div>
             
-            <hr style="border-color: #444; margin: 20px 0;">
-
-            <h4 data-lang-key="notifModalWebHeader">إشعارات المتصفح (Web Push)</h4>
-            <div class="setting-row">
-              <p data-lang-key="notifStatusLabel">الحالة:</p>
-              <span class="status-text unsubscribed" id="web-push-status-text" data-lang-key="notifStatusUnsubbed"></span>
             </div>
-            <div class="setting-row">
-              <p data-lang-key="notifModalWebText">...</p>
-              <label class="switch">
-                  <input id="web-push-toggle" type="checkbox"> 
-                  <div class="slider">
-                      <div class="circle">
-                          <svg class="cross" xml:space="preserve" viewBox="0 0 365.696 365.696" height="6" width="6" xmlns="http://www.w3.org/2000/svg">
-                              <path fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
-                          </svg>
-                          <svg class="checkmark" xml:space="preserve" viewBox="0 0 24 24" height="10" width="10" xmlns="http://www.w3.org/2000/svg">
-                              <path fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
-                          </svg>
-                      </div>
-                  </div>
-              </label>
-            </div>
-        </div>
     </div>
     
     <div class="modal-overlay" id="logout-confirm-modal">

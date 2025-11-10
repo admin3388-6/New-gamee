@@ -7,14 +7,15 @@
     <title data-lang-key="pageTitle">عن Skydata - Skydata</title>
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f", 
-        });
-      });
-    </script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+    });
+  });
+</script>
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }

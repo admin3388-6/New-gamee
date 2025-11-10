@@ -6,7 +6,7 @@
 <title data-lang-key="pageTitle">SkyData - تسجيل الدخول / إنشاء حساب</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-  /* --- الأنيميشنات من Uiverse --- */
+  /* --- (جميع أكواد CSS كما هي تماماً - لا تغيير هنا) --- */
   @keyframes pulse {
       from { transform: scale(0.9); opacity: 1; }
       to { transform: scale(1.8); opacity: 0; }
@@ -19,7 +19,6 @@
       to { opacity: 1; transform: translateY(0); }
   }
 
-  /* --- التصميم الأساسي (Dark Mode) --- */
   * {
       box-sizing: border-box;
   }
@@ -33,7 +32,6 @@
     align-items:center; min-height:100vh; 
   }
   
-  /* --- شريط الرأس (Header) --- */
   header {
       display: flex; justify-content: space-between; align-items: center;
       padding: 15px 20px; background-color: #1e1e1e;
@@ -59,7 +57,6 @@
   .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
 
 
-  /* --- حاوية الصفحة --- */
   .main-wrapper {
       max-width: 400px;
       width: 95%; 
@@ -68,7 +65,6 @@
       margin-bottom: 30px;
   }
 
-  /* --- تصميم النموذج (Form) من Uiverse --- */
   .form {
       display: flex;
       flex-direction: column;
@@ -113,7 +109,6 @@
       text-align: right;
   }
   
-  /* --- عناصر الإدخال --- */
   .input-label {
       background-color: #333;
       color: #ffffff;
@@ -144,7 +139,6 @@
   }
   .input-label:focus-within { border-color: #007bff; }
   
-  /* --- تنسيق حقول الاسم الأول والأخير --- */
   .flex-group {
       display: flex;
       gap: 10px;
@@ -165,7 +159,6 @@
       }
   }
 
-  /* --- زر العين --- */
   .toggle-password {
       position: absolute;
       left: 10px;
@@ -183,7 +176,6 @@
   .toggle-password:hover { color: #007bff; }
 
 
-  /* --- الأزرار --- */
   .submit {
       border: none;
       outline: none;
@@ -209,21 +201,20 @@
   }
   .submit:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
 
-  /* (ستايل لزر الإلغاء) */
   .cancel-button {
       display: block; 
       width: 100%;
       text-decoration: none;
-      border: 1px solid #555; /* (لون ثانوي) */
+      border: 1px solid #555; 
       outline: none;
       padding: 14px;
       border-radius: 8px;
-      color: #aaa; /* (لون ثانوي) */
+      color: #aaa; 
       font-size: 1.2em;
       font-weight: bold;
       background-color: transparent;
       cursor: pointer;
-      margin-top: 10px; /* (مسافة) */
+      margin-top: 10px; 
       transition: all 0.3s ease;
       text-align: center;
   }
@@ -232,12 +223,10 @@
       color: #fff;
   }
 
-  /* --- رابط التبديل و الاشتراك --- */
   .toggle-area { text-align: center; font-size: 0.95em; margin-top: 10px; }
   .toggle-area a { color: #007bff; text-decoration: none; font-weight: 600; transition: color 0.3s; }
   .toggle-area a:hover { text-decoration: underline #007bff; color: #4da6ff; }
   
-  /* --- خيارات إضافية والمربعات المُوحدة --- */
   .checkbox-group {
       display: flex;
       flex-direction: column;
@@ -290,45 +279,6 @@
   .status-error { background: #5c1818; color: #f8d7da; border: 1px solid #dc3545; }
   .verification-code { padding: 10px; background:#121212; border:1px solid #007bff; border-radius:5px; text-align:center; font-size: 0.8em; color: #91d5ff; margin-top: 20px; }
 </style>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-  import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-
-  // 🛑 إعدادات Firebase المحدثة
-  const firebaseConfig = {
-    apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-    authDomain: "skydata-ai.firebaseapp.com",
-    databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "skydata-ai",
-    storageBucket: "skydata-ai.firebasestorage.app",
-    messagingSenderId: "165531796197",
-    appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
-    measurementId: "G-JYS7P7FY3Z"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getDatabase(app);
-
-  function updateSubscription(uid, subscribe) {
-    update(ref(db, 'users/' + uid), { 
-      subscribe_marketing: subscribe,
-      timestamp: Date.now()
-    });
-  }
-
-  // وضع الدوال في النطاق العالمي
-  window.auth = auth;
-  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-  window.sendEmailVerification = sendEmailVerification;
-  window.updateSubscription = updateSubscription;
-  window.onAuthStateChanged = onAuthStateChanged; 
-  window.updateProfile = updateProfile;
-  
-</script>
 
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 
@@ -429,36 +379,31 @@
   // **************************************************
   // 1. استيراد المكتبات
   // **************************************************
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-  import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+  
+  // * ⬅️ قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
+  import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
+
+  // * ⬅️ قمنا بحذف (initializeApp, getAuth, getDatabase) لأنها أصبحت في الملف الخارجي
+  import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  import { ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
   // 2. إعدادات Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-    authDomain: "skydata-ai.firebaseapp.com",
-    databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "skydata-ai",
-    storageBucket: "skydata-ai.firebasestorage.app",
-    messagingSenderId: "165531796197",
-    appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
-    measurementId: "G-JYS7P7FY3Z"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getDatabase(app);
+  // * ⬅️ تم حذف هذا القسم بالكامل لأنه أصبح في الملف الخارجي
+  // const firebaseConfig = { ... };
+  // const app = initializeApp(firebaseConfig);
+  // const auth = getAuth(app);
+  // const db = getDatabase(app);
 
   // 3. دالة تحديث قاعدة البيانات
   function updateSubscription(uid, subscribe) {
     update(ref(db, 'users/' + uid), { 
       subscribe_marketing: subscribe,
       timestamp: Date.now()
-      // (جديد) سنضيف حقل "تم الترحيب به" لاحقاً من menu.html
     });
   }
 
   // 4. وضع الدوال في النطاق العالمي
+  // (هذا ليس ضرورياً لأننا لا نستخدمها من <script> آخر، ولكن سنبقيه للاحتياط)
   window.auth = auth;
   window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
   window.signInWithEmailAndPassword = signInWithEmailAndPassword;
@@ -472,9 +417,6 @@
   // **************************************************
 
   const ONESIGNAL_APP_ID = "9bc8ff80-a325-4935-ba4d-03e362a3cc5f";
-  
-  // استيراد الدوال من النطاق العالمي
-  // (تم تعريفها أعلاه)
   
   // عناصر الواجهة
   const formTitle = document.getElementById('formTitle');
@@ -531,7 +473,6 @@
           "passwordMatchError": "كلمتا المرور غير متطابقتين",
           "nameRequiredError": "الرجاء إدخال الاسم الأول واسم العائلة",
           "loginSuccess": "تم تسجيل الدخول بنجاح! جاري التوجيه",
-          // (رسالة معدلة)
           "registerSuccess": "تم إنشاء الحساب بنجاح! تم إرسال رابط التفعيل إلى بريدك الإلكتروني: {email}<br>تنبيه: يرجى التحقق من مجلد البريد العشوائي (Spam) إذا لم تصلك الرسالة خلال دقائق",
           "cancelBtn": "إلغاء"
       },
@@ -558,7 +499,6 @@
           "passwordMatchError": "Passwords do not match",
           "nameRequiredError": "Please enter your first and last name",
           "loginSuccess": "Login successful! Redirecting",
-          // (رسالة معدلة)
           "registerSuccess": "Account created successfully! A verification link has been sent to your email: {email}<br>Note: Please check your spam folder if the message does not arrive within minutes",
           "cancelBtn": "Cancel"
       }
@@ -656,7 +596,6 @@
     toggleMode();
   });
   
-  // ⬇️⬇️ (التعديل الأهم هنا) ⬇️⬇️
   // إرسال النموذج (تسجيل الدخول أو إنشاء حساب)
   authForm.addEventListener('submit', async function(e){
     e.preventDefault();
@@ -703,7 +642,6 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        // (جديد) تعريف المستخدم لـ OneSignal عند تسجيل الدخول
         if (window.OneSignal) {
              window.OneSignal.login(user.uid);
              window.OneSignal.User.addEmail(email);
@@ -713,7 +651,8 @@
         msgEl.style.display = 'block';
         
         setTimeout(() => {
-             window.location.href = "menu.html";
+             // * ⬅️ (نفس الإصلاح من المرة السابقة)
+             window.location.replace("menu.html"); 
         }, 1500); 
         
       } else {
@@ -721,29 +660,21 @@
         // * وضع إنشاء الحساب (المُعدل حسب طلبك)
         // ********************************
         
-        // 1. إنشاء المستخدم في Firebase
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         const fullName = `${firstNameInput.value.trim()} ${lastNameInput.value.trim()}`;
         
-        // 2. تحديث ملفه الشخصي (الاسم)
         await updateProfile(user, {
             displayName: fullName
         });
         
-        // 3. تحديث قاعدة بياناته (حالة الاشتراك)
         updateSubscription(user.uid, subscribe);
         
-        // 4. (هام) إرسال بريد التفعيل الخاص بـ Firebase (كما طلبت)
         await sendEmailVerification(user); 
 
-        // 5. (هام) تعريف المستخدم لـ OneSignal SDK
-        //    (لا نرسل البريد الترحيبي الآن، سننتظر التفعيل)
         if (window.OneSignal) {
-             window.OneSignal.login(user.uid); // تعريف المستخدم
-             window.OneSignal.User.addEmail(email); // إضافة بريده
-             
-             // (جديد) إضافة وسم (Tag) بحالة الاشتراك
+             window.OneSignal.login(user.uid); 
+             window.OneSignal.User.addEmail(email); 
              if (subscribe) {
                 window.OneSignal.User.addTag("subscribed", "true");
              }
@@ -751,15 +682,13 @@
             console.warn("OneSignal SDK not loaded yet.");
         }
         
-        // 6. عرض رسالة النجاح (تخبره بالتحقق من بريده للتفعيل)
         const registerSuccessMsg = translations[currentLang].registerSuccess.replace('{email}', email);
         msgEl.innerHTML = `✅ ${registerSuccessMsg}`;
         msgEl.style.display = 'block';
         
-        // 7. تسجيل الدخول والانتقال إلى القائمة
-        // (سيتم مطالبته بالتفعيل في صفحة القائمة)
         setTimeout(() => {
-             window.location.href = "menu.html";
+             // * ⬅️ (نفس الإصلاح من المرة السابقة)
+             window.location.replace("menu.html"); 
         }, 3000); 
       }
 
@@ -784,7 +713,8 @@
   // التحقق من حالة المستخدم عند تحميل الصفحة
   onAuthStateChanged(auth, user => {
       if (user) {
-          window.location.href = "menu.html";
+          // * ⬅️ (نفس الإصلاح من المرة السابقة)
+          window.location.replace("menu.html");
       } else {
           toggleMode(); 
           window.onload = () => { setLanguage(currentLang); };
@@ -794,6 +724,5 @@
   // تشغيل اللغة الافتراضية
   setLanguage(currentLang);
 </script>
-
 </body>
 </html>

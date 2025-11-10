@@ -230,8 +230,7 @@
     box-shadow: var(--circle-checked-shadow);
   }
 
-  /* (Loader) */
-  .loader {
+  .loader { 
     width: 100%;
     height: 100vh;
     display: flex;
@@ -240,7 +239,6 @@
     font-size: 1.2em;
     color: #888;
   }
-
   #toast-notification {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     width: 320px;
@@ -770,7 +768,7 @@
 <script type="module">
     
     // --- 1. IMPORTS (MUST BE AT TOP LEVEL) ---
-    // * ⬅️ قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
+    // * ⬅️ (الإصلاح الأول) قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
     import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
     
     // * ⬅️ استيراد الدوال التي نحتاجها فقط
@@ -778,12 +776,8 @@
     import { get, ref, update, child, remove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
     // --- 2. FIREBASE CONFIG (TOP LEVEL) ---
-    // * ⬅️ تم حذف هذا القسم بالكامل لأنه أصبح في الملف الخارجي
-    // const firebaseConfig = { ... };
-    // const app = initializeApp(firebaseConfig);
-    // const auth = getAuth(app);
-    // const db = getDatabase(app);
-
+    // * ⬅️ تم حذف القسم المكرر من هنا
+    
     // --- 3. GLOBAL VARS (TOP LEVEL) ---
     const IMGBB_API_KEY = "f0ff703738276bb67fcc6b7f0a6778d5";
     let currentLang = 'ar'; 
@@ -858,7 +852,7 @@
           "resendButton": "إعادة إرسال",
           "resendButtonCooldown": "انتظر {seconds} ث",
           "verificationSent": "تم إرسال الرابط! تحقق من بريدك.",
-          "backToHome": "العودة للرئيسية" // ⬅️ (إضافة ترجمة)
+          "backToHome": "العودة للرئيسية"
       },
       "en": {
           "pageTitle": "SkyData - Home",
@@ -916,7 +910,7 @@
           "resendButton": "Resend",
           "resendButtonCooldown": "Wait {seconds}s",
           "verificationSent": "Link sent! Check your email.",
-          "backToHome": "Back to Home" // ⬅️ (إضافة ترجمة)
+          "backToHome": "Back to Home"
       }
     };
 
@@ -940,7 +934,8 @@
             }
         } catch (error) {
             console.error("Error getting user data:", error);
-            return { emailSub: false, webPushSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 };
+            // * ⬅️ (إصلاح إضافي) - أضفنا throw error هنا ليتم التقاطه في try/catch
+            throw error; 
         }
     }
 
@@ -1233,10 +1228,16 @@
         });
 
         // --- 8. (AUTH LOGIC) ---
+        // * ⬅️ (الإصلاح الثالث) - إعادة هيكلة هذا الكود
         onAuthStateChanged(auth, async user => {
             if (user) {
                 currentUser = user;
+
+                // * الخطوة 1: إظهار الصفحة فوراً
+                loaderContainer.style.display = 'none';
+                contentContainer.style.display = 'block';
                 
+                // * الخطوة 2: التعامل مع تفعيل البريد (آمن)
                 const verificationBanner = document.getElementById('email-verification-banner');
                 const verificationMessage = document.getElementById('verification-message');
                 const resendBtn = document.getElementById('resend-email-btn');
@@ -1289,14 +1290,26 @@
                     verificationBanner.style.display = 'none';
                 }
 
-                const userData = await getSubscription(user.uid);
+                // * الخطوة 3: جلب البيانات (محمي بـ try/catch)
+                try {
+                    const userData = await getSubscription(user.uid);
+                    isSubscribed = userData.emailSub;
+                    isWebPushSubscribed = userData.webPushSub; 
+                    lastProfileUpdate = userData.lastProfileUpdate;
+                    lastSubChange = userData.lastSubChange; 
+                    lastWebPushSubChange = userData.lastWebPushSubChange;
+                    
+                    // ملء نافذة الإعدادات بالبيانات
+                    populateProfileForm(userData);
 
-                isSubscribed = userData.emailSub;
-                isWebPushSubscribed = userData.webPushSub; 
-                lastProfileUpdate = userData.lastProfileUpdate;
-                lastSubChange = userData.lastSubChange; 
-                lastWebPushSubChange = userData.lastWebPushSubChange; 
-                
+                } catch (error) {
+                    console.error("Failed to get user subscription data:", error);
+                    showToast("فشل تحميل بيانات المستخدم. تحقق من إعدادات قاعدة البيانات.", 'error');
+                    // سيبقى على القيم الافتراضية (false)
+                    populateProfileForm({ bio: "", lastProfileUpdate: 0, lastSubChange: 0, lastWebPushSubChange: 0 }); // ملء النافذة ببيانات فارغة
+                }
+
+                // * الخطوة 4: تحديث الواجهة بالبيانات (الآمنة والمحتملة)
                 window.setLanguage(currentLang); 
                 
                 profileNameEl.textContent = user.displayName || translations[currentLang].noName;
@@ -1307,12 +1320,8 @@
                 updateHomeSubscriptionUI(isSubscribed);
                 updateNotifStatusUI(isSubscribed, isWebPushSubscribed); 
                 
-                populateProfileForm(userData);
                 deleteEmailDisplay1.textContent = user.email;
                 deleteEmailDisplay2.textContent = user.email;
-
-                loaderContainer.style.display = 'none';
-                contentContainer.style.display = 'block';
                 
             } else {
                 // * ⬅️ (الإصلاح الثاني) - تغيير أمر الخروج
@@ -1526,7 +1535,6 @@
             <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
         </div>
     </header>
-
 
     <div class="container" id="contentContainer">
      <div class="error" id="email-verification-banner" style="display: none;">

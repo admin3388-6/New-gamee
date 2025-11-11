@@ -4,49 +4,121 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-lang-key="pageTitle">SkyData - تسجيل الدخول / إنشاء حساب</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-  /* --- (جميع أكواد CSS كما هي تماماً - لا تغيير هنا) --- */
-  @keyframes pulse {
-      from { transform: scale(0.9); opacity: 1; }
-      to { transform: scale(1.8); opacity: 0; }
-  }
-  @keyframes spin {
-      to { transform: rotate(360deg); }
-  }
-  @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+  /* * ⬇️⬇️⬇️ CSS جديد (من index.html) ⬇️⬇️⬇️ * */
+  :root {
+      --primary-color: #007bff;
+      --primary-hover: #0056b3;
+      --glow-color-1: #6366f1;
+      --glow-color-2: #ec4899;
+      --glow-color-3: #f59e0b;
+      --dark-bg: #0d0d1a; 
+      --bg-surface: #1a1a2e;
+      --text-color: #e0e0e0;
+      --text-muted: #aaa;
+      --border-color: #333;
   }
 
   * {
       box-sizing: border-box;
-  }import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+  
+  #app-container {
+      width: 100%;
+      overflow-x: hidden;
+      position: relative; 
+      transform: translate3d(0, 0, 0);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+  }
+  
+  html { }
+
   body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     direction: rtl; 
-    background-color: #121212; 
-    color: #fff;
+    background-color: var(--dark-bg); /* * (مُعدل) * */
+    color: var(--text-color); /* * (مُعدل) * */
     margin: 0; padding: 0; 
-    display:flex; flex-direction: column; 
-    align-items:center; min-height:100vh; 
   }
   
+  body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+          135deg,
+          rgba(var(--glow-color-1), 0.15),
+          rgba(var(--glow-color-2), 0.1),
+          rgba(var(--glow-color-3), 0.15)
+      );
+      background-size: 400% 400%;
+      animation: glowingBackground 20s ease infinite;
+      z-index: -1;
+      filter: blur(50px);
+  }
+
+  @keyframes glowingBackground {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+  }
+  /* * ⬆️⬆️⬆️ نهاية CSS الجديد ⬆️⬆️⬆️ * */
+
+
+  /* --- شريط الرأس (Header) (مُعدل) --- */
   header {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 15px 20px; background-color: #1e1e1e;
-      border-bottom: 1px solid #333;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      padding: 15px 20px; 
+      background-color: rgba(26, 26, 46, 0.7); /* * (مُعدل) * */
+      backdrop-filter: blur(10px); /* * (جديد) * */
+      border-bottom: 1px solid var(--border-color); /* * (مُعدل) * */
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3); /* * (مُعدل) * */
       width: 100%;
+      position: sticky; /* * (جديد) * */
+      top: 0;
       z-index: 100;
   }
   .logo-container { display: flex; align-items: center; }
   .logo-container img { height: 35px; margin-left: 10px; }
   
+  .logo-shine {
+      position: relative;
+      overflow: hidden;
+  }
+  .logo-shine::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+      );
+      transform: skewX(-25deg);
+      animation: shine-effect 5s infinite linear;
+  }
+  @keyframes shine-effect {
+      0% { left: -100%; }
+      50% { left: 150%; }
+      100% { left: 150%; }
+  }
+  
   .lang-switcher { display: flex; align-items: center; }
   .lang-switcher a { 
       text-decoration: none; 
-      color: #007bff; 
+      color: var(--primary-color); 
       margin: 0 3px; 
       font-weight: bold; 
       cursor: pointer; 
@@ -54,17 +126,23 @@
       border-radius: 5px;
       transition: all 0.2s ease;
   }
-  .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
+  .lang-switcher a.active { background-color: var(--primary-color); color: #ffffff; }
 
 
+  /* --- حاوية الصفحة (جديد) --- */
+  main {
+      flex-grow: 1; /* يدفع الفوتر للأسفل */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 0; /* مسافة من الهيدر والفوتر */
+  }
   .main-wrapper {
       max-width: 400px;
       width: 95%; 
-      flex-grow: 1;
-      margin-top: 30px; 
-      margin-bottom: 30px;
   }
 
+  /* --- تصميم النموذج (Form) (مُعدل) --- */
   .form {
       display: flex;
       flex-direction: column;
@@ -72,9 +150,9 @@
       padding: 30px;
       border-radius: 10px; 
       position: relative;
-      background-color: #1e1e1e;
-      color: #fff;
-      border: 1px solid #333;
+      background-color: var(--bg-surface); /* * (مُعدل) * */
+      color: var(--text-color); /* * (مُعدل) * */
+      border: 1px solid var(--border-color); /* * (مُعدل) * */
       box-shadow: 0 5px 15px rgba(0,0,0,0.5);
       animation: fadeIn 0.5s ease-out;
   }
@@ -86,7 +164,7 @@
       position: relative;
       display: flex;
       align-items: center;
-      color: #007bff;
+      color: var(--primary-color); /* * (مُعدل) * */
       margin-bottom: 5px;
       padding-right: 30px; 
   }
@@ -97,24 +175,25 @@
       width: 16px;
       border-radius: 50%;
       right: 0px;
-      background-color: #007bff;
+      background-color: var(--primary-color); /* * (مُعدل) * */
   }
   .title::after { animation: pulse 1s linear infinite; }
 
 
   .message-intro { 
       font-size: 14.5px;
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--text-muted); /* * (مُعدل) * */
       margin-bottom: 5px;
       text-align: right;
   }
   
+  /* --- عناصر الإدخال (مُعدلة) --- */
   .input-label {
-      background-color: #333;
-      color: #ffffff;
+      background-color: rgba(0,0,0,0.2); /* * (مُعدل) * */
+      color: var(--text-color); /* * (مُعدل) * */
       padding: 15px;
       border-radius: 8px;
-      border: 1px solid #555;
+      border: 1px solid var(--border-color); /* * (مُعدل) * */
       display: flex;
       flex-direction: column; 
       gap: 5px;
@@ -124,7 +203,7 @@
   }
   .input-label span {
       font-size: 0.75em;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-muted); /* * (مُعدل) * */
       font-weight: 600;
   }
   .input-label input {
@@ -133,11 +212,11 @@
       background: transparent;
       border: none;
       outline: none;
-      color: #fff;
+      color: var(--text-color); /* * (مُعدل) * */
       font-size: 1em;
       direction: ltr;
   }
-  .input-label:focus-within { border-color: #007bff; }
+  .input-label:focus-within { border-color: var(--primary-color); } /* * (مُعدل) * */
   
   .flex-group {
       display: flex;
@@ -166,16 +245,17 @@
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-muted); /* * (مُعدل) * */
       cursor: pointer;
       font-size: 1.1em;
       padding: 5px;
       transition: color 0.2s;
       z-index: 10;
   }
-  .toggle-password:hover { color: #007bff; }
+  .toggle-password:hover { color: var(--primary-color); }
 
 
+  /* --- الأزرار (مُعدلة) --- */
   .submit {
       border: none;
       outline: none;
@@ -184,7 +264,7 @@
       color: #fff;
       font-size: 1.2em;
       font-weight: bold;
-      background-color: #007bff;
+      background-color: var(--primary-color); /* * (مُعدل) * */
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
       margin-top: 15px;
@@ -195,7 +275,7 @@
   }
   .submit i { margin-left: 10px; }
   .submit:hover {
-      background-color: #0056b3;
+      background-color: var(--primary-hover); /* * (مُعدل) * */
       transform: translateY(-1px);
       box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
   }
@@ -205,11 +285,11 @@
       display: block; 
       width: 100%;
       text-decoration: none;
-      border: 1px solid #555; 
+      border: 1px solid var(--border-color); /* * (مُعدل) * */
       outline: none;
       padding: 14px;
       border-radius: 8px;
-      color: #aaa; 
+      color: var(--text-muted); /* * (مُعدل) * */
       font-size: 1.2em;
       font-weight: bold;
       background-color: transparent;
@@ -219,13 +299,14 @@
       text-align: center;
   }
   .cancel-button:hover {
-      background-color: #333;
-      color: #fff;
+      background-color: var(--border-color); /* * (مُعدل) * */
+      color: var(--text-color); /* * (مُعدل) * */
   }
 
+  /* --- رابط التبديل و الاشتراك (مُعدل) --- */
   .toggle-area { text-align: center; font-size: 0.95em; margin-top: 10px; }
-  .toggle-area a { color: #007bff; text-decoration: none; font-weight: 600; transition: color 0.3s; }
-  .toggle-area a:hover { text-decoration: underline #007bff; color: #4da6ff; }
+  .toggle-area a { color: var(--primary-color); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+  .toggle-area a:hover { text-decoration: underline; color: #4da6ff; }
   
   .checkbox-group {
       display: flex;
@@ -237,22 +318,22 @@
   .terms-acceptance {
       margin-top: 10px;
       padding: 10px;
-      border: 1px solid #555;
+      border: 1px solid var(--border-color); /* * (مُعدل) * */
       border-radius: 8px;
-      background-color: #121212;
+      background-color: rgba(0,0,0,0.2); /* * (مُعدل) * */
   }
   #subscriptionBox {
       padding: 10px;
-      border: 1px solid #555;
+      border: 1px solid var(--border-color); /* * (مُعدل) * */
       border-radius: 8px;
-      background-color: #121212;
+      background-color: rgba(0,0,0,0.2); /* * (مُعدل) * */
   }
   
   .checkbox-group label {
       display: flex;
       align-items: flex-start;
       font-weight: normal;
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--text-muted); /* * (مُعدل) * */
       cursor: pointer;
       margin-top: 5px;
   }
@@ -261,12 +342,12 @@
       margin: 0 0 0 8px;
       flex-shrink: 0;
   }
-  .terms-acceptance a { color: #007bff; text-decoration: none; font-weight: bold; }
+  .terms-acceptance a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
 
-
+  /* --- (ستايلات إضافية - كما هي) --- */
   .loader-spinner {
     border: 4px solid #333;
-    border-top: 4px solid #007BFF;
+    border-top: 4px solid var(--primary-color);
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -274,19 +355,69 @@
     display: none;
     margin: 10px auto 0;
   }
+  @keyframes pulse {
+      from { transform: scale(0.9); opacity: 1; }
+      to { transform: scale(1.8); opacity: 0; }
+  }
+  @keyframes spin {
+      to { transform: rotate(360deg); }
+  }
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
   .status-box { padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; font-weight: 600; }
   .status-message { background: #1a4d2e; color: #d4edda; border: 1px solid #28a845; }
   .status-error { background: #5c1818; color: #f8d7da; border: 1px solid #dc3545; }
-  .verification-code { padding: 10px; background:#121212; border:1px solid #007bff; border-radius:5px; text-align:center; font-size: 0.8em; color: #91d5ff; margin-top: 20px; }
+  .verification-code { padding: 10px; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:5px; text-align:center; font-size: 0.8em; color: var(--text-muted); margin-top: 20px; }
+
+  /* --- الفوتر (جديد) --- */
+  footer {
+      background-color: rgba(26, 26, 46, 0.7); 
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+      margin-top: auto; /* يثبت بالأسفل */
+      border-top: 1px solid var(--border-color);
+      width: 100%;
+  }
+  .footer-links-card {
+      margin: 0 auto; /* (تم حذف الهامش العلوي والسفلي) */
+      border: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.2);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  }
+  .footer-links-card a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 1.1em;
+      transition: color 0.2s ease;
+      display: block; 
+      margin: 10px 0; 
+  }
+  .footer-links-card a:hover {
+      color: var(--primary-color);
+  }
+  
+  @media (max-width: 380px) {
+      .logo-container img { height: 30px; }
+      .lang-switcher a { padding: 3px 5px; font-size: 0.9em; }
+  }
 </style>
 
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 
 <body>
+
+<div id="app-container">
   <header>
       <div class="logo-container">
-          <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-          <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
+          <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData" class="logo-shine">
+          <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata" class="logo-shine">
       </div>
       
       <div class="lang-switcher">
@@ -295,104 +426,109 @@
       </div>
   </header>
 
-<div class="main-wrapper" id="loginWrapper">
-  
-  <form class="form" id="authForm">
-      
-      <p class="title" id="formTitle" dir="rtl" data-lang-key="formTitleLogin">تسجيل الدخول</p>
-      <p class="message-intro" id="messageIntro" data-lang-key="messageLogin">مرحباً بك مجدداً! سجل الدخول للوصول لخدماتنا</p>
-      
-      <div class="flex-group" id="nameFields" style="display: none;">
-          <div>
-              <div class="input-label">
-                  <span id="spanFirstName" data-lang-key="spanFirstName">الاسم الأول</span>
-                  <input type="text" id="firstName" placeholder="" autocomplete="given-name">
-              </div>
-          </div>
-          <div>
-              <div class="input-label">
-                  <span id="spanLastName" data-lang-key="spanLastName">اسم العائلة</span>
-                  <input type="text" id="lastName" placeholder="" autocomplete="family-name">
-              </div>
-          </div>
-      </div>
-      
-      <div class="input-label">
-          <span id="spanEmail" data-lang-key="spanEmail">البريد الإلكتروني</span>
-          <input type="email" id="email" required placeholder="" autocomplete="email">
-      </div>
-      
-      <div class="input-label">
-          <span id="spanPassword" data-lang-key="spanPassword">كلمة المرور</span>
-          <input type="password" id="password" required placeholder="" autocomplete="current-password">
-          <button type="button" class="toggle-password" data-target="password">
-              <i class="fas fa-eye-slash"></i>
-          </button>
-      </div>
+<main>
+  <div class="main-wrapper" id="loginWrapper">
+    
+    <form class="form" id="authForm">
+        
+        <p class="title" id="formTitle" dir="rtl" data-lang-key="formTitleLogin">تسجيل الدخول</p>
+        <p class="message-intro" id="messageIntro" data-lang-key="messageLogin">مرحباً بك مجدداً! سجل الدخول للوصول لخدماتنا</p>
+        
+        <div class="flex-group" id="nameFields" style="display: none;">
+            <div>
+                <div class="input-label">
+                    <span id="spanFirstName" data-lang-key="spanFirstName">الاسم الأول</span>
+                    <input type="text" id="firstName" placeholder="" autocomplete="given-name">
+                </div>
+            </div>
+            <div>
+                <div class="input-label">
+                    <span id="spanLastName" data-lang-key="spanLastName">اسم العائلة</span>
+                    <input type="text" id="lastName" placeholder="" autocomplete="family-name">
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-label">
+            <span id="spanEmail" data-lang-key="spanEmail">البريد الإلكتروني</span>
+            <input type="email" id="email" required placeholder="" autocomplete="email">
+        </div>
+        
+        <div class="input-label">
+            <span id="spanPassword" data-lang-key="spanPassword">كلمة المرور</span>
+            <input type="password" id="password" required placeholder="" autocomplete="current-password">
+            <button type="button" class="toggle-password" data-target="password">
+                <i class="fas fa-eye-slash"></i>
+            </button>
+        </div>
 
-      <div class="input-label" id="confirmPasswordField" style="display: none;">
-          <span id="spanConfirmPassword" data-lang-key="spanConfirmPassword">تأكيد كلمة المرور</span>
-          <input type="password" id="confirmPassword" placeholder="" autocomplete="new-password">
-          <button type="button" class="toggle-password" data-target="confirmPassword">
-              <i class="fas fa-eye-slash"></i>
-          </button>
-      </div>
+        <div class="input-label" id="confirmPasswordField" style="display: none;">
+            <span id="spanConfirmPassword" data-lang-key="spanConfirmPassword">تأكيد كلمة المرور</span>
+            <input type="password" id="confirmPassword" placeholder="" autocomplete="new-password">
+            <button type="button" class="toggle-password" data-target="confirmPassword">
+                <i class="fas fa-eye-slash"></i>
+            </button>
+        </div>
 
 
-      <div class="checkbox-group terms-acceptance" id="subscriptionBox" style="display: none;">
-          <label>
-              <input type="checkbox" id="subscribeEmail" checked>
-              <span data-lang-key="subMarketing">أوافق على استلام البريد التسويقي والأخبار (اختياري)</span>
-          </label>
-      </div>
+        <div class="checkbox-group terms-acceptance" id="subscriptionBox" style="display: none;">
+            <label>
+                <input type="checkbox" id="subscribeEmail" checked>
+                <span data-lang-key="subMarketing">أوافق على استلام البريد التسويقي والأخبار (اختياري)</span>
+            </label>
+        </div>
 
-      <div class="checkbox-group terms-acceptance">
-          <label>
-              <input type="checkbox" id="acceptTerms" required>
-              <span data-lang-key="acceptTermsText">أوافق على <a href="Safety.html" target="_blank">شروط الخدمة وسياسة الخصوصية</a> (إجباري)</span>
-          </label>
-      </div>
-      
-      <button type="submit" class="submit" id="submitBtn">
-          تسجيل الدخول <i class="fas fa-sign-in-alt"></i>
-      </button>
+        <div class="checkbox-group terms-acceptance">
+            <label>
+                <input type="checkbox" id="acceptTerms" required>
+                <span data-lang-key="acceptTermsText">أوافق على <a href="Safety.html" target="_blank">شروط الخدمة وسياسة الخصوصية</a> (إجباري)</span>
+            </label>
+        </div>
+        
+        <button type="submit" class="submit" id="submitBtn">
+            تسجيل الدخول <i class="fas fa-sign-in-alt"></i>
+        </button>
 
-      <a href="index.html" class="cancel-button" id="cancelBtn" data-lang-key="cancelBtn">إلغاء</a>
-      <div class="loader-spinner" id="loadingSpinner"></div>
+        <a href="index.html" class="cancel-button" id="cancelBtn" data-lang-key="cancelBtn">إلغاء</a>
+        <div class="loader-spinner" id="loadingSpinner"></div>
 
-      <p class="toggle-area">
-          <span data-lang-key="togglePrompt">لا تمتلك حساب؟ </span>
-          <a href="#" id="toggleModeLink" data-lang-key="toggleLink">إنشاء حساب جديد</a>
-      </p>
-  </form>
+        <p class="toggle-area">
+            <span data-lang-key="togglePrompt">لا تمتلك حساب؟ </span>
+            <a href="#" id="toggleModeLink" data-lang-key="toggleLink">إنشاء حساب جديد</a>
+        </p>
+    </form>
 
-  <div class="verification-code">
-      رمز التحقق المطلوب من OneSignal: <strong>OS7K3L</strong>
+    <div class="verification-code">
+        رمز التحقق المطلوب من OneSignal: <strong>OS7K3L</strong>
+    </div>
+
+    <div class="status-box status-message" id="msg" style="display: none;"></div>
+    <div class="status-box status-error" id="err" style="display: none;"></div>
   </div>
+</main>
 
-  <div class="status-box status-message" id="msg" style="display: none;"></div>
-  <div class="status-box status-error" id="err" style="display: none;"></div>
-</div>
+<footer>
+    <div class="footer-links-card">
+        <a href="Safety.html" data-lang-key="footerPolicy">شروط الاستخدام وسياسة الخصوصية</a>
+        <a href="aboutus.html" data-lang-key="footerAbout">عن Skydata</a>
+    </div>
+</footer>
 
-
-<script type="module">
+</div> <script type="module">
   // **************************************************
   // 1. استيراد المكتبات
   // **************************************************
   
-  // * ⬅️ قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
+  // * ⬅️ (الإصلاح الأول) قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
   import { app, database as db, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
 
-  // * ⬅️ قمنا بحذف (initializeApp, getAuth, getDatabase) لأنها أصبحت في الملف الخارجي
+  // * ⬅️ استيراد الدوال التي نحتاجها فقط
   import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
   import { ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-  // 2. إعدادات Firebase
-  // * ⬅️ تم حذف هذا القسم بالكامل لأنه أصبح في الملف الخارجي
-  // const firebaseConfig = { ... };
-  // const app = initializeApp(firebaseConfig);
-  // const auth = getAuth(app);
-  // const db = getDatabase(app);
+  // **************************************************
+  // 2. (تم حذف إعدادات Firebase المكررة)
+  // **************************************************
 
   // 3. دالة تحديث قاعدة البيانات
   function updateSubscription(uid, subscribe) {
@@ -401,19 +537,9 @@
       timestamp: Date.now()
     });
   }
-
-  // 4. وضع الدوال في النطاق العالمي
-  // (هذا ليس ضرورياً لأننا لا نستخدمها من <script> آخر، ولكن سنبقيه للاحتياط)
-  window.auth = auth;
-  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-  window.sendEmailVerification = sendEmailVerification;
-  window.updateSubscription = updateSubscription;
-  window.onAuthStateChanged = onAuthStateChanged; 
-  window.updateProfile = updateProfile;
   
   // **************************************************
-  // 5. منطق التطبيق
+  // 4. منطق التطبيق (كما كان، لكن بدون التكرار)
   // **************************************************
 
   const ONESIGNAL_APP_ID = "9bc8ff80-a325-4935-ba4d-03e362a3cc5f";
@@ -474,7 +600,9 @@
           "nameRequiredError": "الرجاء إدخال الاسم الأول واسم العائلة",
           "loginSuccess": "تم تسجيل الدخول بنجاح! جاري التوجيه",
           "registerSuccess": "تم إنشاء الحساب بنجاح! تم إرسال رابط التفعيل إلى بريدك الإلكتروني: {email}<br>تنبيه: يرجى التحقق من مجلد البريد العشوائي (Spam) إذا لم تصلك الرسالة خلال دقائق",
-          "cancelBtn": "إلغاء"
+          "cancelBtn": "إلغاء",
+          "footerPolicy": "شروط الاستخدام وسياسة الخصوصية", // (جديد)
+          "footerAbout": "عن Skydata" // (جديد)
       },
       "en": {
           "pageTitle": "SkyData - Login / Sign Up",
@@ -500,7 +628,9 @@
           "nameRequiredError": "Please enter your first and last name",
           "loginSuccess": "Login successful! Redirecting",
           "registerSuccess": "Account created successfully! A verification link has been sent to your email: {email}<br>Note: Please check your spam folder if the message does not arrive within minutes",
-          "cancelBtn": "Cancel"
+          "cancelBtn": "Cancel",
+          "footerPolicy": "Terms of Use and Privacy Policy", // (جديد)
+          "footerAbout": "About Skydata" // (جديد)
       }
   };
   
@@ -651,7 +781,7 @@
         msgEl.style.display = 'block';
         
         setTimeout(() => {
-             // * ⬅️ (نفس الإصلاح من المرة السابقة)
+             // * ⬅️ (إصلاح زر العودة)
              window.location.replace("menu.html"); 
         }, 1500); 
         
@@ -676,6 +806,7 @@
              window.OneSignal.login(user.uid); 
              window.OneSignal.User.addEmail(email); 
              if (subscribe) {
+                // * ⬅️ (إصلاح OneSignal) - هذا يضيف الوسم فوراً
                 window.OneSignal.User.addTag("subscribed", "true");
              }
         } else {
@@ -687,7 +818,7 @@
         msgEl.style.display = 'block';
         
         setTimeout(() => {
-             // * ⬅️ (نفس الإصلاح من المرة السابقة)
+             // * ⬅️ (إصلاح زر العودة)
              window.location.replace("menu.html"); 
         }, 3000); 
       }
@@ -713,16 +844,21 @@
   // التحقق من حالة المستخدم عند تحميل الصفحة
   onAuthStateChanged(auth, user => {
       if (user) {
-          // * ⬅️ (نفس الإصلاح من المرة السابقة)
+          // * ⬅️ (إصلاح زر العودة)
           window.location.replace("menu.html");
       } else {
-          toggleMode(); 
-          window.onload = () => { setLanguage(currentLang); };
+          // لا تفعل شيئاً، ابقَ في صفحة تسجيل الدخول
       }
   });
   
   // تشغيل اللغة الافتراضية
   setLanguage(currentLang);
+  
+  // * ⬅️ (إصلاح) - تبديل الوضع عند التحميل (كان مفقوداً)
+  toggleMode();
+  toggleMode(); // استدعاء مرتين لإرجاعه لوضع تسجيل الدخول الافتراضي
 </script>
+
+
 </body>
 </html>

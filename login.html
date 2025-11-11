@@ -471,13 +471,7 @@
         </div>
 
 
-        <div class="checkbox-group terms-acceptance" id="subscriptionBox" style="display: none;">
-            <label>
-                <input type="checkbox" id="subscribeEmail" checked>
-                <span data-lang-key="subMarketing">أوافق على استلام البريد التسويقي والأخبار (اختياري)</span>
-            </label>
-        </div>
-
+        
         <div class="checkbox-group terms-acceptance">
             <label>
                 <input type="checkbox" id="acceptTerms" required>
@@ -498,9 +492,6 @@
         </p>
     </form>
 
-    <div class="verification-code">
-        رمز التحقق المطلوب من OneSignal: <strong>OS7K3L</strong>
-    </div>
 
     <div class="status-box status-message" id="msg" style="display: none;"></div>
     <div class="status-box status-error" id="err" style="display: none;"></div>
@@ -530,13 +521,6 @@
   // 2. (تم حذف إعدادات Firebase المكررة)
   // **************************************************
 
-  // 3. دالة تحديث قاعدة البيانات
-  function updateSubscription(uid, subscribe) {
-    update(ref(db, 'users/' + uid), { 
-      subscribe_marketing: subscribe,
-      timestamp: Date.now()
-    });
-  }
   
   // **************************************************
   // 4. منطق التطبيق (كما كان، لكن بدون التكرار)
@@ -564,8 +548,6 @@
 
   const submitBtn = document.getElementById('submitBtn');
   const toggleModeLink = document.getElementById('toggleModeLink');
-  const subscriptionBox = document.getElementById('subscriptionBox');
-  const subscribeEmailCheckbox = document.getElementById('subscribeEmail');
   const acceptTermsCheckbox = document.getElementById('acceptTerms');
   const loadingSpinner = document.getElementById('loadingSpinner');
   const msgEl = document.getElementById('msg');
@@ -805,10 +787,7 @@
         if (window.OneSignal) {
              window.OneSignal.login(user.uid); 
              window.OneSignal.User.addEmail(email); 
-             if (subscribe) {
-                // * ⬅️ (إصلاح OneSignal) - هذا يضيف الوسم فوراً
-                window.OneSignal.User.addTag("subscribed", "true");
-             }
+             
         } else {
             console.warn("OneSignal SDK not loaded yet.");
         }

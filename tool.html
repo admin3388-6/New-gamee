@@ -115,8 +115,17 @@
         [dir="ltr"] .sidebar li a.loading::after { right: auto; left: 15px; }
         @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
         .ai-icon { height: 20px; width: 20px; margin-inline-start: 8px; filter: drop-shadow(0 0 3px var(--ai-glow-yellow)); }
-        .ai-button-glow { animation: ai-glow-pulse 2s infinite ease-in-out; border: 1px solid transparent; }
-        @keyframes ai-glow-pulse { 0% { box-shadow: 0 0 5px var(--ai-glow-yellow), 0 0 10px var(--ai-glow-yellow); border-color: var(--ai-glow-yellow); } 50% { box-shadow: 0 0 10px var(--ai-glow-orange), 0 0 20px var(--ai-glow-orange); border-color: var(--ai-glow-orange); } 100% { box-shadow: 0 0 5px var(--ai-glow-yellow), 0 0 10px var(--ai-glow-yellow); border-color: var(--ai-glow-yellow); } }
+        
+        /* (تعديل كلاس ai-button-glow ليؤثر على الصورة مباشرة) */
+        .ai-button-glow { animation: ai-glow-pulse 2s infinite ease-in-out; }
+        .ai-button-glow img { border-radius: 8px; } /* للحفاظ على حدود الصورة */
+
+        @keyframes ai-glow-pulse { 
+            0% { filter: drop-shadow(0 0 5px var(--ai-glow-yellow)) drop-shadow(0 0 10px var(--ai-glow-yellow)); } 
+            50% { filter: drop-shadow(0 0 10px var(--ai-glow-orange)) drop-shadow(0 0 20px var(--ai-glow-orange)); } 
+            100% { filter: drop-shadow(0 0 5px var(--ai-glow-yellow)) drop-shadow(0 0 10px var(--ai-glow-yellow)); } 
+        }
+
         .overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
@@ -194,7 +203,7 @@
         .tool-header .powered-by img {
             height: 40px; /* حجم اللوغو */
             border-radius: 8px;
-            /* (تم تطبيق التوهج عبر كلاس ai-button-glow) */
+            /* (تم تطبيق التوهج عبر كلاس ai-button-glow مباشرة على img) */
         }
         .tool-header .free-badge {
             display: inline-block;
@@ -341,6 +350,12 @@
                         <span data-lang-key="ctaButtonEditor">محرر الصور</span>
                     </a>
                 </li>
+                <li>
+                    <a href="tool.html" class="tool-link ai-button-glow">
+                        <i class="fas fa-camera-retro"></i> <span data-lang-key="ctaButtonImgToPrompt">تحويل صور إلى برومبيت</span>
+                        <img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="AI Icon" class="ai-icon">
+                    </a>
+                </li>
             </ul>
         </nav>
         <div class="overlay" id="sidebar-overlay"></div>
@@ -375,7 +390,9 @@
             </div>
         </footer>
 
-    </div> <script type="module">
+    </div> 
+    
+    <script type="module">
         // --- 1. استيراد (كما هو) ---
         import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
         import { ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
@@ -394,10 +411,9 @@
                 "ctaButtonSize": "تغيير حجم الصور",
                 "ctaButtonZoom": "تكبير الصور", 
                 "ctaButtonEditor": "محرر الصور",
+                "ctaButtonImgToPrompt": "تحويل صور إلى برومبيت", // مفتاح جديد
                 "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
                 "footerAbout": "عن Skydata",
-                // "loginButton": "تسجيل الدخول", (لم نعد بحاجة لها هنا)
-                // "menuButton": "القائمة", (لم نعد بحاجة لها هنا)
                 "toolTitle": "أداة وصف الصور بدقة عالية",
                 "poweredBy": "مدعوم ب Crystal 1",
                 "free": "مجاناً"
@@ -413,10 +429,9 @@
                 "ctaButtonSize": "Image Resizer",
                 "ctaButtonZoom": "Image Upscaler", 
                 "ctaButtonEditor": "Photo Editor",
+                "ctaButtonImgToPrompt": "Convert Images to Prompt", // مفتاح جديد
                 "footerPolicy": "Terms of Use and Privacy Policy",
                 "footerAbout": "About Skydata",
-                // "loginButton": "Login", (لم نعد بحاجة لها هنا)
-                // "menuButton": "Menu", (لم نعد بحاجة لها هنا)
                 "toolTitle": "High-Accuracy Image Captioning Tool",
                 "poweredBy": "Powered by Crystal 1",
                 "free": "Free"
@@ -445,16 +460,14 @@
                     
                     if (target) {
                          // تجنب استبدال الأيقونات في العناوين أو الروابط
-                        if (target.children.length > 0 && (target.tagName === 'H3' || target.tagName === 'A')) {
-                             // ابحث عن عقدة النص فقط
-                             Array.from(target.childNodes).forEach(node => {
-                                if (node.nodeType === Node.TEXT_NODE) {
-                                    node.textContent = ' ' + text + ' '; // إضافة مسافات
-                                } else if (node.tagName === 'SPAN') {
-                                    node.innerHTML = text; // للحالة العادية
-                                }
-                             });
-                        } else {
+                         // إذا كان العنصر يحتوي على سبان، نحدث السببان فقط
+                        if (target.tagName === 'H3' && target.querySelector('span')) {
+                            target.querySelector('span').innerHTML = text;
+                        } else if (element.classList.contains('tool-link') && element.querySelector('span')) {
+                            element.querySelector('span').innerHTML = text;
+                        }
+                         else {
+                            // للحالات الأخرى التي لا تحتوي على سبان داخلها أو تريد تحديث العنصر نفسه
                             target.innerHTML = text;
                         }
                     }
@@ -511,3 +524,4 @@
     </script>
 </body>
 </html>
+```http://googleusercontent.com/image_generation_content/0

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>SkyData - شراء الباقات</title>
+    <style>
+        /* (CSS من login.html) ... */
+        .pricing-container {
+            display: flex; flex-direction: column; /* جعل الباقات عمودية */
+            gap: 25px; padding: 20px;
+        }
+        .plan-card {
+            background-color: var(--bg-surface); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 25px; text-align: center;
+        }
+        .plan-card h3 { font-size: 1.8em; color: var(--primary-color); margin-top: 0; }
+        .plan-card .price { font-size: 2.5em; font-weight: bold; }
+        /* حاوية زر PayPal */
+        .paypal-button-container {
+            margin-top: 20px;
+            z-index: 10; /* ضمان ظهور الزر */
+        }
+    </style>
+    
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+</head>
+<body>
+    <div id="app-container">
+        <main>
+            <div class="main-wrapper">
+                <h1 style="text-align: center;">اختر الباقة المناسبة لك</h1>
+                <p id="purchase-status" style="text-align: center; color: var(--text-muted);">
+                    يجب أن تكون مسجلاً الدخول للشراء...
+                </p>
+
+                <div class="pricing-container">
+                    <div class="plan-card">
+                        <h3>20 استخدام</h3>
+                        <div class="price">$1.99</div>
+                        <div class="paypal-button-container" id="paypal-btn-20" data-price="1.99" data-uses="20"></div>
+                    </div>
+                    
+                    <div class="plan-card">
+                        <h3>50 استخدام</h3>
+                        <div class="price">$3.99</div>
+                        <div class="paypal-button-container" id="paypal-btn-50" data-price="3.99" data-uses="50"></div>
+                    </div>
+                </div>
+                <div class="loader-spinner" id="loadingSpinner" style="display: none; margin: 20px auto;"></div>
+            </div>
+        </main>
+        </div>
+
+<script type="module">
+    import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const purchaseStatus = document.getElementById('purchase-status');
+    const paypalContainers = document.querySelectorAll('.paypal-button-container');
+    let currentUser = null;
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            purchaseStatus.textContent = "أهلاً بك، " + (user.displayName || user.email);
+            // الآن قم بعرض أزرار PayPal
+            renderPayPalButtons(user.uid);
+        } else {
+            currentUser = null;
+            purchaseStatus.textContent = "الرجاء تسجيل الدخول أولاً لتتمكن من الشراء";
+        }
+    });
+
+    function renderPayPalButtons(userId) {
+        paypalContainers.forEach(container => {
+            const price = container.dataset.price;
+            const uses = container.dataset.uses;
+
+            paypal.Buttons({
+                // 1. إخبار PayPal ما هي تفاصيل الطلب
+                createOrder: (data, actions) => {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: price // السعر من الزر
+                            },
+                            // إرسال البيانات إلى الخادم السري
+                            custom_id: JSON.stringify({ userId: userId, uses: uses })
+                        }]
+                    });
+                },
+                
+                // 2. عند موافقة العميل على الدفع
+                onApprove: async (data, actions) => {
+                    loadingSpinner.style.display = 'block';
+                    purchaseStatus.textContent = "جاري تأكيد الدفع... لا تغلق الصفحة";
+
+                    try {
+                        // 3. استدعاء الخادم السري (Vercel) لتأكيد الدفع
+                        const response = await fetch('/api/capture-paypal', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                orderID: data.orderID,
+                                userId: userId,
+                                uses: uses
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // 4. نجح كل شيء!
+                            loadingSpinner.style.display = 'none';
+                            purchaseStatus.textContent = "تم الشراء بنجاح! يتم توجيهك إلى لوحة التحكم";
+                            setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+                        } else {
+                            throw new Error(result.message);
+                        }
+                    } catch (error) {
+                        loadingSpinner.style.display = 'none';
+                        purchaseStatus.textContent = "خطأ فادح: " + error.message;
+                    }
+                },
+                
+                // 5. عند حدوث خطأ في نافذة PayPal
+                onError: (err) => {
+                    console.error("خطأ من PayPal:", err);
+                    purchaseStatus.textContent = "حدث خطأ أثناء عملية الدفع";
+                }
+            }).render(`#${container.id}`);
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>SkyData - لوحة التحكم</title>
+    <style>
+        /* (CSS من login.html) */
+        /* ... */
+        /* تصميم جدول المفاتيح */
+        .keys-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+        }
+        .keys-table th, .keys-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+        }
+        .keys-table th {
+            background-color: rgba(0,0,0,0.3);
+            color: var(--primary-color);
+        }
+        .keys-table td {
+            color: var(--text-muted);
+        }
+        .api-key-cell {
+            font-family: monospace;
+            font-size: 1.1em;
+            color: var(--text-color);
+            word-break: break-all;
+        }
+        .copy-btn {
+            background: none; border: 1px solid var(--primary-color);
+            color: var(--primary-color); border-radius: 5px; cursor: pointer;
+        }
+        .copy-btn:hover { background-color: var(--primary-color); color: white; }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <main>
+            <div class="main-wrapper">
+                <h1 style="text-align: center;">مفاتيح API الخاصة بك</h1>
+                <p id="loading-keys" style="text-align: center;">جاري تحميل مفاتيحك...</p>
+
+                <div id="keys-container">
+                    </div>
+                
+                <a href="tool.html" class="submit" style="text-decoration: none; margin-top: 20px;">
+                    اذهب إلى الأداة
+                </a>
+            </div>
+        </main>
+        
+        </div>
+
+    <script type="module">
+        import { app, database, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        // استيراد الدوال اللازمة لقراءة البيانات
+        import { ref, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+        const loadingKeys = document.getElementById('loading-keys');
+        const keysContainer = document.getElementById('keys-container');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // المستخدم مسجل دخوله، قم بجلب مفاتيحه
+                loadUserKeys(user.uid);
+            } else {
+                // المستخدم غير مسجل، أعده لصفحة الدخول
+                window.location.replace("login.html");
+            }
+        });
+
+        async function loadUserKeys(uid) {
+            try {
+                // هذا هو الاستعلام: ابحث في "api_keys" عن كل مفتاح
+                // حيث "owner_uid" يساوي "uid" الخاص بالمستخدم الحالي
+                const dbRef = ref(database, 'api_keys');
+                const keysQuery = query(dbRef, orderByChild('owner_uid'), equalTo(uid));
+                
+                const snapshot = await get(keysQuery);
+
+                if (snapshot.exists()) {
+                    let tableHtml = `<table class="keys-table">
+                                        <thead>
+                                            <tr><th>المفتاح (API Key)</th><th>الاستخدامات المتبقية</th><th>نسخ</th></tr>
+                                        </thead>
+                                        <tbody>`;
+                    
+                    snapshot.forEach((childSnapshot) => {
+                        const key = childSnapshot.key; // هذا هو المفتاح العشوائي
+                        const data = childSnapshot.val(); // {"uses": 20, ...}
+                        
+                        tableHtml += `<tr>
+                                        <td class="api-key-cell">${key}</td>
+                                        <td>${data.uses}</td>
+                                        <td><button class="copy-btn" data-key="${key}">نسخ</button></td>
+                                      </tr>`;
+                    });
+                    
+                    tableHtml += `</tbody></table>`;
+                    keysContainer.innerHTML = tableHtml;
+                    loadingKeys.textContent = "هذه هي مفاتيحك. انسخها لاستخدامها في الأداة";
+
+                } else {
+                    loadingKeys.innerHTML = `لم يتم العثور على مفاتيح لك. <br> <a href="pricing.html">اشتر باقة الآن</a>`;
+                }
+            } catch (error) {
+                loadingKeys.textContent = "حدث خطأ أثناء جلب المفاتيح: " + error.message;
+            }
+        }
+        
+        // إضافة حدث "نسخ" للأزرار
+        keysContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('copy-btn')) {
+                const keyToCopy = e.target.dataset.key;
+                navigator.clipboard.writeText(keyToCopy).then(() => {
+                    e.target.textContent = "تم النسخ!";
+                    setTimeout(() => { e.target.textContent = "نسخ"; }, 1500);
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>

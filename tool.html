@@ -2,26 +2,48 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>SkyData - أداة إنشاء الوصف</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyData - أداة Crystal 1</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    
+    <link rel="stylesheet" href="style.css">
+    
     <script
         type="module"
         src="https://gradio.s3-us-west-2.amazonaws.com/5.49.1/gradio.js"
     ></script>
 </head>
 <body>
-    <div id="app-container">
-        <main>
-            <div class="main-wrapper" style="max-width: 900px;">
-                <h1 style="text-align: center;">أداة Crystal 1 AI</h1>
-                <p style="text-align: center; color: var(--text-muted);">
-                    الصق مفتاح API الخاص بك (من <a href="dashboard.html">لوحة التحكم</a>) واستخدم الأداة
-                </p>
 
-                <gradio-app src="https://skydata001-crystal-1-image-to-prombite.hf.space"></gradio-app>
+<div id="app-container">
+  <header>
+      <div class="logo-container">
+          <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData" class="logo-shine">
+          <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata" class="logo-shine">
+      </div>
+      <div class="lang-switcher">
+          <a href="login.html" style="color: white; border: 1px solid white; padding: 4px 7px; border-radius: 5px; text-decoration: none;">تسجيل الدخول</a>
+      </div>
+  </header>
 
-            </div>
-        </main>
-        
-        </div>
-</body>
+<main>
+  <div class="main-wrapper" style="max-width: 900px;">
+      <h1 style="text-align: center; color: var(--primary-color);">أداة Crystal 1 AI</h1>
+      <p style="text-align: center; color: var(--text-muted);">
+          استمتع بوصول مجاني وكامل للأداة
+      </p>
+
+      <gradio-app src="https://skydata001-crystal-1-image-to-prombite.hf.space"></gradio-app>
+
+  </div>
+</main>
+
+<footer>
+    <div class="footer-links-card">
+        <a href="Safety.html">شروط الاستخدام وسياسة الخصوصية</a>
+        <a href="aboutus.html">عن Skydata</a>
+    </div>
+</footer>
+
+</div> </body>
 </html>

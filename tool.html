@@ -32,7 +32,9 @@
             --ai-glow-orange: #ec4899;
             --success-color: #28a745; /* (لأجل كلمة "مجاناً") */
         }
+        /* --- (إضافة لإزالة التحديد الأزرق - طلب #8) --- */
         * { -webkit-tap-highlight-color: rgba(0, 0, 0, 0); tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; }
+        
         #app-container {
             width: 100%; overflow-x: hidden; position: relative; 
             transform: translate3d(0, 0, 0); min-height: 100vh;
@@ -83,23 +85,9 @@
         }
         .lang-switcher a:hover { background-color: rgba(255,255,255,0.1); }
         .lang-switcher a.active { background-color: var(--primary-color); color: #ffffff; }
-        .auth-button {
-            display: flex; align-items: center; text-decoration: none; 
-            color: var(--primary-color); font-weight: bold; 
-            cursor: pointer; padding: 7px 12px; border-radius: 5px;
-            border: 1px solid var(--primary-color);
-            background-color: transparent; transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-        .auth-button:hover { background-color: var(--primary-color); color: #ffffff; }
-        .auth-button i { margin-inline-end: 8px; }
-        .sidebar-toggle-btn {
-            background: none; border: 1px solid var(--text-muted);
-            color: var(--text-muted); font-size: 1.2em;
-            width: 40px; height: 40px; border-radius: 50%;
-            cursor: pointer; transition: all 0.2s ease;
-        }
-        .sidebar-toggle-btn:hover { color: var(--text-color); border-color: var(--text-color); }
+        
+        /* (تم حذف كود .auth-button و .sidebar-toggle-btn القديم) */
+
         .sidebar {
             position: fixed; top: 0; width: 300px; height: 100vh;
             background-color: var(--bg-surface); box-shadow: -5px 0 15px rgba(0,0,0,0.5);
@@ -163,15 +151,12 @@
         @media (max-width: 600px) {
             .container { padding: 10px; }
             header { padding: 10px 15px; }
-            .auth-button span { display: none; }
-            .auth-button i { margin-inline-end: 0; font-size: 1.1em; }
             .sidebar { width: 280px; right: -320px; }
             [dir="ltr"] .sidebar { right: auto; left: -320px; }
         }
         @media (max-width: 380px) {
             .logo-container img { height: 30px; }
             .lang-switcher a { padding: 3px 5px; font-size: 0.9em; }
-            .auth-button { padding: 3px 6px; }
             .header-controls { gap: 8px; }
         }
         /* --- (نهاية CSS المنسوخ) --- */
@@ -209,6 +194,7 @@
         .tool-header .powered-by img {
             height: 40px; /* حجم اللوغو */
             border-radius: 8px;
+            /* (تم تطبيق التوهج عبر كلاس ai-button-glow) */
         }
         .tool-header .free-badge {
             display: inline-block;
@@ -229,6 +215,53 @@
             overflow: hidden; /* لإخفاء الحواف الحادة للأداة */
             border: 1px solid var(--border-color);
         }
+        
+        /* --- 3. CSS جديد لأيقونة القائمة (طلب #7) --- */
+        #checkbox {
+          display: none;
+        }
+
+        .toggle {
+          position: relative;
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition-duration: .3s;
+        }
+
+        .bars {
+          width: 100%;
+          height: 4px;
+          background-color: rgb(253, 255, 243); /* لون أبيض */
+          border-radius: 5px;
+          transition-duration: .3s;
+        }
+
+        #checkbox:checked + .toggle #bar2 {
+          transform: translateY(14px) rotate(60deg);
+          margin-left: 0;
+          transform-origin: right;
+          transition-duration: .3s;
+          z-index: 2;
+        }
+
+        #checkbox:checked + .toggle #bar1 {
+          transform: translateY(28px) rotate(-60deg);
+          transition-duration: .3s;
+          transform-origin: left;
+          z-index: 1;
+        }
+
+        #checkbox:checked + .toggle {
+          transform: rotate(-90deg);
+        }
+        /* --- (نهاية CSS أيقونة القائمة) --- */
+
     </style>
 </head>
 <body>
@@ -245,28 +278,70 @@
                     <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
                     <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
                 </div>
-                <div class="auth-controls">
-                    <a href="login.html" class="auth-button" id="login-btn">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span data-lang-key="loginButton">تسجيل الدخول</span>
-                    </a>
-                    <a href="menu.html" class="auth-button" id="menu-btn" style="display: none;">
-                        <i class="fas fa-bars"></i>
-                        <span data-lang-key="menuButton">القائمة</span>
-                    </a>
-                </div>
-                <button class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Open tools menu">
-                    <i class="fas fa-tools"></i>
-                </button>
+                
+                <input id="checkbox" type="checkbox">
+                <label class="toggle" for="checkbox" id="sidebar-toggle"> <div id="bar1" class="bars"></div>
+                    <div id="bar2" class="bars"></div>
+                    <div id="bar3" class="bars"></div>
+                </label>
+
             </div>
         </header>
 
         <nav class="sidebar" id="tools-sidebar">
             <h3 data-lang-key="toolsTitle"><i class="fas fa-cogs"></i> <span data-lang-key="toolsTitle">أدواتنا السحابية</span></h3>
             <ul>
-                <li><a href="remove.html" class="tool-link ai-button-glow"><i class="fas fa-cut"></i> <span data-lang-key="ctaButtonRemoveBg">إزالة خلفية الصور</span><img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="AI Icon" class="ai-icon"></a></li>
-                <li><a href="pdf.html" class="tool-link"><i class="fas fa-file-pdf"></i> <span data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</span></a></li>
-                </ul>
+                <li>
+                    <a href="remove.html" class="tool-link ai-button-glow">
+                        <i class="fas fa-cut"></i>
+                        <span data-lang-key="ctaButtonRemoveBg">إزالة خلفية الصور</span>
+                        <img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="AI Icon" class="ai-icon">
+                    </a>
+                </li>
+                <li>
+                    <a href="pdf.html" class="tool-link">
+                        <i class="fas fa-file-pdf"></i>
+                        <span data-lang-key="ctaButtonPdf">تحويل صور إلى PDF</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="imgdv.html" class="tool-link">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        <span data-lang-key="ctaButtonWebp">تحويل الصور الى webp</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="imgtag.html" class="tool-link">
+                        <i class="fas fa-link"></i>
+                        <span data-lang-key="ctaButtonImgtag">تحويل الصور الى روابط</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="qr.html" class="tool-link">
+                        <i class="fas fa-qrcode"></i>
+                        <span data-lang-key="ctaButtonQr">صانع QR Code</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="size.html" class="tool-link">
+                        <i class="fas fa-ruler-combined"></i>
+                        <span data-lang-key="ctaButtonSize">تغيير حجم الصور</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zoom.html" class="tool-link ai-button-glow">
+                        <i class="fas fa-search-plus"></i>
+                        <span data-lang-key="ctaButtonZoom">تكبير الصور</span>
+                        <img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="AI Icon" class="ai-icon">
+                    </a>
+                </li>
+                <li>
+                    <a href="editor.html" class="tool-link">
+                        <i class="fas fa-magic"></i>
+                        <span data-lang-key="ctaButtonEditor">محرر الصور</span>
+                    </a>
+                </li>
+            </ul>
         </nav>
         <div class="overlay" id="sidebar-overlay"></div>
 
@@ -278,7 +353,7 @@
                     <h1 data-lang-key="toolTitle">أداة وصف الصور بدقة عالية</h1>
                     <div class="powered-by">
                         <span data-lang-key="poweredBy">مدعوم ب Crystal 1</span>
-                        <img src="https://i.ibb.co/rRKDDrm2/b871a4e8e995.png" alt="Crystal 1 Logo">
+                        <img src="https://i.ibb.co/rRKDDrm2/b871a4e8e995.png" alt="Crystal 1 Logo" class="ai-button-glow">
                     </div>
                     <div class="free-badge" data-lang-key="free">مجاناً</div>
                 </div>
@@ -313,12 +388,16 @@
                 "toolsTitle": "أدواتنا السحابية",
                 "ctaButtonRemoveBg": "إزالة خلفية الصور", 
                 "ctaButtonPdf": "تحويل صور إلى PDF",
-                // (إضافة باقي الأدوات)
+                "ctaButtonWebp": "تحويل الصور الى webp",
+                "ctaButtonImgtag": "تحويل الصور الى روابط",
+                "ctaButtonQr": "صانع QR Code",
+                "ctaButtonSize": "تغيير حجم الصور",
+                "ctaButtonZoom": "تكبير الصور", 
+                "ctaButtonEditor": "محرر الصور",
                 "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
                 "footerAbout": "عن Skydata",
-                "loginButton": "تسجيل الدخول",
-                "menuButton": "القائمة",
-                // *** مفاتيح جديدة ***
+                // "loginButton": "تسجيل الدخول", (لم نعد بحاجة لها هنا)
+                // "menuButton": "القائمة", (لم نعد بحاجة لها هنا)
                 "toolTitle": "أداة وصف الصور بدقة عالية",
                 "poweredBy": "مدعوم ب Crystal 1",
                 "free": "مجاناً"
@@ -328,12 +407,16 @@
                 "toolsTitle": "Our Cloud Tools",
                 "ctaButtonRemoveBg": "Remove Background", 
                 "ctaButtonPdf": "Convert Images to PDF",
-                // (إضافة باقي الأدوات)
+                "ctaButtonWebp": "Convert Images to WEBP",
+                "ctaButtonImgtag": "Convert Images to Links",
+                "ctaButtonQr": "QR Code Generator",
+                "ctaButtonSize": "Image Resizer",
+                "ctaButtonZoom": "Image Upscaler", 
+                "ctaButtonEditor": "Photo Editor",
                 "footerPolicy": "Terms of Use and Privacy Policy",
                 "footerAbout": "About Skydata",
-                "loginButton": "Login",
-                "menuButton": "Menu",
-                // *** مفاتيح جديدة ***
+                // "loginButton": "Login", (لم نعد بحاجة لها هنا)
+                // "menuButton": "Menu", (لم نعد بحاجة لها هنا)
                 "toolTitle": "High-Accuracy Image Captioning Tool",
                 "poweredBy": "Powered by Crystal 1",
                 "free": "Free"
@@ -356,43 +439,68 @@
                     
                     if (element.classList.contains('tool-link')) {
                         target = element.querySelector('span');
-                    } else if (element.tagName === 'H1' || element.tagName === 'DIV') {
-                        target = element; // للترويسة الجديدة
+                    } else if (element.tagName === 'H1' || element.tagName === 'DIV' || element.tagName === 'A') {
+                        target = element; // للترويسة الجديدة وروابط الفوتر
                     }
                     
                     if (target) {
-                        target.innerHTML = text;
+                         // تجنب استبدال الأيقونات في العناوين أو الروابط
+                        if (target.children.length > 0 && (target.tagName === 'H3' || target.tagName === 'A')) {
+                             // ابحث عن عقدة النص فقط
+                             Array.from(target.childNodes).forEach(node => {
+                                if (node.nodeType === Node.TEXT_NODE) {
+                                    node.textContent = ' ' + text + ' '; // إضافة مسافات
+                                } else if (node.tagName === 'SPAN') {
+                                    node.innerHTML = text; // للحالة العادية
+                                }
+                             });
+                        } else {
+                            target.innerHTML = text;
+                        }
                     }
                 }
             });
+             // تحديث خاص لـ data-lang-key="toolsTitle" الذي يحتوي على SPAN
+            const toolsTitleSpan = document.querySelector('h3[data-lang-key="toolsTitle"] span');
+            if (toolsTitleSpan) {
+                toolsTitleSpan.innerHTML = translations[lang]["toolsTitle"];
+            }
         }
         setLanguage(currentLang); 
 
-        // --- 3. التحقق من تسجيل الدخول (كما هو) ---
-        const loginBtn = document.getElementById('login-btn');
-        const menuBtn = document.getElementById('menu-btn');
-        
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // المستخدم مسجل دخوله
-                loginBtn.style.display = 'none';
-                menuBtn.style.display = 'flex';
-            } else {
-                // المستخدم غير مسجل دخوله
-                loginBtn.style.display = 'flex';
-                menuBtn.style.display = 'none';
-            }
-        });
+        // --- 3. التحقق من تسجيل الدخول (تم حذفه - طلب #6) ---
+        // (تم حذف كود onAuthStateChanged بالكامل لأنه كان يتحكم فقط بالأزرار المحذوفة)
         
         // --- 4. منطق الشريط الجانبي (كما هو) ---
         const sidebar = document.getElementById('tools-sidebar');
-        const toggleBtn = document.getElementById('sidebar-toggle');
+        const toggleBtn = document.getElementById('sidebar-toggle'); // (سيعمل لأننا وضعنا الـ ID على الـ Label)
         const overlay = document.getElementById('sidebar-overlay');
         const toolLinks = document.querySelectorAll('.tool-link');
-        function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('show'); }
-        function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('show'); }
-        toggleBtn.addEventListener('click', openSidebar);
+        const checkbox = document.getElementById('checkbox'); // (للتحكم بحالة الأيقونة)
+
+        function openSidebar() { 
+            sidebar.classList.add('open'); 
+            overlay.classList.add('show'); 
+            // checkbox.checked = true; // (اختياري: مزامنة الأيقونة إذا فتحت بوسيلة أخرى)
+        }
+        function closeSidebar() { 
+            sidebar.classList.remove('open'); 
+            overlay.classList.remove('show'); 
+            checkbox.checked = false; // (مهم: أغلق الأيقونة عند إغلاق القائمة)
+        }
+
+        // (الـ Label سيقوم بتشغيل هذا عند النقر)
+        toggleBtn.addEventListener('click', (e) => {
+            // تحقق من حالة الـ checkbox *قبل* النقر
+            if (checkbox.checked) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
         overlay.addEventListener('click', closeSidebar);
+        
         toolLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 this.classList.add('loading');

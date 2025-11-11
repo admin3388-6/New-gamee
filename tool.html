@@ -120,11 +120,13 @@
         .ai-button-glow { animation: ai-glow-pulse 2s infinite ease-in-out; }
         .ai-button-glow img { border-radius: 8px; } /* للحفاظ على حدود الصورة */
 
+        /* --- (تعديل التوهج - طلب #11) --- */
         @keyframes ai-glow-pulse { 
-            0% { filter: drop-shadow(0 0 5px var(--ai-glow-yellow)) drop-shadow(0 0 10px var(--ai-glow-yellow)); } 
-            50% { filter: drop-shadow(0 0 10px var(--ai-glow-orange)) drop-shadow(0 0 20px var(--ai-glow-orange)); } 
-            100% { filter: drop-shadow(0 0 5px var(--ai-glow-yellow)) drop-shadow(0 0 10px var(--ai-glow-yellow)); } 
+            0% { filter: drop-shadow(0 0 3px var(--ai-glow-yellow)) drop-shadow(0 0 5px var(--ai-glow-yellow)); } 
+            50% { filter: drop-shadow(0 0 5px var(--ai-glow-orange)) drop-shadow(0 0 10px var(--ai-glow-orange)); } 
+            100% { filter: drop-shadow(0 0 3px var(--ai-glow-yellow)) drop-shadow(0 0 5px var(--ai-glow-yellow)); } 
         }
+        /* --- (نهاية تعديل التوهج) --- */
 
         .overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -352,7 +354,8 @@
                 </li>
                 <li>
                     <a href="tool.html" class="tool-link ai-button-glow">
-                        <i class="fas fa-camera-retro"></i> <span data-lang-key="ctaButtonImgToPrompt">تحويل صور إلى برومبيت</span>
+                        <i class="fas fa-camera-retro"></i> 
+                        <span data-lang-key="ctaButtonImgToPrompt">تحويل صور إلى برومبيت</span>
                         <img src="https://i.ibb.co/Y4PFgGHN/b087bb012988.png" alt="AI Icon" class="ai-icon">
                     </a>
                 </li>

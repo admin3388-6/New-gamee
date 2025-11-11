@@ -7,7 +7,6 @@
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-  /* * ⬇️⬇️⬇️ CSS جديد (من index.html) ⬇️⬇️⬇️ * */
   :root {
       --primary-color: #007bff;
       --primary-hover: #0056b3;
@@ -19,6 +18,8 @@
       --text-color: #e0e0e0;
       --text-muted: #aaa;
       --border-color: #333;
+      --error-color: #EF665B;
+      --success-color: #28a745;
   }
 
   * {
@@ -42,8 +43,8 @@
   body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     direction: rtl; 
-    background-color: var(--dark-bg); /* * (مُعدل) * */
-    color: var(--text-color); /* * (مُعدل) * */
+    background-color: var(--dark-bg); 
+    color: var(--text-color); 
     margin: 0; padding: 0; 
   }
   
@@ -70,19 +71,16 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
   }
-  /* * ⬆️⬆️⬆️ نهاية CSS الجديد ⬆️⬆️⬆️ * */
 
-
-  /* --- شريط الرأس (Header) (مُعدل) --- */
   header {
       display: flex; justify-content: space-between; align-items: center;
       padding: 15px 20px; 
-      background-color: rgba(26, 26, 46, 0.7); /* * (مُعدل) * */
-      backdrop-filter: blur(10px); /* * (جديد) * */
-      border-bottom: 1px solid var(--border-color); /* * (مُعدل) * */
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3); /* * (مُعدل) * */
+      background-color: rgba(26, 26, 46, 0.7); 
+      backdrop-filter: blur(10px); 
+      border-bottom: 1px solid var(--border-color); 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3); 
       width: 100%;
-      position: sticky; /* * (جديد) * */
+      position: sticky; 
       top: 0;
       z-index: 100;
   }
@@ -128,31 +126,28 @@
   }
   .lang-switcher a.active { background-color: var(--primary-color); color: #ffffff; }
 
-
-  /* --- حاوية الصفحة (جديد) --- */
   main {
-      flex-grow: 1; /* يدفع الفوتر للأسفل */
+      flex-grow: 1; 
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 30px 0; /* مسافة من الهيدر والفوتر */
+      padding: 30px 0; 
   }
   .main-wrapper {
       max-width: 400px;
       width: 95%; 
   }
 
-  /* --- تصميم النموذج (Form) (مُعدل) --- */
   .form {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 5px; /* (تقليل المسافة) */
       padding: 30px;
       border-radius: 10px; 
       position: relative;
-      background-color: var(--bg-surface); /* * (مُعدل) * */
-      color: var(--text-color); /* * (مُعدل) * */
-      border: 1px solid var(--border-color); /* * (مُعدل) * */
+      background-color: var(--bg-surface); 
+      color: var(--text-color); 
+      border: 1px solid var(--border-color); 
       box-shadow: 0 5px 15px rgba(0,0,0,0.5);
       animation: fadeIn 0.5s ease-out;
   }
@@ -164,7 +159,7 @@
       position: relative;
       display: flex;
       align-items: center;
-      color: var(--primary-color); /* * (مُعدل) * */
+      color: var(--primary-color); 
       margin-bottom: 5px;
       padding-right: 30px; 
   }
@@ -175,35 +170,35 @@
       width: 16px;
       border-radius: 50%;
       right: 0px;
-      background-color: var(--primary-color); /* * (مُعدل) * */
+      background-color: var(--primary-color); 
   }
   .title::after { animation: pulse 1s linear infinite; }
 
 
   .message-intro { 
       font-size: 14.5px;
-      color: var(--text-muted); /* * (مُعدل) * */
-      margin-bottom: 5px;
+      color: var(--text-muted); 
+      margin-bottom: 10px; /* (زيادة المسافة هنا) */
       text-align: right;
   }
   
-  /* --- عناصر الإدخال (مُعدلة) --- */
   .input-label {
-      background-color: rgba(0,0,0,0.2); /* * (مُعدل) * */
-      color: var(--text-color); /* * (مُعدل) * */
-      padding: 15px;
+      background-color: rgba(0,0,0,0.2); 
+      color: var(--text-color); 
+      /* * ⬇️ (إصلاح طلب 2) ⬇️ * */
+      padding: 12px 15px; /* (تقليل الارتفاع) */
+      /* * ⬆️ (نهاية الإصلاح) ⬆️ * */
       border-radius: 8px;
-      border: 1px solid var(--border-color); /* * (مُعدل) * */
+      border: 1px solid var(--border-color); 
       display: flex;
       flex-direction: column; 
       gap: 5px;
-      margin-bottom: 5px;
       transition: border-color 0.3s;
       position: relative;
   }
   .input-label span {
       font-size: 0.75em;
-      color: var(--text-muted); /* * (مُعدل) * */
+      color: var(--text-muted); 
       font-weight: 600;
   }
   .input-label input {
@@ -212,11 +207,34 @@
       background: transparent;
       border: none;
       outline: none;
-      color: var(--text-color); /* * (مُعدل) * */
+      color: var(--text-color); 
       font-size: 1em;
       direction: ltr;
+      padding-left: 40px; 
   }
-  .input-label:focus-within { border-color: var(--primary-color); } /* * (مُعدل) * */
+  [dir="rtl"] .input-label input {
+      padding-left: 15px;
+      padding-right: 40px;
+  }
+  
+  /* * ⬇️ (CSS جديد لرسائل الخطأ تحت الحقول) ⬇️ * */
+  .field-error-msg {
+      color: var(--error-color);
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-top: 5px;
+      margin-right: 5px;
+      display: none; /* (مخفي افتراضياً) */
+      text-align: right;
+  }
+  [dir="rtl"] .field-error-msg {
+      text-align: left;
+      margin-right: 0;
+      margin-left: 5px;
+  }
+  /* * ⬆️ (نهاية CSS الجديد) ⬆️ * */
+
+  .input-label:focus-within { border-color: var(--primary-color); } 
   
   .flex-group {
       display: flex;
@@ -240,22 +258,26 @@
 
   .toggle-password {
       position: absolute;
-      left: 10px;
+      right: 10px; 
+      left: auto;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: var(--text-muted); /* * (مُعدل) * */
+      color: var(--text-muted); 
       cursor: pointer;
       font-size: 1.1em;
       padding: 5px;
       transition: color 0.2s;
       z-index: 10;
   }
+  [dir="rtl"] .toggle-password {
+      right: auto;
+      left: 10px; 
+  }
   .toggle-password:hover { color: var(--primary-color); }
 
 
-  /* --- الأزرار (مُعدلة) --- */
   .submit {
       border: none;
       outline: none;
@@ -264,7 +286,7 @@
       color: #fff;
       font-size: 1.2em;
       font-weight: bold;
-      background-color: var(--primary-color); /* * (مُعدل) * */
+      background-color: var(--primary-color); 
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
       margin-top: 15px;
@@ -275,7 +297,7 @@
   }
   .submit i { margin-left: 10px; }
   .submit:hover {
-      background-color: var(--primary-hover); /* * (مُعدل) * */
+      background-color: var(--primary-hover); 
       transform: translateY(-1px);
       box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
   }
@@ -285,11 +307,11 @@
       display: block; 
       width: 100%;
       text-decoration: none;
-      border: 1px solid var(--border-color); /* * (مُعدل) * */
+      border: 1px solid var(--border-color); 
       outline: none;
       padding: 14px;
       border-radius: 8px;
-      color: var(--text-muted); /* * (مُعدل) * */
+      color: var(--text-muted); 
       font-size: 1.2em;
       font-weight: bold;
       background-color: transparent;
@@ -299,11 +321,36 @@
       text-align: center;
   }
   .cancel-button:hover {
-      background-color: var(--border-color); /* * (مُعدل) * */
-      color: var(--text-color); /* * (مُعدل) * */
+      background-color: var(--border-color); 
+      color: var(--text-color); 
   }
 
-  /* --- رابط التبديل و الاشتراك (مُعدل) --- */
+  .support-button {
+      display: flex; 
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      text-decoration: none;
+      border: 1px solid transparent; 
+      outline: none;
+      padding: 14px;
+      border-radius: 8px;
+      color: var(--primary-color); 
+      font-size: 1.2em;
+      font-weight: bold;
+      background-color: transparent;
+      cursor: pointer;
+      margin-top: 10px; 
+      transition: all 0.3s ease;
+      text-align: center;
+  }
+  .support-button:hover {
+      background-color: var(--bg-surface);
+      border-color: var(--border-color);
+  }
+
+
   .toggle-area { text-align: center; font-size: 0.95em; margin-top: 10px; }
   .toggle-area a { color: var(--primary-color); text-decoration: none; font-weight: 600; transition: color 0.3s; }
   .toggle-area a:hover { text-decoration: underline; color: #4da6ff; }
@@ -318,22 +365,16 @@
   .terms-acceptance {
       margin-top: 10px;
       padding: 10px;
-      border: 1px solid var(--border-color); /* * (مُعدل) * */
+      border: 1px solid var(--border-color); 
       border-radius: 8px;
-      background-color: rgba(0,0,0,0.2); /* * (مُعدل) * */
-  }
-  #subscriptionBox {
-      padding: 10px;
-      border: 1px solid var(--border-color); /* * (مُعدل) * */
-      border-radius: 8px;
-      background-color: rgba(0,0,0,0.2); /* * (مُعدل) * */
+      background-color: rgba(0,0,0,0.2); 
   }
   
   .checkbox-group label {
       display: flex;
       align-items: flex-start;
       font-weight: normal;
-      color: var(--text-muted); /* * (مُعدل) * */
+      color: var(--text-muted); 
       cursor: pointer;
       margin-top: 5px;
   }
@@ -344,7 +385,6 @@
   }
   .terms-acceptance a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
 
-  /* --- (ستايلات إضافية - كما هي) --- */
   .loader-spinner {
     border: 4px solid #333;
     border-top: 4px solid var(--primary-color);
@@ -366,24 +406,89 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
   }
-  .status-box { padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; font-weight: 600; }
-  .status-message { background: #1a4d2e; color: #d4edda; border: 1px solid #28a845; }
-  .status-error { background: #5c1818; color: #f8d7da; border: 1px solid #dc3545; }
-  .verification-code { padding: 10px; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:5px; text-align:center; font-size: 0.8em; color: var(--text-muted); margin-top: 20px; }
+  
+  /* (تم حذف .status-box القديمة) */
 
-  /* --- الفوتر (جديد) --- */
+  /* * ⬇️ (CSS جديد: نظام الإشعارات "Toast") ⬇️ * */
+  #global-toast {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      width: 320px;
+      max-width: 90%;
+      padding: 15px;
+      display: none; /* (سيتغير إلى flex عبر JS) */
+      align-items: center;
+      gap: 10px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      position: fixed; 
+      bottom: -100px; /* (يبدأ مخفياً) */
+      left: 50%; 
+      transform: translateX(-50%); 
+      z-index: 2000; 
+      transition: opacity 0.3s ease, bottom 0.3s ease;
+      opacity: 0;
+  }
+  #global-toast.show {
+      display: flex;
+      opacity: 1;
+      bottom: 20px;
+  }
+  #global-toast.success {
+      background: #E0F2E9;
+      border: 1px solid var(--success-color);
+  }
+  #global-toast.success .toast-title { color: #155724; }
+  #global-toast.success .toast-icon { fill: var(--success-color); }
+  #global-toast.error {
+      background: #FCE8DB;
+      border: 1px solid var(--error-color);
+  }
+  #global-toast.error .toast-title { color: #71192F; }
+  #global-toast.error .toast-icon { fill: var(--error-color); }
+
+  .toast-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0; 
+  }
+  .toast-title {
+      font-weight: 600;
+      font-size: 14px;
+      width: 100%; 
+      line-height: 1.4;
+  }
+  .toast-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.5em;
+      line-height: 1;
+      padding: 0 5px;
+      margin-left: auto;
+      flex-shrink: 0;
+  }
+  [dir="rtl"] .toast-close-btn {
+      margin-left: 0;
+      margin-right: auto;
+  }
+  #global-toast.success .toast-close-btn { color: #155724; }
+  #global-toast.error .toast-close-btn { color: #71192F; }
+  /* * ⬆️ (نهاية CSS الجديد) ⬆️ * */
+
+
   footer {
       background-color: rgba(26, 26, 46, 0.7); 
       backdrop-filter: blur(10px);
       color: #fff;
       padding: 30px 20px;
       text-align: center;
-      margin-top: auto; /* يثبت بالأسفل */
+      margin-top: auto; 
       border-top: 1px solid var(--border-color);
       width: 100%;
   }
   .footer-links-card {
-      margin: 0 auto; /* (تم حذف الهامش العلوي والسفلي) */
+      margin: 0 auto;
       border: 1px solid var(--border-color);
       background: rgba(0,0,0,0.2);
       padding: 20px;
@@ -409,8 +514,7 @@
   }
 </style>
 
-<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
-
+</head>
 <body>
 
 <div id="app-container">
@@ -429,7 +533,7 @@
 <main>
   <div class="main-wrapper" id="loginWrapper">
     
-    <form class="form" id="authForm">
+    <form class="form" id="authForm" novalidate>
         
         <p class="title" id="formTitle" dir="rtl" data-lang-key="formTitleLogin">تسجيل الدخول</p>
         <p class="message-intro" id="messageIntro" data-lang-key="messageLogin">مرحباً بك مجدداً! سجل الدخول للوصول لخدماتنا</p>
@@ -438,45 +542,56 @@
             <div>
                 <div class="input-label">
                     <span id="spanFirstName" data-lang-key="spanFirstName">الاسم الأول</span>
-                    <input type="text" id="firstName" placeholder="" autocomplete="given-name">
+                    <input type="text" id="firstName" placeholder="" autocomplete="given-name" maxlength="7">
                 </div>
+                <p class="field-error-msg" id="firstNameError"></p>
             </div>
             <div>
                 <div class="input-label">
                     <span id="spanLastName" data-lang-key="spanLastName">اسم العائلة</span>
-                    <input type="text" id="lastName" placeholder="" autocomplete="family-name">
+                    <input type="text" id="lastName" placeholder="" autocomplete="family-name" maxlength="7">
                 </div>
+                <p class="field-error-msg" id="lastNameError"></p>
             </div>
         </div>
         
-        <div class="input-label">
-            <span id="spanEmail" data-lang-key="spanEmail">البريد الإلكتروني</span>
-            <input type="email" id="email" required placeholder="" autocomplete="email">
+        <div>
+          <div class="input-label">
+              <span id="spanEmail" data-lang-key="spanEmail">البريد الإلكتروني</span>
+              <input type="email" id="email" required placeholder="" autocomplete="email">
+          </div>
+          <p class="field-error-msg" id="emailError"></p>
         </div>
         
-        <div class="input-label">
-            <span id="spanPassword" data-lang-key="spanPassword">كلمة المرور</span>
-            <input type="password" id="password" required placeholder="" autocomplete="current-password">
-            <button type="button" class="toggle-password" data-target="password">
-                <i class="fas fa-eye-slash"></i>
-            </button>
+        <div>
+          <div class="input-label">
+              <span id="spanPassword" data-lang-key="spanPassword">كلمة المرور</span>
+              <button type="button" class="toggle-password" data-target="password">
+                  <i class="fas fa-eye-slash"></i>
+              </button>
+              <input type="password" id="password" required placeholder="" autocomplete="new-password">
+          </div>
+          <p class="field-error-msg" id="passwordError"></p>
         </div>
 
-        <div class="input-label" id="confirmPasswordField" style="display: none;">
-            <span id="spanConfirmPassword" data-lang-key="spanConfirmPassword">تأكيد كلمة المرور</span>
-            <input type="password" id="confirmPassword" placeholder="" autocomplete="new-password">
-            <button type="button" class="toggle-password" data-target="confirmPassword">
-                <i class="fas fa-eye-slash"></i>
-            </button>
+        <div id="confirmPasswordContainer" style="display: none;">
+          <div class="input-label" id="confirmPasswordField">
+              <span id="spanConfirmPassword" data-lang-key="spanConfirmPassword">تأكيد كلمة المرور</span>
+              <button type="button" class="toggle-password" data-target="confirmPassword">
+                  <i class="fas fa-eye-slash"></i>
+              </button>
+              <input type="password" id="confirmPassword" placeholder="" autocomplete="new-password">
+          </div>
+          <p class="field-error-msg" id="confirmPasswordError"></p>
         </div>
 
 
-        
-        <div class="checkbox-group terms-acceptance">
+        <div class="terms-acceptance">
             <label>
                 <input type="checkbox" id="acceptTerms" required>
                 <span data-lang-key="acceptTermsText">أوافق على <a href="Safety.html" target="_blank">شروط الخدمة وسياسة الخصوصية</a> (إجباري)</span>
             </label>
+            <p class="field-error-msg" id="termsError"></p>
         </div>
         
         <button type="submit" class="submit" id="submitBtn">
@@ -484,6 +599,11 @@
         </button>
 
         <a href="index.html" class="cancel-button" id="cancelBtn" data-lang-key="cancelBtn">إلغاء</a>
+        
+        <a href="support.html" class="support-button" id="supportBtn" data-lang-key="supportBtn">
+            <i class="fas fa-headset"></i> <span>الدعم الفني</span>
+        </a>
+        
         <div class="loader-spinner" id="loadingSpinner"></div>
 
         <p class="toggle-area">
@@ -492,10 +612,7 @@
         </p>
     </form>
 
-
-    <div class="status-box status-message" id="msg" style="display: none;"></div>
-    <div class="status-box status-error" id="err" style="display: none;"></div>
-  </div>
+    </div>
 </main>
 
 <footer>
@@ -505,28 +622,26 @@
     </div>
 </footer>
 
+<div id="global-toast">
+    <svg class="toast-icon" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path>
+    </svg>
+    <div class="toast-title" id="toast-title"></div>
+    <button class="toast-close-btn" id="toast-close-btn">&times;</button>
+</div>
 </div> <script type="module">
   // **************************************************
   // 1. استيراد المكتبات
   // **************************************************
   
-  // * ⬅️ (الإصلاح الأول) قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
   import { app, database as db, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
 
-  // * ⬅️ استيراد الدوال التي نحتاجها فقط
   import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
   import { ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
   // **************************************************
-  // 2. (تم حذف إعدادات Firebase المكررة)
+  // 3. منطق التطبيق
   // **************************************************
-
-  
-  // **************************************************
-  // 4. منطق التطبيق (كما كان، لكن بدون التكرار)
-  // **************************************************
-
-  const ONESIGNAL_APP_ID = "9bc8ff80-a325-4935-ba4d-03e362a3cc5f";
   
   // عناصر الواجهة
   const formTitle = document.getElementById('formTitle');
@@ -538,7 +653,7 @@
   const firstNameInput = document.getElementById('firstName');
   const lastNameInput = document.getElementById('lastName');
   const nameFields = document.getElementById('nameFields');
-  const confirmPasswordField = document.getElementById('confirmPasswordField');
+  const confirmPasswordContainer = document.getElementById('confirmPasswordContainer');
   
   const spanEmail = document.getElementById('spanEmail');
   const spanPassword = document.getElementById('spanPassword');
@@ -550,9 +665,21 @@
   const toggleModeLink = document.getElementById('toggleModeLink');
   const acceptTermsCheckbox = document.getElementById('acceptTerms');
   const loadingSpinner = document.getElementById('loadingSpinner');
-  const msgEl = document.getElementById('msg');
-  const errEl = document.getElementById('err');
   
+  // * (جديد) عناصر رسائل الخطأ
+  const firstNameError = document.getElementById('firstNameError');
+  const lastNameError = document.getElementById('lastNameError');
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
+  const confirmPasswordError = document.getElementById('confirmPasswordError');
+  const termsError = document.getElementById('termsError');
+  
+  // * (جديد) عناصر الـ Toast
+  const globalToast = document.getElementById('global-toast');
+  const toastTitle = document.getElementById('toast-title');
+  const toastCloseBtn = document.getElementById('toast-close-btn');
+  let toastTimer; // (لإغلاق الـ Toast تلقائياً)
+
   // حالة التطبيق
   let isLoginMode = true;
 
@@ -575,7 +702,6 @@
           "toggleLink": "إنشاء حساب جديد",
           "togglePromptHasAccount": "لديك حساب بالفعل؟",
           "toggleLinkHasAccount": "سجل الدخول",
-          "subMarketing": "أوافق على استلام البريد التسويقي والأخبار (اختياري)",
           "acceptTermsText": "أوافق على <a href='Safety.html' target='_blank'>شروط الخدمة وسياسة الخصوصية</a> (إجباري)",
           "termsError": "يجب الموافقة على شروط الخدمة وسياسة الخصوصية",
           "passwordMatchError": "كلمتا المرور غير متطابقتين",
@@ -583,8 +709,17 @@
           "loginSuccess": "تم تسجيل الدخول بنجاح! جاري التوجيه",
           "registerSuccess": "تم إنشاء الحساب بنجاح! تم إرسال رابط التفعيل إلى بريدك الإلكتروني: {email}<br>تنبيه: يرجى التحقق من مجلد البريد العشوائي (Spam) إذا لم تصلك الرسالة خلال دقائق",
           "cancelBtn": "إلغاء",
-          "footerPolicy": "شروط الاستخدام وسياسة الخصوصية", // (جديد)
-          "footerAbout": "عن Skydata" // (جديد)
+          "supportBtn": "الدعم الفني", 
+          "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
+          "footerAbout": "عن Skydata",
+          "invalidEmail": "الرجاء إدخال بريد إلكتروني صالح (مثل example@domain.com)",
+          "nameInvalidChars": "يجب أن يحتوي الاسم على حروف فقط (عربي أو إنجليزي)",
+          "nameTooLong": "يجب أن يكون الاسم 7 أحرف أو أقل",
+          "passwordWeak": "كلمة المرور ضعيفة جدا",
+          "passwordPolicy": "كلمة المرور يجب أن تكون 8 أحرف على الأقل، وتحتوي على حرف كبير، حرف صغير، رقم، ورمز خاص (#$_@+-)",
+          "firebaseError": "حدث خطأ غير متوقع",
+          "emailInUse": "هذا البريد الإلكتروني مسجل بالفعل",
+          "authFailed": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
       },
       "en": {
           "pageTitle": "SkyData - Login / Sign Up",
@@ -603,7 +738,6 @@
           "toggleLink": "Create New Account",
           "togglePromptHasAccount": "Already have an account?",
           "toggleLinkHasAccount": "Sign In",
-          "subMarketing": "I agree to receive marketing emails and news (optional)",
           "acceptTermsText": "I agree to the <a href='Safety.html' target='_blank'>Terms of Service and Privacy Policy</a> (required)",
           "termsError": "You must agree to the Terms of Service and Privacy Policy",
           "passwordMatchError": "Passwords do not match",
@@ -611,8 +745,17 @@
           "loginSuccess": "Login successful! Redirecting",
           "registerSuccess": "Account created successfully! A verification link has been sent to your email: {email}<br>Note: Please check your spam folder if the message does not arrive within minutes",
           "cancelBtn": "Cancel",
-          "footerPolicy": "Terms of Use and Privacy Policy", // (جديد)
-          "footerAbout": "About Skydata" // (جديد)
+          "supportBtn": "Support", 
+          "footerPolicy": "Terms of Use and Privacy Policy",
+          "footerAbout": "About Skydata",
+          "invalidEmail": "Please enter a valid email (e.g., example@domain.com)",
+          "nameInvalidChars": "Name must only contain letters (Arabic or English)",
+          "nameTooLong": "Name must be 7 characters or less",
+          "passwordWeak": "Password is too weak",
+          "passwordPolicy": "Password must be at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special symbol (#$_@+-)",
+          "firebaseError": "An unexpected error occurred",
+          "emailInUse": "This email is already registered",
+          "authFailed": "Invalid email or password"
       }
   };
   
@@ -629,7 +772,11 @@
       document.querySelectorAll('[data-lang-key]').forEach(element => {
           const key = element.getAttribute('data-lang-key');
           if (translations[lang][key]) {
-              element.innerHTML = translations[lang][key];
+              if (element.id === 'supportBtn') {
+                  element.querySelector('span').innerHTML = translations[lang][key];
+              } else {
+                  element.innerHTML = translations[lang][key];
+              }
           }
       });
       updateFormContent();
@@ -657,24 +804,58 @@
       }
   }
 
+  // --- (دوال مساعدة جديدة) ---
+  
+  // (دالة لإظهار الـ Toast)
+  function showToast(message, type = 'success', duration = 5000) {
+      if (toastTimer) clearTimeout(toastTimer);
+      
+      toastTitle.innerHTML = message; // (استخدام innerHTML للسماح بـ <br>)
+      globalToast.className = ''; // (إزالة الكلاسات القديمة)
+      globalToast.classList.add(type); // (إضافة success أو error)
+      globalToast.classList.add('show');
+      
+      // (إذا كانت المدة 0، الرسالة تبقى (للأخطاء))
+      // (إذا كانت المدة > 0، تختفي (للنجاح))
+      if (duration > 0) {
+          toastTimer = setTimeout(() => {
+              globalToast.classList.remove('show');
+          }, duration);
+      }
+  }
+
+  // (دالة لإخفاء الـ Toast عند الضغط على X)
+  toastCloseBtn.addEventListener('click', () => {
+      if (toastTimer) clearTimeout(toastTimer);
+      globalToast.classList.remove('show');
+  });
+
+  // (دالة لإخفاء جميع أخطاء الحقول)
+  function clearFieldErrors() {
+      firstNameError.style.display = 'none';
+      lastNameError.style.display = 'none';
+      emailError.style.display = 'none';
+      passwordError.style.display = 'none';
+      confirmPasswordError.style.display = 'none';
+      termsError.style.display = 'none';
+  }
+
   // --- الدوال المساعدة ---
   function toggleMode() {
     isLoginMode = !isLoginMode;
-    errEl.style.display = 'none'; 
-    msgEl.style.display = 'none';
+    clearFieldErrors(); // (إخفاء الأخطاء عند التبديل)
+    globalToast.classList.remove('show'); // (إخفاء الـ Toast عند التبديل)
     
     if (isLoginMode) {
-      subscriptionBox.style.display = 'none';
       nameFields.style.display = 'none';
-      confirmPasswordField.style.display = 'none';
-      passwordInput.setAttribute('autocomplete', 'current-password');
+      confirmPasswordContainer.style.display = 'none'; // (استخدام الحاوية)
+      passwordInput.setAttribute('autocomplete', 'new-password');
       firstNameInput.removeAttribute('required');
       lastNameInput.removeAttribute('required');
       confirmPasswordInput.removeAttribute('required');
     } else {
-      subscriptionBox.style.display = 'flex';
       nameFields.style.display = 'flex';
-      confirmPasswordField.style.display = 'flex';
+      confirmPasswordContainer.style.display = 'block'; // (استخدام الحاوية)
       passwordInput.setAttribute('autocomplete', 'new-password');
       firstNameInput.setAttribute('required', 'required');
       lastNameInput.setAttribute('required', 'required');
@@ -708,40 +889,82 @@
     toggleMode();
   });
   
-  // إرسال النموذج (تسجيل الدخول أو إنشاء حساب)
   authForm.addEventListener('submit', async function(e){
     e.preventDefault();
-    errEl.style.display = 'none'; 
-    msgEl.style.display = 'none';
-    errEl.textContent=''; 
-    msgEl.textContent='';
+    clearFieldErrors(); // (تنظيف الأخطاء القديمة)
+    globalToast.classList.remove('show'); // (إخفاء الـ Toast القديم)
     
     const email = emailInput.value;
     const password = passwordInput.value;
-    const subscribe = subscribeEmailCheckbox.checked;
-
+    
+    // --- (التحقق الشامل يبدأ هنا) ---
+    
     if (!acceptTermsCheckbox.checked) {
-        errEl.textContent = translations[currentLang].termsError;
-        errEl.style.display = 'block';
+        termsError.textContent = translations[currentLang].termsError;
+        termsError.style.display = 'block';
         return;
     }
     
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        emailError.textContent = translations[currentLang].invalidEmail;
+        emailError.style.display = 'block';
+        return;
+    }
+
     if (!isLoginMode) {
         const confirmPassword = confirmPasswordInput.value;
         const firstName = firstNameInput.value.trim();
         const lastName = lastNameInput.value.trim();
+        const nameRegex = /^[a-zA-Z\u0600-\u06FF\s]*$/; 
+        const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$_@+\-])[A-Za-z\d#$_@+\-]{8,}$/;
+
+        let hasError = false;
+
+        if (!firstName) {
+            firstNameError.textContent = translations[currentLang].nameRequiredError;
+            firstNameError.style.display = 'block';
+            hasError = true;
+        } else if (firstName.length > 7) {
+            firstNameError.textContent = translations[currentLang].nameTooLong;
+            firstNameError.style.display = 'block';
+            hasError = true;
+        } else if (!nameRegex.test(firstName)) {
+            firstNameError.textContent = translations[currentLang].nameInvalidChars;
+            firstNameError.style.display = 'block';
+            hasError = true;
+        }
+
+        if (!lastName) {
+            lastNameError.textContent = translations[currentLang].nameRequiredError;
+            lastNameError.style.display = 'block';
+            hasError = true;
+        } else if (lastName.length > 7) {
+            lastNameError.textContent = translations[currentLang].nameTooLong;
+            lastNameError.style.display = 'block';
+            hasError = true;
+        } else if (!nameRegex.test(lastName)) {
+            lastNameError.textContent = translations[currentLang].nameInvalidChars;
+            lastNameError.style.display = 'block';
+            hasError = true;
+        }
 
         if (password !== confirmPassword) {
-            errEl.textContent = translations[currentLang].passwordMatchError;
-            errEl.style.display = 'block';
-            return;
+            confirmPasswordError.textContent = translations[currentLang].passwordMatchError;
+            confirmPasswordError.style.display = 'block';
+            hasError = true;
         }
-        if (!firstName || !lastName) {
-             errEl.textContent = translations[currentLang].nameRequiredError;
-             errEl.style.display = 'block';
-             return;
+        
+        if (!passRegex.test(password)) {
+            passwordError.textContent = translations[currentLang].passwordPolicy;
+            passwordError.style.display = 'block';
+            hasError = true;
         }
+        
+        if(hasError) return; // (إيقاف الإرسال إذا كان هناك أي خطأ)
     }
+    // --- (التحقق الشامل ينتهي هنا) ---
+
 
     submitBtn.disabled = true;
     loadingSpinner.style.display = 'block';
@@ -752,24 +975,16 @@
         // * وضع تسجيل الدخول
         // ********************************
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
         
-        if (window.OneSignal) {
-             window.OneSignal.login(user.uid);
-             window.OneSignal.User.addEmail(email);
-        }
-        
-        msgEl.textContent = translations[currentLang].loginSuccess;
-        msgEl.style.display = 'block';
+        showToast(translations[currentLang].loginSuccess, 'success', 5000);
         
         setTimeout(() => {
-             // * ⬅️ (إصلاح زر العودة)
              window.location.replace("menu.html"); 
-        }, 1500); 
+        }, 1500); // (تأخير بسيط لرؤية الرسالة)
         
       } else {
         // ********************************
-        // * وضع إنشاء الحساب (المُعدل حسب طلبك)
+        // * وضع إنشاء الحساب
         // ********************************
         
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -780,39 +995,35 @@
             displayName: fullName
         });
         
-        updateSubscription(user.uid, subscribe);
+        // (إضافة البيانات الأساسية جداً عند إنشاء الحساب)
+        update(ref(db, 'users/' + user.uid), { 
+            timestamp: Date.now(),
+            bio: "",
+            lastUpdated: Date.now()
+        });
         
         await sendEmailVerification(user); 
-
-        if (window.OneSignal) {
-             window.OneSignal.login(user.uid); 
-             window.OneSignal.User.addEmail(email); 
-             
-        } else {
-            console.warn("OneSignal SDK not loaded yet.");
-        }
         
         const registerSuccessMsg = translations[currentLang].registerSuccess.replace('{email}', email);
-        msgEl.innerHTML = `✅ ${registerSuccessMsg}`;
-        msgEl.style.display = 'block';
+        showToast(registerSuccessMsg, 'success', 10000); // (10 ثواني لقراءة الرسالة)
         
         setTimeout(() => {
-             // * ⬅️ (إصلاح زر العودة)
              window.location.replace("menu.html"); 
         }, 3000); 
       }
 
     } catch(error){
-      let errorMessage = 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+      let errorMessage = translations[currentLang].firebaseError;
       if (error.code === 'auth/email-already-in-use') {
-        errorMessage = 'هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول.';
+        errorMessage = translations[currentLang].emailInUse;
       } else if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-        errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+        errorMessage = translations[currentLang].authFailed;
       } else if (error.code === 'auth/weak-password') {
-        errorMessage = 'كلمة المرور ضعيفة جداً. يجب أن تكون 6 أحرف على الأقل.';
+        errorMessage = translations[currentLang].passwordWeak;
       }
-      errEl.textContent = `فشل العملية: ${errorMessage}`;
-      errEl.style.display = 'block';
+      
+      // * (إظهار الخطأ العام في الـ Toast)
+      showToast(errorMessage, 'error', 0); // (0 = يبقى ولا يختفي)
       
     } finally {
       submitBtn.disabled = false;
@@ -823,21 +1034,15 @@
   // التحقق من حالة المستخدم عند تحميل الصفحة
   onAuthStateChanged(auth, user => {
       if (user) {
-          // * ⬅️ (إصلاح زر العودة)
           window.location.replace("menu.html");
       } else {
-          // لا تفعل شيئاً، ابقَ في صفحة تسجيل الدخول
+          if (isLoginMode === false) { 
+              toggleMode(); 
+          }
+          setLanguage(currentLang);
       }
   });
   
-  // تشغيل اللغة الافتراضية
-  setLanguage(currentLang);
-  
-  // * ⬅️ (إصلاح) - تبديل الوضع عند التحميل (كان مفقوداً)
-  toggleMode();
-  toggleMode(); // استدعاء مرتين لإرجاعه لوضع تسجيل الدخول الافتراضي
 </script>
-
-
 </body>
 </html>

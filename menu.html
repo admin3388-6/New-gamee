@@ -15,7 +15,7 @@
   });
 </script>
 <style>
-  /* --- (جميع أكواد CSS كما هي - لا تغيير) --- */
+  /* --- (جميع أكواد CSS كما هي تماماً - لا تغيير هنا) --- */
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes spin { to { transform: rotate(360deg); } }
   * { box-sizing: border-box; }
@@ -79,8 +79,6 @@
     cursor: pointer; 
   }
   .profile-name { font-size: 1.3em; font-weight: bold; color: #fff; }
-  
-  /* * ⬇️ (منطقة الاشتراك المعدلة) ⬇️ * */
   .subscription-area {
       background-color: #121212;
       padding: 20px;
@@ -114,6 +112,123 @@
       opacity: 0; visibility: hidden; transition: opacity 0.3s ease;
   }
   .modal-overlay.active { opacity: 1; visibility: visible; }
+
+  .switch {
+    --switch-width: 46px;
+    --switch-height: 24px;
+    --switch-bg: rgb(131, 131, 131);
+    --switch-checked-bg: rgb(0, 218, 80);
+    --switch-offset: calc((var(--switch-height) - var(--circle-diameter)) / 2);
+    --switch-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+    --circle-diameter: 18px;
+    --circle-bg: #fff;
+    --circle-shadow: 1px 1px 2px rgba(146, 146, 146, 0.45);
+    --circle-checked-shadow: -1px 1px 2px rgba(163, 163, 163, 0.45);
+    --circle-transition: var(--switch-transition);
+    --icon-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+    --icon-cross-color: var(--switch-bg);
+    --icon-cross-size: 6px;
+    --icon-checkmark-color: var(--switch-checked-bg);
+    --icon-checkmark-size: 10px;
+    --effect-width: calc(var(--circle-diameter) / 2);
+    --effect-height: calc(var(--effect-width) / 2 - 1px);
+    --effect-bg: var(--circle-bg);
+    --effect-border-radius: 1px;
+    --effect-transition: all .2s ease-in-out;
+  }
+  .switch input { display: none; }
+  .switch { display: inline-block; }
+  .switch svg {
+    -webkit-transition: var(--icon-transition);
+    -o-transition: var(--icon-transition);
+    transition: var(--icon-transition);
+    position: absolute;
+    height: auto;
+  }
+  .switch .checkmark {
+    width: var(--icon-checkmark-size);
+    color: var(--icon-checkmark-color);
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+  }
+  .switch .cross {
+    width: var(--icon-cross-size);
+    color: var(--icon-cross-color);
+  }
+  .slider {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: var(--switch-width);
+    height: var(--switch-height);
+    background: var(--switch-bg);
+    border-radius: 999px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    -webkit-transition: var(--switch-transition);
+    -o-transition: var(--switch-transition);
+    transition: var(--switch-transition);
+    cursor: pointer;
+  }
+  .circle {
+    width: var(--circle-diameter);
+    height: var(--circle-diameter);
+    background: var(--circle-bg);
+    border-radius: inherit;
+    -webkit-box-shadow: var(--circle-shadow);
+    box-shadow: var(--circle-shadow);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-transition: var(--circle-transition);
+    -o-transition: var(--circle-transition);
+    transition: var(--circle-transition);
+    z-index: 1;
+    position: absolute;
+    left: var(--switch-offset);
+  }
+  .slider::before {
+    content: "";
+    position: absolute;
+    width: var(--effect-width);
+    height: var(--effect-height);
+    left: calc(var(--switch-offset) + (var(--effect-width) / 2));
+    background: var(--effect-bg);
+    border-radius: var(--effect-border-radius);
+    -webkit-transition: var(--effect-transition);
+    -o-transition: var(--effect-transition);
+    transition: var(--effect-transition);
+  }
+  .switch input:checked+.slider { background: var(--switch-checked-bg); }
+  .switch input:checked+.slider .checkmark {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+  .switch input:checked+.slider .cross {
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+  }
+  .switch input:checked+.slider::before {
+    left: calc(100% - var(--effect-width) - (var(--effect-width) / 2) - var(--switch-offset));
+  }
+  .switch input:checked+.slider .circle {
+    left: calc(100% - var(--circle-diameter) - var(--switch-offset));
+    -webkit-box-shadow: var(--circle-checked-shadow);
+    box-shadow: var(--circle-checked-shadow);
+  }
 
   .loader { 
     width: 100%;
@@ -665,31 +780,44 @@
     const IMGBB_API_KEY = "f0ff703738276bb67fcc6b7f0a6778d5";
     let currentLang = 'ar'; 
     let currentUser = null;
-    // let isSubscribed = false; // * ⬅️ (حذف)
+    let isSubscribed = false;
+    // let isWebPushSubscribed = false; // * ⬅️ (حذف 1) تم حذف متغير الويب
     let lastProfileUpdate = 0;
-    // let lastSubChange = 0; // * ⬅️ (حذف)
+    let lastSubChange = 0;
+    // let lastWebPushSubChange = 0; // * ⬅️ (حذف 2) تم حذف متغير الويب
     const UPDATE_RATE_LIMIT = 24 * 60 * 60 * 1000;
-    const SUB_COOLDOWN = 5 * 60 * 1000; // * (سنبقيه من أجل زر تفعيل البريد)
+    const SUB_COOLDOWN = 5 * 60 * 1000;
     let toastTimer; 
     let isDeletePending = false; 
     let lastVerificationEmailTime = 0;
     let cooldownTimer = null;
 
     // --- 4. TRANSLATIONS (TOP LEVEL) ---
-    // * ⬅️ (تم حذف كل ترجمات الإشعارات والاشتراك)
     const translations = {
       "ar": {
           "pageTitle": "SkyData - الصفحة الرئيسية",
           "profileTitle": "الـملف الـشخصي", 
+          "notifTitle": "إدارة الإشعارات والبريد",
+          "subStatus": "حالة الاشتراك:",
+          "subYes": "مشترك: تصلك رسائل البريد التسويقي والتحديثات",
+          "subNo": "غير مشترك: لا تصلك أي رسائل بريد تسويقي",
           "logoutBtn": "خروج", 
           "settingsTitle": "إعدادات",
           "settingsMenuProfile": "الملف الشخصي",
+          "settingsMenuNotifications": "الإشعارات",
           "settingsMenuSupport": "الدعم",
           "settingsMenuDelete": "حذف الحساب",
           "profileSettingsTitle": "تعديل الملف الشخصي",
           "profileChangePic": "تغيير الصورة",
           "profileBioLabel": "نبذة عني",
           "profileBioPlaceholder": "اكتب شيئاً عن نفسك...",
+          "notifModalTitle": "إدارة الإشعارات",
+          "notifModalEmailHeader": "إشعارات البريد الإلكتروني",
+          "notifModalEmailText": "إدارة رسائل البريد التسويقي والتحديثات.",
+          // * ⬅️ (حذف 3) تم حذف ترجمات الويب
+          "notifStatusLabel": "حالة الاشتراك:",
+          "notifStatusSubbed": "مشترك",
+          "notifStatusUnsubbed": "غير مشترك",
           "logoutConfirmTitle": "تأكيد تسجيل الخروج",
           "logoutConfirmText": "هل أنت متأكد من تسجيل الخروج؟",
           "confirmYes": "نعم",
@@ -702,6 +830,9 @@
           "deleteModalConfirmBtn": "تأكيد الحذف",
           "deleteInProgress": "جاري الحذف...",
           "deleteSuccess": "تم حذف الحساب بنجاح. جاري تسجيل الخروج...",
+          "subYesToast": "تم الاشتراك بنجاح!",
+          "subNoToast": "تم إلغاء الاشتراك.",
+          "cooldownMsg": "يرجى الانتظار 5 دقائق قبل تغيير حالة الاشتراك مرة أخرى.",
           "noName": "مستخدم جديد",
           "profileUploadTitle": "رفع صورتك الشخصية",
           "uploading": "جاري الرفع... يرجى الانتظار",
@@ -718,23 +849,32 @@
           "resendButton": "إعادة إرسال",
           "resendButtonCooldown": "انتظر {seconds} ث",
           "verificationSent": "تم إرسال الرابط! تحقق من بريدك.",
-          "backToHome": "العودة للرئيسية",
-          "cooldownMsg": "يرجى الانتظار قليلاً قبل إعادة الإرسال.", // (رسالة عامة)
-          "settingsMenuNotifications": "الإشعارات", // (ما زلنا نحتاجها للقائمة)
-          "notifModalTitle": "إدارة الإشعارات" // (ما زلنا نحتاجها للنافذة)
+          "backToHome": "العودة للرئيسية"
       },
       "en": {
           "pageTitle": "SkyData - Home",
           "profileTitle": "Profile", 
+          "notifTitle": "Manage Notifications & Email",
+          "subStatus": "Subscription Status:",
+          "subYes": "Subscribed: You will receive marketing emails and updates",
+          "subNo": "Unsubscribed: You will not receive any marketing emails",
           "logoutBtn": "Logout", 
           "settingsTitle": "Settings",
           "settingsMenuProfile": "Profile",
+          "settingsMenuNotifications": "Notifications",
           "settingsMenuSupport": "Support",
           "settingsMenuDelete": "Delete Account",
           "profileSettingsTitle": "Edit Profile",
           "profileChangePic": "Change Picture",
           "profileBioLabel": "About Me",
           "profileBioPlaceholder": "Write something about yourself...",
+          "notifModalTitle": "Notification Management",
+          "notifModalEmailHeader": "Email Notifications",
+          "notifModalEmailText": "Manage marketing emails and updates.",
+          // * ⬅️ (حذف 4) تم حذف ترجمات الويب
+          "notifStatusLabel": "Subscription Status:",
+          "notifStatusSubbed": "Subscribed",
+          "notifStatusUnsubbed": "Unsubscribed",
           "logoutConfirmTitle": "Confirm Logout",
           "logoutConfirmText": "Are you sure you want to log out?",
           "confirmYes": "Yes",
@@ -747,6 +887,9 @@
           "deleteModalConfirmBtn": "Confirm Deletion",
           "deleteInProgress": "Deleting...",
           "deleteSuccess": "Account deleted successfully. Logging out...",
+          "subYesToast": "Subscribed successfully!",
+          "subNoToast": "Unsubscribed.",
+          "cooldownMsg": "Please wait 5 minutes before changing your subscription status again.",
           "noName": "New User",
           "profileUploadTitle": "Upload Your Profile Picture",
           "uploading": "Uploading... Please wait",
@@ -763,15 +906,11 @@
           "resendButton": "Resend",
           "resendButtonCooldown": "Wait {seconds}s",
           "verificationSent": "Link sent! Check your email.",
-          "backToHome": "Back to Home",
-          "cooldownMsg": "Please wait a moment before resending.",
-          "settingsMenuNotifications": "Notifications",
-          "notifModalTitle": "Notification Management"
+          "backToHome": "Back to Home"
       }
     };
 
     // --- 5. HELPER FUNCTIONS (TOP LEVEL) ---
-    // * ⬅️ (تم تعديل الدالة لطلب البيانات الأساسية فقط)
     async function getSubscription(uid) {
         const dbRef = ref(db);
         try {
@@ -779,16 +918,21 @@
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 return {
+                    emailSub: data.subscribe_marketing === true,
+                    // webPushSub: data.subscribe_webpush === true, // * ⬅️ (حذف 5)
                     bio: data.bio || "", 
-                    lastProfileUpdate: data.lastUpdated || 0
+                    lastProfileUpdate: data.lastUpdated || 0,
+                    lastSubChange: data.lastSubChange || 0,
+                    // lastWebPushSubChange: data.lastWebPushSubChange || 0 // * ⬅️ (حذف 6)
                 };
             } else {
-                return { bio: "", lastProfileUpdate: 0 };
+                // * ⬅️ (إصلاح 7) - هذا هو الوضع الافتراضي للمستخدم الجديد
+                return { emailSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0 };
             }
         } catch (error) {
             console.error("Error getting user data:", error);
-            // * ⬅️ (هنا نلقي بالخطأ ليتم عرضه للمستخدم)
-            throw error; 
+            // * ⬅️ (إصلاح 8) - تم حذف throw error، سنرجع القيم الافتراضية
+            return { emailSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0 };
         }
     }
 
@@ -815,7 +959,7 @@
         const profileImgEl = document.getElementById('profile-img');
         const profileNameEl = document.getElementById('profile-name');
         const userEmailEl = document.getElementById('userEmail');
-        // const currentSubscriptionEl = document.getElementById('currentSubscription'); // * ⬅️ (حذف)
+        const currentSubscriptionEl = document.getElementById('currentSubscription');
         const settingsBtn = document.getElementById('settings-btn');
         const logoutBtn = document.getElementById('logoutBtn');
         
@@ -845,7 +989,10 @@
         const profileImgPreview = document.getElementById('profile-img-preview'); 
 
         // (Notifications Modal)
-        // * ⬅️ (تم حذف كل متغيرات نافذة الإشعارات)
+        const emailSubToggle = document.getElementById('email-sub-toggle'); 
+        // const webPushToggle = document.getElementById('web-push-toggle'); // * ⬅️ (حذف 9)
+        const emailStatusText = document.getElementById('email-status-text'); 
+        // const webPushStatusText = document.getElementById('web-push-status-text'); // * ⬅️ (حذف 10)
 
         // (Logout Confirm Modal)
         const logoutConfirmYes = document.getElementById('logout-confirm-yes'); 
@@ -878,7 +1025,20 @@
             }, 4000);
         }
 
-        // * ⬅️ (تم حذف دوال تحديث واجهة الاشتراك)
+        function updateHomeSubscriptionUI(subscribed) {
+            isSubscribed = subscribed;
+            currentSubscriptionEl.textContent = subscribed ? translations[currentLang].subYes : translations[currentLang].subNo;
+            currentSubscriptionEl.className = subscribed ? 'subscription-status' : 'subscription-status unsubscribed';
+        }
+        
+        function updateNotifStatusUI(emailSub) { // * ⬅️ (حذف 11) - إزالة webPushSub
+            emailSubToggle.checked = emailSub;
+            
+            emailStatusText.textContent = emailSub ? translations[currentLang].notifStatusSubbed : translations[currentLang].notifStatusUnsubbed;
+            emailStatusText.className = emailSub ? 'status-text subscribed' : 'status-text unsubscribed';
+
+            // * ⬅️ (حذف 12) - إزالة كود تحديث واجهة الويب
+        }
         
         window.setLanguage = function(lang) {
             currentLang = lang;
@@ -906,7 +1066,8 @@
             
             if (currentUser) {
                 profileNameEl.textContent = currentUser.displayName || translations[currentLang].noName;
-                // * ⬅️ (تم حذف دوال تحديث واجهة الاشتراك)
+                updateHomeSubscriptionUI(isSubscribed);
+                updateNotifStatusUI(isSubscribed); // * ⬅️ (حذف 13)
             }
 
             const verificationBanner = document.getElementById('email-verification-banner');
@@ -1034,7 +1195,6 @@
                     dbDataChanged = true;
                 }
                 
-                // * ⬅️ (تعديل) نحفظ النبذة دائماً
                 dbUpdates.bio = newBio;
                 dbDataChanged = true; 
                 
@@ -1067,9 +1227,11 @@
             if (user) {
                 currentUser = user;
 
+                // * ⬅️ (إصلاح 14) - إظهار الصفحة فوراً
                 loaderContainer.style.display = 'none';
                 contentContainer.style.display = 'block';
                 
+                // * ⬅️ (إصلاح 15) - التعامل مع تفعيل البريد
                 const verificationBanner = document.getElementById('email-verification-banner');
                 const verificationMessage = document.getElementById('verification-message');
                 const resendBtn = document.getElementById('resend-email-btn');
@@ -1080,7 +1242,6 @@
 
                     resendBtn.onclick = () => {
                         const now = Date.now();
-                        // * ⬅️ (تعديل) استخدام رسالة تبريد عامة
                         if (now - lastVerificationEmailTime < SUB_COOLDOWN) {
                             showToast(translations[currentLang].cooldownMsg, 'warning');
                             return;
@@ -1123,38 +1284,46 @@
                     verificationBanner.style.display = 'none';
                 }
 
-                // * ⬅️ (تعديل) جلب البيانات المبسط
+                // * ⬅️ (إصلاح 16) - جلب البيانات (محمي بـ try/catch)
                 try {
                     const userData = await getSubscription(user.uid);
+                    isSubscribed = userData.emailSub;
+                    // isWebPushSubscribed = userData.webPushSub; // * ⬅️ (حذف)
                     lastProfileUpdate = userData.lastProfileUpdate;
+                    lastSubChange = userData.lastSubChange; 
+                    // lastWebPushSubChange = userData.lastWebPushSubChange; // * ⬅️ (حذف)
                     
                     populateProfileForm(userData);
 
-                    // * ⬅️ (تعديل) مزامنة OneSignal عند التحميل
+                    // * ⬅️ (إصلاح 17) - مزامنة OneSignal عند التحميل
                     if (window.OneSignal) {
                         window.OneSignal.login(user.uid); // تسجيل الدخول لـ OneSignal
-                        // (تم حذف كود الوسوم)
+                        // ضبط الوسم بناءً على ما هو موجود في قاعدة بياناتنا
+                        window.OneSignal.User.addTag("subscribed", isSubscribed.toString());
                     }
 
                 } catch (error) {
                     console.error("Failed to get user subscription data:", error);
                     showToast("فشل تحميل بيانات المستخدم. تحقق من إعدادات قاعدة البيانات.", 'error');
-                    populateProfileForm({ bio: "", lastProfileUpdate: 0 });
+                    populateProfileForm({ bio: "", lastProfileUpdate: 0, lastSubChange: 0 }); // ملء النافذة ببيانات فارغة
                 }
                 
+                // * ⬅️ (إصلاح 18) - تحديث الواجهة
                 window.setLanguage(currentLang); 
                 
                 profileNameEl.textContent = user.displayName || translations[currentLang].noName;
                 userEmailEl.textContent = user.email; 
                 profileImgEl.src = user.photoURL || 'https://i.ibb.co/6y45s1f/default.webp';
                 if (!user.photoURL) profileImgEl.classList.add('default');
-                
-                // * ⬅️ (تم حذف دوال تحديث واجهة الاشتراك)
+
+                updateHomeSubscriptionUI(isSubscribed);
+                updateNotifStatusUI(isSubscribed); // * ⬅️ (حذف)
                 
                 deleteEmailDisplay1.textContent = user.email;
                 deleteEmailDisplay2.textContent = user.email;
                 
             } else {
+                // * ⬅️ (إصلاح زر العودة)
                 window.location.replace("login.html"); 
             }
         });
@@ -1171,7 +1340,6 @@
             profileSettingsModal.classList.add('active'); 
         });
         
-        // * ⬅️ (تعديل) زر الإشعارات أصبح يفتح النافذة مباشرة
         document.getElementById('settings-menu-notifications').addEventListener('click', (e) => {
             e.preventDefault();
             settingsModal.classList.remove('active'); 
@@ -1222,7 +1390,48 @@
         });
 
         // 6. (أزرار نافذة الإشعارات)
-        // * ⬅️ (تم حذف كل مستمعي الأزرار الخاصة بالإشعارات)
+        // * ⬅️ (إصلاح 19) - تعديل زر البريد الإلكتروني
+        emailSubToggle.addEventListener('change', async (e) => {
+            if (!currentUser) return;
+            const timeSinceLastChange = Date.now() - lastSubChange;
+            
+            if (timeSinceLastChange < SUB_COOLDOWN) {
+                e.target.checked = !e.target.checked; 
+                showToast(translations[currentLang].cooldownMsg, 'warning');
+                return;
+            }
+
+            const newSubState = e.target.checked;
+            const newLastSubChange = Date.now();
+            
+            try {
+                // * ⬅️ (إصلاح 20) - نرسل الأمرين معاً
+                // الأمر الأول: تحديث قاعدة بياناتنا
+                await updateUserProfileDB(currentUser.uid, { 
+                    subscribe_marketing: newSubState,
+                    lastSubChange: newLastSubChange
+                });
+                
+                // الأمر الثاني: تحديث OneSignal (بشكل حقيقي)
+                if (window.OneSignal) {
+                    window.OneSignal.User.addTag("subscribed", newSubState.toString());
+                }
+
+                lastSubChange = newLastSubChange;
+                updateHomeSubscriptionUI(newSubState); 
+                updateNotifStatusUI(newSubState); 
+                
+                showToast(
+                    newSubState ? translations[currentLang].subYesToast : translations[currentLang].subNoToast,
+                    newSubState ? 'success' : 'error'
+                );
+            } catch (error) {
+                e.target.checked = !e.target.checked; 
+                showToast(`Error: ${error.message}`, 'error');
+            }
+        });
+
+        // * ⬅️ (حذف 21) - تم حذف المستمع الخاص بـ webPushToggle
         
         // 7. (زر تسجيل الخروج الجديد)
         logoutBtn.addEventListener('click', () => {
@@ -1264,7 +1473,7 @@
             deleteStatus.style.display = 'block';
 
             try {
-                await remove(ref(db, 'users/'Kood/' + currentUser.uid));
+                await remove(ref(db, 'users/' + currentUser.uid));
                 
                 await deleteUser(currentUser);
                 
@@ -1345,6 +1554,9 @@
       </div>
 
       <div class="subscription-area">
+        <h3 data-lang-key="notifTitle">إدارة الإشعارات والبريد</h3>
+        <p class="subscription-status" id="currentSubscription"></p>
+        
         <button class="Btn" id="logoutBtn" data-lang-key="logoutBtn">
           <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
           <div class="text">Logout</div>
@@ -1352,6 +1564,7 @@
       </div>
       
       <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
+
     </div>
 
     <div class="modal-overlay" id="profile-upload-modal">
@@ -1378,6 +1591,12 @@
                   <a href="#" id="settings-menu-profile" data-lang-key="settingsMenuProfile">
                     <i class="fas fa-user-edit" style="width: 19px; height: 19px; text-align: center;"></i>
                     الملف الشخصي
+                  </a>
+                </li>
+                <li class="element">
+                  <a href="#" id="settings-menu-notifications" data-lang-key="settingsMenuNotifications">
+                    <i class="fas fa-bell" style="width: 19px; height: 19px; text-align: center;"></i>
+                    الإشعارات
                   </a>
                 </li>
                 <li class="element">
@@ -1447,6 +1666,39 @@
         </div>
     </div>
 
+
+    <div class="modal-overlay" id="notifications-settings-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3 data-lang-key="notifModalTitle">إدارة الإشعارات</h3>
+            
+            <hr style="border-color: #444; margin: 20px 0;">
+
+            <h4 data-lang-key="notifModalEmailHeader">إشعارات البريد الإلكتروني</h4>
+            <div class="setting-row">
+              <p data-lang-key="notifStatusLabel">الحالة:</p>
+              <span class="status-text unsubscribed" id="email-status-text" data-lang-key="notifStatusUnsubbed"></span>
+            </div>
+            <div class="setting-row">
+              <p data-lang-key="notifModalEmailText">...</p>
+              <label class="switch">
+                  <input id="email-sub-toggle" type="checkbox"> 
+                  <div class="slider">
+                      <div class="circle">
+                          <svg class="cross" xml:space="preserve" viewBox="0 0 365.696 365.696" height="6" width="6" xmlns="http://www.w3.org/2000/svg">
+                              <path fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                          </svg>
+                          <svg class="checkmark" xml:space="preserve" viewBox="0 0 24 24" height="10" width="10" xmlns="http://www.w3.org/2000/svg">
+                              <path fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                          </svg>
+                      </div>
+                  </div>
+              </label>
+            </div>
+            
+            </div>
+    </div>
+    
     <div class="modal-overlay" id="logout-confirm-modal">
         <div class="modal-content confirm-modal-content">
             <button class="modal-close-btn">&times;</button>

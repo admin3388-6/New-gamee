@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>AI Chat – Puter.js</title>
+<title>AI Assistant</title>
 
 <script src="https://js.puter.com/v2/"></script>
 
@@ -13,108 +12,65 @@
         margin: 0;
         font-family: sans-serif;
         background: #f7f7f8;
+        height: 100vh;
         display: flex;
         flex-direction: column;
-        height: 100vh;
     }
-
-    /* ===== شريط أعلى ===== */
     header {
         background: white;
-        padding: 12px 18px;
+        padding: 12px 16px;
+        border-bottom: 1px solid #ddd;
         display: flex;
-        justify-content: space-between;
+        gap: 12px;
         align-items: center;
-        border-bottom: 1px solid #e5e5e5;
     }
     header h1 {
-        font-size: 18px;
         margin: 0;
+        font-size: 17px;
     }
-
-    /* ===== منطقة الرسائل ===== */
     #chat {
         flex: 1;
         overflow-y: auto;
-        padding: 20px;
+        padding: 18px;
     }
-
     .msg {
-        max-width: 90%;
-        padding: 12px 16px;
+        padding: 12px 15px;
         margin-bottom: 12px;
         border-radius: 12px;
+        max-width: 85%;
         line-height: 1.6;
         font-size: 15px;
         white-space: pre-wrap;
     }
-    .me {
-        background: #d2e3ff;
-        align-self: flex-start;
-    }
-    .ai {
-        background: #fff;
-        border: 1px solid #eee;
-        align-self: flex-end;
-    }
-
-    /* ===== صندوق الكتابة ===== */
+    .me { background: #d2e3ff; align-self: flex-start; }
+    .ai { background: white; border: 1px solid #eee; align-self: flex-end;}
     #inputArea {
+        background: white;
+        padding: 12px;
         display: flex;
         gap: 10px;
-        padding: 14px;
-        background: white;
-        border-top: 1px solid #e5e5e5;
+        border-top: 1px solid #ddd;
     }
-
     #prompt {
         flex: 1;
         padding: 12px;
         border-radius: 10px;
         border: 1px solid #ccc;
-        font-size: 15px;
         outline: none;
     }
-
     button {
         border: none;
-        background: #007aff;
-        color: white;
-        padding: 12px 16px;
-        border-radius: 10px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-    }
-
-    button svg {
-        width: 20px;
-    }
-
-    .icon-btn {
-        background: #eee;
-        color: black;
         padding: 10px;
         border-radius: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
     }
-
-    .icon-btn svg {
-        width: 22px;
+    .icon-btn {
+        background: #eee;
     }
-
-    /* ===== قائمة الموديل ===== */
-    #modelSelector {
-        padding: 8px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-    }
-
-    /* ===== استجابة الهاتف ===== */
-    @media (max-width: 600px) {
-        #prompt { font-size: 14px; }
-        button { padding: 10px; }
-    }
+    .icon-btn svg, button svg { width: 22px; }
+    .send-btn { background: #007aff; color: white; }
 </style>
 </head>
 <body>
@@ -128,56 +84,57 @@
         <option value="gpt-5-mini">GPT-5 Mini</option>
         <option value="gpt-5-nano">GPT-5 Nano</option>
         <option value="gpt-4o">GPT-4o</option>
-        <option value="o3-mini">O3 Mini</option>
     </select>
 </header>
 
 <div id="chat"></div>
 
-<!-- ========== شريط الأدوات + الإدخال ========== -->
+<!-- ==== الأدوات ==== -->
 <div id="inputArea">
-
-    <!-- زر توليد صورة -->
     <button class="icon-btn" onclick="makeImage()">
-        <svg fill="black" viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14l4-4 4 4 4-4 4 4z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14l4-4 4 4 4-4 4 4z"/></svg>
     </button>
 
-    <!-- زر تحليل صورة -->
-    <button class="icon-btn" onclick="uploadImage()">
-        <svg fill="black" viewBox="0 0 24 24"><path d="M5 20h14a2 2 0 0 0 2-2V8h-6l-2-3H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2z"/></svg>
+    <button class="icon-btn" onclick="chooseImage()">
+        <svg viewBox="0 0 24 24"><path d="M5 20h14a2 2 0 0 0 2-2V8h-6l-2-3H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2z"/></svg>
     </button>
 
-    <input id="prompt" placeholder="اكتب رسالتك هنا...">
+    <input id="prompt" placeholder="اكتب رسالتك...">
 
-    <button onclick="sendMessage()">
-        <svg fill="white" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    <button class="send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
     </button>
 </div>
 
-<!-- اختيار صورة للتحليل -->
 <input type="file" id="imageInput" accept="image/*" style="display:none">
 
-
 <script>
+/* ========== تهيئة Puter (يمنع إعادة التوجيه) ========== */
+(async () => {
+    await puter.init({ anonymous: true });
+})();
 
+/* ========= أدوات مساعدة ========= */
 function addMessage(text, type) {
-    const msg = document.createElement("div");
-    msg.className = "msg " + type;
-    msg.textContent = text;
-    document.getElementById("chat").appendChild(msg);
-    msg.scrollIntoView({ behavior: "smooth" });
+    const el = document.createElement("div");
+    el.className = "msg " + type;
+    el.textContent = text;
+    document.getElementById("chat").appendChild(el);
+    el.scrollIntoView({ behavior: "smooth" });
 }
 
-/* ========= إرسال رسالة عادية ========= */
+/* ========= إرسال رسالة ========= */
 async function sendMessage() {
-    const text = prompt.value.trim();
+    const promptInput = document.getElementById("prompt");
+    const text = promptInput.value.trim();
     if (!text) return;
 
     addMessage(text, "me");
-    prompt.value = "";
+    promptInput.value = "";
 
-    const model = modelSelector.value;
     addMessage("جارٍ الكتابة...", "ai");
+
+    const model = document.getElementById("modelSelector").value;
 
     const reply = await puter.ai.chat(text, { model });
 
@@ -186,22 +143,21 @@ async function sendMessage() {
 
 /* ========= توليد صورة ========= */
 async function makeImage() {
-    const promptText = prompt.value.trim();
-    if (!promptText) return alert("اكتب وصف الصورة أولاً!");
+    const promptInput = document.getElementById("prompt");
+    const text = promptInput.value.trim();
+    if (!text) return alert("أدخل وصف الصورة أولاً");
 
     addMessage("🎨 توليد صورة...", "ai");
 
-    const img = await puter.ai.txt2img(promptText, { model: "gpt-image-1" });
+    const img = await puter.ai.txt2img(text, { model: "gpt-image-1" });
 
     document.getElementById("chat").appendChild(img);
-    img.style.width = "60%";
+    img.style.width = "70%";
     img.style.borderRadius = "10px";
-    img.style.margin = "10px 0";
-    img.scrollIntoView({ behavior: "smooth" });
 }
 
-/* ========= تحليل صورة ========= */
-function uploadImage() {
+/* ========= اختيار صورة للتحليل ========= */
+function chooseImage() {
     document.getElementById("imageInput").click();
 }
 
@@ -211,17 +167,15 @@ imageInput.onchange = async () => {
 
     const url = URL.createObjectURL(file);
 
-    addMessage("🔍 تحليل الصورة…", "ai");
+    addMessage("🔍 تحليل الصورة...", "ai");
 
-    const response = await puter.ai.chat(
-        "What is in this image?",
-        url,
-        { model: "gpt-5.1" }
-    );
+    const response = await puter.ai.chat("Describe this image", url, {
+        model: "gpt-5.1"
+    });
 
     addMessage(response, "ai");
 };
-
 </script>
+
 </body>
 </html>

@@ -1,181 +1,698 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Assistant</title>
-
-<script src="https://js.puter.com/v2/"></script>
-
-<style>
-    body {
-        margin: 0;
-        font-family: sans-serif;
-        background: #f7f7f8;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-    header {
-        background: white;
-        padding: 12px 16px;
-        border-bottom: 1px solid #ddd;
-        display: flex;
-        gap: 12px;
-        align-items: center;
-    }
-    header h1 {
-        margin: 0;
-        font-size: 17px;
-    }
-    #chat {
-        flex: 1;
-        overflow-y: auto;
-        padding: 18px;
-    }
-    .msg {
-        padding: 12px 15px;
-        margin-bottom: 12px;
-        border-radius: 12px;
-        max-width: 85%;
-        line-height: 1.6;
-        font-size: 15px;
-        white-space: pre-wrap;
-    }
-    .me { background: #d2e3ff; align-self: flex-start; }
-    .ai { background: white; border: 1px solid #eee; align-self: flex-end;}
-    #inputArea {
-        background: white;
-        padding: 12px;
-        display: flex;
-        gap: 10px;
-        border-top: 1px solid #ddd;
-    }
-    #prompt {
-        flex: 1;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        outline: none;
-    }
-    button {
-        border: none;
-        padding: 10px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-    .icon-btn {
-        background: #eee;
-    }
-    .icon-btn svg, button svg { width: 22px; }
-    .send-btn { background: #007aff; color: white; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyData - أدواتك في مكان واحد</title>
+    
+    <meta name="description" content="SkyData: منصة عربية شاملة تضم أكثر من 50 أداة مجانية وأدوات ذكاء اصطناعي. ابدأ بتحرير الصور، تحويل الملفات (PDF/MP3)، استخدام مولدات النصوص وكلمات المرور، واطلع على أوقات الصلاة وأحوال الطقس.">
+    <meta name="keywords" content="أدوات مجانية، أدوات الذكاء الاصطناعي، تحرير الصور، إزالة الخلفية، تحويل PDF، مولد كلمات مرور، أوقات الصلاة، مواقيت الصلاة، الطقس، حالة الطقس، SkyData، تحويل العملات، ضغط الصور، صانع QR، أدوات المطورين، محولات الوحدات، زخرفة النصوص، أمان الروابط، تصميم الشعارات، حساب العمر، قص الصور، MP3.">
+    <meta name="author" content="SkyData Team">
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+        });
+      });
+    </script>
 </head>
 <body>
 
-<header>
-    <h1>مساعد الذكاء الاصطناعي</h1>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData Logo" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
+        </div>
+    </header>
 
-    <select id="modelSelector">
-        <option value="gpt-5.1">GPT-5.1</option>
-        <option value="gpt-5">GPT-5</option>
-        <option value="gpt-5-mini">GPT-5 Mini</option>
-        <option value="gpt-5-nano">GPT-5 Nano</option>
-        <option value="gpt-4o">GPT-4o</option>
-    </select>
-</header>
+    <nav class="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> 
+                    <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
 
-<div id="chat"></div>
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
 
-<!-- ==== الأدوات ==== -->
-<div id="inputArea">
-    <button class="icon-btn" onclick="makeImage()">
-        <svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14l4-4 4 4 4-4 4 4z"/></svg>
-    </button>
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
+                
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
 
-    <button class="icon-btn" onclick="chooseImage()">
-        <svg viewBox="0 0 24 24"><path d="M5 20h14a2 2 0 0 0 2-2V8h-6l-2-3H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2z"/></svg>
-    </button>
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa?si=6UG25JIbLwCfRIQF" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">
+                حقوق الملكية والفكرة العامة © 2025
+                <br>
+                تابعة لـ <strong>Sky Data</strong>
+            </p>
+        </div>
+    </nav>
+    <main>
+        <section class="tools-section">
+            <div class="container">
 
-    <input id="prompt" placeholder="اكتب رسالتك...">
+                <h2 class="section-title"><i class="fas fa-brain"></i> أدوات الذكاء الاصطناعي</h2>
+                <div class="tools-grid">
+                    
+                    <a href="remove-background-pro.html" class="tool-card">
+                        <div class="card-badge ai">AI</div>
+                        <div class="card-icon"><i class="fas fa-eraser"></i></div>
+                        <div class="card-content">
+                            <h3>إزالة الخلفية</h3>
+                            <p>قص صورك بسهولة ودقة عالية مجاناً.</p>
+                        </div>
+                    </a>
+                    
+                    <a href="imgscan.html" class="tool-card">
+                        <div class="card-badge ai">AI</div>
+                        <div class="card-icon"><i class="fas fa-text-height"></i></div>
+                        <div class="card-content">
+                            <h3>الصور إلى نص (OCR)</h3>
+                            <p>استخرج النصوص العربية والإنجليزية من أي صورة.</p>
+                        </div>
+                    </a>
+                    
+                    <a href="logo.html" class="tool-card">
+                        <div class="card-badge ai">AI</div>
+                        <div class="card-icon"><i class="fas fa-palette"></i></div>
+                        <div class="card-content">
+                            <h3>صانع الشعار</h3>
+                            <p>صمم شعار احترافي لشركتك بضغطة زر.</p>
+                        </div>
+                    </a>
+                    
+                    <a href="names.html" class="tool-card">
+                        <div class="card-badge ai">AI</div>
+                        <div class="card-icon"><i class="fas fa-random"></i></div>
+                        <div class="card-content">
+                            <h3>مولِّد أسماء</h3>
+                            <p>احصل على أسماء عشوائية لمشاريعك أو شخصياتك.</p>
+                        </div>
+                    </a>
+                    
+                    <a href="password.html" class="tool-card">
+                        <div class="card-badge ai">AI</div>
+                        <div class="card-icon"><i class="fas fa-lock"></i></div>
+                        <div class="card-content">
+                            <h3>مولّد كلمات مرور</h3>
+                            <p>أنشئ كلمات سر قوية ومعقدة لا يمكن اختراقها.</p>
+                        </div>
+                    </a>
+                    
+                    <a href="password-strength.html" class="tool-card">
+                        <div class="card-badge ai">AI</div>
+                        <div class="card-icon"><i class="fas fa-key"></i></div>
+                        <div class="card-content">
+                            <h3>فحص قوة كلمة السر</h3>
+                            <p>اختبر مدى قوة كلمة المرور الخاصة بك.</p>
+                        </div>
+                    </a>
+                    
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-image"></i> أدوات الصور</h2>
+                <div class="tools-grid">
+                    <a href="editor.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-edit"></i></div>
+                        <div class="card-content">
+                            <h3>تحرير الصور</h3>
+                            <p>محرر صور متكامل: قص، فلاتر، نصوص، والمزيد.</p>
+                        </div>
+                    </a>
+                    <a href="imgdv.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-compress-arrows-alt"></i></div>
+                        <div class="card-content">
+                            <h3>ضغط الصور</h3>
+                            <p>قلل حجم صورك (WebP/JPG) مع الحفاظ على الجودة.</p>
+                        </div>
+                    </a>
+                    <a href="imgtag.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-link"></i></div>
+                        <div class="card-content">
+                            <h3>صور إلى روابط</h3>
+                            <p>ارفع صورك واحصل على رابط مباشر لمشاركتها.</p>
+                        </div>
+                    </a>
+                    <a href="size.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+                        <div class="card-content">
+                            <h3>تغيير الأبعاد</h3>
+                            <p>تحكم في طول وعرض الصور بيكسل بيكسل.</p>
+                        </div>
+                    </a>
+                    <a href="zoom.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-search-plus"></i></div>
+                        <div class="card-content">
+                            <h3>تكبير الصور (AI)</h3>
+                            <p>ارفع دقة الصور القديمة وضاعف حجمها.</p>
+                        </div>
+                    </a>
+                    <a href="imgcut.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-crop-alt"></i></div>
+                        <div class="card-content">
+                            <h3>قص الصور بأشكال</h3>
+                            <p>قص صورك على شكل دائرة، نجمة، أو قلب.</p>
+                        </div>
+                    </a>
+                </div>
 
-    <button class="send-btn" onclick="sendMessage()">
-        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-    </button>
-</div>
+                <h2 class="section-title"><i class="fas fa-file-alt"></i> أدوات PDF والنصوص</h2>
+                <div class="tools-grid">
+                    <a href="pdf.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="card-content">
+                            <h3>صور إلى PDF</h3>
+                            <p>اجمع عدة صور في ملف PDF واحد مرتب.</p>
+                        </div>
+                    </a>
+                    <a href="txtpdf.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-file-word"></i></div>
+                        <div class="card-content">
+                            <h3>نص إلى PDF</h3>
+                            <p>اكتب أو الصق نصك وحوله لملف PDF جاهز.</p>
+                        </div>
+                    </a>
+                    <a href="arbtxt.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-font"></i></div>
+                        <div class="card-content">
+                            <h3>زخرفة عربية</h3>
+                            <p>احصل على أشكال مميزة لاسمك وكتاباتك.</p>
+                        </div>
+                    </a>
+                    <a href="engtxt.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-spell-check"></i></div>
+                        <div class="card-content">
+                            <h3>زخرفة إنجليزية</h3>
+                            <p>زخرف نصوصك الإنجليزية بأشكال متنوعة.</p>
+                        </div>
+                    </a>
+                    <a href="delete.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-trash-alt"></i></div>
+                        <div class="card-content">
+                            <h3>تنظيف النصوص</h3>
+                            <p>احذف الأسطر الفارغة والمكررة من أي نص.</p>
+                        </div>
+                    </a>
+                    <a href="more.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-sort-amount-up"></i></div>
+                        <div class="card-content">
+                            <h3>إحصاء الكلمات</h3>
+                            <p>اكتشف الكلمات الأكثر تكراراً في مقالاتك.</p>
+                        </div>
+                    </a>
+                    <a href="fix.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-check-double"></i></div>
+                        <div class="card-content">
+                            <h3>تصحيح إملائي</h3>
+                            <p>اقتراح بدائل للكلمات ذات الأخطاء الإملائية.</p>
+                        </div>
+                    </a>
+                    <a href="hide.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-eye-slash"></i></div>
+                        <div class="card-content">
+                            <h3>حروف مخفية</h3>
+                            <p>أضف حروف مخفية لنسخ نصوصك بشكل فريد.</p>
+                        </div>
+                    </a>
+                    <a href="kill.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-th-large"></i></div>
+                        <div class="card-content">
+                            <h3>تقسيم نص</h3>
+                            <p>قسم النصوص الطويلة إلى عدة أجزاء متساوية.</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-video"></i> أدوات الصوت والفيديو</h2>
+                <div class="tools-grid">
+                    <a href="Mp3.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-file-audio"></i></div>
+                        <div class="card-content">
+                            <h3>فيديو إلى MP3</h3>
+                            <p>استخرج الصوت من أي ملف فيديو بجودة عالية.</p>
+                        </div>
+                    </a>
+                    <a href="recorder.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-microphone"></i></div>
+                        <div class="card-content">
+                            <h3>تسجيل صوت</h3>
+                            <p>سجل صوتك مباشرة من المتصفح واحفظه كـ MP3.</p>
+                        </div>
+                    </a>
+                    <a href="v-o-edit.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-cut"></i></div>
+                        <div class="card-content">
+                            <h3>قص صوت/فيديو</h3>
+                            <p>قص أجزاء من المقاطع الصوتية أو الفيديو.</p>
+                        </div>
+                    </a>
+                    <a href="gif.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-film"></i></div>
+                        <div class="card-content">
+                            <h3>فيديو إلى GIF</h3>
+                            <p>حول مقاطع الفيديو القصيرة إلى صور متحركة GIF.</p>
+                        </div>
+                    </a>
+                </div>
 
-<input type="file" id="imageInput" accept="image/*" style="display:none">
+                <h2 class="section-title"><i class="fas fa-cogs"></i> أدوات الخدمات والمرافق</h2>
+                <div class="tools-grid">
+                    <a href="qr.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-qrcode"></i></div>
+                        <div class="card-content">
+                            <h3>صانع كود QR</h3>
+                            <p>حوّل الروابط والنصوص إلى كود QR فوري.</p>
+                        </div>
+                    </a>
+                    <a href="cameqr.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-camera"></i></div>
+                        <div class="card-content">
+                            <h3>قارئ كود QR</h3>
+                            <p>استخدم كاميرا هاتفك لقراءة أكواد QR.</p>
+                        </div>
+                    </a>
+                    <a href="note.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-sticky-note"></i></div>
+                        <div class="card-content">
+                            <h3>مذكرة فورية</h3>
+                            <p>اكتب ملاحظات سريعة يتم حفظها في متصفحك.</p>
+                        </div>
+                    </a>
+                    <a href="age.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="card-content">
+                            <h3>حساب العمر</h3>
+                            <p>احسب الفرق بين تاريخين باليوم والشهر والسنة.</p>
+                        </div>
+                    </a>
+                    
+                    <a href="prayer.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-mosque"></i></div>
+                        <div class="card-content">
+                            <h3>أوقات الصلاة</h3>
+                            <p>مواعيد الصلاة حسب موقعك الجغرافي.</p>
+                        </div>
+                    </a>
 
-<script>
-/* ========== تهيئة Puter (يمنع إعادة التوجيه) ========== */
-(async () => {
-    await puter.init({ anonymous: true });
-})();
+                    <a href="data.city.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-cloud-sun-rain"></i></div>
+                        <div class="card-content">
+                            <h3>أحوال الطقس</h3>
+                            <p>عرض تفاصيل الطقس لمدينتك الحالية.</p>
+                        </div>
+                    </a>
+                    
+                    <a href="coler.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-swatchbook"></i></div>
+                        <div class="card-content">
+                            <h3>أداة ألوان</h3>
+                            <p>اختر الألوان واحصل على تدرجات (HEX/RGB).</p>
+                        </div>
+                    </a>
+                    <a href="pixels.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-draw-polygon"></i></div>
+                        <div class="card-content">
+                            <h3>رسم Pixel</h3>
+                            <p>أداة بسيطة لرسم فن البكسل (Pixel Art).</p>
+                        </div>
+                    </a>
+                    <a href="emoji.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-smile"></i></div>
+                        <div class="card-content">
+                            <h3>رموز وإيموجي</h3>
+                            <p>انسخ آلاف الرموز والإيموجي لاستخدامها.</p>
+                        </div>
+                    </a>
+                    <a href="voyse.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-volume-up"></i></div>
+                        <div class="card-content">
+                            <h3>قياس الضوضاء</h3>
+                            <p>استخدم الميكروفون لقياس مستوى الضوضاء (dB).</p>
+                        </div>
+                    </a>
+                </div>
 
-/* ========= أدوات مساعدة ========= */
-function addMessage(text, type) {
-    const el = document.createElement("div");
-    el.className = "msg " + type;
-    el.textContent = text;
-    document.getElementById("chat").appendChild(el);
-    el.scrollIntoView({ behavior: "smooth" });
-}
+                <h2 class="section-title"><i class="fas fa-calculator"></i> أدوات الحساب والتحويل</h2>
+                <div class="tools-grid">
+                    <a href="units.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="card-content">
+                            <h3>تحويل الوحدات</h3>
+                            <p>حوّل بين وحدات الطول، الوزن، الحرارة، وغيرها.</p>
+                        </div>
+                    </a>
+                    <a href="money.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="card-content">
+                            <h3>تحويل العملات</h3>
+                            <p>أسعار العملات العالمية محدثة بشكل فوري.</p>
+                        </div>
+                    </a>
+                    <a href="calculator.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                        <div class="card-content">
+                            <h3>آلة حاسبة</h3>
+                            <p>آلة حاسبة بسيطة وسريعة لإجراء العمليات.</p>
+                        </div>
+                    </a>
+                </div>
 
-/* ========= إرسال رسالة ========= */
-async function sendMessage() {
-    const promptInput = document.getElementById("prompt");
-    const text = promptInput.value.trim();
-    if (!text) return;
+                <h2 class="section-title"><i class="fas fa-shield-alt"></i> أدوات الأمان والتشفير</h2>
+                <div class="tools-grid">
+                    <a href="hash.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-hashtag"></i></div>
+                        <div class="card-content">
+                            <h3>مولد Hash</h3>
+                            <p>تشفير نصوصك (MD5, SHA-1, SHA-256).</p>
+                        </div>
+                    </a>
+                    <a href="crypto.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-shield-virus"></i></div>
+                        <div class="card-content">
+                            <h3>تشفير AES</h3>
+                            <p>تشفير وفك تشفير النصوص بـ AES عبر المتصفح.</p>
+                        </div>
+                    </a>
+                    <a href="url.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="card-content">
+                            <h3>فحص الروابط</h3>
+                            <p>تأكد من أمان أي رابط قبل فتحه.</p>
+                        </div>
+                    </a>
+                    <a href="base64.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-retweet"></i></div>
+                        <div class="card-content">
+                            <h3>تشفير Base64</h3>
+                            <p>تحويل النصوص والملفات إلى Base64 والعكس.</p>
+                        </div>
+                    </a>
+                    <a href="morse.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-ellipsis-h"></i></div>
+                        <div class="card-content">
+                            <h3>شيفرة مورس</h3>
+                            <p>تحويل النص إلى شيفرة مورس والعكس.</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-code"></i> أدوات المطورين</h2>
+                <div class="tools-grid">
+                    <a href="yaml.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-file-code"></i></div>
+                        <div class="card-content">
+                            <h3>JSON ↔ YAML</h3>
+                            <p>التحويل بين تنسيقات JSON و YAML بسهولة.</p>
+                        </div>
+                    </a>
+                    <a href="codegood.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-code"></i></div>
+                        <div class="card-content">
+                            <h3>تنسيق الأكواد</h3>
+                            <p>تنظيف وتنسيق أكواد JS, HTML, CSS, JSON.</p>
+                        </div>
+                    </a>
+                    <a href="dns.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                        <div class="card-content">
+                            <h3>فحص DNS</h3>
+                            <p>معرفة سجلات A, CNAME, MX لأي نطاق.</p>
+                        </div>
+                    </a>
+                    <a href="csv.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-file-csv"></i></div>
+                        <div class="card-content">
+                            <h3>CSV ↔ JSON</h3>
+                            <p>تحويل ملفات CSV إلى JSON أو العكس.</p>
+                        </div>
+                    </a>
+                    <a href="zip.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-file-archive"></i></div>
+                        <div class="card-content">
+                            <h3>ضغط ZIP</h3>
+                            <p>تجميع عدة ملفات في ملف ZIP واحد بالمتصفح.</p>
+                        </div>
+                    </a>
+                    <a href="goodarbtxt.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-text-width"></i></div>
+                        <div class="card-content">
+                            <h3>ضغط الخطوط</h3>
+                            <p>تحويل خطوط TTF إلى WOFF2 لسرعة المواقع.</p>
+                        </div>
+                    </a>
+                    <a href="safetymake.html" class="tool-card">
+                        <div class="card-badge free">FREE</div>
+                        <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+                        <div class="card-content">
+                            <h3>مولد الخصوصية</h3>
+                            <p>إنشاء سياسة خصوصية عربية جاهزة لموقعك.</p>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+        </section>
+        
+    </main>
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="container">
+            <div class="cookie-content">
+                <i class="fas fa-cookie-bite cookie-icon"></i>
+                <p>
+                    نحن نستخدم ملفات تعريف ارتباط أساسية لتشغيل الموقع. كما نستخدم ملفات تعريف ارتباط اختيارية لتحسين تجربتك.
+                    <a href="safety.html">سياسة الخصوصية</a> | <a href="safety.html">شروط الخدمة</a>
+                </p>
+            </div>
+            <div class="cookie-buttons">
+                <button id="accept-all-cookies" class="cookie-btn btn-accept">أقبل الكل</button>
+                <button id="accept-essential-cookies" class="cookie-btn btn-essential">قبول الأساسية فقط</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const menuToggle = document.querySelector('.hamburger input');
+        const sidebar = document.querySelector('.sidebar');
+        
+        menuToggle.addEventListener('change', () => {
+            sidebar.classList.toggle('open');
+        });
+    </script>
+    
+    <script type="module">
+        // 1. استيراد المكتبات مباشرة من CDN (نفس إصدار login.html)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-    addMessage(text, "me");
-    promptInput.value = "";
+        // 2. إعدادات المشروع (مطابقة تماماً لما في login.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
+        };
 
-    addMessage("جارٍ الكتابة...", "ai");
+        // 3. تهيئة التطبيق
+        let app, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            console.log("تم الاتصال بـ Firebase في الصفحة الرئيسية بنجاح");
+        } catch (error) {
+            console.error("فشل تهيئة Firebase:", error);
+        }
 
-    const model = document.getElementById("modelSelector").value;
+        // 4. التعامل مع عناصر واجهة المستخدم (زر الدخول/الملف الشخصي)
+        const authLink = document.getElementById('auth-link');
+        // نتأكد من وجود العنصر قبل محاولة تعديله لتجنب الأخطاء
+        if (authLink) {
+            const authIcon = authLink.querySelector('i');
+            const authText = authLink.querySelector('span');
 
-    const reply = await puter.ai.chat(text, { model });
+            // 5. مراقبة حالة تسجيل الدخول
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // إذا كان المستخدم مسجلاً للدخول
+                    // التحقق مما إذا كان البريد مفعلاً (اختياري، يعتمد على رغبتك في ظهور الزر)
+                    // هنا سنعرض زر الملف الشخصي لأي مستخدم مسجل
+                    authLink.href = 'menu.html';
+                    
+                    if (authIcon) authIcon.className = 'fas fa-user-circle'; 
+                    if (authText) authText.textContent = 'ملف الشخصي';
+                    
+                    console.log("المستخدم مسجل الدخول:", user.email);
+                } else {
+                    // إذا لم يكن مسجلاً للدخول
+                    authLink.href = 'login.html'; 
+                    
+                    if (authIcon) authIcon.className = 'fas fa-sign-in-alt';
+                    if (authText) authText.textContent = 'تسجيل الدخول';
+                }
+            });
+        }
+    </script>
 
-    document.querySelector(".ai:last-child").textContent = reply;
-}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cookieBanner = document.getElementById('cookie-banner');
+            const acceptAllBtn = document.getElementById('accept-all-cookies');
+            const acceptEssentialBtn = document.getElementById('accept-essential-cookies');
 
-/* ========= توليد صورة ========= */
-async function makeImage() {
-    const promptInput = document.getElementById("prompt");
-    const text = promptInput.value.trim();
-    if (!text) return alert("أدخل وصف الصورة أولاً");
+            const cookieConsent = localStorage.getItem('cookieConsent');
+            
+            if (!cookieConsent) {
+                const randomDelay = (Math.floor(Math.random() * 4) + 3) * 1000; 
+                setTimeout(() => {
+                    cookieBanner.classList.add('show');
+                }, randomDelay);
+            }
 
-    addMessage("🎨 توليد صورة...", "ai");
+            acceptAllBtn.addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', 'all');
+                cookieBanner.classList.remove('show');
+            });
 
-    const img = await puter.ai.txt2img(text, { model: "gpt-image-1" });
-
-    document.getElementById("chat").appendChild(img);
-    img.style.width = "70%";
-    img.style.borderRadius = "10px";
-}
-
-/* ========= اختيار صورة للتحليل ========= */
-function chooseImage() {
-    document.getElementById("imageInput").click();
-}
-
-imageInput.onchange = async () => {
-    const file = imageInput.files[0];
-    if (!file) return;
-
-    const url = URL.createObjectURL(file);
-
-    addMessage("🔍 تحليل الصورة...", "ai");
-
-    const response = await puter.ai.chat("Describe this image", url, {
-        model: "gpt-5.1"
-    });
-
-    addMessage(response, "ai");
-};
-</script>
-
-</body>
+            acceptEssentialBtn.addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', 'essential');
+                cookieBanner.classList.remove('show');
+            });
+        });
+    </script>
+    </body>
 </html>

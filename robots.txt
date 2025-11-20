@@ -1,2 +1,15 @@
+# SkyData Robots.txt
+# يوجه محركات البحث إلى الصفحات المسموح بها والممنوعة
+
+# ينطبق على جميع برامج الزحف (الروبوتات)
 User-agent: *
-Disallow: /
+
+# السماح بالوصول لجميع الصفحات بشكل افتراضي (Allow: /)
+Allow: /
+
+# الصفحات الممنوعة من الفهرسة (صفحات المستخدم الخاصة)
+Disallow: /login.html
+Disallow: /menu.html
+
+# تحديد موقع ملف Sitemap
+Sitemap: https://skydata.casacam.net/sitemap.xml

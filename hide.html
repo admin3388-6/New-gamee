@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - الحروف والأسماء المخفية</title>
+    <meta name="description" content="احصل على حروف مخفية وفراغات شفافة لأسماء الألعاب (ببجي، فري فاير) وحسابات التواصل الاجتماعي. انسخ الاسم المخفي بسهولة.">
+    <meta name="keywords" content="حروف مخفية, اسم مخفي, فراغ ببجي, فراغ فري فاير, invisible text, blank text, hidden characters, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,7 +27,7 @@
 
     <style>
         /* ==============================================
-           1. أساسيات الصفحة (Standard)
+           1. أساسيات الصفحة
            ============================================== */
         body {
             background-color: #0b132b;
@@ -45,7 +45,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -66,14 +66,6 @@
         .logo-img { height: 35px !important; width: auto; }
 
         /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
-        .hamburger input { display: none; }
-        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line-top-bottom { stroke-dasharray: 12 63; }
-        .hamburger input:checked + svg { transform: rotate(-45deg); }
-        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
-
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -81,6 +73,7 @@
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -88,37 +81,94 @@
         .footer-nav a { color: #ccc; font-size: 13px; }
         .copyright { font-size: 12px; color: #666; }
 
-
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة الإخفاء
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
+            background-color: #111a30; padding: 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            border: 1px solid #2a3a5a;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; text-align: center; }
+        p.desc { color: #aaa; text-align: center; margin-bottom: 30px; font-size: 14px; }
+
+        /* شبكة الرموز المخفية */
+        .hidden-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px; margin-bottom: 40px;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        .hidden-card {
+            background: #0e1624; border: 1px solid #2a3a5a; border-radius: 10px;
+            padding: 20px; text-align: center; transition: 0.3s; position: relative;
+            overflow: hidden;
+        }
+        .hidden-card:hover { transform: translateY(-5px); border-color: #00aaff; }
+
+        .hidden-card h3 { margin: 0 0 10px 0; color: #fff; font-size: 16px; }
+        .hidden-card p { color: #777; font-size: 12px; margin-bottom: 15px; }
+        
+        .preview-box {
+            background: #000; color: #00ff7f; padding: 10px; border-radius: 5px;
+            font-family: monospace; margin-bottom: 15px; border: 1px dashed #333;
+            position: relative; height: 40px; display: flex; align-items: center; justify-content: center;
+        }
+        /* علامة لإظهار المكان المخفي */
+        .preview-box::after {
+            content: "اكتب هنا"; color: #333; font-size: 10px; position: absolute;
         }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        .btn-copy {
+            background: #00aaff; color: #111a30; border: none; padding: 10px 20px;
+            border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;
+            transition: 0.2s; font-size: 14px;
+        }
+        .btn-copy:hover { background: #fff; }
+
+        /* مولد الاسم المخفي */
+        .generator-section {
+            border-top: 1px solid #2a3a5a; padding-top: 30px; margin-top: 20px;
+        }
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        
+        input[type="text"] {
+            flex: 1; padding: 12px; background: #0e1624; border: 1px solid #2a3a5a;
+            color: #fff; border-radius: 6px; font-family: 'Cairo'; font-size: 16px;
+            text-align: center;
+        }
+        
+        .btn-generate {
+            background: #27ae60; color: #fff; border: none; padding: 12px 25px;
+            border-radius: 6px; font-weight: bold; cursor: pointer;
+        }
+        .btn-generate:hover { background: #2ecc71; }
+
+        .result-display {
+            background: #0e1624; padding: 15px; border-radius: 8px; border: 1px solid #2a3a5a;
+            text-align: center; display: none; margin-top: 15px;
+        }
+        .result-text {
+            font-size: 20px; color: #fff; margin-bottom: 10px; letter-spacing: 2px;
+            border-bottom: 1px solid #333; padding-bottom: 10px;
         }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        /* رسالة النسخ */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 5000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
+        #toast.show { opacity: 1; bottom: 50px; }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        @media (max-width: 600px) {
+            .input-group { flex-direction: column; }
+            .btn-generate { width: 100%; }
         }
-        .btn-back:hover { background: #fff; }
 
     </style>
 </head>
@@ -141,7 +191,7 @@
         </div>
     </header>
 
-    <nav class="sidebar" id="sidebar">
+    <nav class="sidebar">
         <div class="sidebar-section">
             <h4>القسم 1: تعريف واختصار</h4>
             <ul>
@@ -179,10 +229,8 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
@@ -198,7 +246,7 @@
                 <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
                 <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
                 <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
-                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="hide.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
                 <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
                 <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
                 <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
@@ -230,26 +278,75 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-eye-slash"></i> حروف وأسماء مخفية</h1>
+            <p class="desc">استخدم هذه الرموز لإنشاء أسماء مخفية في الألعاب (ببجي، فري فاير) أو فيسبوك وواتساب.</p>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
+            <div class="hidden-grid">
+                
+                <div class="hidden-card">
+                    <h3>فراغ كبير (ألعاب)</h3>
+                    <p>الأفضل لـ PUBG و Free Fire. يظهر كاسم فارغ.</p>
+                    <div class="preview-box">ㅤ</div>
+                    <button class="btn-copy" onclick="copyChar('ㅤ')">نسخ الفراغ</button>
+                </div>
+
+                <div class="hidden-card">
+                    <h3>فراغ برايل (فيسبوك)</h3>
+                    <p>ممتاز للفيسبوك والإنستغرام للفصل بين الكلام.</p>
+                    <div class="preview-box">⠀</div>
+                    <button class="btn-copy" onclick="copyChar('⠀')">نسخ الفراغ</button>
+                </div>
+
+                <div class="hidden-card">
+                    <h3>مسافة صفرية (واتساب)</h3>
+                    <p>لا تأخذ مساحة وتستخدم لإخفاء الكلام أو فصل الحروف.</p>
+                    <div class="preview-box">&#8203;</div>
+                    <button class="btn-copy" onclick="copyChar('\u200B')">نسخ الفراغ</button>
+                </div>
+
+                <div class="hidden-card">
+                    <h3>فاصل نادر (MVS)</h3>
+                    <p>رمز نادر يستخدم في بعض الأنظمة القديمة والأسماء.</p>
+                    <div class="preview-box">&#6158;</div>
+                    <button class="btn-copy" onclick="copyChar('\u180E')">نسخ الفراغ</button>
+                </div>
+
+            </div>
+
+            <div class="generator-section">
+                <h2 style="text-align:center; color:#00aaff; margin-bottom:15px; font-size:18px;">مولد الاسم المخفي</h2>
+                <p style="text-align:center; color:#aaa; font-size:14px; margin-bottom:15px;">اكتب اسمك وسنقوم بدمجه بفراغات مخفية ليتم قبوله في الألعاب.</p>
+                
+                <div class="input-group">
+                    <input type="text" id="name-input" placeholder="اكتب اسمك هنا (مثلاً: أحمد)">
+                    <button class="btn-generate" onclick="generateHiddenName()">توليد ونسخ</button>
+                </div>
+
+                <div id="result-display" class="result-display">
+                    <div id="result-text" class="result-text"></div>
+                    <button class="btn-copy" onclick="copyResult()">نسخ النتيجة</button>
+                </div>
+            </div>
+
         </div>
 
     </main>
 
+    <div id="toast">تم النسخ!</div>
+
     <script>
-        // --- فتح/إغلاق القائمة ---
+        // --- 1. القائمة الجانبية ---
         const menuCheckbox = document.getElementById('menu-checkbox');
-        const sidebar = document.getElementById('sidebar');
+        const sidebar = document.querySelector('.sidebar');
         const overlay = document.getElementById('sidebar-overlay');
 
         function toggleMenu(open) {
@@ -258,6 +355,40 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- 2. منطق النسخ والتوليد ---
+        const toast = document.getElementById('toast');
+
+        function showToast() {
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 1500);
+        }
+
+        function copyChar(char) {
+            navigator.clipboard.writeText(char).then(() => showToast());
+        }
+
+        function generateHiddenName() {
+            const name = document.getElementById('name-input').value.trim();
+            if (!name) return alert("الرجاء كتابة اسم أولاً.");
+
+            // دمج الاسم مع Hangul Filler (U+3164) وهو الأشهر للألعاب
+            // نضع الفراغ قبل وبعد وبين الحروف أحياناً
+            const hiddenSpace = 'ㅤ'; // U+3164
+            const generated = `${hiddenSpace}${name}${hiddenSpace}`;
+
+            document.getElementById('result-text').innerText = generated;
+            document.getElementById('result-display').style.display = 'block';
+            
+            // نسخ تلقائي
+            navigator.clipboard.writeText(generated).then(() => showToast());
+        }
+
+        function copyResult() {
+            const text = document.getElementById('result-text').innerText;
+            navigator.clipboard.writeText(text).then(() => showToast());
+        }
+
     </script>
 
     <script type="module">

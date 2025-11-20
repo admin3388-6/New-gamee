@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - استخراج الكلمات المكررة</title>
+    <meta name="description" content="أداة مجانية لتحليل النصوص واستخراج الكلمات المكررة وحساب عدد تكرار كل كلمة بدقة. تدعم اللغة العربية وجميع اللغات.">
+    <meta name="keywords" content="تكرار الكلمات, عداد الكلمات, تحليل النص, word frequency, duplicate finder, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,6 +29,7 @@
         /* ==============================================
            1. أساسيات الصفحة (Standard)
            ============================================== */
+        
         body {
             background-color: #0b132b;
             padding-top: 90px !important;
@@ -43,7 +44,7 @@
             box-shadow: none !important;
             box-sizing: border-box;
         }
-        *:focus { outline: none; border-color: transparent !important; }
+        *:focus, *:active { outline: none !important; border-color: transparent !important; }
 
         /* الهيدر */
         .main-header {
@@ -66,14 +67,6 @@
         .logo-img { height: 35px !important; width: auto; }
 
         /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
-        .hamburger input { display: none; }
-        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line-top-bottom { stroke-dasharray: 12 63; }
-        .hamburger input:checked + svg { transform: rotate(-45deg); }
-        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
-
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -81,6 +74,8 @@
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
+        /* تذييل القائمة */
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,35 +85,90 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة التكرار (Word Counter Tool)
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
+            background-color: #111a30; padding: 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; }
+
+        /* منطقة الإدخال */
+        textarea {
+            width: 100%; height: 200px; background: #0e1624; color: #fff;
+            border: 1px solid #2a3a5a; border-radius: 10px; padding: 15px;
+            font-family: 'Cairo'; font-size: 16px; resize: vertical;
+            line-height: 1.6; margin-bottom: 15px;
+        }
+        textarea:focus { border-color: #00aaff; }
+
+        /* الأزرار */
+        .action-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        
+        .cta-button {
+            flex: 1; padding: 12px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; min-width: 120px;
+        }
+        .btn-blue { background-color: #00aaff; color: #111a30; }
+        .btn-blue:hover { background-color: #fff; }
+        .btn-red { background-color: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-red:hover { background-color: #ff4d4d; color: #fff; }
+        .btn-green { background-color: #27ae60; }
+
+        /* خيارات */
+        .options-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; background: #0e1624; padding: 10px; border-radius: 8px;
+            border: 1px solid #2a3a5a;
+        }
+        .checkbox-wrapper { display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ccc; }
+        .checkbox-wrapper input { width: 18px; height: 18px; accent-color: #00aaff; }
+
+        /* النتائج */
+        #stats-bar {
+            display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;
+            font-weight: bold; color: #00aaff; font-size: 18px;
+        }
+        
+        #results-container {
+            display: none; animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .results-table-wrapper {
+            max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid #2a3a5a;
+        }
+        
+        .results-table { width: 100%; border-collapse: collapse; text-align: right; }
+        .results-table th {
+            background: #00aaff; color: #111a30; padding: 12px; position: sticky; top: 0;
+        }
+        .results-table td {
+            background: #0e1624; color: #fff; padding: 10px; border-bottom: 1px solid #2a3a5a;
+        }
+        .results-table tr:last-child td { border-bottom: none; }
+        .count-badge {
+            background: rgba(0, 255, 127, 0.1); color: #00ff7f; padding: 4px 10px;
+            border-radius: 20px; font-weight: bold; font-size: 14px;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 5000;
         }
+        #toast.show { opacity: 1; bottom: 50px; }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        @media (max-width: 600px) {
+            .options-row { flex-direction: column; gap: 10px; align-items: flex-start; }
         }
-
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
-        }
-
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
-        }
-        .btn-back:hover { background: #fff; }
 
     </style>
 </head>
@@ -141,7 +191,7 @@
         </div>
     </header>
 
-    <nav class="sidebar" id="sidebar">
+    <nav class="sidebar">
         <div class="sidebar-section">
             <h4>القسم 1: تعريف واختصار</h4>
             <ul>
@@ -195,7 +245,7 @@
                 <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
                 <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
                 <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
-                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="more.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
                 <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
                 <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
                 <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
@@ -230,26 +280,68 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-sort-amount-up"></i> استخراج الكلمات المكررة</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
+            <textarea id="text-input" placeholder="الصق النص هنا لتحليله..."></textarea>
+            
+            <div class="options-row">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="show-duplicates-only" checked>
+                    عرض المكرر فقط
+                </label>
+                <div id="stats-bar">
+                    <span>الكلمات: <b id="total-words">0</b></span>
+                    <span style="color:#ccc;">|</span>
+                    <span>الفريدة: <b id="unique-words">0</b></span>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <button class="cta-button btn-blue" onclick="analyzeText()">
+                    <i class="fas fa-search"></i> تحليل النص
+                </button>
+                <button class="cta-button btn-green" onclick="copyResults()">
+                    <i class="fas fa-copy"></i> نسخ النتائج
+                </button>
+                <button class="cta-button btn-red" onclick="clearAll()">
+                    <i class="fas fa-trash"></i> مسح
+                </button>
+            </div>
+
+            <div id="results-container">
+                <div class="results-table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%;">الكلمة</th>
+                                <th style="width: 30%;">التكرار</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
 
     </main>
 
+    <div id="toast">تم النسخ!</div>
+
     <script>
-        // --- فتح/إغلاق القائمة ---
+        // --- 1. القائمة الجانبية ---
         const menuCheckbox = document.getElementById('menu-checkbox');
-        const sidebar = document.getElementById('sidebar');
+        const sidebar = document.querySelector('.sidebar');
         const overlay = document.getElementById('sidebar-overlay');
 
         function toggleMenu(open) {
@@ -258,6 +350,93 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- 2. منطق الأداة ---
+        const textInput = document.getElementById('text-input');
+        const resultsContainer = document.getElementById('results-container');
+        const resultsBody = document.getElementById('results-body');
+        const totalWordsEl = document.getElementById('total-words');
+        const uniqueWordsEl = document.getElementById('unique-words');
+        const showDuplicatesOnly = document.getElementById('show-duplicates-only');
+        
+        function analyzeText() {
+            const text = textInput.value.trim();
+            if (!text) {
+                alert("الرجاء لصق نص أولاً.");
+                return;
+            }
+
+            // تنظيف النص وتقسيمه إلى كلمات (يدعم العربية والإنجليزية)
+            // هذا التعبير النمطي يفصل الكلمات بناءً على المسافات وعلامات الترقيم
+            const words = text.toLowerCase().match(/[\w\u0600-\u06FF]+(?:['’][\w\u0600-\u06FF]+)*/g) || [];
+            
+            const wordCounts = {};
+            words.forEach(word => {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
+            });
+
+            // تحويل الكائن إلى مصفوفة للترتيب
+            let sortedWords = Object.keys(wordCounts).map(word => {
+                return { word: word, count: wordCounts[word] };
+            });
+
+            // الترتيب من الأكثر تكراراً إلى الأقل
+            sortedWords.sort((a, b) => b.count - a.count);
+
+            // الإحصائيات
+            totalWordsEl.innerText = words.length;
+            uniqueWordsEl.innerText = sortedWords.length;
+
+            // العرض
+            resultsBody.innerHTML = '';
+            let hasResults = false;
+
+            sortedWords.forEach(item => {
+                if (showDuplicatesOnly.checked && item.count < 2) return;
+                
+                hasResults = true;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.word}</td>
+                    <td><span class="count-badge">${item.count}</span></td>
+                `;
+                resultsBody.appendChild(row);
+            });
+
+            if (!hasResults && showDuplicatesOnly.checked) {
+                resultsBody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#aaa;">لا توجد كلمات مكررة.</td></tr>';
+            }
+
+            resultsContainer.style.display = 'block';
+        }
+
+        function copyResults() {
+            if (resultsBody.children.length === 0) return;
+            
+            let textToCopy = "الكلمة : التكرار\n----------------\n";
+            const rows = resultsBody.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                if(cols.length === 2) {
+                    textToCopy += `${cols[0].innerText} : ${cols[1].innerText}\n`;
+                }
+            });
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 1500);
+            });
+        }
+
+        function clearAll() {
+            textInput.value = '';
+            resultsContainer.style.display = 'none';
+            totalWordsEl.innerText = '0';
+            uniqueWordsEl.innerText = '0';
+        }
+
     </script>
 
     <script type="module">
@@ -267,7 +446,12 @@
         const firebaseConfig = {
             apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
             authDomain: "skydata-ai.firebaseapp.com",
-            projectId: "skydata-ai"
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
         };
 
         try {

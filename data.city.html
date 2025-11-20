@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SkyData - حالة الطقس العالمية</title>
+    <meta name="description" content="تابع حالة الطقس، درجات الحرارة، وسرعة الرياح في أي مدينة في العالم بدقة عالية وتحديث مباشر.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
+    <style>
+        /* ==============================================
+           1. "الحل النووي" لإزالة المربع الأزرق نهائياً
+           ============================================== */
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        *:focus, *:active, *:focus-visible {
+            outline: none !important;
+            border-color: transparent !important;
+        }
+
+        /* ==============================================
+           2. إصلاحات الهيدر والقائمة (Overrides)
+           ============================================== */
+        
+        body {
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* إجبار الهيدر على التصميم الصحيح */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important; /* لون صلب */
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2000;
+            display: flex !important;
+            align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            z-index: 2001 !important;
+            padding-top: 20px !important;
+            background-color: #111a30;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* طبقة التعتيم */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        /* ==============================================
+           3. تنسيقات تطبيق الطقس
+           ============================================== */
+
+        .weather-container {
+            background-color: #111a30;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px; 
+            border: 1px solid #2a3a5a;
+            text-align: center;
+            margin: 0 auto 50px auto;
+        }
+
+        h1 { color: #00aaff; margin-bottom: 25px; font-size: 2em; }
+
+        form { display: flex; gap: 10px; margin-bottom: 20px; }
+        
+        #city_name {
+            flex-grow: 1; padding: 12px;
+            border: 1px solid #2a3a5a; border-radius: 8px;
+            background-color: #0b132b; color: #ffffff;
+            font-family: 'Cairo', sans-serif; font-size: 1em;
+        }
+        /* إعادة تعيين حدود الحقل عند الكتابة ليكون لونه سماوي فقط */
+        #city_name:focus { border-color: #00aaff !important; }
+
+        .search-btn {
+            background-color: #00aaff; color: #111a30;
+            padding: 12px 20px; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .search-btn:hover { background-color: #fff; }
+        
+        /* صندوق النتائج */
+        #weather_result {
+            background-color: #0b132b; padding: 20px;
+            border-radius: 12px; border: 1px solid #2a3a5a;
+            text-align: right; margin-bottom: 30px;
+        }
+
+        .time-display {
+            background: rgba(0, 170, 255, 0.1); color: #00aaff;
+            padding: 10px; border-radius: 8px; margin-bottom: 20px;
+            font-weight: bold; display: flex; justify-content: center;
+            align-items: center; gap: 10px;
+        }
+
+        .result-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px dashed #2a3a5a;
+        }
+        .result-item:last-child { border-bottom: none; }
+        .label { color: #aaa; font-size: 0.95em; }
+        .value { color: #fff; font-weight: bold; font-family: 'Cairo', sans-serif; }
+
+        .temp-display {
+            font-size: 4em; color: #fff; margin: 10px 0 20px;
+            font-weight: bold; display: flex; justify-content: center;
+            align-items: center; gap: 15px; font-family: sans-serif;
+        }
+        .temp-display i { font-size: 0.6em; color: #FFD700; }
+
+        /* التوقعات */
+        #forecast_container {
+            margin-top: 30px; padding-top: 20px; border-top: 1px solid #2a3a5a;
+        }
+        .forecast-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px; margin-top: 20px;
+        }
+        .day-card {
+            background-color: #0b132b; padding: 15px 5px;
+            border-radius: 10px; border: 1px solid #2a3a5a;
+            cursor: pointer; transition: 0.3s;
+        }
+        .day-card:hover { transform: translateY(-5px); border-color: #00aaff; }
+        .day-card .date { font-size: 0.8em; color: #aaa; margin-bottom: 5px; }
+        .day-card .icon { font-size: 1.8em; color: #FFD700; margin: 5px 0; }
+        .day-card .temps { font-family: sans-serif; font-weight: bold; font-size: 0.9em; }
+        .min-temp { color: #666; font-size: 0.9em; }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; z-index: 3000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #111a30; margin: 15% auto; padding: 25px;
+            border: 1px solid #00aaff; border-radius: 15px;
+            width: 90%; max-width: 400px; position: relative;
+            box-shadow: 0 0 30px rgba(0,170,255,0.2);
+        }
+        .close-btn {
+            color: #ff4d4d; float: left; font-size: 28px; font-weight: bold; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
+        </div>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> 
+                    <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
+                
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
+        </div>
+    </nav>
+
+    <div class="weather-container">
+        <h1><i class="fas fa-cloud-sun" style="margin-left: 10px;"></i> طقس العالم</h1>
+        
+        <form id="weatherForm">
+            <input type="text" id="city_name" name="city_name" placeholder="اسم المدينة (مثلاً: مكة)" required>
+            <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+        </form>
+        
+        <div id="weather_result" style="display: none;"></div>
+        
+        <div id="forecast_container" style="display: none;">
+            <h2 style="color:#00aaff; font-size:1.2em;">الأيام القادمة</h2>
+            <div class="forecast-grid"></div>
+        </div>
+
+        <div id="error_output" style="color:#ff6b6b; margin-top:15px; display:none; font-weight:bold;"></div>
+    </div>
+
+    <div id="detail_modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modal_day_title" style="color:#00aaff; margin-bottom: 20px;"></h3>
+            <div id="modal_details_body"></div>
+        </div>
+    </div>
+
+    <script>
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                menuCheckbox.checked = true;
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                menuCheckbox.checked = false;
+            }
+        }
+
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const authLink = document.getElementById('auth-link');
+            if (authLink) {
+                const authIcon = authLink.querySelector('i');
+                const authText = authLink.querySelector('span');
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authLink.href = 'menu.html';
+                        if (authIcon) authIcon.className = 'fas fa-user-circle'; 
+                        if (authText) authText.textContent = 'ملف الشخصي';
+                    } else {
+                        authLink.href = 'login.html'; 
+                        if (authIcon) authIcon.className = 'fas fa-sign-in-alt';
+                        if (authText) authText.textContent = 'تسجيل الدخول';
+                    }
+                });
+            }
+        } catch (e) { console.error("Firebase Error:", e); }
+    </script>
+
+    <script>
+        const { DateTime } = luxon; 
+        const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
+        const OPENMETEO_URL = "https://api.open-meteo.com/v1/forecast";
+
+        let fullForecastData = []; 
+
+        // قوائم الحظر
+        const BLOCKED_TERMS = ['israel', 'تل ابيب', 'تل أبيب', 'telle a viv', 'jerusalem', 'القدس', 'haifa', 'حيفا', 'netanya', 'ashdod', 'اشدود', 'rishon lezion', 'بات يام'];
+        const RANDOM_ERROR_MESSAGES = ["ما هو هذا شيء", "لا يوجد معلومات حول هذه المنطقة غير موجود", "لا يمكننا تعرف على هذه الدولة هل تقصد فلسطين؟", "لا يمكننا مساعدتك في ذالك", "خطأ", "نعتذر لكن هذه لا يوجد اي معلومات"];
+
+        function closeModal() { document.getElementById('detail_modal').style.display = 'none'; }
+
+        function getWeatherIcon(code) {
+            if (code === 0) return 'fas fa-sun'; 
+            if (code >= 1 && code <= 3) return 'fas fa-cloud-sun'; 
+            if (code >= 51 && code <= 55) return 'fas fa-cloud-drizzle';
+            if (code >= 61 && code <= 65) return 'fas fa-cloud-showers-heavy';
+            if (code >= 71 && code <= 75) return 'fas fa-snowflake';
+            if (code >= 80 && code <= 82) return 'fas fa-cloud-rain';
+            if (code >= 95) return 'fas fa-bolt';
+            return 'fas fa-cloud';
+        }
+
+        function getDayName(dateString, locale = 'ar') {
+            const date = new Date(dateString);
+            return date.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'short' });
+        }
+
+        function getWindDirection(degrees) {
+            const directions = ['شمال', 'شمال-شمال-شرق', 'شمال-شرق', 'شرق-شمال-شرق', 'شرق', 'شرق-جنوب-شرق', 'جنوب-شرق', 'جنوب-جنوب-شرق', 'جنوب', 'جنوب-جنوب-غرب', 'جنوب-غرب', 'غرب-جنوب-غرب', 'غرب', 'غرب-شمال-غرب', 'شمال-غرب', 'شمال-شمال-غرب'];
+            const index = Math.round(degrees / (360 / directions.length)) % directions.length;
+            return directions[index];
+        }
+
+        function getCountryName(code) {
+            const countryNames = { US: "الولايات المتحدة", EG: "مصر", SA: "المملكة العربية السعودية", FR: "فرنسا", DE: "ألمانيا", GB: "المملكة المتحدة", AE: "الإمارات", QA: "قطر", KW: "الكويت", OM: "عُمان", BH: "البحرين", IQ: "العراق", SY: "سوريا", JO: "الأردن", LB: "لبنان", PS: "فلسطين", YE: "اليمن", LY: "ليبيا", TN: "تونس", DZ: "الجزائر", MA: "المغرب", SD: "السودان", TR: "تركيا" };
+            return countryNames[code] || code;
+        }
+
+        function getWmoDescription(code) {
+            const descriptionMap = { 0: "صافية", 1: "مشمس جزئياً", 2: "غيوم متفرقة", 3: "غائم جزئياً", 45: "ضباب", 61: "مطر خفيف", 63: "مطر متوسط", 65: "مطر غزير", 95: "عواصف رعدية" };
+            return descriptionMap[code] || "حالة غير محددة";
+        }
+        
+        function formatDuration(seconds) {
+            if (!seconds) return 'N/A';
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            return `${hours} ساعة و ${minutes} دقيقة`;
+        }
+
+        window.showDailyDetails = function(index) {
+            const dayData = fullForecastData[index];
+            if (!dayData) return;
+            const modalTitle = document.getElementById('modal_day_title');
+            const modalBody = document.getElementById('modal_details_body');
+            const dayText = index === 0 ? 'اليوم' : index === 1 ? 'الغد' : dayData.dayName;
+            
+            modalTitle.innerHTML = `<i class="${getWeatherIcon(dayData.iconCode)}" style="margin-left:10px;"></i> تفاصيل ${dayText}`;
+            
+            modalBody.innerHTML = `
+                <div class="result-item"><span class="label">الحالة:</span><span class="value">${dayData.description}</span></div>
+                <div class="result-item"><span class="label">عظمى:</span><span class="value">${dayData.maxTemp}°C</span></div>
+                <div class="result-item"><span class="label">صغرى:</span><span class="value">${dayData.minTemp}°C</span></div>
+                <div class="result-item"><span class="label">ملموسة (قصوى):</span><span class="value">${dayData.feelsLikeMax}°C</span></div>
+                <div class="result-item"><span class="label">سطوع الشمس:</span><span class="value">${dayData.sunshineDuration}</span></div>
+                <div class="result-item"><span class="label">الرياح (قصوى):</span><span class="value">${dayData.windMax} كم/س</span></div>
+                <div class="result-item"><span class="label">احتمال الهطول:</span><span class="value">${dayData.precProbMax}%</span></div>
+                <div class="result-item"><span class="label">مؤشر الأشعة:</span><span class="value">${dayData.uvMax}</span></div>
+            `;
+            document.getElementById('detail_modal').style.display = 'block';
+        }
+        
+        function displayRandomBlockMessage() {
+            const randomMessage = RANDOM_ERROR_MESSAGES[Math.floor(Math.random() * RANDOM_ERROR_MESSAGES.length)];
+            const modalTitle = document.getElementById('modal_day_title');
+            const modalBody = document.getElementById('modal_details_body');
+            modalTitle.innerHTML = `<i class="fas fa-exclamation-triangle"></i> تنبيه`;
+            modalBody.innerHTML = `<p style="text-align:center; color:#ff6b6b; padding:20px; font-size:1.1em;">${randomMessage}</p>`;
+            document.getElementById('detail_modal').style.display = 'block';
+            return { error: 'Blocked city' }; 
+        }
+
+        async function getWeatherDataKeyless(cityName) {
+            const lowerCaseCityName = cityName.toLowerCase();
+            if (BLOCKED_TERMS.some(term => lowerCaseCityName.includes(term))) return displayRandomBlockMessage();
+
+            try {
+                const geoRes = await fetch(`${NOMINATIM_URL}?q=${encodeURIComponent(cityName)}&format=jsonv2&limit=1&addressdetails=1`);
+                const geoData = await geoRes.json();
+
+                if (!geoData || geoData.length === 0) {
+                    if (BLOCKED_TERMS.some(term => lowerCaseCityName.includes(term))) return displayRandomBlockMessage();
+                    return { error: "❌ لم يتم العثور على المدينة." };
+                }
+
+                const data = geoData[0];
+                if (data.address.country_code?.toUpperCase() === 'IL' || BLOCKED_TERMS.some(t => data.display_name.toLowerCase().includes(t))) {
+                    return displayRandomBlockMessage();
+                }
+                
+                const lat = data.lat;
+                const lon = data.lon;
+                const countryName = data.address.country_code ? getCountryName(data.address.country_code.toUpperCase()) : '';
+                const fullLocation = `${data.display_name.split(',')[0]} (${countryName})`;
+
+                const wRes = await fetch(`${OPENMETEO_URL}?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=celsius&timezone=auto&hourly=relative_humidity_2m,pressure_msl,precipitation_probability,uv_index,dew_point_2m&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,wind_speed_10m_max,precipitation_sum,precipitation_probability_max,uv_index_max,sunrise,sunset,sunshine_duration&forecast_days=7`);
+                const wData = await wRes.json();
+                
+                const current = wData.current_weather;
+                const hourly = wData.hourly;
+                const daily = wData.daily;
+
+                fullForecastData = daily.time.map((t, i) => ({
+                    date: t,
+                    dayName: getDayName(t),
+                    maxTemp: Math.round(daily.temperature_2m_max[i]),
+                    minTemp: Math.round(daily.temperature_2m_min[i]),
+                    iconCode: daily.weathercode[i],
+                    description: getWmoDescription(daily.weathercode[i]),
+                    feelsLikeMax: Math.round(daily.apparent_temperature_max[i]),
+                    sunshineDuration: formatDuration(daily.sunshine_duration[i]),
+                    windMax: Math.round(daily.wind_speed_10m_max[i]),
+                    precSum: daily.precipitation_sum[i],
+                    precProbMax: daily.precipitation_probability_max[i],
+                    uvMax: daily.uv_index_max[i]
+                }));
+
+                const sunrise = daily.sunrise[0] ? DateTime.fromISO(daily.sunrise[0]).setLocale('ar').toFormat('HH:mm') : 'N/A';
+                const sunset = daily.sunset[0] ? DateTime.fromISO(daily.sunset[0]).setLocale('ar').toFormat('HH:mm') : 'N/A';
+
+                return {
+                    city: fullLocation,
+                    temp: current.temperature,
+                    icon: current.weathercode,
+                    description: getWmoDescription(current.weathercode),
+                    windSpeed: current.windspeed,
+                    humidity: hourly.relative_humidity_2m[0],
+                    pressure: hourly.pressure_msl[0],
+                    uvIndex: hourly.uv_index[0],
+                    sunrise, sunset,
+                    forecast: fullForecastData,
+                    timezone: wData.timezone
+                };
+
+            } catch (e) { return { error: "خطأ في الاتصال." }; }
+        }
+
+        document.getElementById('weatherForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const resultBox = document.getElementById('weather_result');
+            const forecastCont = document.getElementById('forecast_container');
+            const errorOut = document.getElementById('error_output');
+            const inputCity = document.getElementById('city_name').value;
+
+            resultBox.style.display = 'none';
+            forecastCont.style.display = 'none';
+            errorOut.style.display = 'none';
+
+            resultBox.innerHTML = '<p style="text-align:center; color:#00aaff;">جاري البحث...</p>';
+            resultBox.style.display = 'block';
+
+            const data = await getWeatherDataKeyless(inputCity);
+
+            if (data.error) {
+                if (data.error !== 'Blocked city') {
+                    errorOut.innerText = data.error;
+                    errorOut.style.display = 'block';
+                }
+                resultBox.style.display = 'none';
+            } else {
+                // تعريب التاريخ والوقت بالكامل
+                const now = DateTime.local().setZone(data.timezone).setLocale('ar').toLocaleString({ 
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit', numberingSystem: 'latn'
+                });
+                
+                resultBox.innerHTML = `
+                    <div class="time-display"><i class="fas fa-clock"></i> ${now}</div>
+                    <h2 style="color:#fff; margin-bottom:10px;">${data.city}</h2>
+                    
+                    <div class="temp-display">
+                        <i class="${getWeatherIcon(data.icon)}"></i>
+                        <span>${Math.round(data.temp)}°C</span>
+                    </div>
+
+                    <div class="result-item"><span class="label">الحالة:</span><span class="value">${data.description}</span></div>
+                    <div class="result-item"><span class="label"><i class="fas fa-sun"></i> الشروق:</span><span class="value">${data.sunrise}</span></div>
+                    <div class="result-item"><span class="label"><i class="fas fa-moon"></i> الغروب:</span><span class="value">${data.sunset}</span></div>
+                    <div class="result-item"><span class="label"><i class="fas fa-tint"></i> الرطوبة:</span><span class="value">${Math.round(data.humidity)}%</span></div>
+                    <div class="result-item"><span class="label"><i class="fas fa-wind"></i> الرياح:</span><span class="value">${Math.round(data.windSpeed)} كم/س</span></div>
+                    <div class="result-item"><span class="label">الضغط:</span><span class="value">${Math.round(data.pressure)} hPa</span></div>
+                    <div class="result-item"><span class="label">الأشعة البنفسجية:</span><span class="value">${data.uvIndex}</span></div>
+                `;
+
+                const grid = forecastCont.querySelector('.forecast-grid');
+                grid.innerHTML = '';
+                data.forecast.forEach((d, i) => {
+                    const name = i===0?'اليوم':i===1?'الغد':d.dayName;
+                    grid.innerHTML += `
+                        <div class="day-card" onclick="showDailyDetails(${i})">
+                            <div class="date">${name}</div>
+                            <i class="icon ${getWeatherIcon(d.iconCode)}"></i>
+                            <div class="temps">${d.maxTemp}° <span class="min-temp">${d.minTemp}°</span></div>
+                        </div>
+                    `;
+                });
+                forecastCont.style.display = 'block';
+            }
+        });
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('detail_modal')) closeModal();
+        }
+    </script>
+</body>
+</html>

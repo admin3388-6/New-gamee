@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - زخرفة وخطوط عربية</title>
+    <meta name="description" content="أداة شاملة لزخرفة النصوص العربية بأكثر من 50 نمط احترافي، مع إمكانية معاينة النص بأكثر من 30 خط عربي مميز.">
+    <meta name="keywords" content="زخرفة عربية, خطوط عربية, تشكيل النصوص, زخرفة يقبلها الفيس, خط رقعة, خط نسخ, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Aref+Ruqaa&family=Cairo&family=Changa&family=El+Messiri&family=Gulzar&family=Harmattan&family=IBM+Plex+Sans+Arabic&family=Katibeh&family=Kufam&family=Lalezar&family=Lateef&family=Lemonada&family=Mada&family=Markazi+Text&family=Mirza&family=Noto+Kufi+Arabic&family=Noto+Naskh+Arabic&family=Rakkas&family=Reem+Kufi&family=Scheherazade+New&family=Tajawal&family=Vibes&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -45,7 +47,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -66,14 +68,6 @@
         .logo-img { height: 35px !important; width: auto; }
 
         /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
-        .hamburger input { display: none; }
-        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line-top-bottom { stroke-dasharray: 12 63; }
-        .hamburger input:checked + svg { transform: rotate(-45deg); }
-        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
-
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -81,6 +75,8 @@
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        /* تذييل القائمة */
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,35 +86,86 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة الزخرفة
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
+            background-color: #111a30; padding: 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; }
+
+        /* التبويبات */
+        .tabs { display: flex; margin-bottom: 20px; background: #0e1624; border-radius: 8px; overflow: hidden; border: 1px solid #2a3a5a; }
+        .tab-btn {
+            flex: 1; padding: 15px; background: transparent; border: none;
+            color: #ccc; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Cairo'; font-size: 16px;
+        }
+        .tab-btn:hover { background: #1f2d4d; }
+        .tab-btn.active { background: #00aaff; color: #111a30; }
+        
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+
+
+        /* حقل الإدخال الرئيسي */
+        .input-area { position: relative; margin-bottom: 30px; }
+        #text-input {
+            width: 100%; padding: 15px; background: #0e1624; border: 2px solid #2a3a5a;
+            color: #fff; border-radius: 10px; font-size: 20px; font-family: 'Cairo';
+            transition: 0.3s; text-align: center;
+        }
+        #text-input:focus { border-color: #00aaff; }
+        .input-label {
+            position: absolute; top: -12px; right: 20px; background: #111a30;
+            padding: 0 10px; color: #00aaff; font-size: 14px; font-weight: bold;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* قائمة النتائج */
+        .results-list { display: flex; flex-direction: column; gap: 15px; }
+
+        .decoration-item, .font-item {
+            background: #0e1624; border: 1px solid #2a3a5a; border-radius: 10px;
+            padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            transition: 0.2s;
+        }
+        .decoration-item:hover, .font-item:hover { border-color: #00aaff; transform: translateX(-5px); }
+        
+        .decor-text, .font-text {
+            color: #fff; font-size: 20px; flex-grow: 1; text-align: right;
+            word-break: break-word; padding-left: 15px;
         }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        /* اسم الخط */
+        .font-name-tag {
+            font-size: 12px; color: #aaa; margin-left: 10px; background: #1f2d4d;
+            padding: 2px 8px; border-radius: 4px; white-space: nowrap;
         }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        .copy-btn {
+            background: rgba(0, 170, 255, 0.1); color: #00aaff; border: 1px solid #00aaff;
+            width: 45px; height: 45px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s; font-size: 18px; flex-shrink: 0;
         }
+        .copy-btn:hover { background: #00aaff; color: #111a30; }
+        .copy-btn:active { transform: scale(0.9); }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        /* رسالة النسخ */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 5000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .btn-back:hover { background: #fff; }
+        #toast.show { opacity: 1; bottom: 50px; }
+
+        .empty-state { color: #777; margin-top: 30px; font-size: 16px; }
 
     </style>
 </head>
@@ -192,7 +239,7 @@
                 <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
                 <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
                 <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
-                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="arbtxt.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
                 <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
                 <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
                 <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
@@ -230,24 +277,47 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-pen-fancy"></i> زخرفة وخطوط عربية</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
+            <div class="input-area">
+                <span class="input-label">اكتب النص هنا</span>
+                <input type="text" id="text-input" placeholder="مثال: محمد أو المملكة العربية السعودية">
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="decor-tab"><i class="fas fa-star"></i> زخرفة النصوص</button>
+                <button class="tab-btn" data-tab="font-tab"><i class="fas fa-font"></i> خطوط الويب</button>
+            </div>
+
+            <div id="decor-tab" class="tab-content active">
+                <div id="decor-results" class="results-list">
+                    <div class="empty-state">اكتب نصاً في الأعلى لتبدأ الزخرفة...</div>
+                </div>
+            </div>
+
+            <div id="font-tab" class="tab-content">
+                <div id="font-results" class="results-list">
+                    <div class="empty-state">اكتب نصاً لمعاينته بالخطوط العربية...</div>
+                </div>
+            </div>
+
         </div>
 
     </main>
 
+    <div id="toast">تم النسخ!</div>
+
     <script>
-        // --- فتح/إغلاق القائمة ---
+        // --- 1. القائمة الجانبية ---
         const menuCheckbox = document.getElementById('menu-checkbox');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -258,6 +328,142 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- 2. التبويبات ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // --- 3. منطق الزخرفة والخطوط ---
+        const textInput = document.getElementById('text-input');
+        const decorList = document.getElementById('decor-results');
+        const fontList = document.getElementById('font-results');
+
+        // أنماط الزخرفة (Mapping & Generators)
+        const decorMap = {
+            'م': ['م', 'مـ', 'مہ', 'مـ♥̨̥̬̩', 'مۘ', 'م̲', 'م̷', 'م̀', 'م͡', 'مٓ'],
+            'ح': ['ح', 'حـ', 'حہ', 'حـ♥̨̥̬̩', 'حۘ', 'ح̲', 'ح̷', 'ح̀', 'ح͡', 'حٓ'],
+            'د': ['د', 'د', 'د', 'ڊ', 'دِ', 'د̲', 'د̷', 'د̀', 'د͡', 'دٓ'],
+        };
+        
+        // دالة مساعدة لتبديل الحروف (لأنماط محددة)
+        const replaceChars = (text, mapIndex) => {
+            return text.split('').map(c => {
+                if (decorMap[c] && decorMap[c][mapIndex]) return decorMap[c][mapIndex];
+                // تعويضات عامة للحروف الأخرى
+                if (mapIndex === 2) return c + 'ہ'; // نمط "محہمد"
+                if (mapIndex === 3) return c + 'ـ♥̨̥̬̩'; // نمط القلوب
+                return c;
+            }).join('');
+        };
+
+        const styles = [
+            (t) => t.split('').join('ـ'), // تمديد
+            (t) => replaceChars(t, 2), // نمط محہمد
+            (t) => replaceChars(t, 3), // نمط مـ♥̨̥̬̩حـ♥̨̥̬̩مـ♥̨̥̬̩د
+            (t) => `★ ${t} ★`,
+            (t) => `꧁ ${t} ꧂`,
+            (t) => `« ${t} »`,
+            (t) => `♛ ${t} ♛`,
+            (t) => `░▒▓█ ${t} █▓▒░`,
+            (t) => `★·.·´¯\`·.·★ ${t} ★·.·´¯\`·.·★`,
+            (t) => `•?((¯°·._.• ${t} •._.·°¯))?•`,
+            (t) => `(¯\`·._.·( ${t} )·._.·´¯)`,
+            (t) => `*•.¸♡ ${t} ♡¸.•*`,
+            (t) => `••¤(\`×[ ${t} ]×´)¤••`,
+            (t) => `—(•·÷[ ${t} ]÷·•)—`,
+            (t) => `▌│█║▌║▌║ ${t} ║▌║▌║█│▌`,
+            (t) => t.split('').map(c => c + 'ّ').join(''), // شدة
+            (t) => t.split('').map(c => c + 'ِ').join(''), // كسرة
+            (t) => `°° ${t} °°`,
+            (t) => `§ ${t} §`,
+            (t) => `™ ${t} ™`,
+            (t) => `父 ${t} 父`,
+            (t) => `ใ ${t} ใ`,
+            (t) => `☁ ${t} ☁`,
+            (t) => `☂ ${t} ☂`,
+            (t) => `★彡 ${t} 彡★`,
+            (t) => `ミ★ ${t} ★彡`,
+            (t) => `卍 ${t} 卍`,
+            (t) => `× ${t} ×`,
+            (t) => `• ${t} •`,
+            (t) => `★ ${t} ★`,
+            (t) => `【 ${t} 】`,
+            (t) => `『 ${t} 』`,
+            (t) => `〖 ${t} 〗`,
+            (t) => `« ${t} »`,
+            (t) => `༺ ${t} ༻`,
+            (t) => `★ ${t} ★`,
+            (t) => `♔ ${t} ♔`,
+            (t) => `♕ ${t} ♕`,
+            (t) => `♖ ${t} ♖`,
+            (t) => `♗ ${t} ♗`,
+            (t) => `♘ ${t} ♘`,
+            (t) => `♙ ${t} ♙`,
+            (t) => `♚ ${t} ♚`,
+            (t) => `♛ ${t} ♛`,
+            (t) => `♜ ${t} ♜`,
+            (t) => `♝ ${t} ♝`,
+            (t) => `♞ ${t} ♞`,
+            (t) => `♟ ${t} ♟`,
+        ];
+
+        // قائمة الخطوط العربية (Google Fonts)
+        const fonts = [
+            'Cairo', 'Tajawal', 'Amiri', 'Changa', 'El Messiri', 'Almarai', 
+            'Reem Kufi', 'Lalezar', 'Lemonada', 'Scheherazade New', 'Lateef', 
+            'Mada', 'Harmattan', 'Mirza', 'Rakkas', 'Katibeh', 'Vibes', 
+            'Kufam', 'Aref Ruqaa', 'Gulzar', 'IBM Plex Sans Arabic', 
+            'Markazi Text', 'Noto Kufi Arabic', 'Noto Naskh Arabic'
+        ];
+
+        textInput.addEventListener('input', (e) => {
+            const text = e.target.value;
+            
+            if (!text.trim()) {
+                decorList.innerHTML = '<div class="empty-state">اكتب نصاً في الأعلى...</div>';
+                fontList.innerHTML = '<div class="empty-state">اكتب نصاً لمعاينته بالخطوط...</div>';
+                return;
+            }
+
+            // توليد الزخارف
+            decorList.innerHTML = '';
+            styles.forEach(styleFn => {
+                const decorated = styleFn(text);
+                decorList.innerHTML += `
+                    <div class="decoration-item">
+                        <button class="copy-btn" onclick="copyText('${decorated.replace(/'/g, "\\'")}')"><i class="fas fa-copy"></i></button>
+                        <div class="decor-text">${decorated}</div>
+                    </div>
+                `;
+            });
+
+            // توليد الخطوط
+            fontList.innerHTML = '';
+            fonts.forEach(font => {
+                fontList.innerHTML += `
+                    <div class="font-item">
+                        <span class="font-name-tag">${font}</span>
+                        <div class="font-text" style="font-family: '${font}', serif;">${text}</div>
+                    </div>
+                `;
+            });
+        });
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 1000);
+            });
+        }
+
     </script>
 
     <script type="module">

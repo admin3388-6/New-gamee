@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title data-lang-key="pageTitle">تحويل الصور إلى PDF مجاناً 2025 - دمج وتجميع الصور في ملف PDF واحد بجودة عالية | Skydata</title>
+<title>SkyData - تحويل الصور إلى PDF</title>
 
-<meta name="description" content="أداة Skydata مجانية 100% وسريعة جداً لتحويل صورك وملفاتك (JPG, PNG, WEBP, GIF) إلى ملف PDF واحد أو دمج عدة صور في PDF. معالجة آمنة لصورك مباشرةً في المتصفح دون رفعها على السيرفر. صانع PDF أون لاين بجودة عالية ومثالية للطباعة والمشاركة لعام 2025.">
+<meta name="description" content="أداة SkyData مجانية 100% وسريعة جداً لتحويل صورك وملفاتك (JPG, PNG) إلى ملف PDF واحد أو دمج عدة صور في PDF. معالجة آمنة لصورك مباشرةً في المتصفح.">
+<meta name="keywords" content="تحويل صور إلى PDF, دمج صور في PDF, JPG إلى PDF, صانع PDF مجاني, تجميع صور PDF, image to pdf free, PDF maker online, convert photo to pdf, SkyData">
 
-<meta name="description" lang="en" content="Skydata's 100% free and very fast tool converts your images (JPG, PNG, WEBP, GIF) into a single PDF file or merges multiple images into one PDF. Secure client-side processing, high-quality online PDF maker for 2025, ideal for printing and sharing. Supports unlimited image to PDF conversion.">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<meta name="keywords" content="تحويل صور إلى PDF, دمج صور في PDF, JPG إلى PDF, صانع PDF مجاني, تجميع صور PDF, برنامج تحويل الصور لبي دي إف, تحويل jpg إلى pdf مجانا 2025, image to pdf free 2025, merge images to pdf, PDF maker online, convert photo to pdf, convertir image en pdf, fusionner images pdf, convertir foto a pdf, unir fotos en pdf, Bild in PDF umwandeln, Bilder zu PDF zusammenfügen, convertire immagine in PDF, unire immagini in PDF, конвертировать изображение в PDF, объединить картинки в PDF, 图片转PDF, 图像合并PDF, 画像をPDFに変換, 複数の画像をPDFにまとめる, फोटो को PDF में बदलें, छवियों को PDF में मर्ज करें">
-<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="style.css">
 
-<meta name="theme-color" content="#2196F3">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
@@ -25,331 +25,325 @@
     });
   });
 </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
+        /* ==============================================
+           1. إصلاحات الهيدر والقائمة والعناصر (Standard)
+           ============================================== */
+        
         body {
-            font-family: Arial, sans-serif; direction: rtl; 
-            background-color: #121212; color: #e0e0e0;
-            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; flex-grow: 1; }
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .logo-container { display: flex; align-items: center; }
-        .logo-container img { height: 40px; margin-left: 10px; }
-        .lang-switcher { display: flex; }
-        .lang-switcher a {
-            text-decoration: none; color: #007bff; margin: 0 5px;
-            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
-        }
-        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
 
-        footer {
-            background-color: #1e1e1e; padding: 20px;
-            text-align: center; margin-top: auto;
-            border-top: 1px solid #333;
+        /* إزالة تأثيرات التركيز والضغط */
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        *:focus, *:active {
+            outline: none !important;
+            border-color: transparent !important;
+        }
+
+        /* الهيدر المثبت */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* القائمة الجانبية */
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
+        /* طبقة التعتيم */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
+        /* ======== 2. تنسيقات أداة PDF ======== */
+
+        main { text-align: center; max-width: 900px; margin: 0 auto; padding: 20px 20px 50px 20px; }
+        .pdf-tool-box {
+            background-color: #111a30; padding: 30px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2a3a5a; text-align: center;
         }
         
-        main { text-align: center; }
-        .pdf-tool-box {
-            background-color: #1e1e1e; padding: 30px;
-            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease;
-        }
-        .pdf-tool-box h1 { color: #ffffff; margin-bottom: 20px; }
+        /* ألوان الأداة تم تحديثها */
+        .pdf-tool-box h1 { color: #00aaff; margin-bottom: 20px; }
 
         #image-input { display: none; }
         .file-upload-label {
-            display: inline-block; background-color: #007bff; color: #ffffff;
-            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
-            border-radius: 5px; cursor: pointer;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            display: inline-block; background-color: #00aaff; color: #111a30; /* لون الموقع الأساسي */
+            padding: 15px 30px; font-size: 1.1em; font-weight: bold;
+            border-radius: 8px; cursor: pointer; margin-bottom: 20px;
+            transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,170,255,0.3);
         }
-        .file-upload-label:hover { 
-            background-color: #0056b3;
-            transform: scale(1.03);
-        }
+        .file-upload-label:hover { background-color: #fff; transform: scale(1.02); }
         
         #preview-area {
-            margin-top: 20px; min-height: 100px;
-            display: none; border: 1px solid #333;
-            background-color: #121212; padding: 10px; border-radius: 5px;
+            margin-top: 20px; display: none; background: #0e1624;
+            padding: 15px; border-radius: 10px; border: 1px solid #2a3a5a;
         }
-        .preview-single-image {
-            height: 120px; width: auto; max-width: 100%;
-            border-radius: 5px; border: 2px solid #444;
-        }
-        #preview-multi-text {
-            font-size: 1.1em; color: #e0e0e0; margin-bottom: 15px;
-        }
+        .preview-single-image { height: 120px; width: auto; max-width: 100%; border-radius: 5px; border: 2px solid #00aaff; }
 
         #progress-area { padding: 20px; display: block; }
         #progress-spinner {
-            display: none;
-            margin-bottom: 15px;
+            display: none; margin-bottom: 15px;
         }
         .progress-circle {
             width: 60px; height: 60px; border: 8px solid #333;
-            border-top-color: #007bff; border-radius: 50%;
-            margin: 0 auto; animation: spin 1s linear infinite;
+            border-top-color: #00aaff; /* لون الموقع الأساسي */
+            border-radius: 50%; margin: 0 auto; animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        #progress-percent {
-            font-size: 1.3em; font-weight: bold;
-            color: #ffffff; margin-top: 10px; display: block;
-        }
-        #progress-status { font-size: 1.1em; color: #e0e0e0; }
 
         #button-area { margin-top: 20px; min-height: 50px; }
         
         #filename-input {
-            background-color: #333; color: #e0e0e0; border: 1px solid #555;
+            background-color: #0b132b; color: #e0e0e0; border: 1px solid #2a3a5a;
             padding: 12px; border-radius: 5px; font-size: 1em;
             margin: 0 10px 10px 10px; direction: ltr; width: 70%;
         }
 
-        #reset-area {
-            margin-top: 20px; min-height: 50px; display: none;
-        }
-
+        /* الأزرار تم تحديث ألوانها */
         .cta-button {
-            display: inline-block; background-color: #28a745; color: #ffffff;
+            display: inline-block; background-color: #27ae60; color: #ffffff;
             padding: 12px 25px; font-size: 1.1em; font-weight: bold;
             text-decoration: none; border-radius: 5px; border: none;
-            cursor: pointer; 
-            transition: all 0.3s ease;
+            cursor: pointer; transition: all 0.3s ease;
         }
-        .cta-button:hover {
-            transform: scale(1.03);
-        }
-        .cta-button.blue { background-color: #007bff; }
-        .cta-button.orange { background-color: #fd7e14; }
-        .cta-button.red { background-color: #dc3545; }
-        
-        .cta-button.blue:hover { background-color: #0056b3; }
-        .cta-button.green:hover { background-color: #218838; }
-        .cta-button.orange:hover { background-color: #e66900; }
-        .cta-button.red:hover { background-color: #c82333; }
+        .cta-button.blue { background-color: #00aaff; color: #111a30; } /* زر التحويل */
+        .cta-button.blue:hover { background-color: #0088cc; }
+        .cta-button.green { background-color: #27ae60; } /* زر التحميل */
+        .cta-button.red { background-color: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .cta-button.red:hover { background-color: #ff4d4d; color: #fff; }
 
-        .cta-button:disabled { background-color: #555; cursor: not-allowed; }
-
-        .back-button { 
-            background-color: #555; margin-top: 50px; 
-            font-size: 1.1em; padding: 10px 20px;
-        }
-        .back-button:hover { background-color: #444; }
-
-        /* --- CSS الخاص بالنافذة المنبثقة (Modal) --- */
+        /* Modal Preview */
         .modal-overlay {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none; justify-content: center;
-            align-items: center; z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); z-index: 3000;
+            display: none; justify-content: center; align-items: center;
         }
         .modal-content {
-            background-color: #1e1e1e; color: #e0e0e0;
-            border-radius: 8px; width: 90%; max-width: 600px;
-            max-height: 80vh; display: flex; flex-direction: column;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            background-color: #1e1e1e; color: #e0e0e0; border-radius: 10px; width: 90%; max-width: 600px;
         }
         .modal-header {
-            padding: 15px 20px; border-bottom: 1px solid #333;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between;
+            background-color: #00aaff; color: #fff; /* تحديث لون الهيدر */
         }
-        .modal-header h2 { margin: 0; color: #fff; }
-        .modal-close-btn {
-            font-size: 1.5em; font-weight: bold; color: #aaa;
-            cursor: pointer; background: none; border: none;
-        }
-        .modal-close-btn:hover { color: #fff; }
-        
-        .modal-body { padding: 20px; overflow-y: auto; }
-        .modal-image-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background-color: #121212; border: 1px solid #333;
-            border-radius: 5px; padding: 10px; margin-bottom: 10px;
-        }
-        .modal-image-item img {
-            height: 60px; width: auto; border-radius: 4px; margin-left: 10px;
-        }
-        .modal-image-item span {
-            flex-grow: 1; font-size: 0.9em;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        
-        .modal-footer {
-            padding: 15px 20px; border-top: 1px solid #333; text-align: left;
-        }
-        
-        /* --- كود CSS لزر سلة المهملات --- */
-        .delete-button {
-          position: relative;
-          padding: 0.5em;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          font-size: 1em;
-          transition: transform 0.2s ease;
-        }
-        .trash-svg {
-          width: 4em;
-          height: 4em;
-          transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-          overflow: visible;
-        }
-        #lid-group {
-          transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .delete-button:hover #lid-group {
-          transform: rotate(-28deg) translateY(2px);
-        }
-        .delete-button:active #lid-group {
-          transform: rotate(-12deg) scale(0.98);
-        }
-        .delete-button:hover .trash-svg {
-          transform: scale(1.08) rotate(3deg);
-        }
-        .delete-button:active .trash-svg {
-          transform: scale(0.96) rotate(-1deg);
-        }
-        .modal-image-item .delete-button {
-            font-size: 0.7em;
-            padding: 0;
-            flex-shrink: 0;
-        }
-        
-        /* (جديد) تنسيق النص التعليمي */
+        .modal-close-btn { color: #fff; }
+
+        /* التعليمات */
         .instruction-box {
-            background-color: #1e1e1e;
-            padding: 20px 30px;
-            border-radius: 8px;
-            margin-top: 30px;
-            text-align: right; /* ضمان النص لليمين */
-            animation: fadeIn 0.5s ease;
+            background-color: #111a30; padding: 25px; border-radius: 15px; margin-top: 40px;
+            border: 1px solid #2a3a5a; text-align: right;
         }
-        .instruction-box h2 {
-            color: #fff;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .instruction-box h3 {
-            color: #007bff;
-            margin-top: 25px;
-        }
-        .instruction-box p, .instruction-box ul {
-            font-size: 1.1em;
-            line-height: 1.7;
-            color: #e0e0e0;
-        }
-        .instruction-box ul {
-            padding-right: 20px;
-        }
-        .instruction-box .privacy-note {
-            font-weight: bold;
-            color: #28a745; /* أخضر */
-            margin-top: 15px;
-        }
+        .instruction-box h2 { color: #fff; border-bottom: 2px solid #00aaff; padding-bottom: 10px; margin-bottom: 20px; }
+        .instruction-box h3 { color: #00aaff; margin-top: 20px; }
+        .instruction-box p, .instruction-box ul { color: #ccc; line-height: 1.7; font-size: 14px; }
+        .instruction-box ul { padding-right: 20px; }
+        .privacy-note { color: #2ecc71 !important; font-weight: bold; margin-top: 15px; }
 
-        /* Responsive */
         @media (max-width: 600px) {
-            .container { padding: 10px; }
-            header { padding: 10px 15px; }
             .pdf-tool-box { padding: 20px; }
-            .modal-content { width: 95%; max-height: 90vh; }
-            #filename-input { width: 80%; }
-            .cta-button { padding: 10px 20px; font-size: 1em; }
-            .back-button { margin-top: 30px; }
-            .instruction-box { padding: 20px; }
-        }
-
-        @media (max-width: 380px) {
-            .logo-container img { height: 30px; }
+            #filename-input { width: 90%; margin: 10px auto; display: block; }
         }
 
     </style>
     </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
-        </div>
-        <div class="lang-switcher">
-            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
         </div>
     </header>
 
-    <div class="container">
-        
-        <main>
-            <div class="pdf-tool-box">
-                <h1 data-lang-key="toolTitle">أداة تحويل الصور إلى PDF</h1>
-                
-                <label for="image-input" class="file-upload-label" id="upload-label" data-lang-key="selectImages">اختر الصور</label>
-                <input type="file" id="image-input" multiple accept="image/*">
-                
-                <div id="preview-area">
-                    </div>
+    <nav class="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> 
+                    <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
 
-                <div id="progress-area">
-                    <div id="progress-spinner" style="display: none;">
-                        <div class="progress-circle"></div>
-                        <span id="progress-percent">0%</span>
-                    </div>
-                    <p id="progress-status" data-lang-key="statusReady">...</p>
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
+                
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <div class="pdf-tool-box">
+            <h1><i class="fas fa-file-pdf"></i> أداة تحويل الصور إلى PDF</h1>
+            
+            <label for="image-input" class="file-upload-label" id="upload-label" data-lang-key="selectImages">اختر الصور</label>
+            <input type="file" id="image-input" multiple accept="image/*">
+            
+            <div id="preview-area">
                 </div>
 
-                <div id="button-area">
-                    </div>
-
-                <div id="reset-area">
-                    </div>
-                
+            <div id="progress-area">
+                <div id="progress-spinner" style="display: none;">
+                    <div class="progress-circle"></div>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <p id="progress-status" data-lang-key="statusReady">اختر صورة واحدة أو أكثر للبدء...</p>
             </div>
+
+            <div id="button-area">
+                </div>
+
+            <div id="reset-area">
+                </div>
             
-            <div class="instruction-box">
-                <h2 data-lang-key="instructionTitle">دليل استخدام أداة PDF</h2>
-                
-                <p data-lang-key="whatIsPdf">
-                    أداة تحويل الصور إلى PDF تتيح لك دمج عدة صور (مثل JPG, PNG, WEBP) في ملف PDF واحد بسهولة وسرعة، جاهز للمشاركة أو الأرشفة.
-                </p>
-                
-                <h3 data-lang-key="howToUse">كيفية الاستخدام</h3>
-                <ul>
-                    <li data-lang-key="step1">1. اختر صورة واحدة أو أكثر.</li>
-                    <li data-lang-key="step2">2. (اختياري) إذا اخترت أكثر من صورة، اضغط "معاينة" لحذف أي صور لا تريدها.</li>
-                    <li data-lang-key="step3">3. اضغط على زر "ابدأ التحويل".</li>
-                    <li data-lang-key="step4">4. اكتب اسم الملف الذي تريده واضغط "تحميل".</li>
-                </ul>
-                
-                <p class="privacy-note" data-lang-key="privacyNote">
-                    + حماية خصوصيتك 100%: كل التحويل يتم على جهازك. صورك لا تترك المتصفح أبداً ولا يتم رفعها لأي خادم.
-                </p>
-            </div>
-
-
-            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
-        </main>
+        </div>
         
-    </div> <footer style="margin-top: auto;">
-        </footer>
+        <div class="instruction-box">
+            <h2 data-lang-key="instructionTitle">دليل استخدام أداة PDF</h2>
+            
+            <p data-lang-key="whatIsPdf">
+                أداة تحويل الصور إلى PDF تتيح لك دمج عدة صور (مثل JPG, PNG, WEBP) في ملف PDF واحد بسهولة وسرعة، جاهز للمشاركة أو الأرشفة.
+            </p>
+            
+            <h3 data-lang-key="howToUse">كيفية الاستخدام</h3>
+            <ul>
+                <li data-lang-key="step1">1. اختر صورة واحدة أو أكثر.</li>
+                <li data-lang-key="step2">2. (اختياري) إذا اخترت أكثر من صورة، اضغط "معاينة" لحذف أي صور لا تريدها.</li>
+                <li data-lang-key="step3">3. اضغط على زر "ابدأ التحويل".</li>
+                <li data-lang-key="step4">4. اكتب اسم الملف الذي تريده واضغط "تحميل".</li>
+            </ul>
+            
+            <p class="privacy-note" data-lang-key="privacyNote">
+                + حماية خصوصيتك 100%: كل التحويل يتم على جهازك. صورك لا تترك المتصفح أبداً ولا يتم رفعها لأي خادم.
+            </p>
+        </div>
 
+
+        <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
+    </main>
+        
     <div class="modal-overlay" id="preview-modal">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header" style="background-color: #00aaff; color: #fff;">
                 <h2 data-lang-key="modalTitle">معاينة الصور</h2>
-                <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+                <button class="modal-close-btn" id="modal-close-btn" style="color:#fff;">&times;</button>
             </div>
             <div class="modal-body" id="modal-body">
                 </div>
@@ -363,7 +357,7 @@
     <script>
         window.jsPDF = window.jspdf.jsPDF;
 
-        // --- 1. قاموس الترجمة (محدث) ---
+        // --- 1. قاموس الترجمة (كما هو) ---
         const translations = {
             "ar": {
                 "pageTitle": "تحويل صور إلى PDF - Skydata",
@@ -383,7 +377,6 @@
                 "modalDeleteAll": "حذف الكل",
                 "modalNoImages": "لا توجد صور لعرضها. سيتم إغلاق النافذة.",
                 "resetButton": "تحويل ملفات جديدة",
-                // (جديد)
                 "instructionTitle": "دليل استخدام أداة PDF",
                 "whatIsPdf": "أداة تحويل الصور إلى PDF تتيح لك دمج عدة صور (مثل JPG, PNG, WEBP) في ملف PDF واحد بسهولة وسرعة، جاهز للمشاركة أو الأرشفة.",
                 "howToUse": "كيفية الاستخدام",
@@ -411,7 +404,6 @@
                 "modalDeleteAll": "Delete All",
                 "modalNoImages": "No images to display. Closing modal.",
                 "resetButton": "Convert New Files",
-                // (جديد)
                 "instructionTitle": "PDF Tool Guide",
                 "whatIsPdf": "The Image to PDF tool allows you to easily and quickly merge multiple images (like JPG, PNG, WEBP) into a single PDF file, ready for sharing or archiving.",
                 "howToUse": "How to Use",
@@ -426,31 +418,15 @@
         // --- 2. متغير اللغة الحالي ---
         let currentLang = 'ar'; 
 
-        // --- 3. دالة تبديل اللغة (كما هي) ---
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-
-            document.querySelectorAll('[data-lang-key]').forEach(element => {
-                const key = element.getAttribute('data-lang-key');
-                if (translations[lang][key]) {
-                    element.innerText = translations[lang][key].replace(/{count}/g, selectedFiles.length);
-                }
-            });
-            renderPreviewArea();
-        }
-        
-        // --- 4. منطق تحويل PDF (معدل) ---
+        // --- 3. منطق تحويل PDF (معدل) ---
+        window.jsPDF = window.jspdf.jsPDF;
 
         // عناصر الصفحة
         const imageInput = document.getElementById('image-input');
         const previewArea = document.getElementById('preview-area');
         const progressArea = document.getElementById('progress-area');
-        const progressSpinner = document.getElementById('progress-spinner'); // (جديد)
-        const progressPercent = document.getElementById('progress-percent'); // (جديد)
+        const progressSpinner = document.getElementById('progress-spinner');
+        const progressPercent = document.getElementById('progress-percent');
         const progressStatus = document.getElementById('progress-status');
         const buttonArea = document.getElementById('button-area');
         const resetArea = document.getElementById('reset-area');
@@ -487,21 +463,20 @@
             objectUrls = [];
         }
 
-        // --- (مُصلح) دالة عرض المعاينة ---
         function renderPreviewArea() {
             previewArea.innerHTML = '';
             buttonArea.innerHTML = '';
 
             if (selectedFiles.length === 0) {
-                previewArea.style.display = 'none'; // إخفاء المعاينة
-                progressArea.style.display = 'block'; // إظهار رسالة الحالة
+                previewArea.style.display = 'none';
+                progressArea.style.display = 'block';
                 progressSpinner.style.display = 'none';
                 updateStatusMessage(progressStatus, 'statusReady');
                 return;
             }
 
-            progressArea.style.display = 'none'; // إخفاء رسالة "اختر صور"
-            previewArea.style.display = 'block'; // إظهار حاوية المعاينة
+            progressArea.style.display = 'none';
+            previewArea.style.display = 'flex'; // استخدام flex لتوسيط المعاينة
 
             if (selectedFiles.length === 1) {
                 const file = selectedFiles[0];
@@ -546,7 +521,7 @@
             modalBody.innerHTML = ''; 
 
             if (selectedFiles.length === 0) {
-                updateStatusMessage(modalBody, 'modalNoImages');
+                modalBody.innerHTML = `<p style="text-align:center; color:#ccc;">${translations[currentLang].modalNoImages}</p>`;
                 setTimeout(closeModal, 1500); 
                 return;
             }
@@ -585,7 +560,6 @@
             });
         }
         
-        // --- (مُصلح) دالة إعادة الضبط ---
         function resetTool() {
             selectedFiles = [];
             clearObjectUrls();
@@ -594,7 +568,7 @@
             
             previewArea.innerHTML = '';
             previewArea.style.display = 'none';
-            progressArea.style.display = 'block'; // إظهار رسالة الحالة
+            progressArea.style.display = 'block';
             progressSpinner.style.display = 'none';
             resetArea.innerHTML = '';
             resetArea.style.display = 'none';
@@ -604,7 +578,6 @@
             updateStatusMessage(progressStatus, 'statusReady');
         }
 
-        // --- (مُصلح) مستمع اختيار الصور ---
         imageInput.addEventListener('change', (e) => {
             clearObjectUrls();
             generatedPdfBlob = null;
@@ -612,12 +585,12 @@
             resetArea.innerHTML = '';
 
             let files = Array.from(e.target.files);
-            selectedFiles = files; // لا يوجد حد أقصى في PDF
+            selectedFiles = files;
             
             renderPreviewArea(); 
         });
 
-        // --- (مُصلح) دالة بدء التحويل ---
+        // --- دالة بدء التحويل ---
         async function startConversion() {
             if (selectedFiles.length === 0) {
                 updateStatusMessage(progressStatus, 'statusError');
@@ -628,7 +601,7 @@
             buttonArea.innerHTML = '';
             uploadLabel.style.display = 'none'; 
             progressArea.style.display = 'block';
-            progressSpinner.style.display = 'block'; // إظهار الدائرة
+            progressSpinner.style.display = 'block';
             progressPercent.innerText = '0%';
             
             try {
@@ -721,10 +694,23 @@
             }
         });
 
-        // --- (مُصلح) تشغيل الصفحة ---
+
+        // --- 4. سكريبتات الواجهة والقائمة الجانبية ---
+
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- التشغيل ---
         setLanguage(currentLang);
-        resetTool(); // يبدأ الصفحة بالحالة النظيفة (يُظهر "اختر...")
-        
+        resetTool();
     </script>
-    </body>
+</body>
 </html>

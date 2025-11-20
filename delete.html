@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - حذف الأسطر المكررة</title>
+    <meta name="description" content="أداة مجانية لتنظيف النصوص والقوائم من الأسطر المكررة والفارغة، مع إمكانية ترتيب النتائج أبجدياً.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -37,6 +36,7 @@
             display: block; 
         }
 
+        /* إزالة تأثيرات التركيز والضغط */
         *, *::before, *::after {
             -webkit-tap-highlight-color: transparent !important;
             outline: none !important;
@@ -45,7 +45,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت (نفس الأصلي) */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -65,22 +65,37 @@
 
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
+        /* زر القائمة الأصلي (SVG Animation) */
+        .hamburger {
+            cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002;
+            display: block;
+        }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line {
+            fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3;
+            transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
         .line-top-bottom { stroke-dasharray: 12 63; }
         .hamburger input:checked + svg { transform: rotate(-45deg); }
         .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
-        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        /* القائمة الجانبية */
+        .sidebar { 
+            z-index: 2001 !important; padding-top: 80px !important; 
+            background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); 
+            width: 300px; height: 100vh; position: fixed; top: 0; right: -320px;
+            transition: right 0.3s ease; overflow-y: auto; padding-bottom: 50px;
+        }
+        .sidebar.open { right: 0; }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,35 +105,70 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة الحذف
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 1000px; margin: 0 auto; padding: 15px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            background-color: #111a30; padding: 20px;
+            border-radius: 15px; border: 1px solid #2a3a5a;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; text-align: center; font-size: 24px; }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* مناطق النص */
+        textarea {
+            width: 100%; height: 200px; background: #0e1624; color: #fff;
+            border: 1px solid #2a3a5a; border-radius: 8px; padding: 15px;
+            font-family: 'Cairo', sans-serif; font-size: 15px; resize: vertical;
+            line-height: 1.6; margin-bottom: 15px;
         }
+        textarea:focus { border-color: #00aaff; }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        /* الخيارات */
+        .options-row {
+            display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;
+            background: #0e1624; padding: 15px; border-radius: 8px; border: 1px solid #2a3a5a;
         }
+        .checkbox-label {
+            display: flex; align-items: center; gap: 8px; color: #ccc; cursor: pointer; font-size: 14px;
+        }
+        .checkbox-label input { accent-color: #00aaff; width: 18px; height: 18px; }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        /* الأزرار */
+        .action-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        
+        .btn-action {
+            flex: 1; padding: 12px; border: none; border-radius: 6px;
+            font-weight: bold; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; transition: 0.2s; min-width: 120px;
         }
+        .btn-process { background: #00aaff; color: #111; }
+        .btn-process:hover { background: #fff; }
+        .btn-copy { background: #27ae60; }
+        .btn-clear { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        
+        /* الإحصائيات */
+        .stats-bar {
+            display: flex; justify-content: space-around; background: #1f2d4d;
+            padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; color: #aaa;
+        }
+        .stats-bar b { color: #fff; font-size: 15px; margin-right: 5px; }
+        .removed-count b { color: #ff4d4d; }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        /* النتيجة */
+        #output-wrapper { display: none; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 7000;
         }
-        .btn-back:hover { background: #fff; }
+        #toast.show { opacity: 1; bottom: 50px; }
 
     </style>
 </head>
@@ -131,6 +181,7 @@
             <a href="index.html" class="logo">
                 <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
             </a>
+            
             <label class="hamburger menu-toggle">
               <input type="checkbox" id="menu-checkbox">
               <svg viewBox="0 0 32 32">
@@ -179,10 +230,8 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
@@ -200,7 +249,7 @@
                 <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
                 <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
                 <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
-                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="delete.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
                 <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
                 <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
                 <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
@@ -230,24 +279,59 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-trash-alt"></i> حذف الأسطر المكررة</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
-        </div>
+            <textarea id="input-text" placeholder="الصق القائمة أو النص هنا (كل عنصر في سطر)..."></textarea>
+            
+            <div class="options-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="remove-empty" checked> حذف الأسطر الفارغة
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="trim-lines" checked> تنظيف المسافات (Trim)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sort-lines"> ترتيب أبجدي (A-Z)
+                </label>
+            </div>
 
+            <div class="action-row">
+                <button class="btn-action btn-process" onclick="processText()">
+                    <i class="fas fa-magic"></i> معالجة وتنظيف
+                </button>
+                <button class="btn-action btn-clear" onclick="clearAll()">
+                    <i class="fas fa-trash"></i> مسح
+                </button>
+            </div>
+
+            <div id="output-wrapper">
+                <div class="stats-bar">
+                    <span>الأصل: <b id="count-original">0</b></span>
+                    <span>الجديد: <b id="count-new">0</b></span>
+                    <span class="removed-count">محذوف: <b id="count-removed">0</b></span>
+                </div>
+                <textarea id="output-text" readonly style="border-color:#2ecc71; background:#0b1c2b;"></textarea>
+                <button class="btn-action btn-copy" style="width:100%;" onclick="copyResult()">
+                    <i class="fas fa-copy"></i> نسخ النتيجة
+                </button>
+            </div>
+
+        </div>
     </main>
 
+    <div id="toast">تم النسخ!</div>
+
     <script>
-        // --- فتح/إغلاق القائمة ---
+        // --- 1. القائمة الجانبية (النظام الأصلي) ---
         const menuCheckbox = document.getElementById('menu-checkbox');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -258,6 +342,76 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- 2. منطق الأداة ---
+        const inputText = document.getElementById('input-text');
+        const outputText = document.getElementById('output-text');
+        const outputWrapper = document.getElementById('output-wrapper');
+        
+        // الخيارات
+        const removeEmptyCheck = document.getElementById('remove-empty');
+        const trimLinesCheck = document.getElementById('trim-lines');
+        const sortLinesCheck = document.getElementById('sort-lines');
+
+        // الإحصائيات
+        const countOriginal = document.getElementById('count-original');
+        const countNew = document.getElementById('count-new');
+        const countRemoved = document.getElementById('count-removed');
+
+        function processText() {
+            const rawText = inputText.value;
+            if (!rawText.trim()) {
+                alert("الرجاء لصق نص أولاً.");
+                return;
+            }
+
+            let lines = rawText.split(/\r?\n/);
+            const originalCount = lines.length;
+
+            // 1. تنظيف المسافات
+            if (trimLinesCheck.checked) {
+                lines = lines.map(line => line.trim());
+            }
+
+            // 2. حذف الفارغة
+            if (removeEmptyCheck.checked) {
+                lines = lines.filter(line => line !== "");
+            }
+
+            // 3. حذف المكرر (باستخدام Set)
+            const uniqueLines = [...new Set(lines)];
+
+            // 4. الترتيب
+            if (sortLinesCheck.checked) {
+                uniqueLines.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+            }
+
+            // العرض
+            outputText.value = uniqueLines.join('\n');
+            
+            // تحديث الإحصائيات
+            countOriginal.innerText = originalCount;
+            countNew.innerText = uniqueLines.length;
+            countRemoved.innerText = originalCount - uniqueLines.length;
+
+            outputWrapper.style.display = 'block';
+            outputWrapper.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyResult() {
+            outputText.select();
+            document.execCommand('copy');
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1000);
+        }
+
+        function clearAll() {
+            inputText.value = '';
+            outputWrapper.style.display = 'none';
+            outputText.value = '';
+        }
+
     </script>
 
     <script type="module">

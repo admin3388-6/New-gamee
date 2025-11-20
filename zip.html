@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SkyData - تجميع وضغط ملفات ZIP</title>
+    <meta name="description" content="أداة مجانية لتجميع وضغط الملفات والصور في ملف ZIP واحد بسرعة عالية داخل المتصفح.">
+    <meta name="keywords" content="create zip, compress files, zip maker, online zip, تجميع ملفات, ضغط ملفات, SkyData">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
+    <style>
+        /* ==============================================
+           1. أساسيات الصفحة (Standard)
+           ============================================== */
+        body {
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
+        }
+
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+            box-sizing: border-box;
+        }
+        *:focus { outline: none; border-color: transparent !important; }
+
+        /* الهيدر المثبت */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* زر القائمة */
+        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
+        .hamburger input { display: none; }
+        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line-top-bottom { stroke-dasharray: 12 63; }
+        .hamburger input:checked + svg { transform: rotate(-45deg); }
+        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
+
+        /* القائمة الجانبية */
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
+        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
+        .social-links a:hover { color: #00aaff; }
+        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .footer-nav a { color: #ccc; font-size: 13px; }
+        .copyright { font-size: 12px; color: #666; }
+
+
+        /* ==============================================
+           2. تنسيقات أداة ZIP
+           ============================================== */
+
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 15px; }
+
+        .tool-box {
+            background-color: #111a30; padding: 25px;
+            border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; text-align: center; font-size: 24px; }
+
+        /* منطقة الرفع */
+        #file-input { display: none; }
+        
+        .upload-area {
+            border: 2px dashed #2a3a5a; border-radius: 10px; padding: 30px;
+            cursor: pointer; transition: 0.3s; background: #0e1624;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+        .upload-area:hover { border-color: #00aaff; background: #152036; }
+        .upload-area i { font-size: 40px; color: #00aaff; }
+        .upload-text { color: #ccc; font-size: 14px; }
+
+        /* قائمة الملفات */
+        #file-list {
+            margin-top: 20px; max-height: 300px; overflow-y: auto;
+            border: 1px solid #2a3a5a; border-radius: 8px; display: none;
+        }
+        
+        .file-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 15px; background: #0e1624; border-bottom: 1px solid #2a3a5a;
+            transition: 0.2s;
+        }
+        .file-item:last-child { border-bottom: none; }
+        .file-item:hover { background: #1f2d4d; }
+        
+        .file-info { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 14px; }
+        .file-size { color: #aaa; font-size: 12px; margin-right: 10px; }
+        
+        .btn-remove {
+            background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 16px;
+        }
+        .btn-remove:hover { color: #ff6b6b; transform: scale(1.1); }
+
+        /* الإجراءات */
+        .actions-panel {
+            display: none; margin-top: 20px; flex-direction: column; gap: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .filename-input {
+            width: 100%; padding: 12px; background: #0e1624; color: #fff;
+            border: 1px solid #2a3a5a; border-radius: 8px; font-size: 14px; text-align: center;
+        }
+        
+        .buttons-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+        .btn-action {
+            padding: 12px 25px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; transition: 0.2s; min-width: 150px;
+        }
+        .btn-zip { background: #00aaff; color: #111; }
+        .btn-zip:hover { background: #fff; }
+        
+        .btn-reset { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-reset:hover { background: #ff4d4d; color: #fff; }
+        
+        .btn-download { background: #27ae60; color: #fff; display: none; }
+        .btn-download:hover { background: #2ecc71; }
+
+        /* التحميل */
+        #loader {
+            display: none; margin-top: 20px; text-align: center;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #2a3a5a; border-top-color: #00aaff;
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px auto;
+        }
+        @keyframes spin { to {transform: rotate(360deg);} }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+        #total-size { color: #aaa; font-size: 13px; margin-top: 5px; text-align: right; padding: 0 10px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب العمر</span></a></li>
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>تكرار كلمات</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>إخفاء</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف أسطر</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>فحص روابط</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>ضوضاء</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>أكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV</span></a></li>
+                <li><a href="zip.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-file-archive"></i> <span>تجميع ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص أشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>سياسة</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>خطوط</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">SkyData © 2025</p>
+        </div>
+    </nav>
+
+    <main class="container-tool">
+        
+        <div class="tool-box">
+            <h1><i class="fas fa-file-archive"></i> تجميع ملفات ZIP</h1>
+            
+            <label for="file-input" class="upload-area">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <div class="upload-text">اضغط لاختيار الملفات أو اسحبها هنا</div>
+            </label>
+            <input type="file" id="file-input" multiple>
+
+            <div id="file-list"></div>
+            <div id="total-size"></div>
+
+            <div class="actions-panel" id="actions-panel">
+                <input type="text" id="zip-filename" class="filename-input" value="SkyData-Files" placeholder="اسم الملف المضغوط">
+                
+                <div class="buttons-row">
+                    <button class="btn-action btn-zip" onclick="createZip()">
+                        <i class="fas fa-compress"></i> ضغط الملفات
+                    </button>
+                    <button class="btn-action btn-reset" onclick="resetTool()">
+                        <i class="fas fa-trash"></i> مسح الكل
+                    </button>
+                </div>
+            </div>
+
+            <div id="loader">
+                <div class="spinner"></div>
+                <p style="color:#aaa; font-size:12px;">جاري ضغط الملفات...</p>
+            </div>
+
+            <button class="btn-action btn-download" id="download-btn" style="width:100%; margin-top:20px;">
+                <i class="fas fa-download"></i> تحميل ملف ZIP
+            </button>
+
+        </div>
+    </main>
+
+    <script>
+        // --- فتح/إغلاق القائمة ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق ZIP ---
+        const fileInput = document.getElementById('file-input');
+        const fileList = document.getElementById('file-list');
+        const actionsPanel = document.getElementById('actions-panel');
+        const totalSizeEl = document.getElementById('total-size');
+        const downloadBtn = document.getElementById('download-btn');
+        const loader = document.getElementById('loader');
+        
+        let filesToZip = [];
+
+        fileInput.addEventListener('change', (e) => {
+            const newFiles = Array.from(e.target.files);
+            filesToZip = [...filesToZip, ...newFiles];
+            renderFileList();
+            fileInput.value = ''; // للسماح بإضافة نفس الملف مرة أخرى
+        });
+
+        function renderFileList() {
+            fileList.innerHTML = '';
+            if (filesToZip.length === 0) {
+                fileList.style.display = 'none';
+                actionsPanel.style.display = 'none';
+                totalSizeEl.innerText = '';
+                downloadBtn.style.display = 'none';
+                return;
+            }
+
+            let totalBytes = 0;
+
+            filesToZip.forEach((file, index) => {
+                totalBytes += file.size;
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.innerHTML = `
+                    <div class="file-info">
+                        <i class="fas fa-file"></i>
+                        <span>${file.name}</span>
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <span class="file-size">${formatBytes(file.size)}</span>
+                        <button class="btn-remove" onclick="removeFile(${index})"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+                fileList.appendChild(div);
+            });
+
+            totalSizeEl.innerText = `الإجمالي: ${formatBytes(totalBytes)}`;
+            fileList.style.display = 'block';
+            actionsPanel.style.display = 'flex';
+        }
+
+        function removeFile(index) {
+            filesToZip.splice(index, 1);
+            renderFileList();
+        }
+
+        function createZip() {
+            if(filesToZip.length === 0) return;
+
+            loader.style.display = 'block';
+            downloadBtn.style.display = 'none';
+            actionsPanel.style.display = 'none';
+
+            const zip = new JSZip();
+
+            // إضافة الملفات
+            filesToZip.forEach(file => {
+                zip.file(file.name, file);
+            });
+
+            // توليد الملف
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                loader.style.display = 'none';
+                actionsPanel.style.display = 'flex'; // إعادة إظهار الأزرار للضغط مرة أخرى
+                
+                const filename = document.getElementById('zip-filename').value || 'SkyData-Files';
+                const url = URL.createObjectURL(content);
+                
+                downloadBtn.onclick = function() {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename + '.zip';
+                    a.click();
+                };
+                
+                downloadBtn.style.display = 'flex';
+                downloadBtn.innerHTML = `<i class="fas fa-download"></i> تحميل ${filename}.zip`;
+            });
+        }
+
+        function resetTool() {
+            filesToZip = [];
+            renderFileList();
+            downloadBtn.style.display = 'none';
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            projectId: "skydata-ai"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const authLink = document.getElementById('auth-link');
+            if (authLink) {
+                const ico = authLink.querySelector('i'); const txt = authLink.querySelector('span');
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authLink.href = 'menu.html'; ico.className = 'fas fa-user-circle'; txt.textContent = 'ملف الشخصي';
+                    } else {
+                        authLink.href = 'login.html'; ico.className = 'fas fa-sign-in-alt'; txt.textContent = 'تسجيل الدخول';
+                    }
+                });
+            }
+        } catch (e) { console.error("Firebase Error:", e); }
+    </script>
+
+</body>
+</html>

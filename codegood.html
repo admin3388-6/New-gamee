@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - تنسيق وترتيب الأكواد</title>
+    <meta name="description" content="أداة مجانية لتنظيف وتنسيق الأكواد البرمجية (HTML, CSS, JS, JSON) وجعلها مرتبة ومقروءة بضغطة زر.">
+    <meta name="keywords" content="code beautifier, code formatter, html formatter, css beautifier, js cleaner, json format, SkyData, تنسيق اكواد">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/prettier@2.8.8/standalone.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.8/parser-html.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.8/parser-postcss.js"></script> <script src="https://unpkg.com/prettier@2.8.8/parser-babel.js"></script>   <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -45,7 +47,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -66,21 +68,15 @@
         .logo-img { height: 35px !important; width: auto; }
 
         /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
-        .hamburger input { display: none; }
-        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line-top-bottom { stroke-dasharray: 12 63; }
-        .hamburger input:checked + svg { transform: rotate(-45deg); }
-        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
-
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,41 +86,111 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة تنسيق الأكواد
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 1100px; margin: 0 auto; padding: 15px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            background-color: #111a30; padding: 25px;
+            border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #2a3a5a;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; text-align: center; font-size: 24px; }
+
+        /* شريط التحكم العلوي */
+        .editor-toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #1f2d4d; padding: 10px 15px; border-radius: 8px 8px 0 0;
+            border: 1px solid #2a3a5a; border-bottom: none; flex-wrap: wrap; gap: 10px;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        .lang-select {
+            background: #0b132b; color: #fff; border: 1px solid #2a3a5a;
+            padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;
+        }
+        
+        .toolbar-actions { display: flex; gap: 10px; }
+
+        .mini-btn {
+            background: transparent; border: 1px solid #555; color: #ccc;
+            padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;
+            transition: 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .mini-btn:hover { background: #2a3a5a; color: #fff; border-color: #00aaff; }
+
+        /* المحرر */
+        .editors-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+            height: 500px; border: 1px solid #2a3a5a; border-radius: 0 0 8px 8px;
+            overflow: hidden;
         }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        .editor-wrapper { position: relative; height: 100%; }
+        
+        .editor-label {
+            position: absolute; top: 0; right: 0; background: rgba(0, 170, 255, 0.1);
+            color: #00aaff; font-size: 11px; padding: 2px 8px; border-radius: 0 0 0 5px;
+            z-index: 10; pointer-events: none;
         }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        textarea {
+            width: 100%; height: 100%; background: #0e1624; color: #d4d4d4;
+            border: none; padding: 25px 15px 15px 15px; /* Padding top for label */
+            font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; 
+            resize: none; line-height: 1.5; direction: ltr; text-align: left;
+            white-space: pre; overflow: auto; tab-size: 4;
+        }
+        textarea:focus { background: #131c2e; }
+        
+        #input-code { border-left: 1px solid #2a3a5a; } /* فاصل */
+
+        /* أزرار التحويل الرئيسية */
+        .main-controls {
+            display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;
         }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        .btn-action {
+            padding: 12px 30px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; font-size: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; transition: 0.2s; min-width: 160px;
         }
-        .btn-back:hover { background: #fff; }
+        .btn-format { background: #00aaff; color: #111; }
+        .btn-format:hover { background: #fff; }
+        
+        .btn-download { background: #27ae60; color: #fff; }
+        .btn-download:hover { background: #2ecc71; }
+
+        /* رسالة الخطأ/النجاح */
+        #status-msg {
+            display: none; padding: 10px; border-radius: 6px; margin-top: 15px;
+            text-align: center; font-size: 14px; font-family: 'Cairo';
+        }
+        .msg-error { background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
+        .msg-success { background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; color: #27ae60; }
+
+        /* تجاوب الموبايل */
+        @media (max-width: 768px) {
+            .editors-grid { grid-template-columns: 1fr; height: auto; }
+            textarea { height: 300px; border-left: none; border-bottom: 1px solid #2a3a5a; }
+            .editor-toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar-actions { justify-content: center; }
+        }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 7000;
+        }
+        #toast.show { opacity: 1; bottom: 50px; }
 
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <header class="main-header">
         <div class="container">
@@ -179,10 +245,8 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
@@ -209,7 +273,7 @@
                 <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
                 <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
                 <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
-                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="codegood.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
                 <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
                 <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
                 <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
@@ -237,14 +301,53 @@
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-magic"></i> تنسيق وترتيب الأكواد</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
-        </div>
+            <div class="editor-toolbar">
+                <select id="lang-select" class="lang-select">
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="json">JSON</option>
+                </select>
+                
+                <div class="toolbar-actions">
+                    <button class="mini-btn" onclick="pasteToInput()"><i class="fas fa-paste"></i> لصق</button>
+                    <button class="mini-btn" onclick="clearAll()" style="color:#ff4d4d; border-color:#ff4d4d;"><i class="fas fa-trash"></i> مسح</button>
+                </div>
+            </div>
 
+            <div class="editors-grid">
+                <div class="editor-wrapper">
+                    <span class="editor-label">الكود العشوائي</span>
+                    <textarea id="input-code" placeholder="الصق الكود غير المرتب هنا..."></textarea>
+                </div>
+                <div class="editor-wrapper">
+                    <span class="editor-label">الكود المنسق</span>
+                    <textarea id="output-code" readonly placeholder="النتيجة ستظهر هنا..."></textarea>
+                </div>
+            </div>
+
+            <div id="status-msg"></div>
+
+            <div class="main-controls">
+                <button class="btn-action btn-format" onclick="formatCode()">
+                    <i class="fas fa-broom"></i> تنسيق (Beautify)
+                </button>
+                
+                <button class="btn-action btn-download" onclick="copyOutput()">
+                    <i class="fas fa-copy"></i> نسخ النتيجة
+                </button>
+                
+                <button class="btn-action btn-download" onclick="downloadCode()" style="background:#e67e22;">
+                    <i class="fas fa-download"></i> تحميل ملف
+                </button>
+            </div>
+
+        </div>
     </main>
+
+    <div id="toast">تم النسخ!</div>
 
     <script>
         // --- فتح/إغلاق القائمة ---
@@ -258,6 +361,95 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق التنسيق (Prettier) ---
+        const inputCode = document.getElementById('input-code');
+        const outputCode = document.getElementById('output-code');
+        const langSelect = document.getElementById('lang-select');
+        const statusMsg = document.getElementById('status-msg');
+
+        function showStatus(msg, type) {
+            statusMsg.innerText = msg;
+            statusMsg.className = type === 'error' ? 'msg-error' : 'msg-success';
+            statusMsg.style.display = 'block';
+        }
+        function clearStatus() {
+            statusMsg.style.display = 'none';
+        }
+
+        async function formatCode() {
+            const code = inputCode.value;
+            const lang = langSelect.value;
+            clearStatus();
+
+            if (!code.trim()) return showStatus("الرجاء لصق كود أولاً.", "error");
+
+            let parser = 'html';
+            let plugins = [prettierPlugins.html, prettierPlugins.postcss, prettierPlugins.babel];
+
+            if (lang === 'css') parser = 'css';
+            else if (lang === 'javascript' || lang === 'json') parser = 'babel';
+
+            try {
+                const formatted = await prettier.format(code, {
+                    parser: parser,
+                    plugins: plugins,
+                    tabWidth: 4,
+                    useTabs: false,
+                    semi: true,
+                    singleQuote: true
+                });
+                outputCode.value = formatted;
+                showStatus("تم التنسيق بنجاح!", "success");
+            } catch (e) {
+                showStatus("خطأ في الكود: " + e.message.split('\n')[0], "error");
+            }
+        }
+
+        // أدوات مساعدة
+        async function pasteToInput() {
+            try {
+                const text = await navigator.clipboard.readText();
+                inputCode.value = text;
+            } catch(e) { alert("يرجى السماح بالوصول للحافظة"); }
+        }
+
+        function clearAll() {
+            inputCode.value = '';
+            outputCode.value = '';
+            clearStatus();
+        }
+
+        function copyOutput() {
+            if(!outputCode.value) return;
+            outputCode.select();
+            document.execCommand('copy');
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1500);
+        }
+
+        function downloadCode() {
+            const code = outputCode.value;
+            if(!code) return;
+            
+            const lang = langSelect.value;
+            let ext = 'txt';
+            if(lang === 'html') ext = 'html';
+            if(lang === 'css') ext = 'css';
+            if(lang === 'javascript') ext = 'js';
+            if(lang === 'json') ext = 'json';
+
+            const blob = new Blob([code], {type: "text/plain;charset=utf-8"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `formatted_code.${ext}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
     </script>
 
     <script type="module">

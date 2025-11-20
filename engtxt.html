@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SkyData - زخرفة وخطوط إنجليزية</title>
+    <meta name="description" content="أداة لزخرفة النصوص الإنجليزية بأشكال احترافية (Gothic, Cursive, Bubbles) ومعاينة خطوط الويب المميزة.">
+    <meta name="keywords" content="English decoration, text generator, font styles, fancy text, زخرفة انجليزي, خطوط انجليزية, SkyData">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alfa+Slab+One&family=Anton&family=Bangers&family=Cinzel&family=Comfortaa&family=Courgette&family=Creepster&family=Dancing+Script&family=Fjalla+One&family=Great+Vibes&family=Indie+Flower&family=Lobster&family=Monoton&family=Orbitron&family=Oswald&family=Pacifico&family=Permanent+Marker&family=Playfair+Display&family=Press+Start+2P&family=Righteous&family=Roboto+Mono&family=Sacramento&family=Satisfy&family=Shadows+Into+Light&family=Special+Elite&family=Tangerine&family=Ultra&family=VT323&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
+    <style>
+        /* ==============================================
+           1. أساسيات الصفحة (Standard)
+           ============================================== */
+        body {
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
+        }
+
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+            box-sizing: border-box;
+        }
+        *:focus { outline: none; border-color: transparent !important; }
+
+        /* الهيدر المثبت */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* القائمة الجانبية */
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
+        /* تذييل القائمة */
+        .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
+        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
+        .social-links a:hover { color: #00aaff; }
+        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .footer-nav a { color: #ccc; font-size: 13px; }
+        .copyright { font-size: 12px; color: #666; }
+
+
+        /* ==============================================
+           2. تنسيقات أداة الزخرفة (English Tool)
+           ============================================== */
+
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        .tool-box {
+            background-color: #111a30; padding: 30px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; }
+
+        /* التبويبات */
+        .tabs { display: flex; margin-bottom: 20px; background: #0e1624; border-radius: 8px; overflow: hidden; border: 1px solid #2a3a5a; }
+        .tab-btn {
+            flex: 1; padding: 15px; background: transparent; border: none;
+            color: #ccc; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Cairo'; font-size: 16px;
+        }
+        .tab-btn:hover { background: #1f2d4d; }
+        .tab-btn.active { background: #00aaff; color: #111a30; }
+        
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+
+        /* حقول الإدخال */
+        .input-area { position: relative; margin-bottom: 30px; }
+        #text-input {
+            width: 100%; padding: 15px; background: #0e1624; border: 2px solid #2a3a5a;
+            color: #fff; border-radius: 10px; font-size: 20px; font-family: 'Cairo';
+            transition: 0.3s; text-align: center; direction: ltr; /* إنجليزي */
+        }
+        #text-input:focus { border-color: #00aaff; }
+        .input-label {
+            position: absolute; top: -12px; right: 20px; background: #111a30;
+            padding: 0 10px; color: #00aaff; font-size: 14px; font-weight: bold;
+        }
+
+        /* النتائج */
+        .results-list { display: flex; flex-direction: column; gap: 15px; }
+
+        .decoration-item, .font-item {
+            background: #0e1624; border: 1px solid #2a3a5a; border-radius: 10px;
+            padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            transition: 0.2s;
+        }
+        .decoration-item:hover, .font-item:hover { border-color: #00aaff; transform: translateX(-5px); }
+        
+        /* النص الناتج (إنجليزي) */
+        .decor-text, .font-text {
+            color: #fff; font-size: 22px; flex-grow: 1; text-align: left; /* يسار */
+            word-break: break-word; padding-right: 15px; direction: ltr;
+        }
+
+        .font-name-tag {
+            font-size: 12px; color: #aaa; margin-right: 10px; background: #1f2d4d;
+            padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+        }
+
+        .copy-btn {
+            background: rgba(0, 170, 255, 0.1); color: #00aaff; border: 1px solid #00aaff;
+            width: 45px; height: 45px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s; font-size: 18px; flex-shrink: 0;
+        }
+        .copy-btn:hover { background: #00aaff; color: #111a30; }
+        .copy-btn:active { transform: scale(0.9); }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 5000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        #toast.show { opacity: 1; bottom: 50px; }
+
+        .empty-state { color: #777; margin-top: 30px; font-size: 16px; direction: rtl; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
+                
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
+        </div>
+    </nav>
+
+    <main class="container-tool">
+        
+        <div class="tool-box">
+            <h1><i class="fas fa-spell-check"></i> زخرفة وخطوط إنجليزية</h1>
+            
+            <div class="input-area">
+                <span class="input-label">Type Text Here</span>
+                <input type="text" id="text-input" placeholder="Example: SkyData Tools">
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="decor-tab"><i class="fas fa-star"></i> Text Decoration</button>
+                <button class="tab-btn" data-tab="font-tab"><i class="fas fa-font"></i> Web Fonts</button>
+            </div>
+
+            <div id="decor-tab" class="tab-content active">
+                <div id="decor-results" class="results-list">
+                    <div class="empty-state">Type text above to start decorating...</div>
+                </div>
+            </div>
+
+            <div id="font-tab" class="tab-content">
+                <div id="font-results" class="results-list">
+                    <div class="empty-state">Type text to preview English fonts...</div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <div id="toast">Copied!</div>
+
+    <script>
+        // --- القائمة ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- التبويبات ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // --- منطق الزخرفة الإنجليزية ---
+        const textInput = document.getElementById('text-input');
+        const decorList = document.getElementById('decor-results');
+        const fontList = document.getElementById('font-results');
+
+        // دوال التحويل (Mapping)
+        const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const maps = {
+            "Circled": "ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ",
+            "Black Bubble": "🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩",
+            "Square": "🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉",
+            "Black Square": "🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉",
+            "Gothic": "𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ",
+            "Bold Gothic": "𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝖕𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟𝕬𝕭𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅",
+            "Script": "𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝒦𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵",
+            "Bold Script": "𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃𝓐𝓑𝓒𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩",
+            "Double Struck": "𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ",
+            "Monospace": "𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉",
+            "Wide": "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ",
+            "Small Caps": "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ",
+            "Upside Down": "zʎxʍʌnʇsɹbdouɯlʞɾıɥƃɟǝpɔqɐZ⅄XϺΛ∩⊥SᴚΌԀONW˥⋊ſIH⅁ℲƎᗡƆ𐐒∀",
+            "Parenthesis": "⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵"
+        };
+
+        function transformText(text, mapKey) {
+            if (!maps[mapKey]) return text;
+            return text.split('').map(c => {
+                const idx = chars.indexOf(c);
+                return idx > -1 ? Array.from(maps[mapKey])[idx] : c;
+            }).join('');
+        }
+
+        // قائمة الخطوط الإنجليزية
+        const fonts = [
+            'Roboto Mono', 'Lobster', 'Pacifico', 'Indie Flower', 'Shadows Into Light',
+            'Abril Fatface', 'Righteous', 'Dancing Script', 'Bangers', 'Creepster',
+            'Monoton', 'Orbitron', 'Press Start 2P', 'Sacramento', 'Satisfy',
+            'Cinzel', 'Courgette', 'Great Vibes', 'Permanent Marker', 'Special Elite',
+            'Tangerine', 'Ultra', 'VT323', 'Fjalla One', 'Oswald', 'Anton', 'Alfa Slab One'
+        ];
+
+        textInput.addEventListener('input', (e) => {
+            const text = e.target.value;
+            decorList.innerHTML = '';
+            fontList.innerHTML = '';
+
+            if (!text.trim()) {
+                decorList.innerHTML = '<div class="empty-state">Type text above to start decorating...</div>';
+                fontList.innerHTML = '<div class="empty-state">Type text to preview English fonts...</div>';
+                return;
+            }
+
+            // 1. توليد الزخارف
+            for (const [key, val] of Object.entries(maps)) {
+                const decorated = transformText(text, key);
+                const item = document.createElement('div');
+                item.className = 'decoration-item';
+                item.innerHTML = `
+                    <button class="copy-btn" onclick="copyText('${decorated.replace(/'/g, "\\'")}')"><i class="fas fa-copy"></i></button>
+                    <div class="decor-text">${decorated}</div>
+                `;
+                decorList.appendChild(item);
+            }
+
+            // إضافة زخارف إضافية (Symbols)
+            const extras = [
+                `★ ${text} ★`, `꧁ ${text} ꧂`, `✧ ${text} ✧`, `🔥 ${text} 🔥`,
+                `【 ${text} 】`, `『 ${text} 』`, `« ${text} »`, `• ${text} •`,
+                `--- ${text} ---`, `~ ${text} ~`, `// ${text} //`,
+                `⚡ ${text} ⚡`, `✨ ${text} ✨`, `❄️ ${text} ❄️`
+            ];
+            extras.forEach(dec => {
+                const item = document.createElement('div');
+                item.className = 'decoration-item';
+                item.innerHTML = `
+                    <button class="copy-btn" onclick="copyText('${dec.replace(/'/g, "\\'")}')"><i class="fas fa-copy"></i></button>
+                    <div class="decor-text">${dec}</div>
+                `;
+                decorList.appendChild(item);
+            });
+
+
+            // 2. توليد الخطوط
+            fonts.forEach(font => {
+                const item = document.createElement('div');
+                item.className = 'font-item';
+                item.innerHTML = `
+                    <button class="copy-btn" onclick="copyText('${text.replace(/'/g, "\\'")}')"><i class="fas fa-copy"></i></button>
+                    <div class="font-text" style="font-family: '${font}', cursive;">
+                        ${text} <span class="font-name-tag">${font}</span>
+                    </div>
+                `;
+                fontList.appendChild(item);
+            });
+        });
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 1000);
+            });
+        }
+
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        const app = initializeApp({
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            projectId: "skydata-ai"
+        });
+        const auth = getAuth(app);
+        const link = document.getElementById('auth-link');
+        if(link) {
+            const ico = link.querySelector('i'); const txt = link.querySelector('span');
+            onAuthStateChanged(auth, u => {
+                if(u) { link.href='menu.html'; ico.className='fas fa-user-circle'; txt.textContent='ملف الشخصي'; }
+                else { link.href='login.html'; ico.className='fas fa-sign-in-alt'; txt.textContent='تسجيل الدخول'; }
+            });
+        }
+    </script>
+
+</body>
+</html>

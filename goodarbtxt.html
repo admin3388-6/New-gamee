@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - ضغط وتحسين الخطوط</title>
+    <meta name="description" content="أداة مجانية لفحص ومعاينة وضغط ملفات الخطوط (TTF/OTF) لاستخدامها في المواقع والتطبيقات.">
+    <meta name="keywords" content="font compressor, web font optimizer, ttf viewer, otf to web, ضغط الخطوط, تحسين الخطوط, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/opentype.js/1.3.4/opentype.min.js"></script>
+
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -45,7 +47,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -65,7 +67,7 @@
 
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
+        /* زر القائمة */
         .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -74,13 +76,16 @@
         .hamburger input:checked + svg { transform: rotate(-45deg); }
         .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
+        /* القائمة الجانبية */
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,41 +95,89 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة الخطوط
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
+            background-color: #111a30; padding: 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            border: 1px solid #2a3a5a; text-align: center;
         }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; font-size: 24px; }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* منطقة الرفع */
+        #font-input { display: none; }
+        .file-upload-label {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background-color: #0e1624; color: #fff; border: 2px dashed #2a3a5a;
+            padding: 40px; border-radius: 10px; cursor: pointer; transition: 0.3s;
+            gap: 15px; margin-bottom: 20px;
         }
+        .file-upload-label:hover { border-color: #00aaff; background: #152036; }
+        .file-upload-label i { font-size: 40px; color: #00aaff; }
+        .upload-hint { font-size: 13px; color: #777; }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
-        }
+        /* لوحة المعلومات */
+        #info-panel { display: none; margin-top: 20px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        .font-details {
+            background: #0e1624; padding: 20px; border-radius: 10px; border: 1px solid #2a3a5a;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;
+            text-align: center; margin-bottom: 20px;
         }
+        .detail-item { display: flex; flex-direction: column; gap: 5px; }
+        .detail-label { font-size: 12px; color: #aaa; }
+        .detail-value { font-size: 16px; font-weight: bold; color: #fff; }
+        .detail-value.highlight { color: #00aaff; }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        /* منطقة المعاينة */
+        .preview-box {
+            background: #fff; color: #000; padding: 20px; border-radius: 10px;
+            min-height: 150px; display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; border: 5px solid #0e1624;
+            font-size: 32px; text-align: center; line-height: 1.5;
+            overflow-x: auto;
         }
-        .btn-back:hover { background: #fff; }
+        
+        /* أزرار التحكم */
+        .action-row { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        
+        .btn-action {
+            padding: 12px 30px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; transition: 0.2s; min-width: 150px;
+        }
+        .btn-download { background: #27ae60; }
+        .btn-download:hover { background: #2ecc71; }
+        
+        .btn-reset { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-reset:hover { background: #ff4d4d; color: #fff; }
+
+        /* التحميل */
+        #loader { display: none; margin: 20px 0; }
+        .spinner {
+            width: 30px; height: 30px; border: 3px solid #2a3a5a; border-top-color: #00aaff;
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;
+        }
+        @keyframes spin { to {transform: rotate(360deg);} }
+
+        .instruction-box {
+            margin-top: 30px; background: #111a30; padding: 20px;
+            border-radius: 10px; border: 1px solid #2a3a5a; text-align: right; font-size: 14px;
+        }
+        .instruction-box h3 { color: #00aaff; margin-bottom: 10px; font-size: 16px; }
+        .instruction-box ul { list-style: inside disc; color: #ccc; line-height: 1.6; }
 
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <header class="main-header">
         <div class="container">
@@ -179,10 +232,8 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
@@ -215,7 +266,7 @@
                 <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
                 <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
                 <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
-                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+                <li><a href="goodarbtxt.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-text-width"></i> <span>ضغط الخطوط</span></a></li>
             </ul>
         </div>
         
@@ -237,13 +288,60 @@
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-text-width"></i> ضغط وتحسين الخطوط</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
+            <label for="font-input" class="file-upload-label" id="upload-label">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>اختر ملف الخط (TTF/OTF)</span>
+                <span class="upload-hint">الحد الأقصى للحجم: 10 ميجابايت</span>
+            </label>
+            <input type="file" id="font-input" accept=".ttf,.otf">
+
+            <div id="loader">
+                <div class="spinner"></div>
+                <p style="color:#aaa; font-size:12px;">جاري تحليل الخط...</p>
+            </div>
+
+            <div id="info-panel">
+                <div class="font-details">
+                    <div class="detail-item">
+                        <span class="detail-label">اسم العائلة (Family)</span>
+                        <span class="detail-value highlight" id="font-family-val">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">عدد الرموز (Glyphs)</span>
+                        <span class="detail-value" id="font-glyphs-val">0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">الحجم الحالي</span>
+                        <span class="detail-value" id="font-size-val">0 KB</span>
+                    </div>
+                </div>
+
+                <div class="preview-box" id="preview-text" contenteditable="true">
+                    أبجد هوز حطي كلمن<br>SkyData Font Optimizer
+                </div>
+
+                <div class="action-row">
+                    <button class="btn-action btn-download" onclick="downloadOptimizedFont()">
+                        <i class="fas fa-download"></i> تحميل الخط المحسن
+                    </button>
+                    <button class="btn-action btn-reset" onclick="resetTool()">
+                        <i class="fas fa-trash"></i> ملف جديد
+                    </button>
+                </div>
+            </div>
+
         </div>
 
+        <div class="instruction-box">
+            <h3><i class="fas fa-info-circle"></i> معلومات عن الأداة</h3>
+            <ul>
+                <li>تقوم هذه الأداة بتحليل ملفات الخطوط وإعادة بنائها، مما قد يزيل البيانات غير الضرورية ويقلل الحجم قليلاً.</li>
+                <li>للحصول على أفضل ضغط للويب (WOFF2)، يُفضل استخدام أدوات سطر الأوامر أو خوادم مخصصة، لكن هذه الأداة تضمن تنظيف الخط محلياً.</li>
+                <li>المعاينة تفاعلية: يمكنك تعديل النص داخل مربع المعاينة لتجربة الخط.</li>
+            </ul>
+        </div>
     </main>
 
     <script>
@@ -258,6 +356,73 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق الأداة ---
+        const fontInput = document.getElementById('font-input');
+        const uploadLabel = document.getElementById('upload-label');
+        const loader = document.getElementById('loader');
+        const infoPanel = document.getElementById('info-panel');
+        const previewText = document.getElementById('preview-text');
+        
+        let currentFont = null;
+        let currentFileName = '';
+
+        fontInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            currentFileName = file.name.split('.')[0];
+            document.getElementById('font-size-val').innerText = (file.size / 1024).toFixed(2) + ' KB';
+
+            uploadLabel.style.display = 'none';
+            loader.style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const buffer = event.target.result;
+                    currentFont = opentype.parse(buffer);
+                    displayFontInfo(currentFont);
+                    
+                    // تفعيل الخط في المعاينة
+                    const fontFace = new FontFace('UploadedFont', buffer);
+                    fontFace.load().then(function(loadedFace) {
+                        document.fonts.add(loadedFace);
+                        previewText.style.fontFamily = 'UploadedFont';
+                    });
+
+                } catch (err) {
+                    alert('تعذر قراءة ملف الخط. تأكد أنه ملف TTF/OTF صالح.');
+                    resetTool();
+                } finally {
+                    loader.style.display = 'none';
+                    infoPanel.style.display = 'block';
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        function displayFontInfo(font) {
+            const names = font.names.fontFamily;
+            const familyName = names.en || names[Object.keys(names)[0]];
+            document.getElementById('font-family-val').innerText = familyName || 'Unknown';
+            document.getElementById('font-glyphs-val').innerText = font.numGlyphs;
+        }
+
+        function downloadOptimizedFont() {
+            if(!currentFont) return;
+            // إعادة بناء الخط وتحميله (يقوم بتنظيف بعض البيانات الوصفية)
+            currentFont.download(currentFileName + '_optimized.otf');
+        }
+
+        function resetTool() {
+            fontInput.value = '';
+            currentFont = null;
+            infoPanel.style.display = 'none';
+            uploadLabel.style.display = 'flex';
+            previewText.style.fontFamily = 'inherit';
+        }
+
     </script>
 
     <script type="module">

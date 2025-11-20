@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>SkyData - المذكرة الشاملة</title>
+    <meta name="description" content="أدوات الإنتاجية: مذكرة، مهام، مؤقت، وعادات.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
+    <style>
+        /* ==============================================
+           1. أساسيات الصفحة (Clean Reset)
+           ============================================== */
+        
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: #0b132b;
+            /* إزاحة للمحتوى لأسفل حتى لا يغطيه الهيدر */
+            padding-top: 80px; 
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ==============================================
+           2. الهيدر والقائمة (Fixed & Layered)
+           ============================================== */
+
+        /* الهيدر: طبقة 1000 */
+        .main-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+            background: rgba(11, 19, 43, 0.98); /* لون شبه شفاف */
+            border-bottom: 1px solid #1f2d4d;
+            z-index: 1000;
+            display: flex; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo-img { height: 35px; width: auto; }
+
+        /* زر القائمة: يجب أن يكون ظاهراً دائماً */
+        .hamburger {
+            display: block; cursor: pointer; height: 30px; width: 30px;
+            z-index: 1001; color: #fff; font-size: 24px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* القائمة الجانبية: طبقة 2000 (فوق الهيدر) */
+        .sidebar {
+            position: fixed; top: 0; right: -300px; width: 280px; height: 100vh;
+            background: #111a30; z-index: 2000;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+            overflow-y: auto; padding-top: 80px; /* مسافة عشان زر الإغلاق */
+        }
+        .sidebar.open { right: 0; }
+
+        /* طبقة التعتيم: طبقة 1500 */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            display: none; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { display: block; }
+
+
+        /* ==============================================
+           3. لوحة التحكم (Dashboard Grid)
+           ============================================== */
+
+        .dashboard-container {
+            max-width: 1200px; margin: 0 auto; padding: 15px;
+            display: grid;
+            /* التوزيع التلقائي: في الحاسوب عمودين أو ثلاثة، في الهاتف عمود واحد */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: #111a30; border: 1px solid #2a3a5a;
+            border-radius: 12px; padding: 20px;
+            display: flex; flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* عناوين البطاقات */
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #2a3a5a; padding-bottom: 12px; margin-bottom: 15px;
+        }
+        .card-header h3 { margin: 0; color: #00aaff; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+
+        /* المدخلات */
+        input, textarea {
+            width: 100%; background: #0e1624; color: #fff; border: 1px solid #2a3a5a;
+            border-radius: 6px; padding: 10px; font-family: 'Cairo'; font-size: 14px;
+        }
+        textarea { resize: vertical; min-height: 150px; line-height: 1.6; }
+
+        /* الأزرار */
+        .btn-add {
+            background: #00aaff; color: #fff; border: none; padding: 0 15px;
+            border-radius: 6px; cursor: pointer; font-weight: bold; min-width: 40px;
+        }
+        .btn-clear { background: none; border: none; color: #aaa; font-size: 12px; cursor: pointer; text-decoration: underline; }
+        .btn-icon { background: none; border: none; cursor: pointer; padding: 5px; }
+        .btn-check { color: #27ae60; } .btn-trash { color: #e74c3c; }
+
+        /* قوائم المهام */
+        .task-input-group { display: flex; gap: 8px; margin-bottom: 10px; }
+        .list-container { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; }
+        .list-item {
+            background: #0e1624; padding: 10px; border-radius: 6px; margin-bottom: 5px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-right: 3px solid #2a3a5a;
+        }
+        .list-item.done { opacity: 0.6; text-decoration: line-through; border-right-color: #27ae60; }
+
+        /* المؤقت */
+        .timer-wrapper { text-align: center; padding: 10px 0; }
+        .timer-inputs { display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 20px; }
+        .time-input { 
+            width: 80px !important; height: 70px; font-size: 36px; font-weight: bold; text-align: center; 
+            font-family: monospace; background: #0e1624; border: 2px solid #2a3a5a; color: #fff;
+        }
+        .timer-controls { display: flex; justify-content: center; gap: 15px; }
+        .t-btn { 
+            width: 50px; height: 50px; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; color: #fff;
+        }
+        .t-start { background: #27ae60; } .t-pause { background: #f39c12; } .t-reset { background: #c0392b; }
+
+        /* الحسابات */
+        .calc-row { display: flex; gap: 5px; margin-bottom: 5px; }
+        .calc-val { text-align: center; direction: ltr; color: #00ff7f; font-weight: bold; }
+        .total-box { background: #2a3a5a; padding: 10px; text-align: center; margin-top: 10px; border-radius: 6px; font-weight: bold; }
+
+        /* الجدول */
+        .table-wrapper { overflow-x: auto; }
+        .schedule-tbl { width: 100%; min-width: 600px; border-collapse: collapse; }
+        .schedule-tbl th { background: #00aaff; color: #111a30; padding: 10px; font-size: 13px; }
+        .schedule-tbl td { border: 1px solid #2a3a5a; padding: 0; }
+        .schedule-tbl input { background: transparent; border: none; text-align: center; padding: 8px; }
+
+        /* رسالة الحفظ */
+        #toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; z-index: 5000; pointer-events: none;
+        }
+        #toast.show { opacity: 1; bottom: 50px; }
+
+        /* تحسينات الموبايل */
+        @media (max-width: 768px) {
+            .dashboard-container { grid-template-columns: 1fr; } /* عمود واحد */
+            .dashboard-card { grid-column: auto !important; } /* إلغاء التمدد */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <div class="hamburger" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>فحص كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>صور لروابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>صور لـ PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>أبعاد الصور</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير الصور</span></a></li>
+                <li><a href="note.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-sticky-note"></i> <span>مذكرة</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب العمر</span></a></li>
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>نص لـ PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>فيديو لـ MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>ألوان</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص ميديا</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>عملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>تكرار كلمات</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>إخفاء</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف أسطر</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>فحص روابط</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>ضوضاء</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>أكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص أشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>سياسة</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>خطوط</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <p class="copyright">SkyData © 2025</p>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        
+        <div class="dashboard-card" style="grid-column: 1 / -1;">
+            <div class="card-header">
+                <h3><i class="fas fa-edit"></i> دفتر اليوميات</h3>
+                <button class="btn-clear" onclick="clearNote()">مسح</button>
+            </div>
+            <textarea id="notepad-area" placeholder="مساحتك الحرة للكتابة..."></textarea>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-tasks"></i> المهام</h3>
+                <span style="font-size:12px; color:#aaa;" id="t-count">0</span>
+            </div>
+            <div class="task-input-group">
+                <input type="text" id="t-input" placeholder="أضف مهمة...">
+                <button class="btn-add" onclick="addT()"><i class="fas fa-plus"></i></button>
+            </div>
+            <ul id="t-list" class="list-container"></ul>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-clock"></i> المؤقت</h3>
+            </div>
+            <div class="timer-wrapper">
+                <div class="timer-inputs">
+                    <input type="number" id="tm-m" class="time-input" value="25" min="0">
+                    <span style="font-size:30px; color:#00aaff; font-weight:bold;">:</span>
+                    <input type="number" id="tm-s" class="time-input" value="00" min="0" max="59">
+                </div>
+                <div class="timer-controls">
+                    <button class="t-btn t-start" onclick="startTm()"><i class="fas fa-play"></i></button>
+                    <button class="t-btn t-pause" onclick="pauseTm()"><i class="fas fa-pause"></i></button>
+                    <button class="t-btn t-reset" onclick="resetTm()"><i class="fas fa-undo"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-check-circle"></i> العادات</h3>
+                <button class="btn-clear" onclick="resetH()">تصفير</button>
+            </div>
+            <div class="task-input-group">
+                <input type="text" id="h-input" placeholder="عادة جديدة...">
+                <button class="btn-add" onclick="addH()"><i class="fas fa-plus"></i></button>
+            </div>
+            <ul id="h-list" class="list-container"></ul>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-calculator"></i> الحسابات</h3>
+                <button class="btn-clear" onclick="clearC()">مسح</button>
+            </div>
+            <div id="c-rows"></div>
+            <button class="btn-add" style="width:100%; margin-top:10px; padding:10px;" onclick="addCRow()">+ بند</button>
+            <div class="total-box">مجموع: <span id="c-total" style="color:#00ff7f">0</span></div>
+        </div>
+
+        <div class="dashboard-card" style="grid-column: 1 / -1;">
+            <div class="card-header">
+                <h3><i class="fas fa-calendar-alt"></i> الجدول</h3>
+                <button class="btn-clear" onclick="clearS()">مسح</button>
+            </div>
+            <div class="table-wrapper">
+                <table class="schedule-tbl">
+                    <thead>
+                        <tr>
+                            <th>اليوم</th>
+                            <th>مهمة 1</th>
+                            <th>مهمة 2</th>
+                            <th>مهمة 3</th>
+                            <th>ملاحظة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="s-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+    
+    <div id="toast">تم الحفظ</div>
+
+    <script>
+        // --- القائمة ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        function toggleMenu() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+        overlay.addEventListener('click', toggleMenu);
+
+        // --- Toast ---
+        function toast() {
+            const t = document.getElementById('toast'); t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1000);
+        }
+
+        // --- 1. Note ---
+        const note = document.getElementById('notepad-area');
+        note.value = localStorage.getItem('sky_note') || '';
+        note.addEventListener('input', () => localStorage.setItem('sky_note', note.value));
+        function clearNote() { if(confirm('مسح؟')) { note.value=''; localStorage.setItem('sky_note',''); } }
+
+        // --- 2. Tasks ---
+        let ts = JSON.parse(localStorage.getItem('sky_tasks') || '[]');
+        function renderT() {
+            const el = document.getElementById('t-list'); el.innerHTML='';
+            ts.forEach((t,i) => {
+                el.innerHTML += `<li class="list-item ${t.d?'done':''}"><span>${t.x}</span>
+                <div><button class="btn-icon btn-check" onclick="togT(${i})"><i class="fas fa-check"></i></button>
+                <button class="btn-icon btn-trash" onclick="delT(${i})"><i class="fas fa-trash"></i></button></div></li>`;
+            });
+            document.getElementById('t-count').innerText = ts.length;
+            localStorage.setItem('sky_tasks', JSON.stringify(ts));
+        }
+        function addT() { const v=document.getElementById('t-input'); if(v.value){ts.push({x:v.value,d:false}); v.value=''; renderT(); toast();} }
+        function togT(i) { ts[i].d = !ts[i].d; renderT(); }
+        function delT(i) { ts.splice(i,1); renderT(); }
+
+        // --- 3. Habits ---
+        let hs = JSON.parse(localStorage.getItem('sky_habits') || '[]');
+        function renderH() {
+            const el = document.getElementById('h-list'); el.innerHTML='';
+            hs.forEach((h,i) => {
+                el.innerHTML += `<li class="list-item ${h.d?'done':''}"><span>${h.x}</span>
+                <div><button class="btn-icon btn-check" onclick="togH(${i})"><i class="fas fa-check"></i></button>
+                <button class="btn-icon btn-trash" onclick="delH(${i})"><i class="fas fa-trash"></i></button></div></li>`;
+            });
+            localStorage.setItem('sky_habits', JSON.stringify(hs));
+        }
+        function addH() { const v=document.getElementById('h-input'); if(v.value){hs.push({x:v.value,d:false}); v.value=''; renderH(); toast();} }
+        function togH(i) { hs[i].d = !hs[i].d; renderH(); }
+        function delH(i) { hs.splice(i,1); renderH(); }
+        function resetH() { hs.forEach(h=>h.d=false); renderH(); toast(); }
+
+        // --- 4. Timer ---
+        let tmInt, tmSec=0;
+        const mM = document.getElementById('tm-m'), mS = document.getElementById('tm-s');
+        
+        function updTm() {
+            mM.value = Math.floor(tmSec/60).toString().padStart(2,'0');
+            mS.value = (tmSec%60).toString().padStart(2,'0');
+        }
+        function startTm() {
+            if(tmInt) return;
+            tmSec = (parseInt(mM.value)||0)*60 + (parseInt(mS.value)||0);
+            if(tmSec<=0) return;
+            
+            mM.disabled=mS.disabled=true;
+            tmInt = setInterval(() => {
+                if(tmSec>0) { tmSec--; updTm(); }
+                else { pauseTm(); alert('انتهى الوقت!'); new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); }
+            }, 1000);
+        }
+        function pauseTm() { clearInterval(tmInt); tmInt=null; mM.disabled=mS.disabled=false; }
+        function resetTm() { pauseTm(); mM.value=25; mS.value=00; }
+
+        // --- 5. Calc ---
+        let cs = JSON.parse(localStorage.getItem('sky_calc') || '[{"d":"","v":""}]');
+        function renderC() {
+            const el = document.getElementById('c-rows'); el.innerHTML=''; let tot=0;
+            cs.forEach((c,i) => {
+                el.innerHTML += `<div class="calc-row">
+                <input type="text" class="calc-desc" value="${c.d}" placeholder="بند" oninput="updC(${i},'d',this.value)">
+                <input type="number" class="calc-val" value="${c.v}" placeholder="0" oninput="updC(${i},'v',this.value)">
+                <button class="btn-icon btn-trash" onclick="delC(${i})"><i class="fas fa-times"></i></button></div>`;
+                tot+=Number(c.v);
+            });
+            document.getElementById('c-total').innerText=tot;
+            localStorage.setItem('sky_calc', JSON.stringify(cs));
+        }
+        window.updC = (i,k,v) => { cs[i][k]=v; let t=0; cs.forEach(c=>t+=Number(c.v)); document.getElementById('c-total').innerText=t; localStorage.setItem('sky_calc', JSON.stringify(cs)); };
+        window.addCRow = () => { cs.push({d:'',v:''}); renderC(); };
+        window.delC = (i) => { cs.splice(i,1); renderC(); };
+        window.clearC = () => { cs=[{d:'',v:''}]; renderC(); };
+
+        // --- 6. Schedule ---
+        const days = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+        let sc = JSON.parse(localStorage.getItem('sky_sched') || '{}');
+        function renderS() {
+            const b = document.getElementById('s-body'); b.innerHTML='';
+            days.forEach(d => {
+                let h = `<tr><td style="background:#1f2d4d;font-weight:bold;">${d}</td>`;
+                for(let i=1;i<=4;i++) h+=`<td><input type="text" value="${sc[d+i]||''}" onchange="saveS('${d+i}',this.value)"></td>`;
+                b.innerHTML += h+'</tr>';
+            });
+        }
+        window.saveS = (k,v) => { sc[k]=v; localStorage.setItem('sky_sched', JSON.stringify(sc)); toast(); };
+        window.clearS = () => { if(confirm('مسح؟')){ sc={}; localStorage.setItem('sky_sched','{}'); renderS(); } };
+
+        // Init
+        renderT(); renderH(); renderC(); renderS();
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        const app = initializeApp({
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            projectId: "skydata-ai"
+        });
+        const auth = getAuth(app);
+        const link = document.getElementById('auth-link');
+        if(link) {
+            const ico = link.querySelector('i'); const txt = link.querySelector('span');
+            onAuthStateChanged(auth, u => {
+                if(u) { link.href='menu.html'; ico.className='fas fa-user-circle'; txt.textContent='ملف الشخصي'; }
+                else { link.href='login.html'; ico.className='fas fa-sign-in-alt'; txt.textContent='تسجيل الدخول'; }
+            });
+        }
+    </script>
+</body>
+</html>

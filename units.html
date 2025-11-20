@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - محول الوحدات الشامل</title>
+    <meta name="description" content="أداة مجانية لتحويل الوحدات بدقة وسرعة. حول بين وحدات الطول، الوزن، الحرارة، السرعة، والمزيد بسهولة.">
+    <meta name="keywords" content="unit converter, تحويل وحدات, طول, وزن, حرارة, converter, SkyData, ادوات قياس">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,7 +45,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -65,7 +65,7 @@
 
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
+        /* زر القائمة */
         .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -74,13 +74,16 @@
         .hamburger input:checked + svg { transform: rotate(-45deg); }
         .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
+        /* القائمة الجانبية */
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,41 +93,76 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات محول الوحدات
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 800px; margin: 0 auto; padding: 15px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            background-color: #111a30; padding: 30px;
+            border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #2a3a5a;
         }
+        
+        h1 { color: #00aaff; margin-bottom: 25px; text-align: center; font-size: 24px; }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* أيقونات التصنيفات */
+        .category-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px; margin-bottom: 30px;
         }
+        
+        .cat-btn {
+            background: #0e1624; border: 1px solid #2a3a5a; border-radius: 10px;
+            padding: 10px; cursor: pointer; text-align: center; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        .cat-btn:hover { background: #1f2d4d; }
+        .cat-btn.active { background: #00aaff; color: #111; border-color: #00aaff; }
+        .cat-btn i { font-size: 20px; }
+        .cat-btn span { font-size: 12px; font-weight: bold; }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        /* منطقة التحويل */
+        .converter-area {
+            background: #0e1624; padding: 20px; border-radius: 12px;
+            border: 1px solid #2a3a5a; animation: fadeIn 0.3s ease;
         }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        .input-group {
+            margin-bottom: 20px; position: relative;
         }
+        .input-group label {
+            display: block; color: #aaa; margin-bottom: 8px; font-size: 14px;
+        }
+        
+        .control-row { display: flex; gap: 10px; }
+        
+        input[type="number"] {
+            flex: 2; padding: 12px; background: #0b132b; color: #fff;
+            border: 1px solid #2a3a5a; border-radius: 8px; font-size: 18px;
+            font-weight: bold; font-family: 'Cairo', sans-serif;
+        }
+        input[type="number"]:focus { border-color: #00aaff; }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        select {
+            flex: 1; padding: 12px; background: #1f2d4d; color: #fff;
+            border: 1px solid #2a3a5a; border-radius: 8px; cursor: pointer;
+            font-family: 'Cairo'; font-size: 14px; min-width: 100px;
         }
-        .btn-back:hover { background: #fff; }
+        select:focus { border-color: #00aaff; }
+
+        .swap-icon {
+            display: flex; justify-content: center; margin: 10px 0;
+            color: #00aaff; font-size: 20px; cursor: pointer; transition: 0.3s;
+        }
+        .swap-icon:hover { transform: rotate(180deg); color: #fff; }
 
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <header class="main-header">
         <div class="container">
@@ -179,14 +217,12 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
-                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="units.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
                 <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
                 <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
                 <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
@@ -237,13 +273,39 @@
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-exchange-alt"></i> محول الوحدات الشامل</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
-        </div>
+            <div class="category-grid">
+                <div class="cat-btn active" onclick="setCategory('length', this)"><i class="fas fa-ruler"></i><span>طول</span></div>
+                <div class="cat-btn" onclick="setCategory('weight', this)"><i class="fas fa-weight-hanging"></i><span>وزن</span></div>
+                <div class="cat-btn" onclick="setCategory('temp', this)"><i class="fas fa-thermometer-half"></i><span>حرارة</span></div>
+                <div class="cat-btn" onclick="setCategory('speed', this)"><i class="fas fa-tachometer-alt"></i><span>سرعة</span></div>
+                <div class="cat-btn" onclick="setCategory('time', this)"><i class="fas fa-clock"></i><span>وقت</span></div>
+                <div class="cat-btn" onclick="setCategory('area', this)"><i class="fas fa-vector-square"></i><span>مساحة</span></div>
+            </div>
 
+            <div class="converter-area">
+                
+                <div class="input-group">
+                    <label>القيمة (من):</label>
+                    <div class="control-row">
+                        <input type="number" id="input-val" value="1" oninput="convert()">
+                        <select id="from-unit" onchange="convert()"></select>
+                    </div>
+                </div>
+
+                <div class="swap-icon" onclick="swapUnits()"><i class="fas fa-exchange-alt" style="transform: rotate(90deg);"></i></div>
+
+                <div class="input-group">
+                    <label>النتيجة (إلى):</label>
+                    <div class="control-row">
+                        <input type="number" id="output-val" readonly>
+                        <select id="to-unit" onchange="convert()"></select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </main>
 
     <script>
@@ -258,6 +320,145 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق التحويل ---
+        const units = {
+            length: {
+                base: 'm',
+                items: {
+                    'm': { name: 'متر (m)', rate: 1 },
+                    'km': { name: 'كيلومتر (km)', rate: 1000 },
+                    'cm': { name: 'سنتيمتر (cm)', rate: 0.01 },
+                    'mm': { name: 'مليمتر (mm)', rate: 0.001 },
+                    'mi': { name: 'ميل (mile)', rate: 1609.34 },
+                    'yd': { name: 'ياردة (yard)', rate: 0.9144 },
+                    'ft': { name: 'قدم (foot)', rate: 0.3048 },
+                    'in': { name: 'بوصة (inch)', rate: 0.0254 }
+                }
+            },
+            weight: {
+                base: 'g',
+                items: {
+                    'g': { name: 'جرام (g)', rate: 1 },
+                    'kg': { name: 'كيلوجرام (kg)', rate: 1000 },
+                    'mg': { name: 'مليجرام (mg)', rate: 0.001 },
+                    'lb': { name: 'باوند (lb)', rate: 453.592 },
+                    'oz': { name: 'أونصة (oz)', rate: 28.3495 },
+                    'ton': { name: 'طن (ton)', rate: 1000000 }
+                }
+            },
+            temp: {
+                type: 'temp',
+                items: {
+                    'c': { name: 'سيليزيوس (°C)' },
+                    'f': { name: 'فهرنهايت (°F)' },
+                    'k': { name: 'كلفن (K)' }
+                }
+            },
+            speed: {
+                base: 'mps',
+                items: {
+                    'mps': { name: 'متر/ثانية (m/s)', rate: 1 },
+                    'kph': { name: 'كم/ساعة (km/h)', rate: 0.277778 },
+                    'mph': { name: 'ميل/ساعة (mph)', rate: 0.44704 },
+                    'knot': { name: 'عقدة (knot)', rate: 0.514444 }
+                }
+            },
+            time: {
+                base: 's',
+                items: {
+                    's': { name: 'ثانية', rate: 1 },
+                    'min': { name: 'دقيقة', rate: 60 },
+                    'h': { name: 'ساعة', rate: 3600 },
+                    'd': { name: 'يوم', rate: 86400 },
+                    'w': { name: 'أسبوع', rate: 604800 }
+                }
+            },
+            area: {
+                base: 'sqm',
+                items: {
+                    'sqm': { name: 'متر مربع (m²)', rate: 1 },
+                    'sqkm': { name: 'كم مربع (km²)', rate: 1000000 },
+                    'ha': { name: 'هكتار', rate: 10000 },
+                    'acre': { name: 'فدان (Acre)', rate: 4046.86 }
+                }
+            }
+        };
+
+        let currentCat = 'length';
+
+        function setCategory(cat, btn) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            populateSelects();
+            convert();
+        }
+
+        function populateSelects() {
+            const fromSel = document.getElementById('from-unit');
+            const toSel = document.getElementById('to-unit');
+            fromSel.innerHTML = ''; toSel.innerHTML = '';
+            
+            const items = units[currentCat].items;
+            Object.keys(items).forEach(key => {
+                fromSel.innerHTML += `<option value="${key}">${items[key].name}</option>`;
+                toSel.innerHTML += `<option value="${key}">${items[key].name}</option>`;
+            });
+            
+            // Set defaults (first and second)
+            if(fromSel.options.length > 1) toSel.selectedIndex = 1;
+        }
+
+        function convert() {
+            const val = parseFloat(document.getElementById('input-val').value);
+            const from = document.getElementById('from-unit').value;
+            const to = document.getElementById('to-unit').value;
+            const out = document.getElementById('output-val');
+
+            if(isNaN(val)) { out.value = ''; return; }
+
+            if(currentCat === 'temp') {
+                out.value = convertTemp(val, from, to);
+            } else {
+                const items = units[currentCat].items;
+                // Convert to base then to target
+                const baseVal = val * items[from].rate;
+                const finalVal = baseVal / items[to].rate;
+                out.value = parseFloat(finalVal.toFixed(6)); // Clean output
+            }
+        }
+
+        function convertTemp(val, from, to) {
+            let res = val;
+            if(from === to) return val;
+            
+            // To Celsius first
+            let c = val;
+            if(from === 'f') c = (val - 32) * 5/9;
+            if(from === 'k') c = val - 273.15;
+            
+            // From Celsius to Target
+            if(to === 'c') res = c;
+            if(to === 'f') res = (c * 9/5) + 32;
+            if(to === 'k') res = c + 273.15;
+            
+            return parseFloat(res.toFixed(2));
+        }
+
+        function swapUnits() {
+            const from = document.getElementById('from-unit');
+            const to = document.getElementById('to-unit');
+            const temp = from.value;
+            from.value = to.value;
+            to.value = temp;
+            convert();
+        }
+
+        // Init
+        populateSelects();
+        convert();
+
     </script>
 
     <script type="module">

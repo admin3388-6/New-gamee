@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - فحص سجلات DNS</title>
+    <meta name="description" content="أداة مجانية لفحص سجلات DNS (A, MX, NS, TXT) لأي نطاق في العالم بشكل فوري ودقيق.">
+    <meta name="keywords" content="dns lookup, dns checker, فحص النطاق, سجلات dns, mx lookup, a record, SkyData, أدوات الشبكة">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,7 +45,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -65,7 +65,7 @@
 
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
+        /* زر القائمة */
         .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -74,13 +74,16 @@
         .hamburger input:checked + svg { transform: rotate(-45deg); }
         .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
+        /* القائمة الجانبية */
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,41 +93,104 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة DNS
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 800px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            background-color: #111a30; padding: 30px;
+            border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #2a3a5a;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 25px; text-align: center; font-size: 24px; }
+
+        /* نموذج البحث */
+        .search-form {
+            display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        
+        .input-wrapper {
+            flex: 2; position: relative; min-width: 200px;
+        }
+        .input-wrapper i {
+            position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        input[type="text"] {
+            width: 100%; padding: 12px 40px 12px 15px; background: #0e1624; color: #fff;
+            border: 1px solid #2a3a5a; border-radius: 8px; font-size: 16px;
+            font-family: 'Cairo', sans-serif; direction: ltr; text-align: left;
+        }
+        input[type="text"]:focus { border-color: #00aaff; }
+
+        select {
+            flex: 1; background: #0e1624; color: #fff; border: 1px solid #2a3a5a;
+            padding: 12px; border-radius: 8px; cursor: pointer; min-width: 100px;
+        }
+        select:focus { border-color: #00aaff; }
+
+        .btn-search {
+            padding: 12px 25px; background: #00aaff; color: #111;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+            transition: 0.2s; min-width: 100px;
+        }
+        .btn-search:hover { background: #fff; }
+
+        /* منطقة النتائج */
+        #results-area { display: none; animation: fadeIn 0.5s ease; margin-top: 20px; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+        .result-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; border-bottom: 1px solid #2a3a5a; padding-bottom: 10px;
+        }
+        .status-badge {
+            padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;
+        }
+        .status-success { background: rgba(39, 174, 96, 0.2); color: #27ae60; }
+        .status-error { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+
+        /* الجدول */
+        .dns-table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid #2a3a5a; }
+        .dns-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        
+        .dns-table th {
+            background: #1f2d4d; color: #00aaff; padding: 12px; text-align: right; font-size: 14px;
+        }
+        .dns-table td {
+            background: #0e1624; color: #ddd; padding: 12px; border-bottom: 1px solid #2a3a5a;
+            font-family: monospace; font-size: 14px; direction: ltr; text-align: left;
+        }
+        .dns-table tr:last-child td { border-bottom: none; }
+        
+        .record-type {
+            display: inline-block; padding: 2px 8px; border-radius: 4px;
+            background: #2a3a5a; color: #fff; font-weight: bold; font-size: 12px;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* التحميل */
+        #loader {
+            display: none; margin-top: 20px; text-align: center;
         }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #2a3a5a; border-top-color: #00aaff;
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px auto;
+        }
+        @keyframes spin { to {transform: rotate(360deg);} }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        @media (max-width: 600px) {
+            .search-form { flex-direction: column; }
+            .input-wrapper, select, .btn-search { width: 100%; }
         }
-
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
-        }
-
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
-        }
-        .btn-back:hover { background: #fff; }
 
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <header class="main-header">
         <div class="container">
@@ -179,10 +245,8 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
@@ -210,7 +274,7 @@
                 <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
                 <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
                 <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
-                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="dns.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
                 <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
                 <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
                 <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
@@ -237,13 +301,54 @@
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-network-wired"></i> فحص سجلات DNS</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
-        </div>
+            <div class="search-form">
+                <div class="input-wrapper">
+                    <i class="fas fa-globe"></i>
+                    <input type="text" id="domain-input" placeholder="أدخل النطاق (مثلاً: google.com)">
+                </div>
+                <select id="record-type">
+                    <option value="A">A (IP Address)</option>
+                    <option value="AAAA">AAAA (IPv6)</option>
+                    <option value="MX">MX (Mail)</option>
+                    <option value="NS">NS (Nameservers)</option>
+                    <option value="CNAME">CNAME (Alias)</option>
+                    <option value="TXT">TXT (Text)</option>
+                    <option value="SOA">SOA (Start of Authority)</option>
+                </select>
+                <button class="btn-search" onclick="lookupDNS()">
+                    <i class="fas fa-search"></i> فحص
+                </button>
+            </div>
 
+            <div id="loader">
+                <div class="spinner"></div>
+                <p style="color:#aaa; font-size:12px;">جاري الاتصال بالخوادم...</p>
+            </div>
+
+            <div id="results-area">
+                <div class="result-header">
+                    <h3 style="color:#fff; margin:0; font-size:16px;">نتائج الفحص: <span id="domain-display" style="color:#00aaff;"></span></h3>
+                    <span id="status-badge" class="status-badge"></span>
+                </div>
+                
+                <div class="dns-table-wrapper">
+                    <table class="dns-table">
+                        <thead>
+                            <tr>
+                                <th>النوع</th>
+                                <th>القيمة (Value/Target)</th>
+                                <th>TTL (ثواني)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </main>
 
     <script>
@@ -258,6 +363,84 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق فحص DNS ---
+        // نستخدم خدمة DNS over HTTPS (DoH) من Cloudflare لأنها مجانية وتدعم CORS
+        const DOH_ENDPOINT = 'https://cloudflare-dns.com/dns-query';
+        
+        const dnsTypes = {
+            'A': 1, 'NS': 2, 'CNAME': 5, 'SOA': 6, 'MX': 15, 'TXT': 16, 'AAAA': 28
+        };
+
+        async function lookupDNS() {
+            const domain = document.getElementById('domain-input').value.trim();
+            const type = document.getElementById('record-type').value;
+            
+            if(!domain) { alert("الرجاء إدخال اسم النطاق"); return; }
+
+            // إظهار التحميل
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results-area').style.display = 'none';
+            document.getElementById('results-body').innerHTML = '';
+
+            try {
+                // طلب البيانات من Cloudflare DoH
+                const response = await fetch(`${DOH_ENDPOINT}?name=${domain}&type=${type}`, {
+                    headers: { 'Accept': 'application/dns-json' }
+                });
+                
+                const data = await response.json();
+                displayResults(data, domain, type);
+
+            } catch (error) {
+                console.error(error);
+                alert("حدث خطأ أثناء الاتصال بالخادم. تأكد من الرابط.");
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function displayResults(data, domain, type) {
+            const resultsArea = document.getElementById('results-area');
+            const resultsBody = document.getElementById('results-body');
+            const statusBadge = document.getElementById('status-badge');
+            document.getElementById('domain-display').innerText = domain;
+
+            if (data.Status === 0 && data.Answer) {
+                // نجاح
+                statusBadge.className = 'status-badge status-success';
+                statusBadge.innerText = 'تم العثور على سجلات';
+                
+                data.Answer.forEach(record => {
+                    const row = document.createElement('tr');
+                    
+                    // تحديد نوع السجل بناءً على الكود الرقمي
+                    let recordTypeName = Object.keys(dnsTypes).find(key => dnsTypes[key] === record.type) || record.type;
+                    
+                    // تنسيق البيانات (بعض السجلات تحتاج تنسيق خاص)
+                    let value = record.data;
+                    if (type === 'MX' && typeof value === 'string' && !value.includes(' ')) {
+                        // أحياناً تأتي البيانات كسترنج، نحاول تحسين العرض
+                    }
+
+                    row.innerHTML = `
+                        <td style="text-align:right;"><span class="record-type">${recordTypeName}</span></td>
+                        <td>${value}</td>
+                        <td style="text-align:right;">${record.TTL}</td>
+                    `;
+                    resultsBody.appendChild(row);
+                });
+
+            } else {
+                // فشل أو لا توجد نتائج
+                statusBadge.className = 'status-badge status-error';
+                statusBadge.innerText = 'لا توجد سجلات';
+                resultsBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#aaa;">لم يتم العثور على سجلات ${type} لهذا النطاق.</td></tr>`;
+            }
+
+            resultsArea.style.display = 'block';
+        }
+
     </script>
 
     <script type="module">

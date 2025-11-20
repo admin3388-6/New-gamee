@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - الحاسبة المتطورة</title>
+    <meta name="description" content="آلة حاسبة علمية وعادية متطورة لحل المسائل الرياضية المعقدة، المعادلات، والدوال المثلثية.">
+    <meta name="keywords" content="آلة حاسبة, حاسبة علمية, calculator, scientific calculator, math tools, حل معادلات, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,8 +27,9 @@
 
     <style>
         /* ==============================================
-           1. أساسيات الصفحة (Standard)
+           1. إصلاحات الهيدر والقائمة (Standard)
            ============================================== */
+        
         body {
             background-color: #0b132b;
             padding-top: 90px !important;
@@ -37,6 +38,7 @@
             display: block; 
         }
 
+        /* إزالة تأثيرات التركيز والضغط */
         *, *::before, *::after {
             -webkit-tap-highlight-color: transparent !important;
             outline: none !important;
@@ -45,7 +47,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -66,21 +68,16 @@
         .logo-img { height: 35px !important; width: auto; }
 
         /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
-        .hamburger input { display: none; }
-        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line-top-bottom { stroke-dasharray: 12 63; }
-        .hamburger input:checked + svg { transform: rotate(-45deg); }
-        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
-
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
+        /* تذييل القائمة */
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,35 +87,71 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات الحاسبة (Calculator Tool)
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; }
 
-        .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+        .calc-box {
+            background-color: #111a30; padding: 20px;
+            border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 1px solid #2a3a5a;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* الشاشة */
+        .calc-screen {
+            background: #0e1624; border-radius: 10px; padding: 15px;
+            margin-bottom: 15px; text-align: right; border: 1px solid #2a3a5a;
         }
+        .calc-history { color: #777; font-size: 14px; min-height: 20px; font-family: monospace; }
+        .calc-current { color: #fff; font-size: 32px; font-weight: bold; margin-top: 5px; font-family: monospace; overflow-x: auto; white-space: nowrap; }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        /* أزرار التحكم بالوضع */
+        .mode-switch {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
         }
+        .mode-label { color: #00aaff; font-weight: bold; font-size: 14px; }
+        .toggle-btn {
+            background: #1f2d4d; color: #fff; border: 1px solid #00aaff;
+            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; transition: 0.3s;
+        }
+        .toggle-btn.active { background: #00aaff; color: #111a30; }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        /* لوحة الأزرار */
+        .calc-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
         }
+        
+        .calc-btn {
+            background: #1f2d4d; border: none; color: #fff;
+            padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold;
+            cursor: pointer; transition: 0.2s; font-family: 'Cairo';
+        }
+        .calc-btn:active { transform: scale(0.95); background: #2a3a5a; }
+        
+        .btn-op { color: #00aaff; background: rgba(0, 170, 255, 0.1); }
+        .btn-eq { background: #00aaff; color: #111a30; grid-column: span 2; }
+        .btn-clear { color: #ff4d4d; background: rgba(255, 77, 77, 0.1); }
+        .btn-sci { display: none; color: #f39c12; font-size: 14px; background: rgba(243, 156, 18, 0.1); }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        /* الوضع العلمي */
+        .calc-box.scientific .calc-grid { grid-template-columns: repeat(5, 1fr); }
+        .calc-box.scientific .btn-sci { display: block; }
+        .calc-box.scientific .btn-eq { grid-column: span 1; }
+        .calc-box.scientific .btn-zero { grid-column: span 2; }
+
+        /* أدوات إضافية */
+        .extra-tools { margin-top: 30px; }
+        .tool-card {
+            background: #0e1624; border: 1px solid #2a3a5a; padding: 20px;
+            border-radius: 10px; margin-bottom: 15px;
         }
-        .btn-back:hover { background: #fff; }
+        .tool-card h3 { color: #00aaff; margin-top: 0; font-size: 16px; border-bottom: 1px dashed #333; padding-bottom: 10px; }
+        
+        .tool-input-group { display: flex; gap: 10px; margin-top: 10px; }
+        .tool-input { flex: 1; padding: 8px; background: #0b132b; border: 1px solid #2a3a5a; color: #fff; border-radius: 5px; text-align: center; }
+        .tool-btn { background: #27ae60; color: #fff; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .tool-result { margin-top: 10px; color: #fff; font-weight: bold; text-align: center; }
 
     </style>
 </head>
@@ -191,7 +224,7 @@
                 <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
                 <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
                 <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
-                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="calculator.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
                 <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
                 <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
                 <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
@@ -230,24 +263,94 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
     <main class="container-tool">
         
-        <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+        <h1 style="text-align:center; color:#00aaff; margin-bottom:20px;"><i class="fas fa-calculator"></i> الحاسبة المتطورة</h1>
+
+        <div class="calc-box" id="calc-box">
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
+            <div class="calc-screen">
+                <div class="calc-history" id="calc-history"></div>
+                <div class="calc-current" id="calc-current">0</div>
+            </div>
+
+            <div class="mode-switch">
+                <div class="mode-label">الوضع: <span id="mode-text">قياسي</span></div>
+                <button class="toggle-btn" onclick="toggleMode()">تبديل للعلمي</button>
+            </div>
+
+            <div class="calc-grid" id="calc-grid">
+                <button class="calc-btn btn-sci" onclick="handleMath('sin')">sin</button>
+                <button class="calc-btn btn-sci" onclick="handleMath('cos')">cos</button>
+                <button class="calc-btn btn-sci" onclick="handleMath('tan')">tan</button>
+                <button class="calc-btn btn-sci" onclick="handleMath('log')">log</button>
+                <button class="calc-btn btn-sci" onclick="handleMath('ln')">ln</button>
+                
+                <button class="calc-btn btn-sci" onclick="handleMath('sqrt')">√</button>
+                <button class="calc-btn btn-sci" onclick="appendOp('^')">^</button>
+                <button class="calc-btn btn-sci" onclick="appendVal('(')">(</button>
+                <button class="calc-btn btn-sci" onclick="appendVal(')')">)</button>
+                <button class="calc-btn btn-sci" onclick="appendVal('3.14159')">π</button>
+
+                <button class="calc-btn btn-clear" onclick="clearAll()">AC</button>
+                <button class="calc-btn btn-clear" onclick="deleteLast()"><i class="fas fa-backspace"></i></button>
+                <button class="calc-btn btn-op" onclick="appendOp('%')">%</button>
+                <button class="calc-btn btn-op" onclick="appendOp('/')">÷</button>
+
+                <button class="calc-btn" onclick="appendVal('7')">7</button>
+                <button class="calc-btn" onclick="appendVal('8')">8</button>
+                <button class="calc-btn" onclick="appendVal('9')">9</button>
+                <button class="calc-btn btn-op" onclick="appendOp('*')">×</button>
+
+                <button class="calc-btn" onclick="appendVal('4')">4</button>
+                <button class="calc-btn" onclick="appendVal('5')">5</button>
+                <button class="calc-btn" onclick="appendVal('6')">6</button>
+                <button class="calc-btn btn-op" onclick="appendOp('-')">-</button>
+
+                <button class="calc-btn" onclick="appendVal('1')">1</button>
+                <button class="calc-btn" onclick="appendVal('2')">2</button>
+                <button class="calc-btn" onclick="appendVal('3')">3</button>
+                <button class="calc-btn btn-op" onclick="appendOp('+')">+</button>
+
+                <button class="calc-btn btn-zero" onclick="appendVal('0')">0</button>
+                <button class="calc-btn" onclick="appendVal('.')">.</button>
+                <button class="calc-btn btn-eq" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <div class="extra-tools">
+            <div class="tool-card">
+                <h3><i class="fas fa-square-root-alt"></i> حل المعادلات التربيعية (ax² + bx + c = 0)</h3>
+                <div class="tool-input-group">
+                    <input type="number" id="qa" class="tool-input" placeholder="a">
+                    <input type="number" id="qb" class="tool-input" placeholder="b">
+                    <input type="number" id="qc" class="tool-input" placeholder="c">
+                    <button class="tool-btn" onclick="solveQuadratic()">حل</button>
+                </div>
+                <div id="quadratic-result" class="tool-result"></div>
+            </div>
+
+            <div class="tool-card">
+                <h3><i class="fas fa-weight"></i> حاسبة كتلة الجسم (BMI)</h3>
+                <div class="tool-input-group">
+                    <input type="number" id="bmi-weight" class="tool-input" placeholder="الوزن (kg)">
+                    <input type="number" id="bmi-height" class="tool-input" placeholder="الطول (cm)">
+                    <button class="tool-btn" onclick="calcBMI()">احسب</button>
+                </div>
+                <div id="bmi-result" class="tool-result"></div>
+            </div>
         </div>
 
     </main>
 
     <script>
-        // --- فتح/إغلاق القائمة ---
+        // --- القائمة الجانبية ---
         const menuCheckbox = document.getElementById('menu-checkbox');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -258,6 +361,132 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق الحاسبة ---
+        let currentInput = '0';
+        let expression = '';
+        let isScientific = false;
+
+        const currentDisplay = document.getElementById('calc-current');
+        const historyDisplay = document.getElementById('calc-history');
+        const calcBox = document.getElementById('calc-box');
+        const modeText = document.getElementById('mode-text');
+
+        function updateDisplay() {
+            currentDisplay.innerText = currentInput;
+            historyDisplay.innerText = expression;
+        }
+
+        function appendVal(val) {
+            if (currentInput === '0' && val !== '.') currentInput = val;
+            else currentInput += val;
+            updateDisplay();
+        }
+
+        function appendOp(op) {
+            expression += currentInput + ' ' + op + ' ';
+            currentInput = '0';
+            updateDisplay();
+        }
+
+        function clearAll() {
+            currentInput = '0';
+            expression = '';
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            if (currentInput === '') currentInput = '0';
+            updateDisplay();
+        }
+
+        function handleMath(func) {
+            if (func === 'sqrt') {
+                currentInput = Math.sqrt(parseFloat(currentInput)).toString();
+            } else if (func === 'sin') {
+                currentInput = Math.sin(parseFloat(currentInput) * Math.PI / 180).toString(); // Degrees
+            } else if (func === 'cos') {
+                currentInput = Math.cos(parseFloat(currentInput) * Math.PI / 180).toString();
+            } else if (func === 'tan') {
+                currentInput = Math.tan(parseFloat(currentInput) * Math.PI / 180).toString();
+            } else if (func === 'log') {
+                currentInput = Math.log10(parseFloat(currentInput)).toString();
+            } else if (func === 'ln') {
+                currentInput = Math.log(parseFloat(currentInput)).toString();
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            let fullExpr = expression + currentInput;
+            // استبدال الرموز ليفهمها الجافاسكريبت
+            fullExpr = fullExpr.replace(/\^/g, '**'); 
+            
+            try {
+                // استخدام دالة آمنة للحساب
+                const result = new Function('return ' + fullExpr)();
+                currentInput = result.toString();
+                expression = '';
+                updateDisplay();
+            } catch (e) {
+                currentInput = 'Error';
+                updateDisplay();
+                setTimeout(clearAll, 1500);
+            }
+        }
+
+        function toggleMode() {
+            isScientific = !isScientific;
+            if (isScientific) {
+                calcBox.classList.add('scientific');
+                modeText.innerText = "علمي";
+                document.querySelector('.toggle-btn').innerText = "تبديل للقياسي";
+            } else {
+                calcBox.classList.remove('scientific');
+                modeText.innerText = "قياسي";
+                document.querySelector('.toggle-btn').innerText = "تبديل للعلمي";
+            }
+        }
+
+        // --- أدوات إضافية ---
+        function solveQuadratic() {
+            const a = parseFloat(document.getElementById('qa').value);
+            const b = parseFloat(document.getElementById('qb').value);
+            const c = parseFloat(document.getElementById('qc').value);
+            const resDiv = document.getElementById('quadratic-result');
+
+            if (isNaN(a) || isNaN(b) || isNaN(c)) { resDiv.innerText = "أدخل أرقاماً صحيحة"; return; }
+            
+            const d = b*b - 4*a*c;
+            if (d > 0) {
+                const x1 = (-b + Math.sqrt(d)) / (2*a);
+                const x2 = (-b - Math.sqrt(d)) / (2*a);
+                resDiv.innerText = `x1 = ${x1.toFixed(2)}, x2 = ${x2.toFixed(2)}`;
+            } else if (d === 0) {
+                const x = -b / (2*a);
+                resDiv.innerText = `x = ${x.toFixed(2)}`;
+            } else {
+                resDiv.innerText = "لا توجد حلول حقيقية";
+            }
+        }
+
+        function calcBMI() {
+            const w = parseFloat(document.getElementById('bmi-weight').value);
+            const h = parseFloat(document.getElementById('bmi-height').value) / 100; // Convert cm to m
+            const resDiv = document.getElementById('bmi-result');
+
+            if (!w || !h) { resDiv.innerText = "أدخل البيانات"; return; }
+
+            const bmi = (w / (h * h)).toFixed(1);
+            let status = "";
+            if (bmi < 18.5) status = "نحافة";
+            else if (bmi < 25) status = "وزن طبيعي";
+            else if (bmi < 30) status = "وزن زائد";
+            else status = "سمنة";
+
+            resDiv.innerText = `BMI: ${bmi} (${status})`;
+        }
     </script>
 
     <script type="module">

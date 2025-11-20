@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - صانع الشعار (غير متوفر)</title>
+    <meta name="description" content="أداة صناعة الشعار غير متوفرة حالياً. يمكنك استخدام أفضل 5 مواقع مجانية لتصميم لوجو احترافي.">
+    <meta name="keywords" content="صانع شعار, لوجو مجاني, logo maker, تصميم لوجو, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,7 +45,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -90,35 +90,41 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات صفحة "غير متوفر"
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 800px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
+            background-color: #111a30; padding: 40px 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             border: 1px solid #2a3a5a; color: #e0e0e0;
+            text-align: right;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        h1 { color: #fff; font-size: 28px; margin-bottom: 10px; text-align: center; }
+        .status-icon { font-size: 60px; color: #ffc107; margin-bottom: 25px; display: block; text-align: center; }
+        .message-text { color: #aaa; font-size: 16px; margin-bottom: 30px; text-align: center; }
+        
+        .alternatives h2 {
+            color: #00aaff; font-size: 20px; margin-top: 30px; margin-bottom: 15px;
+            border-bottom: 1px dashed #2a3a5a; padding-bottom: 8px;
         }
-
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        
+        .logo-link-item {
+            background: #0e1624; border: 1px solid #2a3a5a; padding: 15px;
+            border-radius: 10px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        
+        .logo-link-item a {
+            color: #fff; font-weight: bold; text-decoration: none; font-size: 16px;
         }
-
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        
+        .link-badge {
+            background: #27ae60; color: #111; padding: 5px 10px; border-radius: 20px;
+            font-size: 12px; font-weight: bold;
         }
-        .btn-back:hover { background: #fff; }
 
     </style>
 </head>
@@ -150,8 +156,7 @@
                 <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
                 <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
                 <li><a href="login.html" id="auth-link">
-                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
-                </a></li>
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span></a></li>
             </ul>
         </div>
 
@@ -160,7 +165,7 @@
             <ul>
                 <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
                 <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
-                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="logo.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
                 <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
                 <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
                 <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
@@ -237,11 +242,41 @@
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <i class="fas fa-exclamation-triangle status-icon"></i>
+            <h1>عذراً، الأداة غير متوفرة حالياً</h1>
+            <p class="message-text">نحن نعمل حالياً على تطوير وصيانة أداة **صانع الشعار (Logo Maker)** لتقديمها بأفضل شكل ممكن. نعتذر عن أي إزعاج!</p>
+
+            <div class="alternatives">
+                <h2><i class="fas fa-rocket"></i> بدائل مجانية وموثوقة</h2>
+                
+                <p class="message-text" style="text-align: right;">يمكنك استخدام المواقع التالية للحصول على شعار احترافي ومجاني:</p>
+
+                <div class="logo-link-item">
+                    <a href="https://www.canva.com/logos/create/" target="_blank">Canva Free Logo Maker</a>
+                    <span class="link-badge">سهل الاستخدام</span>
+                </div>
+
+                <div class="logo-link-item">
+                    <a href="https://looka.com/logo-maker/free" target="_blank">Looka Free Logo Maker</a>
+                    <span class="link-badge">مدعوم بالذكاء الاصطناعي</span>
+                </div>
+
+                <div class="logo-link-item">
+                    <a href="https://www.shopify.com/tools/logo-maker" target="_blank">Shopify Logo Maker</a>
+                    <span class="link-badge">شعارات عصرية</span>
+                </div>
+
+                <div class="logo-link-item">
+                    <a href="https://www.freelogodesign.org/" target="_blank">Free Logo Design</a>
+                    <span class="link-badge">جودة عالية (PNG)</span>
+                </div>
+
+                <div class="logo-link-item">
+                    <a href="https://www.logomaker.com/" target="_blank">Logomaker</a>
+                    <span class="link-badge">مكتبة أيقونات ضخمة</span>
+                </div>
+            </div>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
         </div>
 
     </main>

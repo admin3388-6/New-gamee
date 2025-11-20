@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - قص وتجهيز الصور للمنصات</title>
+    <meta name="description" content="أداة مجانية لقص وتعديل أبعاد الصور لتناسب منصات التواصل الاجتماعي (يوتيوب، فيسبوك، تيك توك، تويتش) بدقة عالية.">
+    <meta name="keywords" content="قص الصور, image cropper, youtube banner size, facebook cover, tiktok size, twitch banner, SkyData, تعديل صور">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -45,7 +48,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -65,7 +68,7 @@
 
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
+        /* زر القائمة */
         .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -74,13 +77,16 @@
         .hamburger input:checked + svg { transform: rotate(-45deg); }
         .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
+        /* القائمة الجانبية */
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,41 +96,87 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة القص (ImgCut)
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 1000px; margin: 0 auto; padding: 15px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            background-color: #111a30; padding: 25px;
+            border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; text-align: center; font-size: 24px; }
+
+        /* منطقة الرفع */
+        #image-input { display: none; }
+        .file-upload-label {
+            display: inline-block; background-color: #00aaff; color: #111a30;
+            padding: 15px 30px; font-size: 1.1em; font-weight: bold;
+            border-radius: 8px; cursor: pointer; margin-bottom: 20px;
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(0,170,255,0.3);
+        }
+        .file-upload-label:hover { background-color: #fff; transform: scale(1.02); }
+
+        /* أزرار المنصات (Presets) */
+        .presets-container {
+            display: none; flex-wrap: wrap; gap: 10px; justify-content: center;
+            margin-bottom: 20px; padding: 15px; background: #0e1624;
+            border-radius: 10px; border: 1px solid #2a3a5a;
+        }
+        .preset-btn {
+            background: #1f2d4d; border: 1px solid #2a3a5a; color: #ccc;
+            padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 13px;
+            transition: 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .preset-btn:hover { background: #2a3a5a; color: #fff; }
+        .preset-btn.active { background: #00aaff; color: #111; border-color: #00aaff; font-weight: bold; }
+        .preset-btn i { font-size: 14px; }
+
+        /* حاوية الصورة والقص */
+        .editor-wrapper {
+            display: none; /* مخفي حتى الرفع */
+            height: 500px; width: 100%; background: #000;
+            margin-bottom: 20px; border-radius: 8px; overflow: hidden;
+            border: 1px solid #333;
+        }
+        #image-to-crop { max-width: 100%; display: block; }
+
+        /* أزرار التحكم */
+        .controls-row {
+            display: none; justify-content: center; gap: 15px; flex-wrap: wrap;
+        }
+        .btn-action {
+            padding: 12px 30px; border: none; border-radius: 6px;
+            font-weight: bold; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; transition: 0.2s; min-width: 140px;
+        }
+        .btn-download { background: #27ae60; color: #fff; }
+        .btn-download:hover { background: #2ecc71; }
+        .btn-reset { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-reset:hover { background: #ff4d4d; color: #fff; }
+
+        .dimensions-display {
+            margin-top: 10px; color: #aaa; font-size: 13px; font-family: monospace;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
-        }
+        /* تخصيص Cropper.js ليتناسب مع الوضع المظلم */
+        .cropper-view-box, .cropper-face { outline-color: #00aaff; }
+        .cropper-line, .cropper-point { background-color: #00aaff; }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        @media (max-width: 600px) {
+            .editor-wrapper { height: 350px; }
+            .presets-container { gap: 5px; }
+            .preset-btn { padding: 6px 10px; font-size: 12px; flex: 1 1 calc(50% - 10px); }
         }
-
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
-        }
-
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
-        }
-        .btn-back:hover { background: #fff; }
 
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <header class="main-header">
         <div class="container">
@@ -179,10 +231,8 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
@@ -213,7 +263,7 @@
                 <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
                 <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
                 <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
-                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="imgcut.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
                 <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
                 <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
             </ul>
@@ -237,13 +287,41 @@
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-crop-alt"></i> قص وتجهيز الصور للمنصات</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
-        </div>
+            <label for="image-input" class="file-upload-label" id="upload-label">
+                <i class="fas fa-cloud-upload-alt"></i> اختر صورة للبدء
+            </label>
+            <input type="file" id="image-input" accept="image/*">
 
+            <div class="presets-container" id="presets-container">
+                <button class="preset-btn" onclick="setPreset(16/9, 2560, 1440, this)"><i class="fab fa-youtube"></i> بانر يوتيوب</button>
+                <button class="preset-btn" onclick="setPreset(16/9, 1280, 720, this)"><i class="fab fa-youtube"></i> مصغرة يوتيوب</button>
+                <button class="preset-btn" onclick="setPreset(820/312, 820, 312, this)"><i class="fab fa-facebook"></i> غلاف فيسبوك</button>
+                <button class="preset-btn" onclick="setPreset(1/1, 1080, 1080, this)"><i class="fab fa-instagram"></i> انستا/مربع</button>
+                <button class="preset-btn" onclick="setPreset(9/16, 1080, 1920, this)"><i class="fab fa-tiktok"></i> تيك توك/ستوري</button>
+                <button class="preset-btn" onclick="setPreset(3/1, 1500, 500, this)"><i class="fab fa-twitter"></i> هيدر تويتر</button>
+                <button class="preset-btn" onclick="setPreset(1200/480, 1200, 480, this)"><i class="fab fa-twitch"></i> بانر تويتش</button>
+                <button class="preset-btn" onclick="setPreset(960/540, 960, 540, this)"><i class="fab fa-discord"></i> بانر ديسكورد</button>
+                <button class="preset-btn active" onclick="setPreset(NaN, 0, 0, this)"><i class="fas fa-expand"></i> حر (Free)</button>
+            </div>
+
+            <div class="editor-wrapper" id="editor-wrapper">
+                <img id="image-to-crop" src="">
+            </div>
+            
+            <div class="dimensions-display" id="dims-display"></div>
+
+            <div class="controls-row" id="controls-row">
+                <button class="btn-action btn-download" onclick="cropAndDownload()">
+                    <i class="fas fa-download"></i> قص وتحميل
+                </button>
+                <button class="btn-action btn-reset" onclick="resetTool()">
+                    <i class="fas fa-trash"></i> صورة جديدة
+                </button>
+            </div>
+
+        </div>
     </main>
 
     <script>
@@ -258,6 +336,134 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق القص (Cropper.js) ---
+        const imageInput = document.getElementById('image-input');
+        const uploadLabel = document.getElementById('upload-label');
+        const editorWrapper = document.getElementById('editor-wrapper');
+        const imageElement = document.getElementById('image-to-crop');
+        const presetsContainer = document.getElementById('presets-container');
+        const controlsRow = document.getElementById('controls-row');
+        const dimsDisplay = document.getElementById('dims-display');
+        
+        let cropper;
+        let targetWidth = 0;
+        let targetHeight = 0;
+
+        // عند رفع صورة
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                // إخفاء زر الرفع وإظهار المحرر
+                uploadLabel.style.display = 'none';
+                presetsContainer.style.display = 'flex';
+                editorWrapper.style.display = 'block';
+                controlsRow.style.display = 'flex';
+                
+                imageElement.src = event.target.result;
+                
+                // تدمير الكروبر القديم إن وجد
+                if(cropper) cropper.destroy();
+                
+                // تهيئة Cropper
+                cropper = new Cropper(imageElement, {
+                    viewMode: 1,
+                    dragMode: 'move',
+                    autoCropArea: 0.8,
+                    restore: false,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: false,
+                    ready: function() {
+                        updateDims();
+                    },
+                    crop: function() {
+                        updateDims();
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // تغيير الأبعاد (Presets)
+        window.setPreset = function(ratio, width, height, btn) {
+            // تحديث مظهر الأزرار
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            targetWidth = width;
+            targetHeight = height;
+
+            if (cropper) {
+                cropper.setAspectRatio(ratio);
+                // إذا كان الوضع حر، اسمح بتغيير الصندوق
+                if (isNaN(ratio)) {
+                    cropper.setAspectRatio(NaN);
+                }
+            }
+        };
+
+        function updateDims() {
+            if(!cropper) return;
+            const data = cropper.getData();
+            const w = Math.round(data.width);
+            const h = Math.round(data.height);
+            
+            let text = `الأبعاد الحالية: ${w} × ${h} بكسل`;
+            if(targetWidth && targetHeight) {
+                text += ` (سيتم التحجيم إلى ${targetWidth} × ${targetHeight} عند التحميل)`;
+            }
+            dimsDisplay.innerText = text;
+        }
+
+        // القص والتحميل
+        window.cropAndDownload = function() {
+            if (!cropper) return;
+
+            // إعداد خيارات الخرج
+            let options = {
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            };
+
+            // إذا كان هناك أبعاد محددة (من الـ Presets)، نستخدمها
+            if (targetWidth > 0 && targetHeight > 0) {
+                options.width = targetWidth;
+                options.height = targetHeight;
+            }
+
+            cropper.getCroppedCanvas(options).toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'skydata-crop.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }, 'image/png', 1);
+        };
+
+        window.resetTool = function() {
+            if(cropper) cropper.destroy();
+            imageInput.value = '';
+            imageElement.src = '';
+            uploadLabel.style.display = 'inline-block';
+            presetsContainer.style.display = 'none';
+            editorWrapper.style.display = 'none';
+            controlsRow.style.display = 'none';
+            dimsDisplay.innerText = '';
+            targetWidth = 0; targetHeight = 0;
+            // Reset active button
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.preset-btn:last-child').classList.add('active'); // Free mode
+        };
+
     </script>
 
     <script type="module">

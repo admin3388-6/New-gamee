@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SkyData - عجلة الألوان الذكية</title>
+    <meta name="description" content="أداة احترافية لاختيار الألوان، استخراج درجات اللون (الفاتح والغامق)، والحصول على أكواد HEX/RGB للتصميم.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
+    <style>
+        /* ==============================================
+           1. أساسيات الصفحة والهيدر
+           ============================================== */
+        body {
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
+        }
+
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-sizing: border-box;
+        }
+        *:focus { outline: none; border-color: transparent !important; }
+
+        /* الهيدر المثبت */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* القائمة الجانبية */
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        /* ==============================================
+           2. تنسيقات أداة الألوان
+           ============================================== */
+
+        .container-tool { max-width: 800px; margin: 0 auto; padding: 20px; text-align: center; }
+        
+        .tool-box {
+            background-color: #111a30; padding: 30px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2a3a5a;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; }
+
+        /* منطقة الرسم (تم تصغير الحجم إلى 260px) */
+        .picker-wrapper {
+            position: relative;
+            width: 260px; height: 260px; /* تصغير الحجم */
+            margin: 20px auto;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        
+        #color-canvas {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: border-radius 0.3s ease;
+        }
+
+        /* مقبض التحكم */
+        .picker-handle {
+            position: absolute;
+            width: 16px; height: 16px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: transparent;
+            box-shadow: 0 0 5px rgba(0,0,0,0.8);
+            pointer-events: none;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* أزرار تغيير الشكل */
+        .shapes-container {
+            display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;
+        }
+        .shape-btn {
+            width: 40px; height: 40px; background: #0e1624; border: 1px solid #2a3a5a;
+            color: #fff; border-radius: 8px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        .shape-btn.active { background: #00aaff; color: #111a30; border-color: #00aaff; }
+        .shape-btn:hover { transform: scale(1.1); }
+
+        /* عرض النتيجة */
+        .result-area {
+            background: #0e1624; padding: 20px; border-radius: 12px;
+            border: 1px solid #2a3a5a; margin-top: 20px;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        
+        .hex-input-group {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        
+        .color-preview-box {
+            width: 50px; height: 50px; border-radius: 8px;
+            border: 2px solid #2a3a5a; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        .hex-field {
+            background: #0b132b; border: 1px solid #2a3a5a; color: #fff;
+            padding: 12px; border-radius: 6px; font-family: monospace;
+            font-size: 18px; width: 150px; text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .copy-btn {
+            background: #00aaff; color: #111a30; border: none;
+            width: 45px; height: 45px; border-radius: 6px;
+            cursor: pointer; font-size: 18px; transition: 0.2s;
+        }
+        .copy-btn:active { transform: scale(0.9); }
+
+        /* الدرجات */
+        .palette-container { margin-top: 20px; }
+        .palette-title { font-size: 14px; color: #aaa; margin: 10px 0 5px 0; text-align: right; }
+        
+        .color-row {
+            display: flex; height: 40px; border-radius: 8px; overflow: hidden;
+            border: 1px solid #2a3a5a;
+        }
+        .color-block {
+            flex: 1; cursor: pointer; transition: transform 0.1s;
+            position: relative;
+        }
+        .color-block:hover { transform: scale(1.1); z-index: 2; border: 1px solid #fff; }
+        .color-block:active { transform: scale(0.9); }
+
+        /* رسالة النسخ */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 25px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 5000;
+        }
+        #toast.show { opacity: 1; bottom: 50px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
+        </div>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
+                
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
+        </div>
+    </nav>
+
+    <main class="container-tool">
+        
+        <div class="tool-box">
+            <h1><i class="fas fa-swatchbook"></i> عجلة الألوان الذكية</h1>
+            
+            <div class="shapes-container">
+                <button class="shape-btn active" onclick="setShape('circle')" title="دائرة"><i class="fas fa-circle"></i></button>
+                <button class="shape-btn" onclick="setShape('square')" title="مربع"><i class="fas fa-square"></i></button>
+                <button class="shape-btn" onclick="setShape('triangle')" title="مثلث"><i class="fas fa-caret-up"></i></button>
+            </div>
+
+            <div class="picker-wrapper" id="picker-wrapper">
+                <canvas id="color-canvas" width="260" height="260"></canvas>
+                <div id="picker-handle" class="picker-handle"></div>
+            </div>
+
+            <div class="result-area">
+                
+                <div class="hex-input-group">
+                    <div class="color-preview-box" id="color-preview" style="background:#ff0000;"></div>
+                    <input type="text" id="hex-input" class="hex-field" value="#FF0000">
+                    <button class="copy-btn" onclick="copyHex()"><i class="fas fa-copy"></i></button>
+                </div>
+
+                <div class="palette-container">
+                    <div class="palette-title">فاتح (Tints)</div>
+                    <div class="color-row" id="tints-row"></div>
+                    
+                    <div class="palette-title">غامق (Shades)</div>
+                    <div class="color-row" id="shades-row"></div>
+                </div>
+                
+            </div>
+
+        </div>
+
+    </main>
+
+    <div id="toast">تم النسخ!</div>
+
+    <script>
+        // --- القائمة الجانبية ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق أداة الألوان ---
+        const canvas = document.getElementById('color-canvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('picker-wrapper');
+        const handle = document.getElementById('picker-handle');
+        const hexInput = document.getElementById('hex-input');
+        const preview = document.getElementById('color-preview');
+        const width = canvas.width;
+        const height = canvas.height;
+        const cx = width / 2;
+        const cy = height / 2;
+        let currentShape = 'circle';
+
+        function drawWheel() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // رسم الشكل الأساسي
+            if (currentShape === 'circle') {
+                canvas.style.borderRadius = '50%';
+                // Hue Ring
+                for (let i = 0; i < 360; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.arc(cx, cy, cx, (i * Math.PI) / 180, ((i + 1) * Math.PI) / 180);
+                    ctx.fillStyle = `hsl(${i}, 100%, 50%)`;
+                    ctx.fill();
+                }
+                // White Gradient
+                let grdWhite = ctx.createRadialGradient(cx, cy, 0, cx, cy, cx);
+                grdWhite.addColorStop(0, 'white');
+                grdWhite.addColorStop(1, 'transparent');
+                ctx.fillStyle = grdWhite;
+                ctx.beginPath(); ctx.arc(cx, cy, cx, 0, 2 * Math.PI); ctx.fill();
+
+            } else if (currentShape === 'square') {
+                canvas.style.borderRadius = '8px';
+                // Horizontal Hue
+                let grdHue = ctx.createLinearGradient(0, 0, width, 0);
+                for(let i=0; i<=360; i+=10) { grdHue.addColorStop(i/360, `hsl(${i}, 100%, 50%)`); }
+                ctx.fillStyle = grdHue; ctx.fillRect(0, 0, width, height);
+                
+                // Vertical Black/White (Saturation/Lightness trick)
+                let grdGrey = ctx.createLinearGradient(0, 0, 0, height);
+                grdGrey.addColorStop(0, 'transparent');
+                grdGrey.addColorStop(0.5, 'transparent');
+                grdGrey.addColorStop(1, 'black');
+                ctx.fillStyle = grdGrey; ctx.fillRect(0, 0, width, height);
+
+                let grdWhite = ctx.createLinearGradient(0, 0, 0, height);
+                grdWhite.addColorStop(0, 'white');
+                grdWhite.addColorStop(0.5, 'transparent');
+                ctx.fillStyle = grdWhite; ctx.fillRect(0, 0, width, height);
+
+            } else if (currentShape === 'triangle') {
+                canvas.style.borderRadius = '0';
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(width/2, 0);
+                ctx.lineTo(width, height);
+                ctx.lineTo(0, height);
+                ctx.closePath();
+                ctx.clip(); // قص الرسم داخل المثلث
+
+                // رسم الألوان داخل المثلث (تقريبي)
+                for (let i = 0; i < 360; i++) {
+                    ctx.fillStyle = `hsl(${i}, 100%, 50%)`;
+                    ctx.fillRect(0, 0, width, height); 
+                }
+                let grd = ctx.createLinearGradient(0, 0, width, height);
+                grd.addColorStop(0, "red");
+                grd.addColorStop(0.15, "orange");
+                grd.addColorStop(0.3, "yellow");
+                grd.addColorStop(0.5, "green");
+                grd.addColorStop(0.65, "blue");
+                grd.addColorStop(0.8, "indigo");
+                grd.addColorStop(1, "violet");
+                ctx.fillStyle = grd;
+                ctx.fill();
+
+                let grdW = ctx.createLinearGradient(width/2, 0, width/2, height);
+                grdW.addColorStop(0, "white");
+                grdW.addColorStop(1, "transparent");
+                ctx.fillStyle = grdW; ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        function pickColor(e) {
+            const rect = canvas.getBoundingClientRect();
+            // دعم اللمس والماوس
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            let x = clientX - rect.left;
+            let y = clientY - rect.top;
+
+            // تعديل الإحداثيات لتتناسب مع حجم الكانفاس الفعلي
+            // (لأن CSS Width قد يختلف عن Canvas Attribute Width)
+            x = x * (width / rect.width);
+            y = y * (height / rect.height);
+
+            // حدود الكانفاس
+            x = Math.max(0, Math.min(width, x));
+            y = Math.max(0, Math.min(height, y));
+
+            handle.style.top = (y / height * 100) + '%';
+            handle.style.left = (x / width * 100) + '%';
+
+            // الحصول على لون البيكسل
+            const pixel = ctx.getImageData(x, y, 1, 1).data;
+            const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+            
+            updateUI(hex);
+        }
+
+        function updateUI(hex) {
+            hexInput.value = hex;
+            preview.style.backgroundColor = hex;
+            generatePalette(hex);
+        }
+
+        // أحداث الكانفاس
+        let isDragging = false;
+        const events = ['mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend'];
+        
+        events.forEach(evt => {
+            wrapper.addEventListener(evt, (e) => {
+                if (evt.includes('start') || evt.includes('down')) isDragging = true;
+                if (evt.includes('end') || evt.includes('up')) isDragging = false;
+                if (isDragging) {
+                    e.preventDefault(); // منع السكرول في الموبايل
+                    pickColor(e);
+                }
+            });
+        });
+
+        // تغيير الشكل
+        window.setShape = function(shape) {
+            currentShape = shape;
+            document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`button[onclick="setShape('${shape}')"]`).classList.add('active');
+            drawWheel();
+        }
+
+        // الإدخال اليدوي
+        hexInput.addEventListener('input', (e) => {
+            let val = e.target.value;
+            if (!val.startsWith('#')) val = '#' + val;
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                preview.style.backgroundColor = val;
+                generatePalette(val);
+            }
+        });
+
+        // توليد الدرجات
+        function generatePalette(hex) {
+            const tints = document.getElementById('tints-row');
+            const shades = document.getElementById('shades-row');
+            tints.innerHTML = ''; shades.innerHTML = '';
+            
+            // Tints (Lighten)
+            for (let i = 1; i <= 5; i++) {
+                let c = adjustBrightness(hex, i * 15);
+                tints.innerHTML += `<div class="color-block" style="background:${c}" onclick="selectShade('${c}')" title="${c}"></div>`;
+            }
+            // Shades (Darken)
+            for (let i = 1; i <= 5; i++) {
+                let c = adjustBrightness(hex, -(i * 15));
+                shades.innerHTML += `<div class="color-block" style="background:${c}" onclick="selectShade('${c}')" title="${c}"></div>`;
+            }
+        }
+
+        window.selectShade = function(hex) {
+            updateUI(hex);
+        }
+
+        // دوال مساعدة
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+        }
+
+        function adjustBrightness(col, amt) {
+            var usePound = false;
+            if (col[0] == "#") { col = col.slice(1); usePound = true; }
+            var num = parseInt(col, 16);
+            var r = (num >> 16) + amt; if (r > 255) r = 255; else if (r < 0) r = 0;
+            var b = ((num >> 8) & 0x00FF) + amt; if (b > 255) b = 255; else if (b < 0) b = 0;
+            var g = (num & 0x0000FF) + amt; if (g > 255) g = 255; else if (g < 0) g = 0;
+            return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16).padStart(6,'0');
+        }
+
+        window.copyHex = function() {
+            hexInput.select();
+            document.execCommand('copy');
+            const t = document.getElementById('toast'); t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1000);
+        }
+
+        // التشغيل
+        drawWheel();
+        generatePalette('#FF0000'); // لون افتراضي
+        
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            projectId: "skydata-ai"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const authLink = document.getElementById('auth-link');
+            if (authLink) {
+                const ico = authLink.querySelector('i'); const txt = authLink.querySelector('span');
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authLink.href = 'menu.html'; ico.className = 'fas fa-user-circle'; txt.textContent = 'ملف الشخصي';
+                    } else {
+                        authLink.href = 'login.html'; ico.className = 'fas fa-sign-in-alt'; txt.textContent = 'تسجيل الدخول';
+                    }
+                });
+            }
+        } catch (e) { console.error("Firebase Error:", e); }
+    </script>
+
+</body>
+</html>

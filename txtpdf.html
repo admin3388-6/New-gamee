@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - تحويل النص إلى PDF</title>
+    <meta name="description" content="أداة مجانية لكتابة النصوص وتنسيقها ثم تحويلها إلى ملف PDF احترافي يدعم اللغة العربية.">
+    <meta name="keywords" content="نص إلى pdf, تحويل الكتابة إلى pdf, text to pdf, محرر نصوص pdf, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -27,8 +29,9 @@
 
     <style>
         /* ==============================================
-           1. أساسيات الصفحة (Standard)
+           1. إصلاحات الهيدر والقائمة (Standard)
            ============================================== */
+        
         body {
             background-color: #0b132b;
             padding-top: 90px !important;
@@ -43,7 +46,7 @@
             box-shadow: none !important;
             box-sizing: border-box;
         }
-        *:focus { outline: none; border-color: transparent !important; }
+        *:focus, *:active { outline: none !important; border-color: transparent !important; }
 
         /* الهيدر */
         .main-header {
@@ -66,59 +69,114 @@
         .logo-img { height: 35px !important; width: auto; }
 
         /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
-        .hamburger input { display: none; }
-        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line-top-bottom { stroke-dasharray: 12 63; }
-        .hamburger input:checked + svg { transform: rotate(-45deg); }
-        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
-
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
-        .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
-        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
-        .social-links a:hover { color: #00aaff; }
-        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
-        .footer-nav a { color: #ccc; font-size: 13px; }
-        .copyright { font-size: 12px; color: #666; }
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات محرر PDF (Tool Specific)
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
+            background-color: #111a30; padding: 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; }
+
+        /* شريط الأدوات */
+        .toolbar {
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            background: #0e1624; padding: 10px; border-radius: 8px;
+            border: 1px solid #2a3a5a; margin-bottom: 15px;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        .tool-btn {
+            background: #1f2d4d; border: 1px solid #2a3a5a; color: #fff;
+            width: 40px; height: 40px; border-radius: 5px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .tool-btn:hover { background: #00aaff; color: #111a30; }
+        
+        .font-size-control {
+            display: flex; align-items: center; gap: 5px; background: #1f2d4d;
+            padding: 0 10px; border-radius: 5px; border: 1px solid #2a3a5a;
+        }
+        .font-size-control input {
+            width: 50px; background: transparent; border: none; color: #fff;
+            text-align: center; font-weight: bold;
         }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        /* الورقة (المحرر) */
+        .paper-container {
+            background: #555; /* خلفية رمادية لتمييز الورقة */
+            padding: 20px; border-radius: 8px;
+            overflow: auto; max-height: 600px;
         }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        #pdf-content {
+            background-color: #fff; /* ورقة بيضاء */
+            color: #000; /* نص أسود */
+            width: 100%;
+            min-height: 800px; /* ارتفاع A4 تقريباً */
+            padding: 40px;
+            text-align: right;
+            font-family: 'Times New Roman', serif; /* خط قياسي للمستندات */
+            font-size: 18px;
+            line-height: 1.6;
+            outline: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            margin: 0 auto;
+            border-radius: 2px;
+            direction: rtl;
+        }
+        
+        /* أزرار التحكم السفلية */
+        .action-area {
+            margin-top: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center;
+        }
+        
+        #filename-input {
+            background: #0e1624; border: 1px solid #2a3a5a; color: #fff;
+            padding: 12px; border-radius: 6px; width: 100%; max-width: 300px;
+            text-align: center; direction: ltr;
         }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        .cta-button {
+            display: inline-block; padding: 12px 30px; font-size: 1em; font-weight: bold;
+            border-radius: 8px; border: none; cursor: pointer; transition: 0.3s;
+            color: #fff; font-family: 'Cairo'; width: 100%; max-width: 300px;
         }
-        .btn-back:hover { background: #fff; }
+        .btn-green { background-color: #27ae60; }
+        .btn-green:hover { background-color: #2ecc71; }
+        .btn-red { background-color: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-red:hover { background-color: #ff4d4d; color: #fff; }
+
+        /* شاشة التحميل */
+        #loading-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 19, 43, 0.9); z-index: 10; border-radius: 15px;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #2a3a5a; border-top-color: #00aaff;
+            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px;
+        }
+        @keyframes spin { to {transform: rotate(360deg);} }
+
+        @media (max-width: 600px) {
+            .toolbar { justify-content: space-between; }
+            #pdf-content { padding: 20px; font-size: 16px; }
+        }
 
     </style>
 </head>
@@ -183,7 +241,7 @@
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
 
-                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="txtpdf.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
                 <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
@@ -230,24 +288,56 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-file-word"></i> تحويل النص إلى PDF</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
+            <div class="toolbar">
+                <button class="tool-btn" onclick="formatText('bold')" title="عريض"><i class="fas fa-bold"></i></button>
+                <button class="tool-btn" onclick="formatText('italic')" title="مائل"><i class="fas fa-italic"></i></button>
+                <button class="tool-btn" onclick="formatText('underline')" title="تسطير"><i class="fas fa-underline"></i></button>
+                <div class="font-size-control">
+                    <i class="fas fa-text-height" style="color:#aaa;"></i>
+                    <input type="number" id="font-size" value="18" min="10" max="72" onchange="changeFontSize()">
+                </div>
+                <button class="tool-btn" onclick="formatText('justifyRight')" title="يمين"><i class="fas fa-align-right"></i></button>
+                <button class="tool-btn" onclick="formatText('justifyCenter')" title="وسط"><i class="fas fa-align-center"></i></button>
+                <button class="tool-btn" onclick="formatText('justifyLeft')" title="يسار"><i class="fas fa-align-left"></i></button>
+            </div>
+
+            <div class="paper-container">
+                <div id="pdf-content" contenteditable="true">
+                    بسم الله الرحمن الرحيم<br><br>اكتب نصك هنا...<br>هذا النص سيتم تحويله إلى ملف PDF.
+                </div>
+            </div>
+
+            <div class="action-area">
+                <input type="text" id="filename-input" value="document" placeholder="اسم الملف">
+                <button class="cta-button btn-green" onclick="generatePDF()">
+                    <i class="fas fa-file-download"></i> تحميل PDF
+                </button>
+                <button class="cta-button btn-red" onclick="clearText()">
+                    <i class="fas fa-trash"></i> مسح النص
+                </button>
+            </div>
+
+            <div id="loading-overlay">
+                <div class="spinner"></div>
+                <p style="color:#fff;">جاري إنشاء الملف...</p>
+            </div>
         </div>
 
     </main>
 
     <script>
-        // --- فتح/إغلاق القائمة ---
+        // --- 1. القائمة الجانبية ---
         const menuCheckbox = document.getElementById('menu-checkbox');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -258,33 +348,70 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- 2. أدوات التنسيق ---
+        function formatText(command) {
+            document.execCommand(command, false, null);
+            document.getElementById('pdf-content').focus();
+        }
+
+        function changeFontSize() {
+            const size = document.getElementById('font-size').value;
+            // نستخدم execCommand لتغيير حجم النص المحدد فقط أو الكتابة الجديدة
+            // لكن execCommand font size يقبل 1-7. هنا سنغير ستايل العنصر للسهولة
+            document.getElementById('pdf-content').style.fontSize = size + 'px';
+        }
+
+        function clearText() {
+            if(confirm('هل تريد مسح كل النص؟')) {
+                document.getElementById('pdf-content').innerText = '';
+            }
+        }
+
+        // --- 3. توليد PDF ---
+        function generatePDF() {
+            const element = document.getElementById('pdf-content');
+            const filename = document.getElementById('filename-input').value || 'document';
+            const loading = document.getElementById('loading-overlay');
+
+            loading.style.display = 'flex';
+
+            const opt = {
+                margin:       15, // هوامش بالميليمتر
+                filename:     filename + '.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true }, // زيادة الدقة
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // استخدام مكتبة html2pdf
+            html2pdf().set(opt).from(element).save().then(() => {
+                loading.style.display = 'none';
+            }).catch(err => {
+                console.error(err);
+                alert("حدث خطأ أثناء إنشاء الملف.");
+                loading.style.display = 'none';
+            });
+        }
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-        const firebaseConfig = {
+        const app = initializeApp({
             apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
             authDomain: "skydata-ai.firebaseapp.com",
             projectId: "skydata-ai"
-        };
-
-        try {
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const authLink = document.getElementById('auth-link');
-            if (authLink) {
-                const ico = authLink.querySelector('i'); const txt = authLink.querySelector('span');
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        authLink.href = 'menu.html'; ico.className = 'fas fa-user-circle'; txt.textContent = 'ملف الشخصي';
-                    } else {
-                        authLink.href = 'login.html'; ico.className = 'fas fa-sign-in-alt'; txt.textContent = 'تسجيل الدخول';
-                    }
-                });
-            }
-        } catch (e) { console.error("Firebase Error:", e); }
+        });
+        const auth = getAuth(app);
+        const link = document.getElementById('auth-link');
+        if(link) {
+            const ico = link.querySelector('i'); const txt = link.querySelector('span');
+            onAuthStateChanged(auth, u => {
+                if(u) { link.href='menu.html'; ico.className='fas fa-user-circle'; txt.textContent='ملف الشخصي'; }
+                else { link.href='login.html'; ico.className='fas fa-sign-in-alt'; txt.textContent='تسجيل الدخول'; }
+            });
+        }
     </script>
 
 </body>

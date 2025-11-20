@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SkyData - حاسبة العمر والفرق الزمني</title>
+    <meta name="description" content="احسب عمرك بدقة بالسنوات والأشهر والأيام، واعرف موعد عيد ميلادك القادم، أو احسب الفرق الزمني الدقيق بين تاريخين.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
+    <style>
+        /* ==============================================
+           1. إصلاحات الهيدر والقائمة (Standard Fixes)
+           ============================================== */
+        
+        body {
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
+        }
+
+        /* إزالة تأثيرات التركيز والضغط */
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        *:focus, *:active {
+            outline: none !important;
+            border-color: transparent !important;
+        }
+
+        /* الهيدر المثبت */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* زر القائمة الأصلي (SVG) */
+        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
+        .hamburger input { display: none; }
+        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line-top-bottom { stroke-dasharray: 12 63; }
+        .hamburger input:checked + svg { transform: rotate(-45deg); }
+        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
+
+        /* القائمة الجانبية */
+        .sidebar { 
+            z-index: 2001 !important; padding-top: 80px !important; 
+            background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); 
+            width: 300px; height: 100vh; position: fixed; top: 0; right: -320px;
+            transition: right 0.3s ease; overflow-y: auto; padding-bottom: 50px;
+        }
+        .sidebar.open { right: 0; }
+        
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
+        /* تذييل القائمة (Footer Styles) */
+        .sidebar-footer {
+            margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center;
+        }
+        .social-links { margin-bottom: 15px; }
+        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
+        .social-links a:hover { color: #00aaff; }
+        
+        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .footer-nav a { color: #ccc; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+        .footer-nav a:hover { color: #fff; }
+        
+        .copyright { font-size: 12px; color: #666; }
+
+
+        /* ==============================================
+           2. تنسيقات الأداة (Age Calculator Tool)
+           ============================================== */
+
+        .container-tool { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        .tool-box {
+            background-color: #111a30; padding: 30px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 25px; }
+
+        /* التبويبات */
+        .tabs { display: flex; margin-bottom: 25px; background: #0e1624; border-radius: 8px; overflow: hidden; border: 1px solid #2a3a5a; }
+        .tab-btn {
+            flex: 1; padding: 15px; background: transparent; border: none;
+            color: #ccc; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Cairo';
+        }
+        .tab-btn:hover { background: #1f2d4d; }
+        .tab-btn.active { background: #00aaff; color: #111a30; }
+        
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+
+        /* حقول الإدخال */
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .input-group label { display: block; color: #fff; margin-bottom: 8px; font-weight: bold; }
+        input[type="date"] {
+            width: 100%; padding: 12px; border: 1px solid #2a3a5a;
+            background: #0e1624; color: #fff; border-radius: 6px;
+            font-family: 'Arial', sans-serif; font-size: 16px; cursor: pointer;
+        }
+        
+        /* زر الحساب */
+        .calculate-btn {
+            width: 100%; padding: 12px; background: #27ae60; color: #fff;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+            transition: 0.3s; font-family: 'Cairo'; font-size: 16px; margin-top: 10px;
+        }
+        .calculate-btn:hover { background: #2ecc71; transform: scale(1.02); }
+        
+        /* النتائج */
+        .results-card {
+            background: #0e1624; border: 1px solid #2a3a5a; border-radius: 10px;
+            margin-top: 25px; padding: 20px; text-align: right; display: none;
+        }
+        .result-header { 
+            color: #00aaff; border-bottom: 1px dashed #2a3a5a; 
+            padding-bottom: 10px; margin-bottom: 15px; font-size: 18px; font-weight: bold;
+        }
+        .result-row {
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px dotted #1f2d4d;
+        }
+        .result-row:last-child { border: none; }
+        .res-label { color: #aaa; }
+        .res-val { color: #fff; font-weight: bold; font-family: 'Arial'; direction: ltr; }
+        
+        .next-bday-box {
+            background: rgba(0, 170, 255, 0.1); border: 1px solid #00aaff;
+            color: #fff; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;
+        }
+
+        #error-msg { color: #ff4d4d; margin-top: 15px; display: none; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
+                
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
+        </div>
+    </nav>
+
+    <main class="container-tool">
+        
+        <div class="tool-box">
+            <h1><i class="fas fa-calendar-check"></i> حاسبة العمر والفرق الزمني</h1>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="age-calc"><i class="fas fa-user-clock"></i> حساب العمر</button>
+                <button class="tab-btn" data-tab="diff-calc"><i class="fas fa-exchange-alt"></i> الفرق بين تاريخين</button>
+            </div>
+
+            <div id="age-calc" class="tab-content active">
+                <div class="input-group">
+                    <label><i class="fas fa-birthday-cake"></i> تاريخ الميلاد:</label>
+                    <input type="date" id="dob">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-calendar-day"></i> الحساب حتى:</label>
+                    <input type="date" id="age-target">
+                </div>
+                <button class="calculate-btn" onclick="calcAge()">احسب العمر</button>
+                
+                <div id="age-results" class="results-card">
+                    <div class="result-header">عمرك بالتفصيل</div>
+                    <div class="result-row"><span class="res-label">السنوات:</span><span class="res-val" id="res-y"></span></div>
+                    <div class="result-row"><span class="res-label">الأشهر:</span><span class="res-val" id="res-m"></span></div>
+                    <div class="result-row"><span class="res-label">الأيام:</span><span class="res-val" id="res-d"></span></div>
+                    
+                    <div class="result-header" style="margin-top:20px;">إجماليات حياتك</div>
+                    <div class="result-row"><span class="res-label">عدد الأيام الكلي:</span><span class="res-val" id="total-days"></span></div>
+                    <div class="result-row"><span class="res-label">عدد الأسابيع:</span><span class="res-val" id="total-weeks"></span></div>
+                    <div class="result-row"><span class="res-label">عدد الساعات:</span><span class="res-val" id="total-hours"></span></div>
+                    
+                    <div class="next-bday-box" id="next-bday"></div>
+                </div>
+            </div>
+
+            <div id="diff-calc" class="tab-content">
+                <div class="input-group">
+                    <label><i class="fas fa-hourglass-start"></i> التاريخ الأول:</label>
+                    <input type="date" id="diff-start">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-hourglass-end"></i> التاريخ الثاني:</label>
+                    <input type="date" id="diff-end">
+                </div>
+                <button class="calculate-btn" onclick="calcDiff()">احسب الفرق</button>
+                
+                <div id="diff-results" class="results-card">
+                    <div class="result-header">المدة بين التاريخين</div>
+                    <div class="result-row"><span class="res-label">سنوات:</span><span class="res-val" id="diff-y"></span></div>
+                    <div class="result-row"><span class="res-label">أشهر:</span><span class="res-val" id="diff-m"></span></div>
+                    <div class="result-row"><span class="res-label">أيام:</span><span class="res-val" id="diff-d"></span></div>
+                    
+                    <div class="result-header" style="margin-top:20px;">المدة الإجمالية</div>
+                    <div class="result-row"><span class="res-label">مجموع الأيام:</span><span class="res-val" id="diff-total-days"></span></div>
+                </div>
+            </div>
+
+            <div id="error-msg"></div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- 1. القائمة الجانبية ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- 2. منطق التبويبات ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // تعيين تاريخ اليوم تلقائياً
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('age-target').value = today;
+        document.getElementById('diff-end').value = today;
+
+        // --- 3. منطق الحساب (Pure JS) ---
+        
+        function calcAge() {
+            const dobVal = document.getElementById('dob').value;
+            const targetVal = document.getElementById('age-target').value;
+            const err = document.getElementById('error-msg');
+            const resBox = document.getElementById('age-results');
+
+            if(!dobVal || !targetVal) {
+                err.innerText = "الرجاء اختيار التواريخ."; err.style.display = 'block'; resBox.style.display = 'none'; return;
+            }
+
+            const dob = new Date(dobVal);
+            const target = new Date(targetVal);
+
+            if(dob > target) {
+                err.innerText = "تاريخ الميلاد يجب أن يكون قبل تاريخ الحساب."; err.style.display = 'block'; resBox.style.display = 'none'; return;
+            }
+
+            err.style.display = 'none';
+
+            // الحساب
+            let years = target.getFullYear() - dob.getFullYear();
+            let months = target.getMonth() - dob.getMonth();
+            let days = target.getDate() - dob.getDate();
+
+            if(days < 0) {
+                months--;
+                const lastMonth = new Date(target.getFullYear(), target.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            if(months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // الإجماليات
+            const diffTime = Math.abs(target - dob);
+            const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const totalWeeks = Math.floor(totalDays / 7);
+            const totalHours = totalDays * 24;
+
+            // عيد الميلاد القادم
+            const nextBday = new Date(target.getFullYear(), dob.getMonth(), dob.getDate());
+            if(nextBday < target) nextBday.setFullYear(target.getFullYear() + 1);
+            
+            const daysToNext = Math.ceil((nextBday - target) / (1000 * 60 * 60 * 24));
+            const dayNames = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+            const nextDayName = dayNames[nextBday.getDay()];
+
+            // العرض
+            document.getElementById('res-y').innerText = years;
+            document.getElementById('res-m').innerText = months;
+            document.getElementById('res-d').innerText = days;
+            document.getElementById('total-days').innerText = totalDays.toLocaleString();
+            document.getElementById('total-weeks').innerText = totalWeeks.toLocaleString();
+            document.getElementById('total-hours').innerText = totalHours.toLocaleString();
+            
+            document.getElementById('next-bday').innerHTML = `
+                يوم ميلادك القادم سيكون يوم <b>${nextDayName}</b><br>
+                متبقي: <b>${daysToNext}</b> يوم
+            `;
+
+            resBox.style.display = 'block';
+        }
+
+        function calcDiff() {
+            const startVal = document.getElementById('diff-start').value;
+            const endVal = document.getElementById('diff-end').value;
+            const err = document.getElementById('error-msg');
+            const resBox = document.getElementById('diff-results');
+
+            if(!startVal || !endVal) {
+                err.innerText = "الرجاء اختيار التواريخ."; err.style.display = 'block'; resBox.style.display = 'none'; return;
+            }
+
+            let d1 = new Date(startVal);
+            let d2 = new Date(endVal);
+            
+            // التبديل لو كان البدء أكبر
+            if(d1 > d2) { let temp = d1; d1 = d2; d2 = temp; }
+
+            err.style.display = 'none';
+
+            let years = d2.getFullYear() - d1.getFullYear();
+            let months = d2.getMonth() - d1.getMonth();
+            let days = d2.getDate() - d1.getDate();
+
+            if(days < 0) {
+                months--;
+                const lastMonth = new Date(d2.getFullYear(), d2.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            if(months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const diffTime = Math.abs(d2 - d1);
+            const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            document.getElementById('diff-y').innerText = years;
+            document.getElementById('diff-m').innerText = months;
+            document.getElementById('diff-d').innerText = days;
+            document.getElementById('diff-total-days').innerText = totalDays.toLocaleString();
+
+            resBox.style.display = 'block';
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            projectId: "skydata-ai"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const authLink = document.getElementById('auth-link');
+            if (authLink) {
+                const authIcon = authLink.querySelector('i');
+                const authText = authLink.querySelector('span');
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authLink.href = 'menu.html';
+                        if (authIcon) authIcon.className = 'fas fa-user-circle'; 
+                        if (authText) authText.textContent = 'ملف الشخصي';
+                    } else {
+                        authLink.href = 'login.html'; 
+                        if (authIcon) authIcon.className = 'fas fa-sign-in-alt';
+                        if (authText) authText.textContent = 'تسجيل الدخول';
+                    }
+                });
+            }
+        } catch (e) { console.error("Firebase Error:", e); }
+    </script>
+
+</body>
+</html>

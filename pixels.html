@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SkyData - رسام البكسل (Pixel Art)</title>
+    <meta name="description" content="أداة رسم بكسل آرت متقدمة تدعم الطبقات، التحريك (GIF)، وتغيير المقاسات حتى 512x512.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ==============================================
+           تنسيقات استوديو البكسل
+           ============================================== */
+        
+        body {
+            background-color: #121212; /* خلفية داكنة جداً للتركيز */
+            overflow: hidden; /* منع التمرير للصفحة بالكامل (التطبيق يملأ الشاشة) */
+            display: flex; flex-direction: column; height: 100vh;
+        }
+
+        /* الهيدر */
+        .main-header {
+            height: 60px !important; position: relative !important;
+            background: #1f2d4d; border-bottom: 1px solid #333;
+            z-index: 100; flex-shrink: 0;
+        }
+
+        /* منطقة العمل الرئيسية */
+        .workspace {
+            display: flex; flex: 1; overflow: hidden; height: calc(100vh - 60px);
+        }
+
+        /* 1. شريط الأدوات (يسار) */
+        .toolbar-left {
+            width: 60px; background: #1a1a1a; border-left: 1px solid #333;
+            display: flex; flex-direction: column; align-items: center; padding: 10px 0;
+            gap: 10px; z-index: 50;
+        }
+        
+        .tool-btn {
+            width: 40px; height: 40px; border-radius: 8px; border: 1px solid #333;
+            background: #252525; color: #aaa; font-size: 18px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .tool-btn:hover { background: #333; color: #fff; }
+        .tool-btn.active { background: #00aaff; color: #111; border-color: #00aaff; }
+
+        .color-picker-wrapper {
+            width: 40px; height: 40px; border-radius: 50%; overflow: hidden;
+            border: 2px solid #fff; margin-top: 10px; cursor: pointer;
+        }
+        #color-input { width: 150%; height: 150%; margin: -25%; cursor: pointer; }
+
+        /* 2. منطقة الرسم (وسط) */
+        .canvas-area {
+            flex: 1; background: #2a2a2a; position: relative;
+            display: flex; justify-content: center; align-items: center;
+            overflow: auto; /* للسماح بالتمرير عند التكبير */
+            background-image: 
+                linear-gradient(45deg, #333 25%, transparent 25%), 
+                linear-gradient(-45deg, #333 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #333 75%), 
+                linear-gradient(-45deg, transparent 75%, #333 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        .drawing-board {
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            image-rendering: pixelated; /* سر البكسل آرت */
+            cursor: crosshair;
+        }
+
+        /* 3. اللوحات الجانبية (يمين) */
+        .sidebar-right {
+            width: 280px; background: #1a1a1a; border-right: 1px solid #333;
+            display: flex; flex-direction: column;
+        }
+
+        .panel {
+            border-bottom: 1px solid #333; display: flex; flex-direction: column;
+        }
+        .panel-header {
+            padding: 10px 15px; background: #252525; color: #ddd; font-size: 14px; font-weight: bold;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .panel-body { padding: 10px; overflow-y: auto; max-height: 200px; }
+
+        /* الطبقات */
+        .layer-item {
+            display: flex; align-items: center; gap: 10px; padding: 8px;
+            background: #2a2a2a; border: 1px solid #333; border-radius: 5px;
+            margin-bottom: 5px; cursor: pointer;
+        }
+        .layer-item.active { border-color: #00aaff; background: #1f2d4d; }
+        .layer-preview { width: 30px; height: 30px; background: #fff; border: 1px solid #555; }
+        .layer-name { flex: 1; color: #fff; font-size: 12px; }
+        
+        /* الفريمات */
+        .frame-item {
+            display: inline-block; width: 60px; height: 60px; background: #fff;
+            border: 2px solid #333; margin: 5px; cursor: pointer; position: relative;
+        }
+        .frame-item.active { border-color: #00aaff; }
+        .frame-num {
+            position: absolute; top: 0; left: 0; background: rgba(0,0,0,0.7);
+            color: #fff; font-size: 10px; padding: 2px 4px;
+        }
+
+        /* أدوات التحكم العلوية */
+        .top-controls {
+            height: 40px; background: #1a1a1a; border-bottom: 1px solid #333;
+            display: flex; align-items: center; padding: 0 15px; gap: 15px;
+        }
+        .control-group { display: flex; align-items: center; gap: 5px; }
+        .control-label { color: #aaa; font-size: 12px; }
+        select, input[type="number"] {
+            background: #333; border: 1px solid #444; color: #fff;
+            padding: 3px 8px; border-radius: 4px; font-size: 12px;
+        }
+
+        /* أزرار الإجراءات */
+        .action-btn {
+            background: #00aaff; color: #111; border: none; padding: 5px 12px;
+            border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px;
+        }
+        .action-btn:hover { background: #fff; }
+        .btn-sm { padding: 3px 8px; font-size: 10px; }
+
+        /* شاشة التحميل */
+        #loader-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8); z-index: 9999; display: none;
+            justify-content: center; align-items: center; flex-direction: column; color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container" style="max-width: 100%;">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <div style="color:#fff; font-weight:bold;">Pixel Art Studio</div>
+            <a href="index.html" class="action-btn" style="background:#444; color:#fff; text-decoration:none;">خروج</a>
+        </div>
+    </header>
+
+    <div class="workspace">
+        
+        <div class="toolbar-left">
+            <button class="tool-btn active" id="tool-pen" onclick="setTool('pen')" title="قلم (P)"><i class="fas fa-pencil-alt"></i></button>
+            <button class="tool-btn" id="tool-eraser" onclick="setTool('eraser')" title="ممحاة (E)"><i class="fas fa-eraser"></i></button>
+            <button class="tool-btn" id="tool-fill" onclick="setTool('fill')" title="تعبئة (F)"><i class="fas fa-fill-drip"></i></button>
+            <button class="tool-btn" id="tool-picker" onclick="setTool('picker')" title="قطارة (I)"><i class="fas fa-eye-dropper"></i></button>
+            
+            <div class="color-picker-wrapper" title="لون الرسم">
+                <input type="color" id="color-input" value="#000000">
+            </div>
+
+            <div style="width: 80%; height: 1px; background: #333; margin: 5px 0;"></div>
+
+            <button class="tool-btn" onclick="undo()" title="تراجع (Ctrl+Z)"><i class="fas fa-undo"></i></button>
+            <button class="tool-btn" onclick="clearCanvas()" title="مسح الكل"><i class="fas fa-trash"></i></button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; flex:1;">
+            <div class="top-controls">
+                <div class="control-group">
+                    <span class="control-label">المقاس:</span>
+                    <select id="size-select" onchange="changeSize()">
+                        <option value="16">16x16</option>
+                        <option value="32" selected>32x32</option>
+                        <option value="64">64x64</option>
+                        <option value="128">128x128</option>
+                        <option value="256">256x256</option>
+                        <option value="512">512x512 (ثقيل)</option>
+                    </select>
+                </div>
+                
+                <div class="control-group" style="margin-right: auto;">
+                    <span class="control-label">تصدير:</span>
+                    <button class="action-btn" onclick="exportImage('png')">PNG</button>
+                    <button class="action-btn" onclick="exportGIF()" style="background:#e67e22;">GIF</button>
+                </div>
+            </div>
+
+            <div class="canvas-area" id="canvas-container">
+                <canvas id="main-canvas" class="drawing-board"></canvas>
+                <canvas id="grid-canvas" class="drawing-board" style="position:absolute; pointer-events:none; opacity:0.3;"></canvas>
+            </div>
+        </div>
+
+        <div class="sidebar-right">
+            
+            <div class="panel">
+                <div class="panel-header">المعاينة <button class="btn-sm action-btn" onclick="playAnimation()"><i class="fas fa-play"></i></button></div>
+                <div class="panel-body" style="text-align:center; background:#222;">
+                    <img id="preview-img" style="max-width:100px; image-rendering:pixelated; border:1px solid #555; background:#fff;">
+                    <div style="margin-top:10px;">
+                        <span class="control-label">سرعة (FPS): </span>
+                        <input type="number" id="fps-input" value="10" min="1" max="60" style="width:50px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="flex:1;">
+                <div class="panel-header">
+                    الفريمات (GIF)
+                    <div>
+                        <button class="btn-sm action-btn" onclick="addFrame()"><i class="fas fa-plus"></i></button>
+                        <button class="btn-sm action-btn" style="background:#e74c3c;" onclick="deleteFrame()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="panel-body" id="frames-list">
+                    </div>
+            </div>
+
+            <div class="panel" style="flex:1;">
+                <div class="panel-header">
+                    الطبقات
+                    <button class="btn-sm action-btn" onclick="addLayer()"><i class="fas fa-plus"></i></button>
+                </div>
+                <div class="panel-body" id="layers-list">
+                    </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="loader-overlay">
+        <i class="fas fa-spinner fa-spin" style="font-size:50px; color:#00aaff; margin-bottom:20px;"></i>
+        <h3 id="loader-text">جاري المعالجة...</h3>
+    </div>
+
+    <script>
+        // --- المتغيرات العامة ---
+        const mainCanvas = document.getElementById('main-canvas');
+        const gridCanvas = document.getElementById('grid-canvas');
+        const ctx = mainCanvas.getContext('2d');
+        const gridCtx = gridCanvas.getContext('2d');
+        
+        let gridSize = 32; // 32x32 بكسل
+        let pixelSize = 1; // حجم التكبير للعرض
+        let currentColor = '#000000';
+        let currentTool = 'pen';
+        let isDrawing = false;
+        
+        // إدارة البيانات
+        let frames = []; // مصفوفة الفريمات (كل فريم يحتوي على مصفوفة طبقات)
+        let currentFrameIndex = 0;
+        let currentLayerIndex = 0;
+        
+        // --- التهيئة (Init) ---
+        function init() {
+            resizeCanvas(32);
+            addFrame(); // إضافة الفريم الأول تلقائياً
+            setupEvents();
+            renderGrid();
+        }
+
+        function resizeCanvas(size) {
+            gridSize = parseInt(size);
+            // تحديد حجم الكانفاس (الفعلي)
+            mainCanvas.width = gridSize;
+            mainCanvas.height = gridSize;
+            gridCanvas.width = gridSize;
+            gridCanvas.height = gridSize;
+            
+            // تكبير العرض (CSS) ليناسب الشاشة
+            const displaySize = Math.min(600, window.innerWidth - 350); // حساب المساحة المتاحة
+            pixelSize = Math.floor(displaySize / gridSize);
+            const finalSize = pixelSize * gridSize;
+            
+            mainCanvas.style.width = finalSize + 'px';
+            mainCanvas.style.height = finalSize + 'px';
+            gridCanvas.style.width = finalSize + 'px';
+            gridCanvas.style.height = finalSize + 'px';
+
+            // إعادة رسم الفريم الحالي إذا وجد
+            if(frames[currentFrameIndex]) updateCanvasFromLayers();
+            renderGrid();
+        }
+
+        function changeSize() {
+            if(confirm("تغيير الحجم سيؤدي لمسح العمل الحالي. هل أنت متأكد؟")) {
+                frames = [];
+                currentFrameIndex = 0;
+                resizeCanvas(document.getElementById('size-select').value);
+                addFrame();
+            }
+        }
+
+        // --- أدوات الرسم ---
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tool-' + tool).classList.add('active');
+        }
+
+        function getMousePos(evt) {
+            const rect = mainCanvas.getBoundingClientRect();
+            const scaleX = mainCanvas.width / rect.width;
+            const scaleY = mainCanvas.height / rect.height;
+            return {
+                x: Math.floor((evt.clientX - rect.left) * scaleX),
+                y: Math.floor((evt.clientY - rect.top) * scaleY)
+            };
+        }
+
+        function drawPixel(x, y, color) {
+            if(x < 0 || x >= gridSize || y < 0 || y >= gridSize) return;
+            
+            // الرسم على الطبقة الحالية فقط
+            const layer = frames[currentFrameIndex].layers[currentLayerIndex];
+            const lCtx = layer.canvas.getContext('2d');
+            
+            if (currentTool === 'eraser') {
+                lCtx.clearRect(x, y, 1, 1);
+            } else {
+                lCtx.fillStyle = color;
+                lCtx.fillRect(x, y, 1, 1);
+            }
+            
+            updateCanvasFromLayers(); // دمج الطبقات وعرضها
+            updatePreviews(); // تحديث المصغرات
+        }
+
+        function floodFill(x, y, fillColor) {
+            const layer = frames[currentFrameIndex].layers[currentLayerIndex];
+            const lCtx = layer.canvas.getContext('2d');
+            const w = gridSize; const h = gridSize;
+            
+            const imgData = lCtx.getImageData(0, 0, w, h);
+            const pixelData = imgData.data; // RGBA array
+            
+            // Helper to get color at x,y
+            const getColorAt = (x, y) => {
+                const idx = (y * w + x) * 4;
+                return { r: pixelData[idx], g: pixelData[idx+1], b: pixelData[idx+2], a: pixelData[idx+3] };
+            };
+
+            // Target Color
+            const targetColor = getColorAt(x, y);
+            
+            // Convert HEX fill color to RGB
+            const r = parseInt(fillColor.slice(1, 3), 16);
+            const g = parseInt(fillColor.slice(3, 5), 16);
+            const b = parseInt(fillColor.slice(5, 7), 16);
+            
+            // If colors same, return
+            if (targetColor.r === r && targetColor.g === g && targetColor.b === b && targetColor.a === 255) return;
+
+            const matchStartColor = (c) => {
+                return c.r === targetColor.r && c.g === targetColor.g && c.b === targetColor.b && c.a === targetColor.a;
+            };
+
+            // Stack based Fill
+            const stack = [[x, y]];
+            while(stack.length) {
+                const [cx, cy] = stack.pop();
+                const idx = (cy * w + cx) * 4;
+                
+                if (cx >= 0 && cx < w && cy >= 0 && cy < h && matchStartColor(getColorAt(cx, cy))) {
+                    pixelData[idx] = r;
+                    pixelData[idx+1] = g;
+                    pixelData[idx+2] = b;
+                    pixelData[idx+3] = 255; // Alpha
+
+                    stack.push([cx+1, cy]);
+                    stack.push([cx-1, cy]);
+                    stack.push([cx, cy+1]);
+                    stack.push([cx, cy-1]);
+                }
+            }
+            
+            lCtx.putImageData(imgData, 0, 0);
+            updateCanvasFromLayers();
+            updatePreviews();
+        }
+
+        // --- إدارة الطبقات والفريمات ---
+        
+        function updateCanvasFromLayers() {
+            // مسح الكانفاس الرئيسي
+            ctx.clearRect(0, 0, gridSize, gridSize);
+            
+            // رسم كل الطبقات بالترتيب
+            frames[currentFrameIndex].layers.forEach(layer => {
+                if(layer.visible) {
+                    ctx.drawImage(layer.canvas, 0, 0);
+                }
+            });
+        }
+
+        function addFrame() {
+            // إنشاء فريم جديد يحتوي على طبقة واحدة افتراضية
+            const newLayerCanvas = document.createElement('canvas');
+            newLayerCanvas.width = gridSize; newLayerCanvas.height = gridSize;
+            
+            // إذا كان هناك فريم سابق، انسخه (اختياري، يسهل التحريك)
+            if(frames.length > 0) {
+                const prevCanvas = frames[frames.length-1].layers[0].canvas;
+                newLayerCanvas.getContext('2d').drawImage(prevCanvas, 0, 0);
+            }
+
+            const newFrame = {
+                layers: [{ name: 'Layer 1', canvas: newLayerCanvas, visible: true }]
+            };
+            
+            frames.push(newFrame);
+            currentFrameIndex = frames.length - 1;
+            currentLayerIndex = 0;
+            
+            renderFramesList();
+            renderLayersList();
+            updateCanvasFromLayers();
+        }
+
+        function addLayer() {
+            const newCanvas = document.createElement('canvas');
+            newCanvas.width = gridSize; newCanvas.height = gridSize;
+            
+            frames[currentFrameIndex].layers.push({
+                name: `Layer ${frames[currentFrameIndex].layers.length + 1}`,
+                canvas: newCanvas,
+                visible: true
+            });
+            
+            currentLayerIndex = frames[currentFrameIndex].layers.length - 1;
+            renderLayersList();
+        }
+
+        // --- واجهة المستخدم (Rendering UI) ---
+
+        function renderFramesList() {
+            const list = document.getElementById('frames-list');
+            list.innerHTML = '';
+            frames.forEach((frame, idx) => {
+                const div = document.createElement('div');
+                div.className = `frame-item ${idx === currentFrameIndex ? 'active' : ''}`;
+                
+                // دمج طبقات الفريم لإنشاء مصغر
+                const thumbCanvas = document.createElement('canvas');
+                thumbCanvas.width = gridSize; thumbCanvas.height = gridSize;
+                const tCtx = thumbCanvas.getContext('2d');
+                frame.layers.forEach(l => { if(l.visible) tCtx.drawImage(l.canvas, 0, 0); });
+                
+                const img = new Image();
+                img.src = thumbCanvas.toDataURL();
+                img.style.width = '100%'; img.style.height = '100%'; img.style.imageRendering = 'pixelated';
+                
+                div.appendChild(img);
+                div.innerHTML += `<span class="frame-num">${idx + 1}</span>`;
+                div.onclick = () => {
+                    currentFrameIndex = idx;
+                    currentLayerIndex = 0; // Reset layer select
+                    renderFramesList();
+                    renderLayersList();
+                    updateCanvasFromLayers();
+                };
+                list.appendChild(div);
+            });
+        }
+
+        function renderLayersList() {
+            const list = document.getElementById('layers-list');
+            list.innerHTML = '';
+            // نعرض الطبقات بترتيب عكسي (الطبقة العليا في الأعلى)
+            const layers = frames[currentFrameIndex].layers;
+            
+            for(let i = layers.length - 1; i >= 0; i--) {
+                const layer = layers[i];
+                const div = document.createElement('div');
+                div.className = `layer-item ${i === currentLayerIndex ? 'active' : ''}`;
+                div.onclick = () => {
+                    currentLayerIndex = i;
+                    renderLayersList();
+                };
+                
+                div.innerHTML = `
+                    <i class="fas fa-eye" style="color:${layer.visible?'#fff':'#555'}; cursor:pointer;" 
+                       onclick="toggleLayer(${i}, event)"></i>
+                    <span class="layer-name">${layer.name}</span>
+                    <i class="fas fa-trash" style="color:#ff4d4d; font-size:10px; cursor:pointer;" 
+                       onclick="deleteLayer(${i}, event)"></i>
+                `;
+                list.appendChild(div);
+            }
+        }
+
+        function updatePreviews() {
+            renderFramesList();
+            // تحديث المعاينة الرئيسية
+            const previewImg = document.getElementById('preview-img');
+            previewImg.src = mainCanvas.toDataURL();
+        }
+
+        function toggleLayer(idx, e) {
+            e.stopPropagation();
+            frames[currentFrameIndex].layers[idx].visible = !frames[currentFrameIndex].layers[idx].visible;
+            updateCanvasFromLayers();
+            renderLayersList();
+        }
+        
+        function deleteLayer(idx, e) {
+            e.stopPropagation();
+            if(frames[currentFrameIndex].layers.length <= 1) return alert("يجب أن تبقى طبقة واحدة على الأقل.");
+            frames[currentFrameIndex].layers.splice(idx, 1);
+            if(currentLayerIndex >= frames[currentFrameIndex].layers.length) currentLayerIndex = frames[currentFrameIndex].layers.length - 1;
+            updateCanvasFromLayers();
+            renderLayersList();
+        }
+        
+        function deleteFrame() {
+            if(frames.length <= 1) return alert("يجب أن يبقى فريم واحد على الأقل.");
+            frames.splice(currentFrameIndex, 1);
+            if(currentFrameIndex >= frames.length) currentFrameIndex = frames.length - 1;
+            updateCanvasFromLayers();
+            renderFramesList();
+            renderLayersList();
+        }
+
+        // --- الأحداث ---
+        function setupEvents() {
+            const container = document.getElementById('canvas-container');
+            
+            // Mouse Events
+            mainCanvas.addEventListener('mousedown', startDraw);
+            window.addEventListener('mouseup', stopDraw);
+            mainCanvas.addEventListener('mousemove', draw);
+            
+            // Touch Events
+            mainCanvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startDraw(e.touches[0]);
+            });
+            mainCanvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                draw(e.touches[0]);
+            });
+            window.addEventListener('touchend', stopDraw);
+
+            document.getElementById('color-input').addEventListener('change', (e) => {
+                currentColor = e.target.value;
+            });
+        }
+
+        function startDraw(e) {
+            isDrawing = true;
+            draw(e); // Draw single dot on click
+        }
+        
+        function stopDraw() {
+            isDrawing = false;
+        }
+
+        function draw(e) {
+            if (!isDrawing && e.type !== 'mousedown' && e.type !== 'touchstart') return;
+            
+            const pos = getMousePos(e);
+            
+            if(currentTool === 'fill') {
+                floodFill(pos.x, pos.y, currentColor);
+                isDrawing = false; // Fill is one-time action
+            } else if (currentTool === 'picker') {
+                // Pick color logic (simple implementation)
+                // For simplicity, we won't implement complex picking from merged canvas here
+                isDrawing = false;
+            } else {
+                drawPixel(pos.x, pos.y, currentColor);
+            }
+        }
+
+        function clearCanvas() {
+            if(confirm("هل أنت متأكد من مسح الفريم الحالي؟")) {
+                const layer = frames[currentFrameIndex].layers[currentLayerIndex];
+                const ctx = layer.canvas.getContext('2d');
+                ctx.clearRect(0, 0, gridSize, gridSize);
+                updateCanvasFromLayers();
+                updatePreviews();
+            }
+        }
+
+        // --- التصدير والتحريك ---
+        function renderGrid() {
+            gridCtx.clearRect(0, 0, gridSize, gridSize);
+            gridCtx.fillStyle = '#ccc';
+            // رسم شبكة وهمية إذا لزم الأمر (يمكن الاستغناء عنها ب CSS background)
+        }
+
+        function exportImage() {
+            const link = document.createElement('a');
+            link.download = 'pixel-art.png';
+            // تكبير الصورة عند التصدير لتكون واضحة
+            const exportCanvas = document.createElement('canvas');
+            const scale = 10; // تكبير 10 مرات
+            exportCanvas.width = gridSize * scale;
+            exportCanvas.height = gridSize * scale;
+            const eCtx = exportCanvas.getContext('2d');
+            eCtx.imageSmoothingEnabled = false;
+            eCtx.drawImage(mainCanvas, 0, 0, exportCanvas.width, exportCanvas.height);
+            
+            link.href = exportCanvas.toDataURL();
+            link.click();
+        }
+
+        function exportGIF() {
+            const overlay = document.getElementById('loader-overlay');
+            overlay.style.display = 'flex';
+            
+            // استخدام مكتبة GIF.js (تتطلب ملف worker)
+            // هنا سنستخدم Blob Worker لتجنب مشاكل الملفات الخارجية
+            const workerBlob = new Blob([`
+                importScripts('https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js');
+            `], { type: 'application/javascript' });
+            const workerUrl = URL.createObjectURL(workerBlob);
+
+            const gif = new GIF({
+                workers: 2,
+                quality: 10,
+                width: gridSize * 10, // تكبير للتصدير
+                height: gridSize * 10,
+                workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js' // استخدام CDN مباشر
+            });
+
+            frames.forEach(frame => {
+                // دمج طبقات الفريم
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = gridSize; tempCanvas.height = gridSize;
+                const tCtx = tempCanvas.getContext('2d');
+                frame.layers.forEach(l => { if(l.visible) tCtx.drawImage(l.canvas, 0, 0); });
+                
+                // تكبير
+                const scaleCanvas = document.createElement('canvas');
+                scaleCanvas.width = gridSize * 10; scaleCanvas.height = gridSize * 10;
+                const sCtx = scaleCanvas.getContext('2d');
+                sCtx.imageSmoothingEnabled = false;
+                sCtx.drawImage(tempCanvas, 0, 0, scaleCanvas.width, scaleCanvas.height);
+
+                const delay = 1000 / parseInt(document.getElementById('fps-input').value);
+                gif.addFrame(scaleCanvas, {delay: delay});
+            });
+
+            gif.on('finished', function(blob) {
+                overlay.style.display = 'none';
+                window.open(URL.createObjectURL(blob));
+            });
+
+            gif.render();
+        }
+
+        let animationInterval;
+        function playAnimation() {
+            if(animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+                return;
+            }
+            
+            let fIdx = 0;
+            const fps = parseInt(document.getElementById('fps-input').value);
+            const img = document.getElementById('preview-img');
+            
+            animationInterval = setInterval(() => {
+                // رسم الفريم في صورة المعاينة
+                const frame = frames[fIdx];
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = gridSize; tempCanvas.height = gridSize;
+                const tCtx = tempCanvas.getContext('2d');
+                frame.layers.forEach(l => { if(l.visible) tCtx.drawImage(l.canvas, 0, 0); });
+                img.src = tempCanvas.toDataURL();
+                
+                fIdx = (fIdx + 1) % frames.length;
+            }, 1000 / fps);
+        }
+
+        // تشغيل
+        init();
+
+    </script>
+</body>
+</html>

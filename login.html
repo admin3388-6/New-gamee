@@ -1,1048 +1,445 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-lang-key="pageTitle">SkyData - تسجيل الدخول / إنشاء حساب</title>
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<style>
-  :root {
-      --primary-color: #007bff;
-      --primary-hover: #0056b3;
-      --glow-color-1: #6366f1;
-      --glow-color-2: #ec4899;
-      --glow-color-3: #f59e0b;
-      --dark-bg: #0d0d1a; 
-      --bg-surface: #1a1a2e;
-      --text-color: #e0e0e0;
-      --text-muted: #aaa;
-      --border-color: #333;
-      --error-color: #EF665B;
-      --success-color: #28a745;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyData - تسجيل الدخول</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      tap-highlight-color: rgba(0, 0, 0, 0);
-  }
-  
-  #app-container {
-      width: 100%;
-      overflow-x: hidden;
-      position: relative; 
-      transform: translate3d(0, 0, 0);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-  }
-  
-  html { }
+    <style>
+        /* ============ 1. التصميم الأساسي (CSS) ============ */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background-color: #0b132b; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* إزالة التحديد والمربعات المزعجة */
+        *:focus { outline: none !important; }
+        a, button, input, span, label { -webkit-tap-highlight-color: transparent; }
 
-  body { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    direction: rtl; 
-    background-color: var(--dark-bg); 
-    color: var(--text-color); 
-    margin: 0; padding: 0; 
-  }
-  
-  body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-          135deg,
-          rgba(var(--glow-color-1), 0.15),
-          rgba(var(--glow-color-2), 0.1),
-          rgba(var(--glow-color-3), 0.15)
-      );
-      background-size: 400% 400%;
-      animation: glowingBackground 20s ease infinite;
-      z-index: -1;
-      filter: blur(50px);
-  }
+        /* الهيدر الثابت */
+        .main-header {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(11, 19, 43, 0.95);
+            padding: 15px; z-index: 1000;
+            text-align: center; border-bottom: 1px solid #00aaff;
+        }
+        .logo-img { height: 40px; }
 
-  @keyframes glowingBackground {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-  }
+        /* حاوية نموذج الدخول */
+        .auth-container {
+            background-color: #111a30;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #1f2d4d;
+            margin-top: 80px; /* مسافة عشان الهيدر */
+            margin-bottom: 50px;
+        }
 
-  header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 15px 20px; 
-      background-color: rgba(26, 26, 46, 0.7); 
-      backdrop-filter: blur(10px); 
-      border-bottom: 1px solid var(--border-color); 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3); 
-      width: 100%;
-      position: sticky; 
-      top: 0;
-      z-index: 100;
-  }
-  .logo-container { display: flex; align-items: center; }
-  .logo-container img { height: 35px; margin-left: 10px; }
-  
-  .logo-shine {
-      position: relative;
-      overflow: hidden;
-  }
-  .logo-shine::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.3),
-          transparent
-      );
-      transform: skewX(-25deg);
-      animation: shine-effect 5s infinite linear;
-  }
-  @keyframes shine-effect {
-      0% { left: -100%; }
-      50% { left: 150%; }
-      100% { left: 150%; }
-  }
-  
-  .lang-switcher { display: flex; align-items: center; }
-  .lang-switcher a { 
-      text-decoration: none; 
-      color: var(--primary-color); 
-      margin: 0 3px; 
-      font-weight: bold; 
-      cursor: pointer; 
-      padding: 4px 7px; 
-      border-radius: 5px;
-      transition: all 0.2s ease;
-  }
-  .lang-switcher a.active { background-color: var(--primary-color); color: #ffffff; }
+        /* حقول الإدخال */
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: bold; }
+        .input-group input {
+            width: 100%; padding: 12px; background: #0b132b;
+            border: 1px solid #2a3a5a; color: #fff; border-radius: 8px;
+            transition: border 0.3s;
+        }
+        .input-group input:focus { border-color: #00aaff; }
+        
+        /* أيقونة العين */
+        .toggle-pass {
+            position: absolute; left: 15px; top: 42px;
+            color: #00aaff; cursor: pointer;
+            padding: 5px;
+        }
 
-  main {
-      flex-grow: 1; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 30px 0; 
-  }
-  .main-wrapper {
-      max-width: 400px;
-      width: 95%; 
-  }
+        /* الأزرار */
+        .btn-primary {
+            width: 100%; padding: 12px; background: #00aaff;
+            color: #0b132b; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; margin-top: 10px;
+            font-size: 16px; transition: transform 0.2s, background 0.3s;
+        }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:disabled { background: #445566; color: #aaa; cursor: not-allowed; opacity: 0.8; }
+        
+        .btn-secondary {
+            width: 100%; padding: 10px; background: transparent;
+            color: #00aaff; border: 1px solid #00aaff; border-radius: 8px;
+            font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
 
-  .form {
-      display: flex;
-      flex-direction: column;
-      gap: 5px; /* (تقليل المسافة) */
-      padding: 30px;
-      border-radius: 10px; 
-      position: relative;
-      background-color: var(--bg-surface); 
-      color: var(--text-color); 
-      border: 1px solid var(--border-color); 
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-      animation: fadeIn 0.5s ease-out;
-  }
+        /* الروابط والنصوص */
+        .switch-text { text-align: center; margin-top: 20px; font-size: 14px; }
+        .clickable-text { color: #00aaff; cursor: pointer; font-weight: bold; text-decoration: underline; }
+        
+        .terms-box { font-size: 12px; margin-bottom: 15px; color: #ccc; display: flex; align-items: flex-start; gap: 8px; }
+        .terms-box a { color: #00aaff; text-decoration: none; }
 
-  .title {
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: -1px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      color: var(--primary-color); 
-      margin-bottom: 5px;
-      padding-right: 30px; 
-  }
-  .title::before, .title::after {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      border-radius: 50%;
-      right: 0px;
-      background-color: var(--primary-color); 
-  }
-  .title::after { animation: pulse 1s linear infinite; }
+        /* أدوات مساعدة */
+        .hidden { display: none !important; }
+        
+        /* زر الدعم العائم */
+        .support-fab {
+            position: fixed; bottom: 20px; left: 20px; width: 55px; height: 55px;
+            background-color: #00aaff; color: #111a30; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 24px; z-index: 2000;
+            text-decoration: none; box-shadow: 0 4px 15px rgba(0,170,255,0.4);
+        }
 
-
-  .message-intro { 
-      font-size: 14.5px;
-      color: var(--text-muted); 
-      margin-bottom: 10px; /* (زيادة المسافة هنا) */
-      text-align: right;
-  }
-  
-  .input-label {
-      background-color: rgba(0,0,0,0.2); 
-      color: var(--text-color); 
-      /* * ⬇️ (إصلاح طلب 2) ⬇️ * */
-      padding: 12px 15px; /* (تقليل الارتفاع) */
-      /* * ⬆️ (نهاية الإصلاح) ⬆️ * */
-      border-radius: 8px;
-      border: 1px solid var(--border-color); 
-      display: flex;
-      flex-direction: column; 
-      gap: 5px;
-      transition: border-color 0.3s;
-      position: relative;
-  }
-  .input-label span {
-      font-size: 0.75em;
-      color: var(--text-muted); 
-      font-weight: 600;
-  }
-  .input-label input {
-      padding: 0;
-      margin: 0;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text-color); 
-      font-size: 1em;
-      direction: ltr;
-      padding-left: 40px; 
-  }
-  [dir="rtl"] .input-label input {
-      padding-left: 15px;
-      padding-right: 40px;
-  }
-  
-  /* * ⬇️ (CSS جديد لرسائل الخطأ تحت الحقول) ⬇️ * */
-  .field-error-msg {
-      color: var(--error-color);
-      font-size: 0.85em;
-      font-weight: 600;
-      margin-top: 5px;
-      margin-right: 5px;
-      display: none; /* (مخفي افتراضياً) */
-      text-align: right;
-  }
-  [dir="rtl"] .field-error-msg {
-      text-align: left;
-      margin-right: 0;
-      margin-left: 5px;
-  }
-  /* * ⬆️ (نهاية CSS الجديد) ⬆️ * */
-
-  .input-label:focus-within { border-color: var(--primary-color); } 
-  
-  .flex-group {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-      flex-wrap: wrap; 
-  }
-  .flex-group > div {
-      flex: 1;
-      min-width: 140px;
-  }
-  @media (max-width: 350px) {
-      .flex-group {
-          flex-direction: column;
-          gap: 5px;
-      }
-      .flex-group > div {
-          min-width: 100%;
-      }
-  }
-
-  .toggle-password {
-      position: absolute;
-      right: 10px; 
-      left: auto;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-muted); 
-      cursor: pointer;
-      font-size: 1.1em;
-      padding: 5px;
-      transition: color 0.2s;
-      z-index: 10;
-  }
-  [dir="rtl"] .toggle-password {
-      right: auto;
-      left: 10px; 
-  }
-  .toggle-password:hover { color: var(--primary-color); }
-
-
-  .submit {
-      border: none;
-      outline: none;
-      padding: 14px;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 1.2em;
-      font-weight: bold;
-      background-color: var(--primary-color); 
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-      margin-top: 15px;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
-  .submit i { margin-left: 10px; }
-  .submit:hover {
-      background-color: var(--primary-hover); 
-      transform: translateY(-1px);
-      box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
-  }
-  .submit:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
-
-  .cancel-button {
-      display: block; 
-      width: 100%;
-      text-decoration: none;
-      border: 1px solid var(--border-color); 
-      outline: none;
-      padding: 14px;
-      border-radius: 8px;
-      color: var(--text-muted); 
-      font-size: 1.2em;
-      font-weight: bold;
-      background-color: transparent;
-      cursor: pointer;
-      margin-top: 10px; 
-      transition: all 0.3s ease;
-      text-align: center;
-  }
-  .cancel-button:hover {
-      background-color: var(--border-color); 
-      color: var(--text-color); 
-  }
-
-  .support-button {
-      display: flex; 
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      text-decoration: none;
-      border: 1px solid transparent; 
-      outline: none;
-      padding: 14px;
-      border-radius: 8px;
-      color: var(--primary-color); 
-      font-size: 1.2em;
-      font-weight: bold;
-      background-color: transparent;
-      cursor: pointer;
-      margin-top: 10px; 
-      transition: all 0.3s ease;
-      text-align: center;
-  }
-  .support-button:hover {
-      background-color: var(--bg-surface);
-      border-color: var(--border-color);
-  }
-
-
-  .toggle-area { text-align: center; font-size: 0.95em; margin-top: 10px; }
-  .toggle-area a { color: var(--primary-color); text-decoration: none; font-weight: 600; transition: color 0.3s; }
-  .toggle-area a:hover { text-decoration: underline; color: #4da6ff; }
-  
-  .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      font-size: 0.9em;
-      text-align: right;
-  }
-  .terms-acceptance {
-      margin-top: 10px;
-      padding: 10px;
-      border: 1px solid var(--border-color); 
-      border-radius: 8px;
-      background-color: rgba(0,0,0,0.2); 
-  }
-  
-  .checkbox-group label {
-      display: flex;
-      align-items: flex-start;
-      font-weight: normal;
-      color: var(--text-muted); 
-      cursor: pointer;
-      margin-top: 5px;
-  }
-  .checkbox-group input[type="checkbox"] {
-      width: auto;
-      margin: 0 0 0 8px;
-      flex-shrink: 0;
-  }
-  .terms-acceptance a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
-
-  .loader-spinner {
-    border: 4px solid #333;
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
-    display: none;
-    margin: 10px auto 0;
-  }
-  @keyframes pulse {
-      from { transform: scale(0.9); opacity: 1; }
-      to { transform: scale(1.8); opacity: 0; }
-  }
-  @keyframes spin {
-      to { transform: rotate(360deg); }
-  }
-  @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-  }
-  
-  /* (تم حذف .status-box القديمة) */
-
-  /* * ⬇️ (CSS جديد: نظام الإشعارات "Toast") ⬇️ * */
-  #global-toast {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      width: 320px;
-      max-width: 90%;
-      padding: 15px;
-      display: none; /* (سيتغير إلى flex عبر JS) */
-      align-items: center;
-      gap: 10px;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-      position: fixed; 
-      bottom: -100px; /* (يبدأ مخفياً) */
-      left: 50%; 
-      transform: translateX(-50%); 
-      z-index: 2000; 
-      transition: opacity 0.3s ease, bottom 0.3s ease;
-      opacity: 0;
-  }
-  #global-toast.show {
-      display: flex;
-      opacity: 1;
-      bottom: 20px;
-  }
-  #global-toast.success {
-      background: #E0F2E9;
-      border: 1px solid var(--success-color);
-  }
-  #global-toast.success .toast-title { color: #155724; }
-  #global-toast.success .toast-icon { fill: var(--success-color); }
-  #global-toast.error {
-      background: #FCE8DB;
-      border: 1px solid var(--error-color);
-  }
-  #global-toast.error .toast-title { color: #71192F; }
-  #global-toast.error .toast-icon { fill: var(--error-color); }
-
-  .toast-icon {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0; 
-  }
-  .toast-title {
-      font-weight: 600;
-      font-size: 14px;
-      width: 100%; 
-      line-height: 1.4;
-  }
-  .toast-close-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1.5em;
-      line-height: 1;
-      padding: 0 5px;
-      margin-left: auto;
-      flex-shrink: 0;
-  }
-  [dir="rtl"] .toast-close-btn {
-      margin-left: 0;
-      margin-right: auto;
-  }
-  #global-toast.success .toast-close-btn { color: #155724; }
-  #global-toast.error .toast-close-btn { color: #71192F; }
-  /* * ⬆️ (نهاية CSS الجديد) ⬆️ * */
-
-
-  footer {
-      background-color: rgba(26, 26, 46, 0.7); 
-      backdrop-filter: blur(10px);
-      color: #fff;
-      padding: 30px 20px;
-      text-align: center;
-      margin-top: auto; 
-      border-top: 1px solid var(--border-color);
-      width: 100%;
-  }
-  .footer-links-card {
-      margin: 0 auto;
-      border: 1px solid var(--border-color);
-      background: rgba(0,0,0,0.2);
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 400px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  }
-  .footer-links-card a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 1.1em;
-      transition: color 0.2s ease;
-      display: block; 
-      margin: 10px 0; 
-  }
-  .footer-links-card a:hover {
-      color: var(--primary-color);
-  }
-  
-  @media (max-width: 380px) {
-      .logo-container img { height: 30px; }
-      .lang-switcher a { padding: 3px 5px; font-size: 0.9em; }
-  }
-</style>
-
+        /* نظام الإشعارات (Toasts) */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px; max-width: 350px;
+            width: 90%; pointer-events: none;
+        }
+        .toast-alert {
+            background-color: #1f2d4d; color: #fff; padding: 15px 20px;
+            border-radius: 8px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-size: 14px; line-height: 1.5; opacity: 0;
+            transform: translateX(100%); 
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            pointer-events: auto;
+        }
+        .toast-content { display: flex; align-items: center; gap: 10px; }
+        .toast-error { background-color: #4b1a1a; border-right: 5px solid #ff4d4d; color: #ffcccc; }
+        .toast-error .fas { color: #ff4d4d; }
+        .toast-success { background-color: #1a4b2a; border-right: 5px solid #00ff7f; color: #ccffdd; }
+        .toast-success .fas { color: #00ff7f; }
+        .toast-warning { background-color: #4b441a; border-right: 5px solid #ffc107; color: #fffbe6; }
+        .toast-warning .fas { color: #ffc107; }
+        
+        .toast-in { opacity: 1; transform: translateX(0); }
+        .toast-out { opacity: 0; transform: translateX(100%); }
+    </style>
 </head>
 <body>
 
-<div id="app-container">
-  <header>
-      <div class="logo-container">
-          <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData" class="logo-shine">
-          <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata" class="logo-shine">
-      </div>
-      
-      <div class="lang-switcher">
-          <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-          <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
-      </div>
-  </header>
+    <div class="main-header">
+        <a href="index.html"><img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="Logo" class="logo-img"></a>
+    </div>
 
-<main>
-  <div class="main-wrapper" id="loginWrapper">
-    
-    <form class="form" id="authForm" novalidate>
+    <div class="auth-container">
         
-        <p class="title" id="formTitle" dir="rtl" data-lang-key="formTitleLogin">تسجيل الدخول</p>
-        <p class="message-intro" id="messageIntro" data-lang-key="messageLogin">مرحباً بك مجدداً! سجل الدخول للوصول لخدماتنا</p>
-        
-        <div class="flex-group" id="nameFields" style="display: none;">
-            <div>
-                <div class="input-label">
-                    <span id="spanFirstName" data-lang-key="spanFirstName">الاسم الأول</span>
-                    <input type="text" id="firstName" placeholder="" autocomplete="given-name" maxlength="7">
+        <div id="view-login">
+            <h2 style="text-align:center; color:#00aaff; margin-bottom:20px;">تسجيل الدخول</h2>
+            
+            <form id="formLogin">
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="emailLogin" required autocomplete="username">
                 </div>
-                <p class="field-error-msg" id="firstNameError"></p>
-            </div>
-            <div>
-                <div class="input-label">
-                    <span id="spanLastName" data-lang-key="spanLastName">اسم العائلة</span>
-                    <input type="text" id="lastName" placeholder="" autocomplete="family-name" maxlength="7">
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="passLogin" required autocomplete="current-password">
+                    <i class="fas fa-eye toggle-pass" onclick="toggleP('passLogin', this)"></i>
                 </div>
-                <p class="field-error-msg" id="lastNameError"></p>
+                
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:15px;">
+                    <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
+                        <input type="checkbox"> تذكرني
+                    </label>
+                    <span class="clickable-text" onclick="swap('reset')" style="text-decoration:none;">نسيت كلمة السر؟</span>
+                </div>
+
+                <button type="button" class="btn-primary" id="btnLogin">دخول آمن</button>
+            </form>
+
+            <div class="switch-text">
+                ليس لديك حساب؟ <span class="clickable-text" onclick="swap('signup')">أنشئ حساباً جديداً</span>
             </div>
         </div>
-        
-        <div>
-          <div class="input-label">
-              <span id="spanEmail" data-lang-key="spanEmail">البريد الإلكتروني</span>
-              <input type="email" id="email" required placeholder="" autocomplete="email">
-          </div>
-          <p class="field-error-msg" id="emailError"></p>
+
+        <div id="view-signup" class="hidden">
+            <h2 style="text-align:center; color:#00aaff; margin-bottom:20px;">إنشاء حساب</h2>
+
+            <form id="formSignup">
+                <div class="input-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="nameReg" required maxlength="14" autocomplete="name">
+                </div>
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="emailReg" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <label>كلمة المرور (8+ حروف)</label>
+                    <input type="password" id="passReg" required minlength="8" autocomplete="new-password">
+                    <i class="fas fa-eye toggle-pass" onclick="toggleP('passReg', this)"></i>
+                </div>
+
+                <div class="terms-box">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <span>أوافق على <a href="safety.html" target="_blank">شروط الخدمة</a> و <a href="safety.html" target="_blank">سياسة الخصوصية</a></span>
+                </div>
+
+                <button type="button" class="btn-primary" id="btnSignup">إنشاء الحساب</button>
+            </form>
+
+            <div class="switch-text">
+                لديك حساب بالفعل؟ <span class="clickable-text" onclick="swap('login')">تسجيل الدخول</span>
+            </div>
         </div>
-        
-        <div>
-          <div class="input-label">
-              <span id="spanPassword" data-lang-key="spanPassword">كلمة المرور</span>
-              <button type="button" class="toggle-password" data-target="password">
-                  <i class="fas fa-eye-slash"></i>
-              </button>
-              <input type="password" id="password" required placeholder="" autocomplete="new-password">
-          </div>
-          <p class="field-error-msg" id="passwordError"></p>
+
+        <div id="view-reset" class="hidden">
+            <h2 style="text-align:center; color:#00aaff; margin-bottom:20px;">استعادة الحساب</h2>
+            <p style="text-align:center; font-size:13px; color:#bbb; margin-bottom:15px;">أدخل بريدك الإلكتروني لنرسل لك رابط استعادة كلمة المرور.</p>
+
+            <form id="formReset">
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="emailReset" required>
+                </div>
+                <button type="button" class="btn-primary" id="btnReset">إرسال الرابط</button>
+            </form>
+
+            <div class="switch-text">
+                <span class="clickable-text" onclick="swap('login')">العودة لتسجيل الدخول</span>
+            </div>
         </div>
 
-        <div id="confirmPasswordContainer" style="display: none;">
-          <div class="input-label" id="confirmPasswordField">
-              <span id="spanConfirmPassword" data-lang-key="spanConfirmPassword">تأكيد كلمة المرور</span>
-              <button type="button" class="toggle-password" data-target="confirmPassword">
-                  <i class="fas fa-eye-slash"></i>
-              </button>
-              <input type="password" id="confirmPassword" placeholder="" autocomplete="new-password">
-          </div>
-          <p class="field-error-msg" id="confirmPasswordError"></p>
+        <div id="view-verify" class="hidden">
+            <h2 style="text-align:center; color:#e67e22; margin-bottom:20px;"><i class="fas fa-exclamation-circle"></i> الحساب غير مفعل</h2>
+            <p style="text-align:center; font-size:14px; line-height:1.6; margin-bottom:20px;">
+                يرجى مراجعة بريدك الإلكتروني (بما في ذلك مجلد الرسائل غير المرغوب فيها) للضغط على رابط التفعيل.
+            </p>
+            <button type="button" class="btn-primary" id="btnResendVerify">إعادة إرسال رابط التفعيل</button>
+            <button type="button" class="btn-secondary" onclick="window.location.reload()">تم التفعيل؟ (تحديث)</button>
+            <div class="switch-text">
+                <span class="clickable-text" onclick="signOutAndBack()">تسجيل خروج</span>
+            </div>
         </div>
-
-
-        <div class="terms-acceptance">
-            <label>
-                <input type="checkbox" id="acceptTerms" required>
-                <span data-lang-key="acceptTermsText">أوافق على <a href="Safety.html" target="_blank">شروط الخدمة وسياسة الخصوصية</a> (إجباري)</span>
-            </label>
-            <p class="field-error-msg" id="termsError"></p>
-        </div>
-        
-        <button type="submit" class="submit" id="submitBtn">
-            تسجيل الدخول <i class="fas fa-sign-in-alt"></i>
-        </button>
-
-        <a href="index.html" class="cancel-button" id="cancelBtn" data-lang-key="cancelBtn">إلغاء</a>
-        
-        <a href="support.html" class="support-button" id="supportBtn" data-lang-key="supportBtn">
-            <i class="fas fa-headset"></i> <span>الدعم الفني</span>
-        </a>
-        
-        <div class="loader-spinner" id="loadingSpinner"></div>
-
-        <p class="toggle-area">
-            <span data-lang-key="togglePrompt">لا تمتلك حساب؟ </span>
-            <a href="#" id="toggleModeLink" data-lang-key="toggleLink">إنشاء حساب جديد</a>
-        </p>
-    </form>
 
     </div>
-</main>
-
-<footer>
-    <div class="footer-links-card">
-        <a href="Safety.html" data-lang-key="footerPolicy">شروط الاستخدام وسياسة الخصوصية</a>
-        <a href="aboutus.html" data-lang-key="footerAbout">عن Skydata</a>
-    </div>
-</footer>
-
-<div id="global-toast">
-    <svg class="toast-icon" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
-        <path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path>
-    </svg>
-    <div class="toast-title" id="toast-title"></div>
-    <button class="toast-close-btn" id="toast-close-btn">&times;</button>
-</div>
-</div> <script type="module">
-  // **************************************************
-  // 1. استيراد المكتبات
-  // **************************************************
-  
-  import { app, database as db, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
-
-  import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-  import { ref, update } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-
-  // **************************************************
-  // 3. منطق التطبيق
-  // **************************************************
-  
-  // عناصر الواجهة
-  const formTitle = document.getElementById('formTitle');
-  const messageIntro = document.getElementById('messageIntro');
-  const authForm = document.getElementById('authForm');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const confirmPasswordInput = document.getElementById('confirmPassword');
-  const firstNameInput = document.getElementById('firstName');
-  const lastNameInput = document.getElementById('lastName');
-  const nameFields = document.getElementById('nameFields');
-  const confirmPasswordContainer = document.getElementById('confirmPasswordContainer');
-  
-  const spanEmail = document.getElementById('spanEmail');
-  const spanPassword = document.getElementById('spanPassword');
-  const spanConfirmPassword = document.getElementById('spanConfirmPassword');
-  const spanFirstName = document.getElementById('spanFirstName');
-  const spanLastName = document.getElementById('spanLastName');
-
-  const submitBtn = document.getElementById('submitBtn');
-  const toggleModeLink = document.getElementById('toggleModeLink');
-  const acceptTermsCheckbox = document.getElementById('acceptTerms');
-  const loadingSpinner = document.getElementById('loadingSpinner');
-  
-  // * (جديد) عناصر رسائل الخطأ
-  const firstNameError = document.getElementById('firstNameError');
-  const lastNameError = document.getElementById('lastNameError');
-  const emailError = document.getElementById('emailError');
-  const passwordError = document.getElementById('passwordError');
-  const confirmPasswordError = document.getElementById('confirmPasswordError');
-  const termsError = document.getElementById('termsError');
-  
-  // * (جديد) عناصر الـ Toast
-  const globalToast = document.getElementById('global-toast');
-  const toastTitle = document.getElementById('toast-title');
-  const toastCloseBtn = document.getElementById('toast-close-btn');
-  let toastTimer; // (لإغلاق الـ Toast تلقائياً)
-
-  // حالة التطبيق
-  let isLoginMode = true;
-
-  // --- قاموس الترجمة ---
-  const translations = {
-      "ar": {
-          "pageTitle": "SkyData - تسجيل الدخول / إنشاء حساب",
-          "formTitleLogin": "تسجيل الدخول",
-          "formTitleRegister": "إنشاء حساب",
-          "messageLogin": "مرحباً بك مجدداً! سجل الدخول للوصول لخدماتنا",
-          "messageRegister": "انضم الآن واحصل على وصول كامل لجميع أدواتنا",
-          "spanEmail": "البريد الإلكتروني",
-          "spanPassword": "كلمة المرور",
-          "spanConfirmPassword": "تأكيد كلمة المرور",
-          "spanFirstName": "الاسم الأول",
-          "spanLastName": "اسم العائلة",
-          "submitBtnLogin": "تسجيل الدخول",
-          "submitBtnRegister": "إنشاء حساب و تسجيل الدخول",
-          "togglePrompt": "لا تمتلك حساب؟",
-          "toggleLink": "إنشاء حساب جديد",
-          "togglePromptHasAccount": "لديك حساب بالفعل؟",
-          "toggleLinkHasAccount": "سجل الدخول",
-          "acceptTermsText": "أوافق على <a href='Safety.html' target='_blank'>شروط الخدمة وسياسة الخصوصية</a> (إجباري)",
-          "termsError": "يجب الموافقة على شروط الخدمة وسياسة الخصوصية",
-          "passwordMatchError": "كلمتا المرور غير متطابقتين",
-          "nameRequiredError": "الرجاء إدخال الاسم الأول واسم العائلة",
-          "loginSuccess": "تم تسجيل الدخول بنجاح! جاري التوجيه",
-          "registerSuccess": "تم إنشاء الحساب بنجاح! تم إرسال رابط التفعيل إلى بريدك الإلكتروني: {email}<br>تنبيه: يرجى التحقق من مجلد البريد العشوائي (Spam) إذا لم تصلك الرسالة خلال دقائق",
-          "cancelBtn": "إلغاء",
-          "supportBtn": "الدعم الفني", 
-          "footerPolicy": "شروط الاستخدام وسياسة الخصوصية",
-          "footerAbout": "عن Skydata",
-          "invalidEmail": "الرجاء إدخال بريد إلكتروني صالح (مثل example@domain.com)",
-          "nameInvalidChars": "يجب أن يحتوي الاسم على حروف فقط (عربي أو إنجليزي)",
-          "nameTooLong": "يجب أن يكون الاسم 7 أحرف أو أقل",
-          "passwordWeak": "كلمة المرور ضعيفة جدا",
-          "passwordPolicy": "كلمة المرور يجب أن تكون 8 أحرف على الأقل، وتحتوي على حرف كبير، حرف صغير، رقم، ورمز خاص (#$_@+-)",
-          "firebaseError": "حدث خطأ غير متوقع",
-          "emailInUse": "هذا البريد الإلكتروني مسجل بالفعل",
-          "authFailed": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
-      },
-      "en": {
-          "pageTitle": "SkyData - Login / Sign Up",
-          "formTitleLogin": "Sign In",
-          "formTitleRegister": "Register",
-          "messageLogin": "Welcome back! Sign in to access our services",
-          "messageRegister": "Sign up now and get full access to all our tools",
-          "spanEmail": "Email",
-          "spanPassword": "Password",
-          "spanConfirmPassword": "Confirm Password",
-          "spanFirstName": "First Name",
-          "spanLastName": "Last Name",
-          "submitBtnLogin": "Sign In",
-          "submitBtnRegister": "Sign Up and Sign In",
-          "togglePrompt": "Don't have an account?",
-          "toggleLink": "Create New Account",
-          "togglePromptHasAccount": "Already have an account?",
-          "toggleLinkHasAccount": "Sign In",
-          "acceptTermsText": "I agree to the <a href='Safety.html' target='_blank'>Terms of Service and Privacy Policy</a> (required)",
-          "termsError": "You must agree to the Terms of Service and Privacy Policy",
-          "passwordMatchError": "Passwords do not match",
-          "nameRequiredError": "Please enter your first and last name",
-          "loginSuccess": "Login successful! Redirecting",
-          "registerSuccess": "Account created successfully! A verification link has been sent to your email: {email}<br>Note: Please check your spam folder if the message does not arrive within minutes",
-          "cancelBtn": "Cancel",
-          "supportBtn": "Support", 
-          "footerPolicy": "Terms of Use and Privacy Policy",
-          "footerAbout": "About Skydata",
-          "invalidEmail": "Please enter a valid email (e.g., example@domain.com)",
-          "nameInvalidChars": "Name must only contain letters (Arabic or English)",
-          "nameTooLong": "Name must be 7 characters or less",
-          "passwordWeak": "Password is too weak",
-          "passwordPolicy": "Password must be at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special symbol (#$_@+-)",
-          "firebaseError": "An unexpected error occurred",
-          "emailInUse": "This email is already registered",
-          "authFailed": "Invalid email or password"
-      }
-  };
-  
-  let currentLang = 'ar'; 
-
-  window.setLanguage = function(lang) {
-      currentLang = lang;
-      document.documentElement.lang = lang;
-      document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-      
-      document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-
-      document.querySelectorAll('[data-lang-key]').forEach(element => {
-          const key = element.getAttribute('data-lang-key');
-          if (translations[lang][key]) {
-              if (element.id === 'supportBtn') {
-                  element.querySelector('span').innerHTML = translations[lang][key];
-              } else {
-                  element.innerHTML = translations[lang][key];
-              }
-          }
-      });
-      updateFormContent();
-  }
-  
-  function updateFormContent() {
-      spanEmail.innerText = translations[currentLang].spanEmail;
-      spanPassword.innerText = translations[currentLang].spanPassword;
-      spanConfirmPassword.innerText = translations[currentLang].spanConfirmPassword;
-      spanFirstName.innerText = translations[currentLang].spanFirstName;
-      spanLastName.innerText = translations[currentLang].spanLastName;
-      
-      if (isLoginMode) {
-          formTitle.innerText = translations[currentLang].formTitleLogin;
-          messageIntro.innerText = translations[currentLang].messageLogin;
-          submitBtn.innerHTML = `${translations[currentLang].submitBtnLogin} <i class="fas fa-sign-in-alt"></i>`;
-          document.querySelector('.toggle-area span').innerText = translations[currentLang].togglePrompt;
-          toggleModeLink.innerText = translations[currentLang].toggleLink;
-      } else {
-          formTitle.innerText = translations[currentLang].formTitleRegister;
-          messageIntro.innerText = translations[currentLang].messageRegister;
-          submitBtn.innerHTML = `${translations[currentLang].submitBtnRegister} <i class="fas fa-user-plus"></i>`;
-          document.querySelector('.toggle-area span').innerText = translations[currentLang].togglePromptHasAccount;
-          toggleModeLink.innerText = translations[currentLang].toggleLinkHasAccount;
-      }
-  }
-
-  // --- (دوال مساعدة جديدة) ---
-  
-  // (دالة لإظهار الـ Toast)
-  function showToast(message, type = 'success', duration = 5000) {
-      if (toastTimer) clearTimeout(toastTimer);
-      
-      toastTitle.innerHTML = message; // (استخدام innerHTML للسماح بـ <br>)
-      globalToast.className = ''; // (إزالة الكلاسات القديمة)
-      globalToast.classList.add(type); // (إضافة success أو error)
-      globalToast.classList.add('show');
-      
-      // (إذا كانت المدة 0، الرسالة تبقى (للأخطاء))
-      // (إذا كانت المدة > 0، تختفي (للنجاح))
-      if (duration > 0) {
-          toastTimer = setTimeout(() => {
-              globalToast.classList.remove('show');
-          }, duration);
-      }
-  }
-
-  // (دالة لإخفاء الـ Toast عند الضغط على X)
-  toastCloseBtn.addEventListener('click', () => {
-      if (toastTimer) clearTimeout(toastTimer);
-      globalToast.classList.remove('show');
-  });
-
-  // (دالة لإخفاء جميع أخطاء الحقول)
-  function clearFieldErrors() {
-      firstNameError.style.display = 'none';
-      lastNameError.style.display = 'none';
-      emailError.style.display = 'none';
-      passwordError.style.display = 'none';
-      confirmPasswordError.style.display = 'none';
-      termsError.style.display = 'none';
-  }
-
-  // --- الدوال المساعدة ---
-  function toggleMode() {
-    isLoginMode = !isLoginMode;
-    clearFieldErrors(); // (إخفاء الأخطاء عند التبديل)
-    globalToast.classList.remove('show'); // (إخفاء الـ Toast عند التبديل)
     
-    if (isLoginMode) {
-      nameFields.style.display = 'none';
-      confirmPasswordContainer.style.display = 'none'; // (استخدام الحاوية)
-      passwordInput.setAttribute('autocomplete', 'new-password');
-      firstNameInput.removeAttribute('required');
-      lastNameInput.removeAttribute('required');
-      confirmPasswordInput.removeAttribute('required');
-    } else {
-      nameFields.style.display = 'flex';
-      confirmPasswordContainer.style.display = 'block'; // (استخدام الحاوية)
-      passwordInput.setAttribute('autocomplete', 'new-password');
-      firstNameInput.setAttribute('required', 'required');
-      lastNameInput.setAttribute('required', 'required');
-      confirmPasswordInput.setAttribute('required', 'required');
-    }
-    updateFormContent();
-  }
-  
-  // --- معالجات الأحداث ---
-  
-  document.querySelectorAll('.toggle-password').forEach(button => {
-      button.addEventListener('click', () => {
-          const targetId = button.dataset.target;
-          const targetInput = document.getElementById(targetId);
-          const icon = button.querySelector('i');
-          
-          if (targetInput.type === 'password') {
-              targetInput.type = 'text';
-              icon.classList.remove('fa-eye-slash');
-              icon.classList.add('fa-eye');
-          } else {
-              targetInput.type = 'password';
-              icon.classList.remove('fa-eye');
-              icon.classList.add('fa-eye-slash');
-          }
-      });
-  });
+    <a href="support.html" class="support-fab" title="تواصل مع الدعم"><i class="fas fa-headset"></i></a>
 
-  toggleModeLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleMode();
-  });
-  
-  authForm.addEventListener('submit', async function(e){
-    e.preventDefault();
-    clearFieldErrors(); // (تنظيف الأخطاء القديمة)
-    globalToast.classList.remove('show'); // (إخفاء الـ Toast القديم)
-    
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    
-    // --- (التحقق الشامل يبدأ هنا) ---
-    
-    if (!acceptTermsCheckbox.checked) {
-        termsError.textContent = translations[currentLang].termsError;
-        termsError.style.display = 'block';
-        return;
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        emailError.textContent = translations[currentLang].invalidEmail;
-        emailError.style.display = 'block';
-        return;
-    }
+    <div id="toast-container"></div>
 
-    if (!isLoginMode) {
-        const confirmPassword = confirmPasswordInput.value;
-        const firstName = firstNameInput.value.trim();
-        const lastName = lastNameInput.value.trim();
-        const nameRegex = /^[a-zA-Z\u0600-\u06FF\s]*$/; 
-        const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$_@+\-])[A-Za-z\d#$_@+\-]{8,}$/;
+    <script>
+        if (window.location.protocol === 'file:') {
+            alert("تنبيه هام: لا يمكنك تشغيل هذا الملف بالنقر المباشر (file://) لأن جوجل تمنع ذلك.\n\nيجب تشغيل الملف عبر سيرفر محلي (Live Server) لكي يعمل تسجيل الدخول.");
+        }
+    </script>
 
-        let hasError = false;
+    <script>
+        const COOLDOWN_TIME = 60; 
 
-        if (!firstName) {
-            firstNameError.textContent = translations[currentLang].nameRequiredError;
-            firstNameError.style.display = 'block';
-            hasError = true;
-        } else if (firstName.length > 7) {
-            firstNameError.textContent = translations[currentLang].nameTooLong;
-            firstNameError.style.display = 'block';
-            hasError = true;
-        } else if (!nameRegex.test(firstName)) {
-            firstNameError.textContent = translations[currentLang].nameInvalidChars;
-            firstNameError.style.display = 'block';
-            hasError = true;
+        // إظهار الإشعار
+        function showToast(type, message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast-alert toast-${type} toast-in`;
+            
+            let icon = '';
+            if (type === 'error') icon = '<i class="fas fa-times-circle"></i>';
+            else if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
+            else if (type === 'warning') icon = '<i class="fas fa-exclamation-triangle"></i>';
+
+            toast.innerHTML = `<div class="toast-content">${icon}<span>${message}</span></div>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.replace('toast-in', 'toast-out');
+                setTimeout(() => { toast.remove(); }, 500); 
+            }, 4000); 
         }
 
-        if (!lastName) {
-            lastNameError.textContent = translations[currentLang].nameRequiredError;
-            lastNameError.style.display = 'block';
-            hasError = true;
-        } else if (lastName.length > 7) {
-            lastNameError.textContent = translations[currentLang].nameTooLong;
-            lastNameError.style.display = 'block';
-            hasError = true;
-        } else if (!nameRegex.test(lastName)) {
-            lastNameError.textContent = translations[currentLang].nameInvalidChars;
-            lastNameError.style.display = 'block';
-            hasError = true;
+        // التبديل بين الواجهات
+        function swap(viewName) {
+            ['login','signup','reset','verify'].forEach(v => {
+                const el = document.getElementById('view-'+v);
+                if(el) el.classList.add('hidden');
+            });
+            document.getElementById('view-' + viewName).classList.remove('hidden');
         }
 
-        if (password !== confirmPassword) {
-            confirmPasswordError.textContent = translations[currentLang].passwordMatchError;
-            confirmPasswordError.style.display = 'block';
-            hasError = true;
+        // إظهار كلمة السر
+        function toggleP(id, icon) {
+            let x = document.getElementById(id);
+            if (x.type === "password") { x.type = "text"; icon.classList.remove("fa-eye"); icon.classList.add("fa-eye-slash"); } 
+            else { x.type = "password"; icon.classList.add("fa-eye"); icon.classList.remove("fa-eye-slash"); }
         }
-        
-        if (!passRegex.test(password)) {
-            passwordError.textContent = translations[currentLang].passwordPolicy;
-            passwordError.style.display = 'block';
-            hasError = true;
+
+        // إدارة المؤقت
+        function startCooldown(btnId, storageKey) {
+            const btn = document.getElementById(btnId);
+            if(!btn) return;
+
+            const expireTime = Date.now() + (COOLDOWN_TIME * 1000);
+            localStorage.setItem(storageKey, expireTime);
+            disableBtn(btn, expireTime);
         }
-        
-        if(hasError) return; // (إيقاف الإرسال إذا كان هناك أي خطأ)
-    }
-    // --- (التحقق الشامل ينتهي هنا) ---
 
+        function disableBtn(btn, expireTime) {
+            btn.disabled = true;
+            const interval = setInterval(() => {
+                const now = Date.now();
+                const left = Math.ceil((expireTime - now) / 1000);
+                if (left <= 0) {
+                    clearInterval(interval);
+                    btn.disabled = false;
+                    btn.innerText = (btn.id === 'btnReset') ? "إرسال الرابط" : "إعادة إرسال رابط التفعيل";
+                    localStorage.removeItem(btn.id === 'btnReset' ? 'resetCooldown' : 'verifyCooldown');
+                } else {
+                    btn.innerText = `انتظر ${left} ثانية...`;
+                }
+            }, 1000);
+        }
 
-    submitBtn.disabled = true;
-    loadingSpinner.style.display = 'block';
-
-    try {
-      if (isLoginMode) {
-        // ********************************
-        // * وضع تسجيل الدخول
-        // ********************************
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        
-        showToast(translations[currentLang].loginSuccess, 'success', 5000);
-        
-        setTimeout(() => {
-             window.location.replace("menu.html"); 
-        }, 1500); // (تأخير بسيط لرؤية الرسالة)
-        
-      } else {
-        // ********************************
-        // * وضع إنشاء الحساب
-        // ********************************
-        
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        const fullName = `${firstNameInput.value.trim()} ${lastNameInput.value.trim()}`;
-        
-        await updateProfile(user, {
-            displayName: fullName
+        document.addEventListener("DOMContentLoaded", () => {
+            const resetTime = localStorage.getItem('resetCooldown');
+            if(resetTime && parseInt(resetTime) > Date.now()) disableBtn(document.getElementById('btnReset'), parseInt(resetTime));
+            const verifyTime = localStorage.getItem('verifyCooldown');
+            if(verifyTime && parseInt(verifyTime) > Date.now()) disableBtn(document.getElementById('btnResendVerify'), parseInt(verifyTime));
         });
-        
-        // (إضافة البيانات الأساسية جداً عند إنشاء الحساب)
-        update(ref(db, 'users/' + user.uid), { 
-            timestamp: Date.now(),
-            bio: "",
-            lastUpdated: Date.now()
-        });
-        
-        await sendEmailVerification(user); 
-        
-        const registerSuccessMsg = translations[currentLang].registerSuccess.replace('{email}', email);
-        showToast(registerSuccessMsg, 'success', 10000); // (10 ثواني لقراءة الرسالة)
-        
-        setTimeout(() => {
-             window.location.replace("menu.html"); 
-        }, 3000); 
-      }
+    </script>
 
-    } catch(error){
-      let errorMessage = translations[currentLang].firebaseError;
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = translations[currentLang].emailInUse;
-      } else if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-        errorMessage = translations[currentLang].authFailed;
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = translations[currentLang].passwordWeak;
-      }
-      
-      // * (إظهار الخطأ العام في الـ Toast)
-      showToast(errorMessage, 'error', 0); // (0 = يبقى ولا يختفي)
-      
-    } finally {
-      submitBtn.disabled = false;
-      loadingSpinner.style.display = 'none';
-    }
-  });
+    <script type="module">
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-  // التحقق من حالة المستخدم عند تحميل الصفحة
-  onAuthStateChanged(auth, user => {
-      if (user) {
-          window.location.replace("menu.html");
-      } else {
-          if (isLoginMode === false) { 
-              toggleMode(); 
-          }
-          setLanguage(currentLang);
-      }
-  });
-  
-</script>
+        // 1. إعدادات مشروعك (تم دمجها هنا)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
+        };
+
+        // 2. تشغيل الخدمات
+        let app, auth, database;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            database = getDatabase(app);
+            console.log("تم الاتصال بـ Firebase بنجاح");
+        } catch (e) {
+            showToast('error', 'فشل الاتصال بالسيرفر. تأكد من الإنترنت.');
+        }
+
+        // دالة مساعدة للخروج
+        window.signOutAndBack = async () => {
+            await signOut(auth);
+            showToast('success', 'تم تسجيل الخروج.');
+            swap('login');
+        };
+
+        // 3. زر تسجيل الدخول (يعمل بحدث النقر Click)
+        const btnLogin = document.getElementById('btnLogin');
+        if(btnLogin) {
+            btnLogin.addEventListener('click', async () => {
+                const form = document.getElementById('formLogin');
+                if(!form.checkValidity()) {
+                    showToast('error', 'البيانات ناقصة أو غير صحيحة.');
+                    form.reportValidity(); 
+                    return;
+                }
+                
+                try {
+                    btnLogin.innerText = "جاري التحقق..."; btnLogin.disabled = true;
+                    const email = document.getElementById('emailLogin').value;
+                    const pass = document.getElementById('passLogin').value;
+
+                    const userCred = await signInWithEmailAndPassword(auth, email, pass);
+                    
+                    if(!userCred.user.emailVerified) {
+                        showToast('warning', 'حسابك غير مفعل.');
+                        swap('verify');
+                        btnLogin.innerText = "دخول آمن"; btnLogin.disabled = false;
+                        return;
+                    }
+
+                    showToast('success', 'تم الدخول بنجاح!');
+                    window.location.href = "menu.html";
+                } catch(err) {
+                    let msg = "بيانات الدخول خاطئة.";
+                    if(err.code === 'auth/too-many-requests') msg = "الحساب محظور مؤقتاً.";
+                    showToast('error', msg);
+                    btnLogin.innerText = "دخول آمن"; btnLogin.disabled = false;
+                }
+            });
+        }
+
+        // 4. زر إنشاء حساب
+        const btnSignup = document.getElementById('btnSignup');
+        if(btnSignup) {
+            btnSignup.addEventListener('click', async () => {
+                const form = document.getElementById('formSignup');
+                if(!form.checkValidity()) {
+                    showToast('error', 'أكمل البيانات بشكل صحيح.');
+                    form.reportValidity();
+                    return;
+                }
+                if(!document.getElementById('agreeTerms').checked) {
+                    showToast('error', 'يجب الموافقة على الشروط.');
+                    return;
+                }
+
+                try {
+                    btnSignup.innerText = "جاري الإنشاء..."; btnSignup.disabled = true;
+                    const name = document.getElementById('nameReg').value;
+                    const email = document.getElementById('emailReg').value;
+                    const pass = document.getElementById('passReg').value;
+
+                    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+                    await updateProfile(userCred.user, {displayName: name});
+                    await sendEmailVerification(userCred.user);
+
+                    startCooldown('btnResendVerify', 'verifyCooldown');
+                    showToast('success', 'تم! تفقد بريدك للتفعيل.');
+                    setTimeout(() => swap('verify'), 1500);
+                } catch(err) {
+                    let msg = "خطأ في الإنشاء.";
+                    if(err.code === 'auth/email-already-in-use') msg = "البريد مستخدم مسبقاً.";
+                    if(err.code === 'auth/weak-password') msg = "كلمة السر ضعيفة.";
+                    showToast('error', msg);
+                    btnSignup.innerText = "إنشاء الحساب"; btnSignup.disabled = false;
+                }
+            });
+        }
+
+        // 5. زر استعادة كلمة السر
+        const btnReset = document.getElementById('btnReset');
+        if(btnReset) {
+            btnReset.addEventListener('click', async () => {
+                const form = document.getElementById('formReset');
+                if(!form.checkValidity()) { form.reportValidity(); return; }
+
+                try {
+                    btnReset.innerText = "جاري..."; btnReset.disabled = true;
+                    const email = document.getElementById('emailReset').value;
+                    await sendPasswordResetEmail(auth, email, {url: 'https://skydata.casacam.net/password.back'});
+                    startCooldown('btnReset', 'resetCooldown');
+                    showToast('success', 'تم إرسال الرابط.');
+                } catch(err) {
+                    showToast('error', 'البريد غير صحيح.');
+                    if(!localStorage.getItem('resetCooldown')) { btnReset.innerText = "إرسال الرابط"; btnReset.disabled = false; }
+                }
+            });
+        }
+
+        // 6. زر إعادة التفعيل
+        const btnResendVerify = document.getElementById('btnResendVerify');
+        if(btnResendVerify) {
+            btnResendVerify.addEventListener('click', async () => {
+                if(auth.currentUser) {
+                    try {
+                        await sendEmailVerification(auth.currentUser);
+                        startCooldown('btnResendVerify', 'verifyCooldown');
+                        showToast('success', 'تم الإرسال.');
+                    } catch(err) { showToast('warning', 'انتظر قليلاً.'); }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

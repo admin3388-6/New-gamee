@@ -1,204 +1,323 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="pageTitle">عن Skydata - Skydata</title>
+    
+    <title>SkyData - من نحن</title>
+    <meta name="description" content="تعرف على SkyData، المنصة العربية الرائدة للأدوات الرقمية المجانية. نحن نقدم حلولاً ذكية وسريعة للجميع.">
+    <meta name="keywords" content="من نحن, عن الموقع, SkyData, فريق العمل, أدوات مجانية, about us">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
-    });
-  });
-</script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* ==============================================
+           1. أساسيات الصفحة (Standard)
+           ============================================== */
         body {
-            font-family: Arial, sans-serif; direction: rtl; 
-            background-color: #121212; color: #e0e0e0;
-            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; flex-grow: 1; }
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .logo-container { display: flex; align-items: center; }
-        .logo-container img { height: 40px; margin-left: 10px; }
-        .lang-switcher { display: flex; }
-        .lang-switcher a {
-            text-decoration: none; color: #007bff; margin: 0 5px;
-            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
-        }
-        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
 
-        footer {
-            background-color: #1e1e1e; padding: 20px;
-            text-align: center; margin-top: auto;
-            border-top: 1px solid #333;
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+            box-sizing: border-box;
         }
+        *:focus { outline: none; border-color: transparent !important; }
+
+        /* الهيدر */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* القائمة الجانبية */
+        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
+        .hamburger input { display: none; }
+        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line-top-bottom { stroke-dasharray: 12 63; }
+        .hamburger input:checked + svg { transform: rotate(-45deg); }
+        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
+
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
+        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
+        .social-links a:hover { color: #00aaff; }
+        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .footer-nav a { color: #ccc; font-size: 13px; }
+        .copyright { font-size: 12px; color: #666; }
+
+        /* ==============================================
+           2. تنسيقات صفحة "من نحن" (مراجعة)
+           ============================================== */
+
+        .container-about { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        .about-box {
+            background-color: #111a30; padding: 40px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2a3a5a; color: #e0e0e0; line-height: 1.8; text-align: center;
+        }
+
+        h1.main-title { color: #00aaff; font-size: 32px; margin-bottom: 20px; }
         
-        main { text-align: right; }
-        .content-box {
-            background-color: #1e1e1e; padding: 30px;
-            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease;
-            line-height: 1.7;
-        }
-        .content-box h1 { 
-            color: #ffffff; 
-            margin-bottom: 20px; 
-            text-align: center; 
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-        }
-        .content-box h2 {
-            color: #007bff;
-            margin-top: 30px;
-        }
-        .content-box p {
-            font-size: 1.1em;
-            color: #e0e0e0;
-        }
-        /* (جديد) تصميم شعار في وسط الصفحة */
+        /* تعديل الشعار الرئيسي */
         .about-logo {
-            width: 150px;
-            height: 150px;
-            border-radius: 25px;
-            margin: 10px auto 20px auto;
-            display: block;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            width: auto; height: 50px; margin: 0 auto 30px auto;
+            display: block; 
         }
 
-        .cta-button {
-            display: inline-block; background-color: #007bff; color: #ffffff;
-            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
-            text-decoration: none; border-radius: 5px; border: none;
-            cursor: pointer; 
-            transition: all 0.3s ease;
-            margin: 5px;
-        }
+        h2 { color: #fff; font-size: 22px; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #2a3a5a; display: inline-block; padding-bottom: 5px; }
         
-        .back-button { 
-            background-color: #555; margin-top: 50px; 
-            font-size: 1.1em; padding: 10px 20px;
-            display: inline-block;
-        }
-        .back-button:hover { background-color: #444; }
+        p { margin-bottom: 15px; font-size: 16px; color: #ccc; max-width: 800px; margin-left: auto; margin-right: auto; text-align: justify; }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .container { padding: 10px; }
-            header { padding: 10px 15px; }
-            .content-box { padding: 20px; }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; margin-top: 30px;
         }
-        @media (max-width: 380px) {
-            .logo-container img { height: 30px; }
+        .feature-card {
+            background: #0e1624; padding: 20px; border-radius: 10px; border: 1px solid #2a3a5a; transition: 0.3s;
         }
+        .feature-card:hover { transform: translateY(-5px); border-color: #00aaff; }
+        .feature-icon { font-size: 30px; color: #00aaff; margin-bottom: 10px; }
+        .feature-title { font-weight: bold; color: #fff; margin-bottom: 5px; }
 
     </style>
-    </head>
+</head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
-        </div>
-        <div class="lang-switcher">
-            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
         </div>
     </header>
 
-    <div class="container">
-        
-        <main>
-            <div class="content-box">
-                <h1 data-lang-key="mainTitle">عن Skydata</h1>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
 
-                <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata" class="about-logo">
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
                 
-                <h2 data-lang-key="missionTitle">مهمتنا</h2>
-                <p data-lang-key="missionText1">
-                    (هذا نص مؤقت، قم باستبداله بالنصوص الخاصة بك). مهمتنا في Skydata هي توفير أدوات صور سحابية قوية ومجانية وسهلة الاستخدام للجميع. نحن نؤمن بأن الأدوات الاحترافية يجب أن تكون متاحة للجميع، وليس فقط للشركات الكبرى.
-                </p>
-                
-                <h2 data-lang-key="privacyTitle">التزامنا بالخصوصية</h2>
-                <p data-lang-key="privacyText1">
-                    (نص مؤقت) نحن نأخذ خصوصيتك على محمل الجد. تم تصميم غالبية أدواتنا لتعمل بالكامل "من جانب العميل" (Client-Side). هذا يعني أن ملفاتك وصورك لا تلمس خوادمنا أبداً، كل المعالجة تحدث على جهازك أنت.
-                </p>
-                <p data-lang-key="privacyText2">
-                    (نص مؤقت) بالنسبة للأدوات التي تتطلب رفع (مثل "صورة إلى رابط")، فإننا نستخدم واجهات برمجة تطبيقات (APIs) موثوقة ونوضح ذلك بشفافية كاملة في صفحة سياسة الخصوصية.
-                </p>
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
+        </div>
+    </nav>
+
+    <main class="container-about">
+        
+        <div class="about-box">
+            <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="شعار Skydata" class="about-logo">
+            
+            <h1 class="main-title">عن SkyData</h1>
+
+            <h2>من نحن؟</h2>
+            <p>
+                SkyData هي منصة عربية شاملة تهدف إلى توفير أدوات رقمية للجميع مجاناً نحن نؤمن بأن التكنولوجيا يجب أن تكون متاحة للجميع، لذلك قمنا بجمع أكثر من 50 أداة في مكان واحد، بدءاً من الذكاء الاصطناعي، مروراً بمعالجة الصور، وصولاً إلى أدوات المطورين
+            </p>
+            
+            <h2>مهمتنا</h2>
+            <p>
+                نسعى لتبسيط المهام اليومية المعقدة بدلاً من تثبيت برامج ثقيلة أو دفع رسوم اشتراك باهظة، يمكنك إنجاز مهامك في ثوانٍ عبر متصفحك نحن نركز على السرعة والخصوصية وسهولة الاستخدام
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-lock feature-icon"></i>
+                    <div class="feature-title">خصوصية تامة</div>
+                    <div>معظم الأدوات تعمل محلياً دون رفع الملفات</div>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt feature-icon"></i>
+                    <div class="feature-title">سرعة فائقة</div>
+                    <div>أداء سريع واستجابة فورية لجميع الأدوات</div>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle feature-icon"></i>
+                    <div class="feature-title">مجاني 100%</div>
+                    <div>لا رسوم خفية، لا قيود مزعجة</div>
+                </div>
             </div>
 
-            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
-        </main>
-        
-    </div> <footer style="margin-top: auto;">
-        </footer>
+        </div>
 
+    </main>
 
     <script>
-        // --- 1. قاموس الترجمة ---
-        const translations = {
-            "ar": {
-                "pageTitle": "عن Skydata - Skydata",
-                "mainTitle": "عن Skydata",
-                "missionTitle": "مهمتنا",
-                "missionText1": "(هذا نص مؤقت، قم باستبداله بالنصوص الخاصة بك). مهمتنا في Skydata هي توفير أدوات صور سحابية قوية ومجانية وسهلة الاستخدام للجميع. نحن نؤمن بأن الأدوات الاحترافية يجب أن تكون متاحة للجميع، وليس فقط للشركات الكبرى.",
-                "privacyTitle": "التزامنا بالخصوصية",
-                "privacyText1": "(نص مؤقت) نحن نأخذ خصوصيتك على محمل الجد. تم تصميم غالبية أدواتنا لتعمل بالكامل \"من جانب العميل\" (Client-Side). هذا يعني أن ملفاتك وصورك لا تلمس خوادمنا أبداً، كل المعالجة تحدث على جهازك أنت.",
-                "privacyText2": "(نص مؤقت) بالنسبة للأدوات التي تتطلب رفع (مثل \"صورة إلى رابط\")، فإننا نستخدم واجهات برمجة تطبيقات (APIs) موثوقة ونوضح ذلك بشفافية كاملة في صفحة سياسة الخصوصية.",
-                "backToHome": "العودة للرئيسية"
-            },
-            "en": {
-                "pageTitle": "About Us - Skydata",
-                "mainTitle": "About Skydata",
-                "missionTitle": "Our Mission",
-                "missionText1": "(This is placeholder text, replace it with your own). Our mission at Skydata is to provide powerful, free, and easy-to-use cloud image tools for everyone. We believe professional tools should be accessible to all, not just large corporations.",
-                "privacyTitle": "Our Commitment to Privacy",
-                "privacyText1": "(Placeholder text) We take your privacy seriously. The majority of our tools are designed to be entirely \"Client-Side\". This means your files and images never touch our servers; all processing happens on your own device.",
-                "privacyText2": "(Placeholder text) For tools that require an upload (like \"Image to Link\"), we use trusted APIs and state this with full transparency in our privacy policy.",
-                "backToHome": "Back to Home"
-            }
+        // --- فتح/إغلاق القائمة ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            projectId: "skydata-ai"
         };
 
-        // --- 2. متغير اللغة الحالي ---
-        let currentLang = 'ar'; 
-
-        // --- 3. دالة تبديل اللغة ---
-        window.setLanguage = function(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-
-            document.querySelectorAll('[data-lang-key]').forEach(element => {
-                const key = element.getAttribute('data-lang-key');
-                if (translations[lang][key]) {
-                    element.innerHTML = translations[lang][key];
-                }
-            });
-        }
-        
-        // --- 4. تشغيل الصفحة ---
-        // (لا حاجة لـ DOMContentLoaded لأن السكريبت في نهاية الصفحة)
-        setLanguage(currentLang);
-        
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const authLink = document.getElementById('auth-link');
+            if (authLink) {
+                const ico = authLink.querySelector('i'); const txt = authLink.querySelector('span');
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authLink.href = 'menu.html'; ico.className = 'fas fa-user-circle'; txt.textContent = 'ملف الشخصي';
+                    } else {
+                        authLink.href = 'login.html'; ico.className = 'fas fa-sign-in-alt'; txt.textContent = 'تسجيل الدخول';
+                    }
+                });
+            }
+        } catch (e) { console.error("Firebase Error:", e); }
     </script>
-    </body>
+
+</body>
 </html>

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - تحويل فيديو إلى صوت</title>
+    <meta name="description" content="أداة مجانية لاستخراج الصوت من الفيديو وتحويله إلى ملف صوتي قابل للتنزيل والاستماع.">
+    <meta name="keywords" content="video to mp3, extract audio, convert video to audio, تحويل فيديو لصوت, استخراج الصوت, SkyData">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,7 +45,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -65,7 +65,7 @@
 
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
+        /* زر القائمة */
         .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -74,13 +74,16 @@
         .hamburger input:checked + svg { transform: rotate(-45deg); }
         .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
+        /* القائمة الجانبية */
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,41 +93,89 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة تحويل الصوت
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 800px; margin: 0 auto; padding: 20px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
+            background-color: #111a30; padding: 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            border: 1px solid #2a3a5a; text-align: center;
+        }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; }
+
+        /* منطقة الرفع */
+        #video-input { display: none; }
+        .file-upload-label {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background-color: #0e1624; color: #fff; border: 2px dashed #2a3a5a;
+            padding: 40px; border-radius: 10px; cursor: pointer; transition: 0.3s;
+            gap: 15px; margin-bottom: 20px;
+        }
+        .file-upload-label:hover { border-color: #00aaff; background: #152036; }
+        .file-upload-label i { font-size: 40px; color: #00aaff; }
+        .upload-hint { font-size: 13px; color: #777; margin-top: 5px; }
+
+        /* مشغل الصوت والنتيجة */
+        #result-area { display: none; margin-top: 30px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        audio {
+            width: 100%; margin-bottom: 20px; border-radius: 30px;
+            filter: invert(1) hue-rotate(180deg); /* لتتناسب مع الوضع المظلم */
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        .file-info {
+            background: #0e1624; padding: 10px; border-radius: 8px;
+            margin-bottom: 15px; color: #ccc; font-size: 14px; border: 1px solid #2a3a5a;
         }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        /* أزرار التحكم */
+        .action-row { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        
+        .btn-action {
+            padding: 12px 30px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; transition: 0.2s; min-width: 150px;
         }
+        .btn-convert { background: #00aaff; color: #111; }
+        .btn-convert:hover { background: #fff; }
+        
+        .btn-download { background: #27ae60; color: #fff; }
+        .btn-download:hover { background: #2ecc71; }
+        
+        .btn-reset { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-reset:hover { background: #ff4d4d; color: #fff; }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        /* التحميل */
+        #progress-area { display: none; margin: 20px 0; }
+        .progress-bar {
+            width: 100%; height: 10px; background: #1f2d4d; border-radius: 5px; overflow: hidden;
+            border: 1px solid #2a3a5a;
         }
+        .progress-fill {
+            height: 100%; background: #00aaff; width: 0%; transition: width 0.3s ease;
+        }
+        .progress-text { color: #aaa; font-size: 12px; margin-top: 5px; }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        /* عنصر فيديو مخفي للاستخراج */
+        #hidden-video { display: none; }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #e74c3c; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 7000;
         }
-        .btn-back:hover { background: #fff; }
+        #toast.show { opacity: 1; bottom: 50px; }
 
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <header class="main-header">
         <div class="container">
@@ -184,7 +235,7 @@
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
 
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
-                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="Mp3.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
                 <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
                 <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
@@ -237,14 +288,42 @@
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-file-audio"></i> تحويل الفيديو إلى صوت</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
-        </div>
+            <div id="upload-section">
+                <label for="video-input" class="file-upload-label" id="upload-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>اختر ملف الفيديو</span>
+                    <span class="upload-hint">الحد الأقصى: 100 ميجابايت | المدة: 5 دقائق</span>
+                </label>
+                <input type="file" id="video-input" accept="video/*">
+            </div>
 
+            <div id="progress-area">
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+                <p class="progress-text" id="progress-text">جاري المعالجة...</p>
+            </div>
+
+            <div id="result-area">
+                <div class="file-info" id="file-info"></div>
+                <audio id="audio-player" controls></audio>
+                
+                <div class="action-row">
+                    <a id="download-btn" class="btn-action btn-download" download="audio.wav">
+                        <i class="fas fa-download"></i> تحميل الملف
+                    </a>
+                    <button class="btn-action btn-reset" onclick="resetTool()">
+                        <i class="fas fa-redo"></i> تحويل آخر
+                    </button>
+                </div>
+            </div>
+
+            <video id="hidden-video" controls></video>
+
+        </div>
     </main>
+
+    <div id="toast">تنبيه</div>
 
     <script>
         // --- فتح/إغلاق القائمة ---
@@ -258,6 +337,169 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق التحويل ---
+        const videoInput = document.getElementById('video-input');
+        const uploadLabel = document.getElementById('upload-label');
+        const progressArea = document.getElementById('progress-area');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        const resultArea = document.getElementById('result-area');
+        const audioPlayer = document.getElementById('audio-player');
+        const downloadBtn = document.getElementById('download-btn');
+        const fileInfo = document.getElementById('file-info');
+        const hiddenVideo = document.getElementById('hidden-video');
+        const toast = document.getElementById('toast');
+
+        const MAX_SIZE = 100 * 1024 * 1024; // 100MB
+        const MAX_DURATION = 300; // 5 Minutes (300 seconds)
+
+        function showToast(msg) {
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        videoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            // 1. فحص الحجم
+            if(file.size > MAX_SIZE) {
+                showToast("عذراً، حجم الملف أكبر من 100 ميجابايت.");
+                this.value = "";
+                return;
+            }
+
+            // بدء التحميل والمعاينة للتحقق من المدة
+            uploadLabel.style.display = 'none';
+            progressArea.style.display = 'block';
+            progressText.innerText = "جاري فحص الملف...";
+            progressFill.style.width = "20%";
+
+            const url = URL.createObjectURL(file);
+            hiddenVideo.src = url;
+
+            hiddenVideo.onloadedmetadata = function() {
+                // 2. فحص المدة
+                if(hiddenVideo.duration > MAX_DURATION) {
+                    showToast("عذراً، مدة الفيديو تتجاوز 5 دقائق.");
+                    resetTool();
+                    return;
+                }
+                
+                // إذا نجح الفحص، ابدأ التحويل
+                progressText.innerText = "جاري استخراج الصوت...";
+                progressFill.style.width = "50%";
+                extractAudio(file);
+            };
+
+            hiddenVideo.onerror = function() {
+                showToast("ملف الفيديو غير صالح.");
+                resetTool();
+            };
+        });
+
+        function extractAudio(file) {
+            // استخدام Web Audio API لاستخراج الصوت
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                
+                audioContext.decodeAudioData(arrayBuffer, function(buffer) {
+                    progressFill.style.width = "90%";
+                    
+                    // تحويل Buffer إلى ملف WAV
+                    const wavBlob = bufferToWave(buffer, buffer.length);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    
+                    // عرض النتيجة
+                    audioPlayer.src = audioUrl;
+                    downloadBtn.href = audioUrl;
+                    // تغيير اسم الملف عند التنزيل
+                    downloadBtn.download = file.name.split('.')[0] + ".wav";
+                    
+                    fileInfo.innerText = `تم استخراج الصوت من: ${file.name}`;
+                    
+                    progressArea.style.display = 'none';
+                    resultArea.style.display = 'block';
+                    
+                }, function(e) {
+                    showToast("فشل في معالجة الصوت. قد تكون الصيغة غير مدعومة.");
+                    resetTool();
+                });
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        // دالة مساعدة لتحويل AudioBuffer إلى WAV Blob
+        function bufferToWave(abuffer, len) {
+            let numOfChan = abuffer.numberOfChannels,
+                length = len * numOfChan * 2 + 44,
+                buffer = new ArrayBuffer(length),
+                view = new DataView(buffer),
+                channels = [], i, sample,
+                offset = 0,
+                pos = 0;
+            
+            // كتابة ترويسة WAV
+            setUint32(0x46464952); // "RIFF"
+            setUint32(length - 8); // file length - 8
+            setUint32(0x45564157); // "WAVE"
+
+            setUint32(0x20746d66); // "fmt " chunk
+            setUint32(16); // length = 16
+            setUint16(1); // PCM (uncompressed)
+            setUint16(numOfChan);
+            setUint32(abuffer.sampleRate);
+            setUint32(abuffer.sampleRate * 2 * numOfChan); // avg. bytes/sec
+            setUint16(numOfChan * 2); // block-align
+            setUint16(16); // 16-bit (hardcoded in this function)
+
+            setUint32(0x61746164); // "data" - chunk
+            setUint32(length - pos - 4); // chunk length
+
+            // كتابة البيانات
+            for(i = 0; i < abuffer.numberOfChannels; i++)
+                channels.push(abuffer.getChannelData(i));
+
+            while(pos < length) {
+                for(i = 0; i < numOfChan; i++) {
+                    // تداخل القنوات (Interleave channels)
+                    sample = Math.max(-1, Math.min(1, channels[i][offset])); // clamp
+                    sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767)|0; // scale to 16-bit signed int
+                    view.setInt16(pos, sample, true); // write 16-bit sample
+                    pos += 2;
+                }
+                offset++;
+            }
+
+            return new Blob([buffer], {type: "audio/wav"});
+
+            function setUint16(data) {
+                view.setUint16(pos, data, true);
+                pos += 2;
+            }
+
+            function setUint32(data) {
+                view.setUint32(pos, data, true);
+                pos += 4;
+            }
+        }
+
+        function resetTool() {
+            videoInput.value = '';
+            hiddenVideo.src = '';
+            audioPlayer.src = '';
+            uploadLabel.style.display = 'flex';
+            progressArea.style.display = 'none';
+            resultArea.style.display = 'none';
+            progressFill.style.width = '0%';
+        }
+
     </script>
 
     <script type="module">

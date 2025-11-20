@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - محول Base64 (نصوص وصور)</title>
+    <meta name="description" content="أداة مجانية لتحويل النصوص والصور إلى صيغة Base64 والعكس. تدعم اللغة العربية والملفات الكبيرة.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,7 +26,7 @@
 
     <style>
         /* ==============================================
-           1. أساسيات الصفحة (Standard)
+           1. أساسيات الصفحة (Standard Design)
            ============================================== */
         body {
             background-color: #0b132b;
@@ -45,7 +44,7 @@
         }
         *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر */
+        /* الهيدر المثبت */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -65,7 +64,7 @@
 
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
+        /* زر القائمة (SVG Animation) */
         .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -74,13 +73,16 @@
         .hamburger input:checked + svg { transform: rotate(-45deg); }
         .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
+        /* القائمة الجانبية */
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
         .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
         .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
         .social-links a:hover { color: #00aaff; }
@@ -90,35 +92,88 @@
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           2. تنسيقات أداة Base64
            ============================================== */
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        .container-tool { max-width: 900px; margin: 0 auto; padding: 15px; }
 
         .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+            background-color: #111a30; padding: 25px;
+            border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #2a3a5a;
         }
+        
+        h1 { color: #00aaff; margin-bottom: 20px; text-align: center; font-size: 24px; }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* التبويبات */
+        .tabs { display: flex; margin-bottom: 20px; background: #0e1624; border-radius: 8px; overflow: hidden; border: 1px solid #2a3a5a; }
+        .tab-btn {
+            flex: 1; padding: 15px; background: transparent; border: none;
+            color: #ccc; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Cairo'; font-size: 15px;
         }
+        .tab-btn.active { background: #00aaff; color: #111a30; }
+        .tab-btn:hover:not(.active) { background: #1f2d4d; }
+        
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
 
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        /* مناطق النص */
+        .text-area-wrapper { position: relative; margin-bottom: 20px; }
+        .label-tag {
+            position: absolute; top: -12px; right: 15px; background: #111a30;
+            padding: 0 10px; color: #00aaff; font-size: 13px; font-weight: bold;
         }
+        
+        textarea {
+            width: 100%; height: 150px; background: #0e1624; color: #fff;
+            border: 1px solid #2a3a5a; border-radius: 8px; padding: 15px;
+            font-family: monospace; font-size: 14px; resize: vertical;
+            line-height: 1.5; word-break: break-all;
+        }
+        textarea:focus { border-color: #00aaff; }
+        
+        /* الأزرار */
+        .action-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        
+        .btn-action {
+            flex: 1; padding: 12px; border: none; border-radius: 6px;
+            font-weight: bold; cursor: pointer; font-size: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; transition: 0.2s; min-width: 120px;
+        }
+        .btn-blue { background: #00aaff; color: #111; }
+        .btn-blue:hover { background: #fff; }
+        .btn-copy { background: #27ae60; color: #fff; }
+        .btn-copy:hover { background: #2ecc71; }
+        .btn-clear { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-clear:hover { background: #ff4d4d; color: #fff; }
+        
+        /* قسم الصور */
+        #image-input { display: none; }
+        
+        .file-upload-label {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background-color: #0e1624; color: #fff; border: 2px dashed #2a3a5a;
+            padding: 30px; border-radius: 10px; cursor: pointer; transition: 0.3s;
+            text-align: center; gap: 10px; margin-bottom: 20px;
+        }
+        .file-upload-label:hover { border-color: #00aaff; background: #152036; }
+        .file-upload-label i { font-size: 40px; color: #00aaff; }
 
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        .preview-box {
+            text-align: center; margin-bottom: 20px; padding: 10px;
+            background: #0e1624; border-radius: 8px; border: 1px solid #2a3a5a;
+            display: none;
         }
+        .preview-box img { max-width: 100%; max-height: 300px; border-radius: 5px; }
 
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #27ae60; color: #fff; padding: 10px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 7000;
         }
-        .btn-back:hover { background: #fff; }
+        #toast.show { opacity: 1; bottom: 50px; }
 
     </style>
 </head>
@@ -207,7 +262,7 @@
                 <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
                 <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
                 <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
-                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="base64.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
                 <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
                 <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
                 <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
@@ -230,24 +285,77 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
     <main class="container-tool">
         
         <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
+            <h1><i class="fas fa-retweet"></i> محول Base64</h1>
             
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
-        </div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="text-tab"><i class="fas fa-font"></i> نصوص</button>
+                <button class="tab-btn" data-tab="image-tab"><i class="fas fa-image"></i> صور</button>
+            </div>
 
+            <div id="text-tab" class="tab-content active">
+                <div class="text-area-wrapper">
+                    <span class="label-tag">المدخلات (نص أو كود)</span>
+                    <textarea id="input-text" placeholder="اكتب النص العادي هنا، أو الصق كود Base64 لفك تشفيره..."></textarea>
+                </div>
+                <div class="action-row">
+                    <button class="btn-action btn-blue" onclick="encodeText()">
+                        <i class="fas fa-arrow-down"></i> تشفير (Encode)
+                    </button>
+                    <button class="btn-action btn-blue" onclick="decodeText()">
+                        <i class="fas fa-arrow-up"></i> فك (Decode)
+                    </button>
+                    <button class="btn-action btn-clear" onclick="clearText()">
+                        <i class="fas fa-trash"></i> مسح
+                    </button>
+                </div>
+                <div class="text-area-wrapper">
+                    <span class="label-tag" style="color:#2ecc71;">النتيجة</span>
+                    <textarea id="output-text" readonly style="border-color:#2ecc71; background:#0b1c2b;"></textarea>
+                    <button class="btn-action btn-copy" style="width:100%; margin-top:10px;" onclick="copyResult('output-text')">
+                        <i class="fas fa-copy"></i> نسخ
+                    </button>
+                </div>
+            </div>
+
+            <div id="image-tab" class="tab-content">
+                <div style="display:flex; flex-direction: column; gap:15px;">
+                    
+                    <label for="image-input" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>اختر صورة لتحويلها إلى كود</span>
+                    </label>
+                    <input type="file" id="image-input" accept="image/*">
+
+                    <div id="image-preview" class="preview-box">
+                        <img id="preview-img" src="" alt="Preview">
+                    </div>
+
+                    <div class="text-area-wrapper">
+                        <span class="label-tag">كود Base64 (للصورة)</span>
+                        <textarea id="output-image" placeholder="الصق كود Base64 هنا لعرض الصورة، أو سيظهر الكود هنا عند رفع صورة..." oninput="decodeImageFromText()"></textarea>
+                        <button class="btn-action btn-copy" style="width:100%; margin-top:10px;" onclick="copyResult('output-image')">
+                            <i class="fas fa-copy"></i> نسخ الكود
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </main>
 
+    <div id="toast">تم النسخ!</div>
+
     <script>
-        // --- فتح/إغلاق القائمة ---
+        // --- 1. القائمة الجانبية (مطابقة للملفات الأصلية) ---
         const menuCheckbox = document.getElementById('menu-checkbox');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -258,6 +366,108 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- 2. التبويبات ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // --- 3. منطق النصوص (UTF-8 Compatible) ---
+        function b64EncodeUnicode(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+                function toSolidBytes(match, p1) { return String.fromCharCode('0x' + p1); }));
+        }
+
+        function b64DecodeUnicode(str) {
+            try {
+                return decodeURIComponent(atob(str).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+            } catch(e) {
+                return "خطأ: الكود غير صالح أو مشفر بطريقة خاطئة.";
+            }
+        }
+
+        function encodeText() {
+            try {
+                const text = document.getElementById('input-text').value;
+                if(!text) return;
+                document.getElementById('output-text').value = b64EncodeUnicode(text);
+            } catch(e) { alert("خطأ في التحويل."); }
+        }
+
+        function decodeText() {
+            try {
+                const text = document.getElementById('input-text').value;
+                if(!text) return;
+                document.getElementById('output-text').value = b64DecodeUnicode(text);
+            } catch(e) { alert("الكود المدخل غير صالح."); }
+        }
+
+        function clearText() {
+            document.getElementById('input-text').value = '';
+            document.getElementById('output-text').value = '';
+        }
+
+        // --- 4. منطق الصور (إصلاح المشكلة) ---
+        const imageInput = document.getElementById('image-input');
+        const previewBox = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        const outputImage = document.getElementById('output-image');
+
+        // دالة: عند رفع صورة، حولها لكود واعرضها
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64 = event.target.result;
+                // عرض الصورة
+                previewImg.src = base64;
+                previewBox.style.display = 'block';
+                // وضع الكود في المربع
+                outputImage.value = base64;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // دالة: عند لصق كود في المربع، اعرض الصورة
+        function decodeImageFromText() {
+            const base64 = outputImage.value.trim();
+            if(!base64) {
+                previewBox.style.display = 'none';
+                return;
+            }
+
+            // محاولة عرض الكود كصورة
+            // إذا كان الكود لا يحتوي على data:image... نحاول إضافتها افتراضياً
+            if (!base64.startsWith('data:image')) {
+                // نفترض أنها jpeg أو png
+                previewImg.src = "data:image/png;base64," + base64; 
+            } else {
+                previewImg.src = base64;
+            }
+            previewBox.style.display = 'block';
+        }
+
+        // --- 5. أدوات مساعدة ---
+        function copyResult(id) {
+            const text = document.getElementById(id).value;
+            if(!text) return;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 1500);
+            });
+        }
+
     </script>
 
     <script type="module">

@@ -1,1751 +1,534 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-lang-key="pageTitle">SkyData - الصفحة الرئيسية</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
-    });
-  });
-</script>
-<style>
-  /* --- (جميع أكواد CSS كما هي تماماً - لا تغيير هنا) --- */
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  * { box-sizing: border-box; }
-  body { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    direction: rtl; 
-    background-color: #121212; 
-    color: #e0e0e0;
-    margin: 0; padding: 0; 
-    display:flex; flex-direction: column; 
-    align-items:center; min-height:100vh; 
-  }
-  
-  header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 15px 20px; background-color: #1e1e1e;
-      border-bottom: 1px solid #333;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      width: 100%;
-      z-index: 100;
-      position: fixed; 
-      top: 0;
-  }
-  .logo-container { display: flex; align-items: center; }
-  .logo-container img { height: 35px; margin-left: 10px; }
-  .lang-switcher { display: flex; align-items: center; }
-  .lang-switcher a { text-decoration: none; color: #007bff; margin: 0 3px; font-weight: bold; cursor: pointer; padding: 4px 7px; border-radius: 5px; transition: all 0.2s ease; }
-  .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
-  .container { 
-    background-color: #1e1e1e; 
-    padding: 20px; 
-    border-radius: 10px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
-    width: 95%; 
-    max-width: 500px; 
-    animation: fadeIn 0.5s ease-out;
-    display: none; 
-    margin-top: 80px; 
-    margin-bottom: 30px;
-  }
-  h2 { text-align:center; margin-bottom:25px; color: #ffffff; 
-       border-bottom: 2px solid #007bff; padding-bottom: 10px; }
-  
-  .profile-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-    background-color: #121212;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    width: 100%; 
-  }
-  .profile-details { display: flex; align-items: center; flex-wrap: wrap; }
-  .profile-img {
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    margin-left: 15px;
-    object-fit: cover;
-    border: 3px solid #007bff;
-    cursor: pointer; 
-  }
-  .profile-name { font-size: 1.3em; font-weight: bold; color: #fff; }
-  .subscription-area {
-      background-color: #121212;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 20px;
-      text-align: center; 
-      width: 100%; 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  }
-  
-  .modal-content {
-      background-color: #2a2a2a;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.7);
-      width: 90%; 
-      max-width: 450px; 
-      text-align: right;
-      position: relative;
-      max-height: 85vh; 
-      overflow-y: auto;   
-  }
-  
-  .modal-overlay {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: flex; justify-content: center; align-items: center; z-index: 1000;
-      opacity: 0; visibility: hidden; transition: opacity 0.3s ease;
-  }
-  .modal-overlay.active { opacity: 1; visibility: visible; }
-
-  .switch {
-    --switch-width: 46px;
-    --switch-height: 24px;
-    --switch-bg: rgb(131, 131, 131);
-    --switch-checked-bg: rgb(0, 218, 80);
-    --switch-offset: calc((var(--switch-height) - var(--circle-diameter)) / 2);
-    --switch-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
-    --circle-diameter: 18px;
-    --circle-bg: #fff;
-    --circle-shadow: 1px 1px 2px rgba(146, 146, 146, 0.45);
-    --circle-checked-shadow: -1px 1px 2px rgba(163, 163, 163, 0.45);
-    --circle-transition: var(--switch-transition);
-    --icon-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
-    --icon-cross-color: var(--switch-bg);
-    --icon-cross-size: 6px;
-    --icon-checkmark-color: var(--switch-checked-bg);
-    --icon-checkmark-size: 10px;
-    --effect-width: calc(var(--circle-diameter) / 2);
-    --effect-height: calc(var(--effect-width) / 2 - 1px);
-    --effect-bg: var(--circle-bg);
-    --effect-border-radius: 1px;
-    --effect-transition: all .2s ease-in-out;
-  }
-  .switch input { display: none; }
-  .switch { display: inline-block; }
-  .switch svg {
-    -webkit-transition: var(--icon-transition);
-    -o-transition: var(--icon-transition);
-    transition: var(--icon-transition);
-    position: absolute;
-    height: auto;
-  }
-  .switch .checkmark {
-    width: var(--icon-checkmark-size);
-    color: var(--icon-checkmark-color);
-    -webkit-transform: scale(0);
-    -ms-transform: scale(0);
-    transform: scale(0);
-  }
-  .switch .cross {
-    width: var(--icon-cross-size);
-    color: var(--icon-cross-color);
-  }
-  .slider {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    width: var(--switch-width);
-    height: var(--switch-height);
-    background: var(--switch-bg);
-    border-radius: 999px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    position: relative;
-    -webkit-transition: var(--switch-transition);
-    -o-transition: var(--switch-transition);
-    transition: var(--switch-transition);
-    cursor: pointer;
-  }
-  .circle {
-    width: var(--circle-diameter);
-    height: var(--circle-diameter);
-    background: var(--circle-bg);
-    border-radius: inherit;
-    -webkit-box-shadow: var(--circle-shadow);
-    box-shadow: var(--circle-shadow);
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-transition: var(--circle-transition);
-    -o-transition: var(--circle-transition);
-    transition: var(--circle-transition);
-    z-index: 1;
-    position: absolute;
-    left: var(--switch-offset);
-  }
-  .slider::before {
-    content: "";
-    position: absolute;
-    width: var(--effect-width);
-    height: var(--effect-height);
-    left: calc(var(--switch-offset) + (var(--effect-width) / 2));
-    background: var(--effect-bg);
-    border-radius: var(--effect-border-radius);
-    -webkit-transition: var(--effect-transition);
-    -o-transition: var(--effect-transition);
-    transition: var(--effect-transition);
-  }
-  .switch input:checked+.slider { background: var(--switch-checked-bg); }
-  .switch input:checked+.slider .checkmark {
-    -webkit-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-  }
-  .switch input:checked+.slider .cross {
-    -webkit-transform: scale(0);
-    -ms-transform: scale(0);
-    transform: scale(0);
-  }
-  .switch input:checked+.slider::before {
-    left: calc(100% - var(--effect-width) - (var(--effect-width) / 2) - var(--switch-offset));
-  }
-  .switch input:checked+.slider .circle {
-    left: calc(100% - var(--circle-diameter) - var(--switch-offset));
-    -webkit-box-shadow: var(--circle-checked-shadow);
-    box-shadow: var(--circle-checked-shadow);
-  }
-
-  .loader { 
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2em;
-    color: #888;
-  }
-  #toast-notification {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    width: 320px;
-    padding: 12px;
-    display: flex; 
-    flex-direction: row;
-    align-items: center;
-    justify-content: start;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px -3px #111;
-    position: fixed; 
-    bottom: 20px; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    z-index: 2000; 
-    transition: opacity 0.3s ease;
-  }
-  #toast-notification.success {
-    background: #E0F2E9;
-    border: 1px solid #28a745;
-  }
-  #toast-notification.success .toast-icon path { fill: #28a745; }
-  #toast-notification.success .toast-title { color: #155724; }
-  #toast-notification.success .toast-close path { fill: #155724; }
-  #toast-notification.error {
-    background: #FCE8DB;
-    border: 1px solid #EF665B;
-  }
-  #toast-notification.error .toast-icon path { fill: #EF665B; }
-  #toast-notification.error .toast-title { color: #71192F; }
-  #toast-notification.error .toast-close path { fill: #71192F; }
-  #toast-notification.warning {
-    background: #FFF8E1;
-    border: 1px solid #FFC107;
-  }
-  #toast-notification.warning .toast-icon path { fill: #FFC107; }
-  #toast-notification.warning .toast-title { color: #856404; }
-  #toast-notification.warning .toast-close path { fill: #856404; }
-  .toast-icon {
-    width: 20px;
-    height: 20px;
-    transform: translateY(-2px);
-    margin-right: 8px;
-    flex-shrink: 0; 
-  }
-  [dir="rtl"] .toast-icon { margin-right: 0; margin-left: 8px; }
-  .toast-title {
-    font-weight: 500;
-    font-size: 14px;
-    width: 100%; 
-  }
-  .toast-close {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    margin-left: auto;
-    flex-shrink: 0; 
-  }
-  [dir="rtl"] .toast-close { margin-left: 0; margin-right: auto; }
-  
-  .Btn {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition-duration: .3s;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-    background-color: rgb(255, 65, 65);
-    margin-top: 25px; 
-  }
-  .Btn .sign {
-    width: 100%;
-    transition-duration: .3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .Btn .sign svg { width: 17px; }
-  .Btn .sign svg path { fill: white; }
-  .Btn .text {
-    position: absolute;
-    right: 0%;
-    width: 0%;
-    opacity: 0;
-    color: white;
-    font-size: 1em; 
-    font-weight: 600;
-    transition-duration: .3s;
-  }
-  [dir="rtl"] .Btn .text { right: auto; left: 0; }
-  .Btn:hover {
-    width: 130px; 
-    border-radius: 40px;
-    transition-duration: .3s;
-  }
-  .Btn:hover .sign {
-    width: 30%;
-    transition-duration: .3s;
-    padding-left: 10px; 
-  }
-  [dir="rtl"] .Btn:hover .sign { padding-left: 0; padding-right: 10px; }
-  .Btn:hover .text {
-    opacity: 1;
-    width: 70%;
-    transition-duration: .3s;
-    padding-right: 15px; 
-  }
-  [dir="rtl"] .Btn:hover .text { padding-right: 0; padding-left: 15px; }
-  .Btn:active {
-    transform: translate(2px ,2px);
-  }
-  
-  .settings-card { 
-    width: 100%; 
-    background-color: rgba(36, 40, 50, 1);
-    background-image: linear-gradient(
-      139deg,
-      rgba(36, 40, 50, 1) 0%,
-      rgba(36, 40, 50, 1) 0%,
-      rgba(37, 28, 40, 1) 100%
-    );
-    user-select: none;
-    border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .settings-card .list {
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 0px;
-    margin: 0;
-  }
-  .settings-card .separator {
-    border-top: 1.5px solid #42434a;
-    margin: 5px 0; 
-  }
-  .settings-card .list .element > a, 
-  .settings-card .list .element > label {
-    display: flex;
-    align-items: center;
-    color: #7e8590;
-    gap: 10px;
-    transition: all 0.3s ease-out;
-    padding: 8px; 
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    text-decoration: none; 
-  }
-  .settings-card .list .element label svg,
-  .settings-card .list .element a svg,
-  .settings-card .list .element a i { 
-    width: 19px;
-    height: 19px;
-    transition: all 0.3s ease-out;
-    stroke: #7e8590; 
-    color: #7e8590; 
-  }
-  .settings-card .list .element label:hover,
-  .settings-card .list .element a:hover { 
-    background-color: var(--color);
-    color: var(--hover-color);
-  }
-  .settings-card .list .element label:active,
-  .settings-card .list .element a:active { 
-    transform: scale(0.96);
-  }
-  .settings-card .list .element label:hover svg,
-  .settings-card .list .element a:hover svg,
-  .settings-card .list .element a:hover i { 
-    stroke: var(--hover-storke);
-    color: var(--hover-storke); 
-  }
-
-  .save-button {
-    font-family: inherit;
-    font-size: 18px; 
-    background: #212121;
-    color: white;
-    fill: rgb(155, 153, 153);
-    padding: 0.7em 1em;
-    padding-left: 0.9em;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    border: none;
-    border-radius: 15px;
-    font-weight: 1000;
-    margin-top: 20px; 
-  }
-  .save-button span {
-    display: block;
-    margin-left: 0.3em;
-    transition: all 0.3s ease-in-out;
-  }
-  [dir="rtl"] .save-button span { margin-left: 0; margin-right: 0.3em; }
-  .save-button svg {
-    display: block;
-    transform-origin: center center;
-    transition: transform 0.3s ease-in-out;
-  }
-  .save-button:hover { background: #000; }
-  .save-button:hover .svg-wrapper {
-    transform: scale(1.25);
-    transition: 0.5s linear;
-  }
-  .save-button:hover svg {
-    transform: translateX(1.2em) scale(1.1);
-    fill: #fff;
-  }
-  [dir="rtl"] .save-button:hover svg { transform: translateX(-1.2em) scale(1.1); }
-  .save-button:hover span {
-    opacity: 0;
-    transition: 0.5s linear;
-  }
-  .save-button:active { transform: scale(0.95); }
-  .save-button:disabled { background: #444; cursor: not-allowed; } 
-
-  .btn-cont {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-    background-color: transparent; 
-    margin: 0;
-    border: none; 
-    border-radius: 10px;
-  }
-  .btn-cont .button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 5px;
-    position: relative;
-    transition: background-color 0.2s ease;
-  }
-  .btn-cont .button:hover { 
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  .settings-btn {
-    display: block;
-    transition: transform 0.4s ease-in;
-  }
-  .settings-btn:hover {
-    transform: rotate(60deg);
-  }
-  .tooltip { display: none; } 
-  
-  .modal-close-btn {
-    position: absolute;
-    top: 10px; 
-    left: 15px; 
-    background: none;
-    border: none;
-    font-size: 2em;
-    color: #777;
-    cursor: pointer;
-    transition: color 0.2s;
-    line-height: 1;
-    padding: 5px;
-  }
-  .modal-close-btn:hover { color: #fff; }
-  [dir="rtl"] .modal-close-btn { left: auto; right: 15px; } 
-  
-  .profile-pic-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  .profile-pic-container .profile-img { 
-    margin-left: 0; 
-    width: 80px; 
-    height: 80px; 
-  }
-  .upload-pic-btn {
-      display: inline-flex; 
-      align-items: center;
-      gap: 10px;
-      padding: 10px 15px;
-      background-color: #007bff;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      margin-top: 15px;
-      transition: background-color 0.2s;
-      border: none; 
-  }
-  .upload-pic-btn:hover { background-color: #0056b3; }
-
-  .modal-content input[type="text"],
-  .modal-content input[type="email"],
-  .modal-content textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #555;
-    background-color: #1e1e1e; 
-    color: #e0e0e0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1em;
-    margin-top: 5px;
-    box-sizing: border-box; 
-  }
-  .modal-content textarea {
-    resize: vertical; 
-    min-height: 80px;
-  }
-  .modal-content input:disabled,
-  .modal-content input[disabled] { 
-    background-color: #333 !important;
-    color: #777 !important;
-    opacity: 1; 
-  }
-  .modal-content label {
-    display: block;
-    margin-top: 15px;
-    font-weight: 600;
-    color: #aaa;
-  }
-  
-  #settings-form {
-    display: flex;
-    flex-direction: column;
-  }
-  #settings-form .save-button {
-    margin-top: 25px;
-    align-self: center; 
-  }
-  
-  #notifications-settings-modal .setting-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-  }
-  #notifications-settings-modal .setting-row p { margin: 0; }
-  #notifications-settings-modal .status-text {
-      font-size: 0.9em;
-      font-weight: bold;
-      padding: 5px 10px;
-      border-radius: 5px;
-  }
-  #notifications-settings-modal .status-text.subscribed {
-      color: #155724; background-color: #d4edda;
-  }
-  #notifications-settings-modal .status-text.unsubscribed {
-      color: #721c24; background-color: #f8d7da;
-  }
-  
-  .confirm-modal-content {
-      text-align: center;
-  }
-  .confirm-modal-content .icon {
-      font-size: 3em;
-      margin-bottom: 15px;
-  }
-  .confirm-modal-content .icon.warning { color: #fd7e14; }
-  
-  .confirm-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 25px;
-  }
-  .confirm-btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.1s ease;
-  }
-  .confirm-btn.yes-btn { background-color: #dc3545; color: white; }
-  .confirm-btn.no-btn { background-color: #6c757d; color: white; }
-  .confirm-btn:active { transform: scale(0.95); }
-  
-  #delete-account-modal-step2 .user-email-display {
-      background-color: #1e1e1e;
-      padding: 10px;
-      border-radius: 5px;
-      font-weight: bold;
-      text-align: center;
-      margin: 10px 0;
-      color: #fff;
-  }
-  #delete-account-modal-step2 input[type="email"] {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #555;
-      background-color: #333;
-      color: white;
-      text-align: center;
-  }
-  #delete-account-modal-step2 .confirm-btn.delete-btn {
-      background-color: #dc3545;
-      color: white;
-  }
-  #delete-account-modal-step2 .confirm-btn.delete-btn:disabled {
-      background-color: #555;
-      cursor: not-allowed;
-  }
-  
-  #profile-upload-modal h3 { margin-top: 15px; }
-  #settings-modal .modal-content { padding: 0; }
-  
-  .cta-button { 
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-    margin-top: 15px;
-    transition: background-color 0.2s;
-    border: none;
-    text-decoration: none;
-  }
-  
-  .modal-content h3 {
-    padding: 0 30px; 
-    margin-bottom: 20px;
-    text-align: center; 
-  }
-
-.error {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  width: 100%; 
-  padding: 12px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  background: #EF665B; 
-  border-radius: 8px;
-  box-shadow: 0px 0px 5px -3px #111;
-  margin-bottom: 20px; 
-  transition: background-color 0.5s ease; 
-}
-
-.error.success-banner {
-  background: #28a745; 
-}
-
-.error__icon {
-  width: 20px;
-  height: 20px;
-  transform: translateY(-2px);
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-[dir="rtl"] .error__icon {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-.error__icon path {
-  fill: #fff;
-}
-
-.error__title {
-  font-weight: 500;
-  font-size: 14px;
-  color: #fff;
-  flex-grow: 1; 
-}
-
-#resend-email-btn {
-  background: #fff;
-  color: #EF665B;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: auto; 
-  flex-shrink: 0;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap; 
-}
-[dir="rtl"] #resend-email-btn {
-    margin-left: 0;
-    margin-right: auto;
-}
-
-#resend-email-btn:hover {
-    background: #f0f0f0;
-}
-
-#resend-email-btn:disabled {
-  background: #aaa;
-  color: #777;
-  cursor: not-allowed;
-}
-
-.error.success-banner #resend-email-btn {
-    background: #fff;
-    color: #28a745;
-}
-.back-button {
-  display: inline-block; 
-  width: 100%;
-  text-align: center;
-  margin-top: 15px; 
-  background-color: #333; 
-  font-size: 1.1em;
-}
-.back-button:hover {
-  background-color: #444;
-}
-</style>
-
-<script type="module">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SkyData - لوحة التحكم</title>
     
-    // --- 1. IMPORTS (MUST BE AT TOP LEVEL) ---
-    // * ⬅️ (الإصلاح الأول) قمنا باستيراد الإعدادات الجاهزة من الملف الخارجي
-    import { app, database as db, auth } from '/rool/boomb/erdg/xoxo/Catchmeifyoucan/firebase-init.js';
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    // * ⬅️ استيراد الدوال التي نحتاجها فقط
-    import { signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, deleteUser, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-    import { get, ref, update, child, remove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
 
-    // --- 2. (تم حذف إعدادات Firebase المكررة) ---
-
-    // --- 3. GLOBAL VARS (TOP LEVEL) ---
-    const IMGBB_API_KEY = "f0ff703738276bb67fcc6b7f0a6778d5";
-    let currentLang = 'ar'; 
-    let currentUser = null;
-    let isSubscribed = false;
-    // let isWebPushSubscribed = false; // * ⬅️ (حذف 1) تم حذف متغير الويب
-    let lastProfileUpdate = 0;
-    let lastSubChange = 0;
-    // let lastWebPushSubChange = 0; // * ⬅️ (حذف 2) تم حذف متغير الويب
-    const UPDATE_RATE_LIMIT = 24 * 60 * 60 * 1000;
-    const SUB_COOLDOWN = 5 * 60 * 1000;
-    let toastTimer; 
-    let isDeletePending = false; 
-    let lastVerificationEmailTime = 0;
-    let cooldownTimer = null;
-
-    // --- 4. TRANSLATIONS (TOP LEVEL) ---
-    const translations = {
-      "ar": {
-          "pageTitle": "SkyData - الصفحة الرئيسية",
-          "profileTitle": "الـملف الـشخصي", 
-          "notifTitle": "إدارة الإشعارات والبريد",
-          "subStatus": "حالة الاشتراك:",
-          "subYes": "مشترك: تصلك رسائل البريد التسويقي والتحديثات",
-          "subNo": "غير مشترك: لا تصلك أي رسائل بريد تسويقي",
-          "logoutBtn": "خروج", 
-          "settingsTitle": "إعدادات",
-          "settingsMenuProfile": "الملف الشخصي",
-          "settingsMenuNotifications": "الإشعارات",
-          "settingsMenuSupport": "الدعم",
-          "settingsMenuDelete": "حذف الحساب",
-          "profileSettingsTitle": "تعديل الملف الشخصي",
-          "profileChangePic": "تغيير الصورة",
-          "profileBioLabel": "نبذة عني",
-          "profileBioPlaceholder": "اكتب شيئاً عن نفسك...",
-          "notifModalTitle": "إدارة الإشعارات",
-          "notifModalEmailHeader": "إشعارات البريد الإلكتروني",
-          "notifModalEmailText": "إدارة رسائل البريد التسويقي والتحديثات.",
-          // * ⬅️ (حذف 3) تم حذف ترجمات الويب
-          "notifStatusLabel": "حالة الاشتراك:",
-          "notifStatusSubbed": "مشترك",
-          "notifStatusUnsubbed": "غير مشترك",
-          "logoutConfirmTitle": "تأكيد تسجيل الخروج",
-          "logoutConfirmText": "هل أنت متأكد من تسجيل الخروج؟",
-          "confirmYes": "نعم",
-          "confirmNo": "لا",
-          "deleteModalTitle1": "تأكيد حذف الحساب",
-          "deleteModalText1": "هل أنت متأكد من حذف حسابك؟ سيتم حذف جميع بياناتك نهائياً. بريدك الإلكتروني:",
-          "deleteModalTitle2": "تأكيد نهائي",
-          "deleteModalText2": "لحذف حسابك، يرجى كتابة بريدك الإلكتروني في الحقل أدناه. هذا الإجراء لا يمكن التراجع عنه.",
-          "deleteModalPlaceholder": "اكتب بريدك الإلكتروني للتأكيد",
-          "deleteModalConfirmBtn": "تأكيد الحذف",
-          "deleteInProgress": "جاري الحذف...",
-          "deleteSuccess": "تم حذف الحساب بنجاح. جاري تسجيل الخروج...",
-          "subYesToast": "تم الاشتراك بنجاح!",
-          "subNoToast": "تم إلغاء الاشتراك.",
-          "cooldownMsg": "يرجى الانتظار 5 دقائق قبل تغيير حالة الاشتراك مرة أخرى.",
-          "noName": "مستخدم جديد",
-          "profileUploadTitle": "رفع صورتك الشخصية",
-          "uploading": "جاري الرفع... يرجى الانتظار",
-          "uploadSuccess": "تم الرفع بنجاح!",
-          "uploadError": "فشل الرفع. الرجاء التأكد من حجم ونوع الملف",
-          "settingsPassTitle": "تغيير كلمة المرور",
-          "settingsPassText": "لتغيير كلمة السر، سنرسل رابطاً على بريدك الإلكتروني",
-          "settingsPassBtn": "إرسال رابط تغيير كلمة السر",
-          "settingsSaveBtn": "حفظ", 
-          "settingsSuccess": "تم حفظ التعديلات بنجاح",
-          "settingsEmailSent": "تم إرسال رابط تغيير كلمة السر إلى بريدك الإلكتروني",
-          "rateLimitMsg": "يمكنك تعديل الصورة أو الاسم مرة واحدة كل 24 ساعة. يتبقى {hours} ساعة و {minutes} دقيقة",
-          "verifyEmailWarning": "بريدك الإلكتروني غير مُفعّل. اضغط لإرسال رابط التفعيل. (تحقق من البريد العشوائي)",
-          "resendButton": "إعادة إرسال",
-          "resendButtonCooldown": "انتظر {seconds} ث",
-          "verificationSent": "تم إرسال الرابط! تحقق من بريدك.",
-          "backToHome": "العودة للرئيسية"
-      },
-      "en": {
-          "pageTitle": "SkyData - Home",
-          "profileTitle": "Profile", 
-          "notifTitle": "Manage Notifications & Email",
-          "subStatus": "Subscription Status:",
-          "subYes": "Subscribed: You will receive marketing emails and updates",
-          "subNo": "Unsubscribed: You will not receive any marketing emails",
-          "logoutBtn": "Logout", 
-          "settingsTitle": "Settings",
-          "settingsMenuProfile": "Profile",
-          "settingsMenuNotifications": "Notifications",
-          "settingsMenuSupport": "Support",
-          "settingsMenuDelete": "Delete Account",
-          "profileSettingsTitle": "Edit Profile",
-          "profileChangePic": "Change Picture",
-          "profileBioLabel": "About Me",
-          "profileBioPlaceholder": "Write something about yourself...",
-          "notifModalTitle": "Notification Management",
-          "notifModalEmailHeader": "Email Notifications",
-          "notifModalEmailText": "Manage marketing emails and updates.",
-          // * ⬅️ (حذف 4) تم حذف ترجمات الويب
-          "notifStatusLabel": "Subscription Status:",
-          "notifStatusSubbed": "Subscribed",
-          "notifStatusUnsubbed": "Unsubscribed",
-          "logoutConfirmTitle": "Confirm Logout",
-          "logoutConfirmText": "Are you sure you want to log out?",
-          "confirmYes": "Yes",
-          "confirmNo": "No",
-          "deleteModalTitle1": "Confirm Account Deletion",
-          "deleteModalText1": "Are you sure you want to delete your account? All your data will be permanently removed. Your email:",
-          "deleteModalTitle2": "Final Confirmation",
-          "deleteModalText2": "To delete your account, please type your email below. This action cannot be undone.",
-          "deleteModalPlaceholder": "Type your email to confirm",
-          "deleteModalConfirmBtn": "Confirm Deletion",
-          "deleteInProgress": "Deleting...",
-          "deleteSuccess": "Account deleted successfully. Logging out...",
-          "subYesToast": "Subscribed successfully!",
-          "subNoToast": "Unsubscribed.",
-          "cooldownMsg": "Please wait 5 minutes before changing your subscription status again.",
-          "noName": "New User",
-          "profileUploadTitle": "Upload Your Profile Picture",
-          "uploading": "Uploading... Please wait",
-          "uploadSuccess": "Upload successful!",
-          "uploadError": "Upload failed. Please check file size/type",
-          "settingsPassTitle": "Change Password",
-          "settingsPassText": "To change your password, we will send a reset link to your email",
-          "settingsPassBtn": "Send Password Reset Link",
-          "settingsSaveBtn": "Save", 
-          "settingsSuccess": "Changes saved successfully",
-          "settingsEmailSent": "Password reset link sent to your email",
-          "rateLimitMsg": "You can only change your profile picture or name once every 24 hours. Remaining: {hours}h {minutes}m",
-          "verifyEmailWarning": "Your email is not verified. Click to send activation link. (Check spam folder)",
-          "resendButton": "Resend",
-          "resendButtonCooldown": "Wait {seconds}s",
-          "verificationSent": "Link sent! Check your email.",
-          "backToHome": "Back to Home"
-      }
-    };
-
-    // --- 5. HELPER FUNCTIONS (TOP LEVEL) ---
-    async function getSubscription(uid) {
-        const dbRef = ref(db);
-        try {
-            const snapshot = await get(child(dbRef, `users/${uid}`));
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                return {
-                    emailSub: data.subscribe_marketing === true,
-                    // webPushSub: data.subscribe_webpush === true, // * ⬅️ (حذف 5)
-                    bio: data.bio || "", 
-                    lastProfileUpdate: data.lastUpdated || 0,
-                    lastSubChange: data.lastSubChange || 0,
-                    // lastWebPushSubChange: data.lastWebPushSubChange || 0 // * ⬅️ (حذف 6)
-                };
-            } else {
-                // * ⬅️ (إصلاح 7) - هذا هو الوضع الافتراضي للمستخدم الجديد
-                return { emailSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0 };
-            }
-        } catch (error) {
-            console.error("Error getting user data:", error);
-            // * ⬅️ (إصلاح 8) - تم حذف throw error، سنرجع القيم الافتراضية
-            return { emailSub: false, bio: "", lastProfileUpdate: 0, lastSubChange: 0 };
+    <style>
+        /* ======== 1. أساسيات وإزالة المربع الأزرق ======== */
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-sizing: border-box;
+            margin: 0; padding: 0;
         }
-    }
-
-    function updateUserProfileDB(uid, data) {
-      update(ref(db, 'users/' + uid), data);
-    }
-
-    async function checkImageSafety(base64Image) {
-        return { safe: true }; // Mock
-    }
-    
-    function formatTimeRemaining(ms) {
-        const hours = Math.floor(ms / (1000 * 60 * 60));
-        const minutes = Math.ceil((ms % (1000 * 60 * 60)) / (1000 * 60));
-        return { hours, minutes };
-    }
-
-    // --- 6. WRAP DOM-DEPENDENT CODE ---
-    document.addEventListener('DOMContentLoaded', () => {
-
-        // --- DOM ELEMENT VARIABLES ---
-        const contentContainer = document.getElementById('contentContainer');
-        const loaderContainer = document.getElementById('loaderContainer');
-        const profileImgEl = document.getElementById('profile-img');
-        const profileNameEl = document.getElementById('profile-name');
-        const userEmailEl = document.getElementById('userEmail');
-        const currentSubscriptionEl = document.getElementById('currentSubscription');
-        const settingsBtn = document.getElementById('settings-btn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        
-        // (Modals)
-        const profileModal = document.getElementById('profile-upload-modal');
-        const settingsModal = document.getElementById('settings-modal'); 
-        const profileSettingsModal = document.getElementById('profile-settings-modal'); 
-        const notifModal = document.getElementById('notifications-settings-modal'); 
-        const logoutConfirmModal = document.getElementById('logout-confirm-modal'); 
-        const deleteModalStep1 = document.getElementById('delete-account-modal-step1'); 
-        const deleteModalStep2 = document.getElementById('delete-account-modal-step2'); 
-
-        // (Profile Upload Modal)
-        const uploadImageInput = document.getElementById('upload-image-input');
-        const modalStatus = document.getElementById('modal-status');
-        const modalSpinner = document.getElementById('modal-spinner');
-
-        // (Profile Settings Modal)
-        const settingsForm = document.getElementById('settings-form');
-        const settingsNameInput = document.getElementById('settings-display-name');
-        const settingsBioInput = document.getElementById('settings-bio'); 
-        const settingsEmailDisplay = document.getElementById('settings-email-display'); 
-        const settingsRateLimit = document.getElementById('settings-rate-limit');
-        const settingsStatus = document.getElementById('settings-status');
-        const settingsSpinner = document.getElementById('settings-spinner');
-        const profileChangePicBtn = document.getElementById('profile-change-pic-btn'); 
-        const profileImgPreview = document.getElementById('profile-img-preview'); 
-
-        // (Notifications Modal)
-        const emailSubToggle = document.getElementById('email-sub-toggle'); 
-        // const webPushToggle = document.getElementById('web-push-toggle'); // * ⬅️ (حذف 9)
-        const emailStatusText = document.getElementById('email-status-text'); 
-        // const webPushStatusText = document.getElementById('web-push-status-text'); // * ⬅️ (حذف 10)
-
-        // (Logout Confirm Modal)
-        const logoutConfirmYes = document.getElementById('logout-confirm-yes'); 
-        const logoutConfirmNo = document.getElementById('logout-confirm-no'); 
-        
-        // (Delete Account Modals)
-        const deleteEmailDisplay1 = document.getElementById('delete-email-display-1'); 
-        const deleteConfirmYes = document.getElementById('delete-confirm-yes'); 
-        const deleteConfirmNo = document.getElementById('delete-confirm-no'); 
-        const deleteEmailDisplay2 = document.getElementById('delete-email-display-2'); 
-        const deleteEmailInput = document.getElementById('delete-email-input'); 
-        const deleteConfirmFinalBtn = document.getElementById('delete-confirm-final-btn'); 
-        const deleteStatus = document.getElementById('delete-status'); 
-
-        // (Toast Notification)
-        const toastEl = document.getElementById('toast-notification');
-        const toastTitle = document.getElementById('toast-title');
-        const toastClose = document.getElementById('toast-close');
-
-        // --- DOM-DEPENDENT FUNCTIONS ---
-
-        function showToast(message, type = 'success') {
-            if (toastTimer) clearTimeout(toastTimer);
-            toastTitle.textContent = message;
-            toastEl.className = '';
-            toastEl.classList.add(type);
-            toastEl.style.display = 'flex';
-            toastTimer = setTimeout(() => {
-                toastEl.style.display = 'none';
-            }, 4000);
+        body { 
+            background-color: #0b132b; 
+            font-family: 'Cairo', sans-serif;
+            min-height: 100vh;
+            padding-top: 85px; /* مسافة للهيدر */
+            overflow-x: hidden;
         }
 
-        function updateHomeSubscriptionUI(subscribed) {
-            isSubscribed = subscribed;
-            currentSubscriptionEl.textContent = subscribed ? translations[currentLang].subYes : translations[currentLang].subNo;
-            currentSubscriptionEl.className = subscribed ? 'subscription-status' : 'subscription-status unsubscribed';
+        /* ======== 2. الهيدر ======== */
+        .main-header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            height: 75px;
+            background: rgba(11, 19, 43, 0.98);
+            border-bottom: 1px solid #1f2d4d;
+            z-index: 1000;
+            display: flex; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
+        .container {
+            width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 35px; width: auto; } 
         
-        function updateNotifStatusUI(emailSub) { // * ⬅️ (حذف 11) - إزالة webPushSub
-            emailSubToggle.checked = emailSub;
-            
-            emailStatusText.textContent = emailSub ? translations[currentLang].notifStatusSubbed : translations[currentLang].notifStatusUnsubbed;
-            emailStatusText.className = emailSub ? 'status-text subscribed' : 'status-text unsubscribed';
-
-            // * ⬅️ (حذف 12) - إزالة كود تحديث واجهة الويب
+        .rank-badge {
+            font-size: 10px; padding: 3px 8px; border-radius: 4px;
+            font-weight: bold; letter-spacing: 1px; display: inline-block;
         }
-        
-        window.setLanguage = function(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+        .rank-free { background: #2a3a5a; color: #aaa; border: 1px solid #444; }
+        .rank-pro { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; border: 1px solid #ffd700; }
 
-            document.querySelectorAll('[data-lang-key]').forEach(element => {
-                const key = element.getAttribute('data-lang-key');
-                if (translations[currentLang][key]) {
-                    const translationText = translations[currentLang][key];
-                    if (element.id === 'settings-save-btn' && element.classList.contains('save-button')) {
-                        element.querySelector('span').textContent = translationText;
-                    } 
-                    else if (element.id === 'logoutBtn' && element.classList.contains('Btn')) {
-                        element.querySelector('.text').textContent = translationText;
-                    }
-                    else {
-                        element.innerHTML = translationText;
-                    }
-                }
-            });
-            
-            if (currentUser) {
-                profileNameEl.textContent = currentUser.displayName || translations[currentLang].noName;
-                updateHomeSubscriptionUI(isSubscribed);
-                updateNotifStatusUI(isSubscribed); // * ⬅️ (حذف 13)
-            }
-
-            const verificationBanner = document.getElementById('email-verification-banner');
-            if (verificationBanner.style.display === 'flex') {
-            
-                if (verificationBanner.classList.contains('success-banner')) {
-                    document.getElementById('verification-message').innerHTML = translations[currentLang].verificationSent;
-                } else {
-                    document.getElementById('verification-message').innerHTML = translations[currentLang].verifyEmailWarning;
-                }
-            
-                const resendBtn = document.getElementById('resend-email-btn');
-                if (!resendBtn.disabled) {
-                    resendBtn.innerHTML = translations[currentLang].resendButton;
-                }
-            }
+        /* زر القائمة (Animation) */
+        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 1001; }
+        .hamburger input { display: none; }
+        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line {
+            fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3;
+            transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .line-top-bottom { stroke-dasharray: 12 63; }
+        .hamburger input:checked + svg { transform: rotate(-45deg); }
+        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
 
-        async function uploadProfilePicture(file) {
-            modalStatus.textContent = '';
-            modalSpinner.style.display = 'block';
+        /* القائمة الجانبية */
+        .sidebar {
+            position: fixed; top: 0; right: -280px; width: 280px; height: 100vh;
+            background: #111a30; z-index: 999; padding-top: 100px;
+            transition: right 0.4s ease; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+        .sidebar.open { right: 0; }
+        .sidebar ul { list-style: none; padding: 0 20px; }
+        .sidebar ul li { margin-bottom: 15px; }
+        .sidebar ul li a {
+            color: #fff; text-decoration: none; display: flex; align-items: center;
+            padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05);
+        }
+        .sidebar ul li a i { margin-left: 10px; width: 25px; text-align: center; color: #00aaff; }
 
-            try {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                await new Promise(resolve => reader.onload = resolve);
-                const base64Image = reader.result.split(',')[1];
-                
-                modalStatus.textContent = translations[currentLang].uploading;
-                const safetyCheck = await checkImageSafety(base64Image); 
-                if (!safetyCheck.safe) {
-                    modalStatus.textContent = translations[currentLang].moderationError;
-                    return;
-                }
-                
-                const formData = new FormData();
-                formData.append('key', IMGBB_API_KEY);
-                formData.append('image', base64Image);
+        /* ======== 3. المحتوى والبطاقات ======== */
+        .welcome-section { text-align: center; margin-bottom: 30px; }
+        .welcome-section h2 { color: #fff; font-size: 20px; margin-bottom: 5px; }
+        .welcome-section p { color: #888; font-size: 13px; direction: ltr; font-family: monospace; }
 
-                const uploadResponse = await fetch('https://api.imgbb.com/1/upload', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const result = await uploadResponse.json();
-
-                if (result.success && currentUser) {
-                    const photoURL = result.data.url;
-                    await updateProfile(currentUser, { photoURL });
-                    updateUserProfileDB(currentUser.uid, { photoURL: photoURL }); 
-                    
-                    profileImgEl.src = photoURL;
-                    profileImgPreview.src = photoURL; 
-                    profileImgEl.classList.remove('default');
-                    profileImgPreview.classList.remove('default'); 
-                    
-                    modalStatus.textContent = translations[currentLang].uploadSuccess;
-                    setTimeout(() => { 
-                        profileModal.classList.remove('active'); 
-                        profileSettingsModal.classList.add('active'); 
-                    }, 1500);
-                } else {
-                    modalStatus.textContent = translations[currentLang].uploadError;
-                }
-            } catch (error) {
-                console.error("Upload process failed:", error);
-                modalStatus.textContent = translations[currentLang].uploadError;
-            } finally {
-                modalSpinner.style.display = 'none';
-            }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* عمودين للموبايل */
+            gap: 15px; padding-bottom: 50px;
         }
 
-        function populateProfileForm(userData) {
-            settingsStatus.style.display = 'none';
-            settingsNameInput.value = currentUser.displayName || '';
-            settingsEmailDisplay.textContent = currentUser.email || '';
-            settingsBioInput.value = userData.bio || ''; 
-            profileImgPreview.src = currentUser.photoURL || 'https://i.ibb.co/6y45s1f/default.webp'; 
-            
-            const timeElapsed = Date.now() - userData.lastProfileUpdate;
-            if (timeElapsed < UPDATE_RATE_LIMIT) {
-                const remaining = formatTimeRemaining(UPDATE_RATE_LIMIT - timeElapsed);
-                settingsRateLimit.innerHTML = translations[currentLang].rateLimitMsg
-                    .replace('{hours}', remaining.hours)
-                    .replace('{minutes}', remaining.minutes);
-                settingsRateLimit.style.display = 'block';
-                settingsNameInput.disabled = true;
-                settingsBioInput.disabled = true; 
-                settingsForm.querySelector('#settings-save-btn').disabled = true;
-            } else {
-                settingsRateLimit.style.display = 'none';
-                settingsNameInput.disabled = false;
-                settingsBioInput.disabled = false; 
-                settingsForm.querySelector('#settings-save-btn').disabled = false;
-            }
+        .menu-card {
+            background: #161f36; border: 1px solid #253250; border-radius: 12px;
+            padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; cursor: pointer; position: relative;
+            height: 120px; /* ارتفاع ثابت ومستطيل */
+            transition: transform 0.2s;
+        }
+        .menu-card:active { transform: scale(0.96); background: #1c2742; }
+        .menu-card i.main-icon { font-size: 26px; color: #00aaff; margin-bottom: 10px; }
+        .menu-card h3 { font-size: 13px; color: #e6f7ff; font-weight: 600; }
+        
+        .notification-dot {
+            position: absolute; top: 10px; left: 10px; width: 8px; height: 8px;
+            background: #ff4d4d; border-radius: 50%; display: none; box-shadow: 0 0 5px #ff4d4d;
         }
 
-        // --- 7. EVENT LISTENERS ---
-        toastClose.addEventListener('click', () => {
-            if (toastTimer) clearTimeout(toastTimer);
-            toastEl.style.display = 'none';
-        });
+        /* ======== 4. النوافذ المنبثقة ======== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.2s; backdrop-filter: blur(5px);
+            padding: 20px;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
 
-        settingsForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            settingsSpinner.style.display = 'block';
-            settingsStatus.style.display = 'none';
-            const newName = settingsNameInput.value.trim();
-            const newBio = settingsBioInput.value.trim(); 
-            const newLastUpdated = Date.now();
-            
-            let profileDataChanged = false;
-            let dbDataChanged = false;
-            
-            try {
-                if (newName !== currentUser.displayName) {
-                    await updateProfile(currentUser, { displayName: newName });
-                    profileNameEl.textContent = newName;
-                    profileDataChanged = true;
-                }
-                
-                const dbUpdates = {};
-                if (profileDataChanged) {
-                    dbUpdates.lastUpdated = newLastUpdated;
-                    dbDataChanged = true;
-                }
-                
-                dbUpdates.bio = newBio;
-                dbDataChanged = true; 
-                
-                if (dbDataChanged) {
-                    updateUserProfileDB(currentUser.uid, dbUpdates);
-                    lastProfileUpdate = newLastUpdated;
-                }
-                
-                settingsStatus.textContent = translations[currentLang].settingsSuccess;
-                settingsStatus.style.color = '#28a745';
-                settingsStatus.style.display = 'block';
-                
-                setTimeout(() => { profileSettingsModal.classList.remove('active'); }, 1500);
+        .modal-content {
+            background: #111a30; width: 100%; max-width: 400px;
+            border-radius: 15px; border: 1px solid #2a3a5a;
+            display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            transform: translateY(20px); transition: transform 0.3s;
+            max-height: 85vh;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
 
-            } catch (error) {
-                settingsStatus.textContent = `Error: ${error.message}`;
-                settingsStatus.style.color = '#dc3545';
-                settingsStatus.style.display = 'block';
-            } finally {
-                settingsSpinner.style.display = 'none';
-            }
-        });
+        .modal-header {
+            padding: 15px; background: #0e1624; border-bottom: 1px solid #253250;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-header h3 { font-size: 16px; color: #fff; margin: 0; }
+        .close-modal { background: none; border: none; color: #ff4d4d; font-size: 24px; cursor: pointer; padding: 0 10px; }
 
-        document.getElementById('reset-password-btn').addEventListener('click', async () => {
-             // ... (نفس الكود)
-        });
+        .modal-body { padding: 20px; overflow-y: auto; }
 
-        // --- 8. (AUTH LOGIC) ---
-        onAuthStateChanged(auth, async user => {
-            if (user) {
-                currentUser = user;
-
-                // * ⬅️ (إصلاح 14) - إظهار الصفحة فوراً
-                loaderContainer.style.display = 'none';
-                contentContainer.style.display = 'block';
-                
-                // * ⬅️ (إصلاح 15) - التعامل مع تفعيل البريد
-                const verificationBanner = document.getElementById('email-verification-banner');
-                const verificationMessage = document.getElementById('verification-message');
-                const resendBtn = document.getElementById('resend-email-btn');
-
-                if (!user.emailVerified) {
-                    verificationBanner.style.display = 'flex';
-                    verificationMessage.innerHTML = translations[currentLang].verifyEmailWarning;
-
-                    resendBtn.onclick = () => {
-                        const now = Date.now();
-                        if (now - lastVerificationEmailTime < SUB_COOLDOWN) {
-                            showToast(translations[currentLang].cooldownMsg, 'warning');
-                            return;
-                        }
-
-                        sendEmailVerification(user)
-                            .then(() => {
-                                lastVerificationEmailTime = Date.now();
-                                verificationBanner.classList.add('success-banner');
-                                verificationMessage.innerHTML = translations[currentLang].verificationSent;
-                                resendBtn.disabled = true;
-
-                                let secondsLeft = SUB_COOLDOWN / 1000;
-                                resendBtn.innerHTML = translations[currentLang].resendButtonCooldown.replace('{seconds}', secondsLeft);
-
-                                if(cooldownTimer) clearInterval(cooldownTimer);
-                                cooldownTimer = setInterval(() => {
-                                    secondsLeft--;
-                                    if (secondsLeft > 0) {
-                                        resendBtn.innerHTML = translations[currentLang].resendButtonCooldown.replace('{seconds}', secondsLeft);
-                                    } else {
-                                        clearInterval(cooldownTimer);
-                                        resendBtn.disabled = false;
-                                        resendBtn.innerHTML = translations[currentLang].resendButton;
-                                    }
-                                }, 1000);
-
-                                setTimeout(() => {
-                                    verificationBanner.style.display = 'none';
-                                    verificationBanner.classList.remove('success-banner'); 
-                                }, 30000); 
-
-                            })
-                            .catch((error) => {
-                                showToast(`Error: ${error.message}`, 'error');
-                            });
-                    };
-
-                } else {
-                    verificationBanner.style.display = 'none';
-                }
-
-                // * ⬅️ (إصلاح 16) - جلب البيانات (محمي بـ try/catch)
-                try {
-                    const userData = await getSubscription(user.uid);
-                    isSubscribed = userData.emailSub;
-                    // isWebPushSubscribed = userData.webPushSub; // * ⬅️ (حذف)
-                    lastProfileUpdate = userData.lastProfileUpdate;
-                    lastSubChange = userData.lastSubChange; 
-                    // lastWebPushSubChange = userData.lastWebPushSubChange; // * ⬅️ (حذف)
-                    
-                    populateProfileForm(userData);
-
-                    // * ⬅️ (إصلاح 17) - مزامنة OneSignal عند التحميل
-                    if (window.OneSignal) {
-                        window.OneSignal.login(user.uid); // تسجيل الدخول لـ OneSignal
-                        // ضبط الوسم بناءً على ما هو موجود في قاعدة بياناتنا
-                        window.OneSignal.User.addTag("subscribed", isSubscribed.toString());
-                    }
-
-                } catch (error) {
-                    console.error("Failed to get user subscription data:", error);
-                    showToast("فشل تحميل بيانات المستخدم. تحقق من إعدادات قاعدة البيانات.", 'error');
-                    populateProfileForm({ bio: "", lastProfileUpdate: 0, lastSubChange: 0 }); // ملء النافذة ببيانات فارغة
-                }
-                
-                // * ⬅️ (إصلاح 18) - تحديث الواجهة
-                window.setLanguage(currentLang); 
-                
-                profileNameEl.textContent = user.displayName || translations[currentLang].noName;
-                userEmailEl.textContent = user.email; 
-                profileImgEl.src = user.photoURL || 'https://i.ibb.co/6y45s1f/default.webp';
-                if (!user.photoURL) profileImgEl.classList.add('default');
-
-                updateHomeSubscriptionUI(isSubscribed);
-                updateNotifStatusUI(isSubscribed); // * ⬅️ (حذف)
-                
-                deleteEmailDisplay1.textContent = user.email;
-                deleteEmailDisplay2.textContent = user.email;
-                
-            } else {
-                // * ⬅️ (إصلاح زر العودة)
-                window.location.replace("login.html"); 
-            }
-        });
-
-        // 1. (زر الإعدادات - الترس)
-        settingsBtn.addEventListener('click', () => {
-            settingsModal.classList.add('active');
-        });
+        /* عناصر الأدمن والمدخلات */
+        .admin-panel { display: none; border-top: 2px dashed #333; margin-top: 20px; padding-top: 20px; }
         
-        // 2. (أزرار بطاقة الإعدادات الجديدة)
-        document.getElementById('settings-menu-profile').addEventListener('click', (e) => {
-            e.preventDefault();
-            settingsModal.classList.remove('active'); 
-            profileSettingsModal.classList.add('active'); 
-        });
+        .form-group { margin-bottom: 12px; text-align: right; }
+        .form-group label { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; }
+        .form-control {
+            width: 100%; padding: 10px; background: #080e1e; border: 1px solid #253250;
+            border-radius: 6px; color: #fff; font-family: inherit; font-size: 14px;
+        }
         
-        document.getElementById('settings-menu-notifications').addEventListener('click', (e) => {
-            e.preventDefault();
-            settingsModal.classList.remove('active'); 
-            notifModal.classList.add('active'); 
-        });
+        /* حقل الحذف Terminal */
+        #del-confirm-input {
+            background: #000; border: 1px solid #ff4d4d; color: #00ff7f;
+            text-align: center; font-family: monospace; font-size: 13px; padding: 12px; width: 100%;
+        }
 
-        document.getElementById('settings-menu-support').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open('Support.html', '_blank'); 
-        });
+        .btn-action {
+            width: 100%; padding: 12px; border: none; border-radius: 6px;
+            font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 14px;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-save { background: #00aaff; color: #fff; }
+        .btn-danger { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-upgrade { background: linear-gradient(45deg, #ffd700, #ffaa00); color: #000; }
 
-        document.getElementById('settings-menu-delete').addEventListener('click', (e) => {
-            e.preventDefault();
-            settingsModal.classList.remove('active'); 
-            deleteModalStep1.classList.add('active'); 
-        });
-        
-        // 3. (أزرار رفع الصورة)
-        profileImgEl.addEventListener('click', () => {
-            profileModal.classList.add('active');
-        });
-        profileChangePicBtn.addEventListener('click', () => {
-            profileSettingsModal.classList.remove('active');
-            profileModal.classList.add('active');
-        });
-        document.getElementById('upload-profile-btn').addEventListener('click', () => {
-          uploadImageInput.click();
-        });
-        uploadImageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) { uploadProfilePicture(file); }
-        });
-        
-        // 4. (إغلاق النوافذ بالخلفية)
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target.classList.contains('modal-overlay')) {
-                    overlay.classList.remove('active');
-                }
-            });
-        });
+        /* رسائل العرض */
+        .message-display {
+            background: #0e1624; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #253250;
+        }
+        .msg-header { display: flex; align-items: center; margin-bottom: 8px; }
+        .msg-sender-icon { width: 32px; height: 32px; border-radius: 50%; margin-left: 10px; object-fit: cover; border: 1px solid #00aaff; }
 
-        // 5. (جديد: إغلاق النوافذ بالزر X)
-        document.querySelectorAll('.modal-close-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.target.closest('.modal-overlay').classList.remove('active');
-            });
-        });
-
-        // 6. (أزرار نافذة الإشعارات)
-        // * ⬅️ (إصلاح 19) - تعديل زر البريد الإلكتروني
-        emailSubToggle.addEventListener('change', async (e) => {
-            if (!currentUser) return;
-            const timeSinceLastChange = Date.now() - lastSubChange;
-            
-            if (timeSinceLastChange < SUB_COOLDOWN) {
-                e.target.checked = !e.target.checked; 
-                showToast(translations[currentLang].cooldownMsg, 'warning');
-                return;
-            }
-
-            const newSubState = e.target.checked;
-            const newLastSubChange = Date.now();
-            
-            try {
-                // * ⬅️ (إصلاح 20) - نرسل الأمرين معاً
-                // الأمر الأول: تحديث قاعدة بياناتنا
-                await updateUserProfileDB(currentUser.uid, { 
-                    subscribe_marketing: newSubState,
-                    lastSubChange: newLastSubChange
-                });
-                
-                // الأمر الثاني: تحديث OneSignal (بشكل حقيقي)
-                if (window.OneSignal) {
-                    window.OneSignal.User.addTag("subscribed", newSubState.toString());
-                }
-
-                lastSubChange = newLastSubChange;
-                updateHomeSubscriptionUI(newSubState); 
-                updateNotifStatusUI(newSubState); 
-                
-                showToast(
-                    newSubState ? translations[currentLang].subYesToast : translations[currentLang].subNoToast,
-                    newSubState ? 'success' : 'error'
-                );
-            } catch (error) {
-                e.target.checked = !e.target.checked; 
-                showToast(`Error: ${error.message}`, 'error');
-            }
-        });
-
-        // * ⬅️ (حذف 21) - تم حذف المستمع الخاص بـ webPushToggle
-        
-        // 7. (زر تسجيل الخروج الجديد)
-        logoutBtn.addEventListener('click', () => {
-            logoutConfirmModal.classList.add('active');
-        });
-        logoutConfirmYes.addEventListener('click', () => {
-            signOut(auth).catch((error) => {
-                console.error("Sign out error", error);
-                showToast(`Sign out error: ${error.message}`, 'error');
-            });
-        });
-        logoutConfirmNo.addEventListener('click', () => {
-            logoutConfirmModal.classList.remove('active');
-        });
-
-        // 8. (أزرار حذف الحساب)
-        deleteConfirmYes.addEventListener('click', () => {
-            deleteModalStep1.classList.remove('active');
-            deleteModalStep2.classList.add('active');
-        });
-        deleteConfirmNo.addEventListener('click', () => {
-            deleteModalStep1.classList.remove('active');
-        });
-        
-        deleteEmailInput.addEventListener('input', () => {
-            if (deleteEmailInput.value === currentUser.email) {
-                deleteConfirmFinalBtn.disabled = false;
-            } else {
-                deleteConfirmFinalBtn.disabled = true;
-            }
-        });
-        
-        deleteConfirmFinalBtn.addEventListener('click', async () => {
-            if (isDeletePending || deleteEmailInput.value !== currentUser.email) return;
-
-            isDeletePending = true;
-            deleteConfirmFinalBtn.disabled = true;
-            deleteStatus.textContent = translations[currentLang].deleteInProgress;
-            deleteStatus.style.display = 'block';
-
-            try {
-                await remove(ref(db, 'users/' + currentUser.uid));
-                
-                await deleteUser(currentUser);
-                
-                showToast(translations[currentLang].deleteSuccess, 'success');
-                
-            } catch (error) {
-                console.error("Delete account error:", error);
-                if (error.code === 'auth/requires-recent-login') {
-                    showToast('Please log out and log back in to delete your account.', 'error');
-                } else {
-                    showToast(`Error: ${error.message}`, 'error');
-                }
-                deleteStatus.style.display = 'none';
-                isDeletePending = false;
-                deleteConfirmFinalBtn.disabled = false;
-            }
-        });
-
-
-        // --- 9. INITIAL CALL ---
-        window.setLanguage(currentLang); 
-    
-    }); // --- END OF DOMCONTENTLOADED ---
-</script>
+        @media (min-width: 768px) {
+            .menu-grid { grid-template-columns: repeat(4, 1fr); max-width: 900px; margin: 0 auto; }
+            .menu-card { height: 140px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="loader" id="loaderContainer" data-lang-key="loading">جاري التحميل...</div>
 
-    <header>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
-        </div>
-        
-        <div class="lang-switcher">
-            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="Logo" class="logo-img">
+                <span id="user-rank-badge" class="rank-badge rank-free">...</span>
+            </div>
+            
+            <label class="hamburger menu-toggle">
+              <input type="checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
         </div>
     </header>
 
+    <nav class="sidebar">
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <li><a href="#" onclick="signOutUser(this)"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
+        </ul>
+    </nav>
 
-    <div class="container" id="contentContainer">
-     <div class="error" id="email-verification-banner" style="display: none;">
-    <div class="error__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#fff" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
-    </div>
-    <div class="error__title" id="verification-message" data-lang-key="verifyEmailWarning">
-        بريدك الإلكتروني غير مُفعّل.
-    </div>
-    <button id="resend-email-btn" data-lang-key="resendButton">إعادة إرسال</button>
-</div>
-      <h2 data-lang-key="profileTitle">الـملف الـشخصي</h2>
-      
-      <div class="profile-info">
-        <div class="profile-details">
-          <img id="profile-img" src="https://i.ibb.co/6y45s1f/default.webp" alt="Profile Picture" class="profile-img default">
-          <div>
-            <div class="profile-name" id="profile-name"></div>
-            <div class="user-email" id="userEmail" style="font-size: 0.9em; color: #aaa;"></div>
-          </div>
+    <div class="container">
+        <div class="welcome-section">
+            <h2>أهلاً، <span id="display-name" style="color:#00aaff;">User</span></h2>
+            <p id="display-email">...</p>
         </div>
-        <div class="btn-cont">
-          <button class="button" id="settings-btn">
-            <svg
-              class="settings-btn"
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24"
-              fill="#e8eaed"
-            >
-              <path
-                d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"
-              ></path>
-            </svg>
-          </button>
-        </div>
-      </div>
 
-      <div class="subscription-area">
-        <h3 data-lang-key="notifTitle">إدارة الإشعارات والبريد</h3>
-        <p class="subscription-status" id="currentSubscription"></p>
-        
-        <button class="Btn" id="logoutBtn" data-lang-key="logoutBtn">
-          <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
-          <div class="text">Logout</div>
-        </button>
-      </div>
-      
-      <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a>
+        <div class="menu-grid">
+            <div class="menu-card" onclick="openModal('settings')">
+                <i class="fas fa-cog main-icon"></i>
+                <h3>الإعدادات</h3>
+            </div>
 
-    </div>
+            <div class="menu-card" onclick="openModal('inbox')">
+                <div class="notification-dot" id="inbox-dot"></div>
+                <i class="fas fa-envelope main-icon"></i>
+                <h3>البريد</h3>
+            </div>
 
-    <div class="modal-overlay" id="profile-upload-modal">
-        <div class="modal-content">
-            <button class="modal-close-btn">&times;</button>
-            <h3 data-lang-key="profileUploadTitle">رفع صورتك الشخصية</h3>
-            <input type="file" id="upload-image-input" accept="image/jpeg, image/png, image/gif" style="display: none;">
-            <button id="upload-profile-btn" class="cta-button" type="button">
-                اختيار ورفع الصورة <i class="fas fa-upload"></i>
-            </button>
-            <div class="spinner" id="modal-spinner" style="display: none;"></div>
-            <p class="modal-status" id="modal-status"></p>
-        </div>
-    </div>
+            <div class="menu-card" onclick="window.location.href='index.html'">
+                <i class="fas fa-home main-icon"></i>
+                <h3>الرئيسية</h3>
+            </div>
 
-    <div class="modal-overlay" id="settings-modal">
-        <div class="modal-content" style="background: none; box-shadow: none; max-width: 250px; padding: 0;">
-            <div class="settings-card">
-              <ul
-                class="list"
-                style="--color:#5353ff;--hover-storke:#fff; --hover-color:#fff"
-              >
-                <li class="element">
-                  <a href="#" id="settings-menu-profile" data-lang-key="settingsMenuProfile">
-                    <i class="fas fa-user-edit" style="width: 19px; height: 19px; text-align: center;"></i>
-                    الملف الشخصي
-                  </a>
-                </li>
-                <li class="element">
-                  <a href="#" id="settings-menu-notifications" data-lang-key="settingsMenuNotifications">
-                    <i class="fas fa-bell" style="width: 19px; height: 19px; text-align: center;"></i>
-                    الإشعارات
-                  </a>
-                </li>
-                <li class="element">
-                  <a href="#" id="settings-menu-support" data-lang-key="settingsMenuSupport">
-                    <i class="fas fa-question-circle" style="width: 19px; height: 19px; text-align: center;"></i>
-                    الدعم
-                  </a>
-                </li>
-                <div class="separator"></div>
-                <li class="element delete" style="--color:#8e2a2a; --hover-storke:#fff;">
-                  <a href="#" id="settings-menu-delete" data-lang-key="settingsMenuDelete">
-                    <i class="fas fa-trash-alt" style="width: 19px; height: 19px; text-align: center;"></i>
-                    حذف الحساب
-                  </a>
-                </li>
-              </ul>
+            <div class="menu-card" onclick="signOutUser(this)" style="border-color: rgba(255, 77, 77, 0.3);">
+                <i class="fas fa-sign-out-alt main-icon" style="color: #ff4d4d;"></i>
+                <h3 style="color: #ff4d4d;">خروج</h3>
             </div>
         </div>
     </div>
-    
-    <div class="modal-overlay" id="profile-settings-modal">
+
+    <div id="modal-settings" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close-btn">&times;</button>
-            <h3 data-lang-key="profileSettingsTitle">تعديل الملف الشخصي</h3>
-            
-            <form id="settings-form">
+            <div class="modal-header">
+                <h3>إعدادات الحساب</h3>
+                <button class="close-modal" onclick="closeModal('settings')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>الاسم</label>
+                    <input type="text" id="edit-name" class="form-control" placeholder="الاسم">
+                </div>
+                <button class="btn-action btn-save" id="btn-save-name">حفظ</button>
                 
-                <div class="profile-pic-container">
-                  <img id="profile-img-preview" src="https://i.ibb.co/6y45s1f/default.webp" alt="Preview" class="profile-img default">
-                  <label class="upload-pic-btn" id="profile-change-pic-btn" data-lang-key="profileChangePic">
-                      <i class="fas fa-camera"></i> تغيير الصورة
-                  </label>
+                <hr style="border-color:#253250; margin: 15px 0;">
+                
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="edit-pass" class="form-control" placeholder="الجديدة">
+                </div>
+                <button class="btn-action btn-save" id="btn-save-pass">تغيير</button>
+
+                <hr style="border-color:#253250; margin: 15px 0;">
+                
+                <button class="btn-action btn-upgrade" onclick="window.location.href='pro.html'">
+                    <i class="fas fa-crown"></i> ترقية الحساب
+                </button>
+                <button class="btn-action btn-danger" onclick="openDeleteFlow()">
+                    <i class="fas fa-trash"></i> حذف الحساب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-delete" class="modal-overlay" style="z-index: 2100;">
+        <div class="modal-content" style="border-color: #ff4d4d;">
+            <div class="modal-header" style="background: rgba(255,0,0,0.1);">
+                <h3 style="color:#ff4d4d;">منطقة الخطر</h3>
+                <button class="close-modal" onclick="closeModal('delete')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="del-step-1">
+                    <p style="text-align:center; margin-bottom:15px; color:#ddd;">هل أنت متأكد من الحذف؟</p>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-action btn-danger" onclick="nextDelStep(2)">نعم</button>
+                        <button class="btn-action btn-save" onclick="closeModal('delete')">إلغاء</button>
+                    </div>
                 </div>
 
-                <label for="settings-display-name" data-lang-key="settingsNameLabel">الاسم المعروض</label>
-                <input type="text" id="settings-display-name" required>
-
-                <label data-lang-key="settingsEmailLabel">البريد الإلكتروني</label>
-                <p id="settings-email-display" style="background: #1e1e1e; padding: 10px; border-radius: 5px; color: #aaa; margin-top: 5px;"></p>
-                
-                <label for="settings-bio" data-lang-key="profileBioLabel">نبذة عني</label>
-                <textarea id="settings-bio" rows="3" data-lang-key="profileBioPlaceholder" placeholder="اكتب شيئاً..."></textarea>
-                
-                <p class="rate-limit-msg" id="settings-rate-limit" style="display: none;"></p>
-
-                <h4 style="color: #fff; margin-top: 20px;" data-lang-key="settingsPassTitle">تغيير كلمة المرور</h4>
-                <p style="font-size: 0.9em; color: #aaa;" data-lang-key="settingsPassText">...</p>
-                <button type="button" id="reset-password-btn" class="cta-button" style="background-color: #fd7e14;" data-lang-key="settingsPassBtn">
-                    إرسال رابط تغيير كلمة السر <i class="fas fa-unlock-alt"></i>
-                </button>
-
-                <button type="submit" id="settings-save-btn" class="save-button" data-lang-key="settingsSaveBtn">
-                  <div class="svg-wrapper-1">
-                    <div class="svg-wrapper">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="none" d="M0 0h24v24H0z"></path>
-                        <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.522-.634-.01l-4.243-16.075-16.075-4.243z"></path>
-                      </svg>
+                <div id="del-step-2" style="display:none;">
+                    <p style="text-align:center; margin-bottom:15px; color:#ffcccc; font-size:13px;">سيتم حذف كل البيانات نهائياً.</p>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-action btn-danger" onclick="nextDelStep(3)">تأكيد</button>
+                        <button class="btn-action btn-save" onclick="closeModal('delete')">تراجع</button>
                     </div>
-                  </div>
-                  <span>Save</span>
-                </button>
-                
-                <div class="spinner" id="settings-spinner" style="display: none;"></div>
-                <p class="modal-status" id="settings-status"></p>
-            </form>
+                </div>
+
+                <div id="del-step-3" style="display:none;">
+                    <p style="font-size:12px; color:#aaa; margin-bottom:10px; text-align:center;">انسخ الجملة التالية:</p>
+                    <div style="background:#111; padding:8px; border-radius:4px; font-size:11px; color:#00ff7f; user-select:all; margin-bottom:10px; text-align:center; direction:ltr; border:1px dashed #444;">
+                        انا متأكد من حذف حسابي <span id="del-email-display" style="color:#fff;"></span> نهائيا
+                    </div>
+                    <input type="text" id="del-confirm-input" placeholder="الصق هنا" autocomplete="off">
+                    <button class="btn-action btn-danger" id="btn-final-delete" style="margin-top:10px; opacity:0.5;" disabled>حذف نهائي</button>
+                </div>
+            </div>
         </div>
     </div>
 
-
-    <div class="modal-overlay" id="notifications-settings-modal">
+    <div id="modal-inbox" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close-btn">&times;</button>
-            <h3 data-lang-key="notifModalTitle">إدارة الإشعارات</h3>
-            
-            <hr style="border-color: #444; margin: 20px 0;">
+            <div class="modal-header">
+                <h3><i class="fas fa-envelope"></i> صندوق البريد</h3>
+                <button class="close-modal" onclick="closeModal('inbox')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="user-inbox-view">
+                    <div id="messages-container"></div>
+                    <p id="no-msg-text" style="text-align:center; color:#555; font-size:13px; margin-top:20px;">لا توجد رسائل</p>
+                </div>
+                
+                <div id="admin-inbox-view" class="admin-panel">
+                    <h4 style="color:#ffaa00; font-size:12px; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">لوحة الأدمن (إرسال)</h4>
+                    
+                    <div class="form-group">
+                        <label>المرسل</label>
+                        <input type="text" id="msg-sender" value="Admin" class="form-control">
+                    </div>
 
-            <h4 data-lang-key="notifModalEmailHeader">إشعارات البريد الإلكتروني</h4>
-            <div class="setting-row">
-              <p data-lang-key="notifStatusLabel">الحالة:</p>
-              <span class="status-text unsubscribed" id="email-status-text" data-lang-key="notifStatusUnsubbed"></span>
-            </div>
-            <div class="setting-row">
-              <p data-lang-key="notifModalEmailText">...</p>
-              <label class="switch">
-                  <input id="email-sub-toggle" type="checkbox"> 
-                  <div class="slider">
-                      <div class="circle">
-                          <svg class="cross" xml:space="preserve" viewBox="0 0 365.696 365.696" height="6" width="6" xmlns="http://www.w3.org/2000/svg">
-                              <path fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
-                          </svg>
-                          <svg class="checkmark" xml:space="preserve" viewBox="0 0 24 24" height="10" width="10" xmlns="http://www.w3.org/2000/svg">
-                              <path fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
-                          </svg>
-                      </div>
-                  </div>
-              </label>
-            </div>
-            
-            </div>
-    </div>
-    
-    <div class="modal-overlay" id="logout-confirm-modal">
-        <div class="modal-content confirm-modal-content">
-            <button class="modal-close-btn">&times;</button>
-            <h3 data-lang-key="logoutConfirmTitle">تأكيد تسجيل الخروج</h3>
-            <p data-lang-key="logoutConfirmText">...</p>
-            <div class="confirm-buttons">
-                <button class="confirm-btn no-btn" id="logout-confirm-no" data-lang-key="confirmNo">لا</button>
-                <button class="confirm-btn yes-btn" id="logout-confirm-yes" data-lang-key="confirmYes">نعم</button>
+                    <div class="form-group">
+                        <label>صورة (رفع)</label>
+                        <input type="file" id="msg-file" class="form-control">
+                        <input type="hidden" id="msg-avatar-url" value="https://i.ibb.co/v4vwvcGq/skydatafull.webp">
+                    </div>
+
+                    <div class="form-group">
+                        <label>نص الرسالة</label>
+                        <textarea id="msg-text" rows="3" class="form-control" placeholder="اكتب هنا..."></textarea>
+                    </div>
+
+                    <div style="display:flex; gap:5px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>كلمة ملونة</label>
+                            <input type="text" id="msg-highlight" class="form-control">
+                        </div>
+                        <div class="form-group" style="width:50px;">
+                            <label>اللون</label>
+                            <input type="color" id="msg-color" value="#00aaff" style="width:100%; height:38px; padding:0;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>مدة البقاء (ساعات)</label>
+                        <input type="number" id="msg-duration" value="24" class="form-control">
+                    </div>
+
+                    <button class="btn-action btn-save" id="btn-send-broadcast">
+                        <i class="fas fa-paper-plane"></i> إرسال للجميع
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="delete-account-modal-step1">
-        <div class="modal-content confirm-modal-content">
-            <button class="modal-close-btn">&times;</button>
-            <div class="icon warning"><i class="fas fa-exclamation-triangle"></i></div>
-            <h3 data-lang-key="deleteModalTitle1">تأكيد حذف الحساب</h3>
-            <p data-lang-key="deleteModalText1">...</p>
-            <p id="delete-email-display-1" class="user-email-display"></p>
-            <div class="confirm-buttons">
-                <button class="confirm-btn no-btn" id="delete-confirm-no" data-lang-key="confirmNo">لا</button>
-                <button class="confirm-btn yes-btn" id="delete-confirm-yes" data-lang-key="confirmYes">نعم</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal-overlay" id="delete-account-modal-step2">
-        <div class="modal-content confirm-modal-content">
-            <button class="modal-close-btn">&times;</button>
-            <h3 data-lang-key="deleteModalTitle2">تأكيد نهائي</h3>
-            <p data-lang-key="deleteModalText2">...</p>
-            <p id="delete-email-display-2" class="user-email-display"></p>
-            <input type="email" id="delete-email-input" data-lang-key="deleteModalPlaceholder" placeholder="اكتب بريدك الإلكتروني للتأكيد">
-            <button class="confirm-btn delete-btn" id="delete-confirm-final-btn" data-lang-key="deleteModalConfirmBtn" disabled>
-                تأكيد الحذف
-            </button>
-            <p class="modal-status" id="delete-status" style="display: none;"></p>
-        </div>
-    </div>
-    
-    <div id="toast-notification" style="display: none;">
-      <div class="toast-icon" id="toast-icon">
-          <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
-      </div>
-      <div class="toast-title" id="toast-title"></div>
-      <div class="toast-close" id="toast-close"><svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z" fill="#393a37"></path></svg></div>
-    </div>
-    
+    <script>
+        const menuToggle = document.querySelector('.hamburger input');
+        const sidebar = document.querySelector('.sidebar');
+        menuToggle.addEventListener('change', () => { sidebar.classList.toggle('open'); });
+
+        function openModal(id) { document.getElementById('modal-'+id).classList.add('active'); }
+        function closeModal(id) { document.getElementById('modal-'+id).classList.remove('active'); }
+
+        function nextDelStep(step) {
+            [1,2,3].forEach(n => document.getElementById('del-step-'+n).style.display = 'none');
+            document.getElementById('del-step-'+step).style.display = 'block';
+        }
+        function openDeleteFlow() { nextDelStep(1); openModal('delete'); }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('display-name').textContent = user.displayName || 'مستخدم';
+                document.getElementById('display-email').textContent = user.email;
+                document.getElementById('del-email-display').textContent = user.email;
+                document.getElementById('edit-name').value = user.displayName || '';
+                
+                checkRank(user.uid);
+                checkInbox();
+                
+                if(window.OneSignalDeferred){
+                    window.OneSignalDeferred.push(function(OS){ OS.login(user.uid); OS.User.addEmail(user.email); });
+                }
+
+                // إظهار لوحة الأدمن فقط لهذا الإيميل
+                if(user.email === "brxpara@gmail.com") {
+                    document.getElementById('admin-inbox-view').style.display = 'block';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function checkRank(uid) {
+            const badge = document.getElementById('user-rank-badge');
+            try {
+                const snap = await get(child(ref(db), `users/${uid}/rank`));
+                if (snap.exists() && snap.val() === 'pro') {
+                    badge.textContent = "PRO"; badge.className = "rank-badge rank-pro";
+                } else {
+                    badge.textContent = "FREE"; badge.className = "rank-badge rank-free";
+                }
+            } catch (e) { badge.textContent = "FREE"; }
+        }
+
+        window.signOutUser = (btn) => {
+            btn.style.pointerEvents = 'none';
+            if(window.OneSignalDeferred) window.OneSignalDeferred.push(function(OS){ OS.logout(); });
+            signOut(auth).then(() => { window.location.href = 'login.html'; });
+        };
+
+        document.getElementById('btn-save-name').addEventListener('click', function() {
+            const name = document.getElementById('edit-name').value;
+            if(name.length < 2) return alert("اسم قصير");
+            updateProfile(currentUser, { displayName: name }).then(() => {
+                document.getElementById('display-name').textContent = name; alert("تم الحفظ");
+            });
+        });
+
+        document.getElementById('btn-save-pass').addEventListener('click', function() {
+            const p = document.getElementById('edit-pass').value;
+            if(p.length < 6) return alert("6 حروف على الأقل");
+            updatePassword(currentUser, p).then(() => alert("تم التغيير")).catch(() => alert("يجب تسجيل الدخول مجدداً"));
+        });
+
+        const delInp = document.getElementById('del-confirm-input');
+        const delBtn = document.getElementById('btn-final-delete');
+        delInp.addEventListener('input', () => {
+            const match = `انا متأكد من حذف حسابي ${currentUser.email} نهائيا`;
+            if(delInp.value.trim() === match) { delBtn.disabled = false; delBtn.style.opacity = "1"; }
+            else { delBtn.disabled = true; delBtn.style.opacity = "0.5"; }
+        });
+
+        delBtn.addEventListener('click', () => {
+            delBtn.innerText = "...";
+            set(ref(db, 'users/' + currentUser.uid), null);
+            deleteUser(currentUser).then(() => window.location.href = 'login.html')
+            .catch(e => alert("خطأ: " + e.message));
+        });
+
+        // رفع الصورة (ImgBB)
+        document.getElementById('msg-file').addEventListener('change', async function() {
+            if(!this.files[0]) return;
+            const fd = new FormData(); fd.append("image", this.files[0]);
+            try {
+                const r = await fetch("https://api.imgbb.com/1/upload?key=c0216950144467262408820345687052", {method:"POST", body:fd});
+                const d = await r.json();
+                if(d.success) { document.getElementById('msg-avatar-url').value = d.data.url; alert("تم الرفع!"); }
+            } catch(e){}
+        });
+
+        // زر الإرسال (Send Broadcast) - موجود الآن
+        document.getElementById('btn-send-broadcast').addEventListener('click', function() {
+            const txt = document.getElementById('msg-text').value;
+            if(!txt) return alert("أدخل نص الرسالة");
+            
+            const msg = {
+                sender: document.getElementById('msg-sender').value,
+                avatar: document.getElementById('msg-avatar-url').value,
+                text: txt,
+                highlight: document.getElementById('msg-highlight').value,
+                color: document.getElementById('msg-color').value,
+                expiry: Date.now() + (document.getElementById('msg-duration').value * 3600000),
+                timestamp: Date.now()
+            };
+            set(ref(db, 'global_messages'), msg).then(() => { alert("تم الإرسال"); closeModal('inbox'); });
+        });
+
+        function checkInbox() {
+            get(ref(db, 'global_messages')).then(s => {
+                if(s.exists()) {
+                    const d = s.val();
+                    if(Date.now() < d.expiry) {
+                        renderMsg(d);
+                        const last = localStorage.getItem('last_msg');
+                        if(!last || parseInt(last) < d.timestamp) document.getElementById('inbox-dot').style.display = 'block';
+                    }
+                }
+            });
+        }
+
+        function renderMsg(d) {
+            document.getElementById('no-msg-text').style.display = 'none';
+            let body = d.text;
+            if(d.highlight) {
+                const r = new RegExp(`(${d.highlight})`, 'gi');
+                body = body.replace(r, `<span style="color:${d.color}; font-weight:bold;">$1</span>`);
+            }
+            document.getElementById('messages-container').innerHTML = `
+                <div class="message-display">
+                    <div class="msg-header">
+                         <div style="flex:1; font-weight:bold; color:#fff; font-size:13px;">${d.sender}</div>
+                         <img src="${d.avatar}" class="msg-sender-icon">
+                    </div>
+                    <div style="color:#ccc; font-size:13px; line-height:1.4;">${body}</div>
+                </div>`;
+            
+            document.querySelector('.menu-card:nth-child(2)').addEventListener('click', () => {
+                document.getElementById('inbox-dot').style.display = 'none';
+                localStorage.setItem('last_msg', d.timestamp);
+            });
+        }
+    </script>
 </body>
 </html>

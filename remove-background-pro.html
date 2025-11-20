@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - تحديث التطبيق</title>
-    <meta name="description" content="سيتم توفير تطبيق SkyData الرسمي قريباً على متجر جوجل بلاي.">
-    <meta name="keywords" content="تحديث تطبيق, متجر بلاي, app update, google play store, SkyData">
+    <title>SkyData - إزالة الخلفية (Pro)</title>
+    <meta name="description" content="أداة مجانية لإزالة خلفية الصور بدقة عالية.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,99 +26,122 @@
 
     <style>
         /* ==============================================
-           1. أساسيات الصفحة (Standard)
+           إصلاحات الهيدر والقائمة (Overrides)
            ============================================== */
+
+        /* 1. ضبط الجسم */
         body {
             background-color: #0b132b;
-            padding-top: 90px !important;
+            padding-top: 70px !important; /* مساحة لعدم اختفاء المحتوى */
             overflow-x: hidden;
-            font-family: 'Cairo', sans-serif;
-            display: block; 
         }
 
-        *, *::before, *::after {
-            -webkit-tap-highlight-color: transparent !important;
-            outline: none !important;
-            box-shadow: none !important;
-            box-sizing: border-box;
-        }
-        *:focus { outline: none; border-color: transparent !important; }
-
-        /* الهيدر */
+        /* 2. إصلاح الهيدر ليكون صلباً وموزعاً بشكل صحيح */
         .main-header {
             height: 70px !important; 
-            background-color: #0b132b !important;
+            background-color: #0b132b !important; /* لون صلب وليس شفاف */
             border-bottom: 1px solid #1f2d4d;
-            padding: 0 !important;
-            position: fixed; top: 0; width: 100%; z-index: 2000;
-            display: flex !important; align-items: center !important;
+            padding: 0 !important; /* إلغاء الحشو الزائد */
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000; /* طبقة الهيدر */
+            display: flex !important;
+            align-items: center !important;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
+        /* توزيع العناصر (شعار يمين - زر يسار) */
         .main-header .container {
-            width: 100% !important; height: 100% !important; max-width: 100% !important;
-            padding: 0 20px !important;
-            display: flex !important; justify-content: space-between !important;
-            align-items: center !important; margin: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important; /* لضمان التمدد الكامل */
+            padding: 0 20px !important; /* مسافة جانبية */
+            display: flex !important;
+            justify-content: space-between !important; /* السر في التباعد */
+            align-items: center !important;
+            margin: 0 !important;
         }
 
+        .logo { display: flex; align-items: center; }
         .logo-img { height: 35px !important; width: auto; }
 
-        /* القائمة الجانبية */
-        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
-        .hamburger input { display: none; }
-        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
-        .line-top-bottom { stroke-dasharray: 12 63; }
-        .hamburger input:checked + svg { transform: rotate(-45deg); }
-        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
+        /* 3. القائمة الجانبية (يجب أن تكون فوق الهيدر) */
+        .sidebar {
+            z-index: 2001 !important; /* رقم أعلى من الهيدر */
+            padding-top: 20px !important; /* تعديل المسافة الداخلية */
+            background-color: #111a30;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
 
-        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        /* طبقة التعتيم الخلفية */
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 1500;
-            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+            background: rgba(0,0,0,0.7); 
+            z-index: 1500; /* بين الهيدر والقائمة */
+            opacity: 0; visibility: hidden; transition: 0.3s;
+            backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
-        .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
-        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
-        .social-links a:hover { color: #00aaff; }
-        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
-        .footer-nav a { color: #ccc; font-size: 13px; }
-        .copyright { font-size: 12px; color: #666; }
 
 
         /* ==============================================
-           2. تنسيقات رسالة التحديث
+           باقي عناصر الصفحة (Iframe & Tools)
            ============================================== */
+        
+        .gradio-container {
+            width: 100%; 
+            height: calc(100vh - 70px);
+            position: relative; 
+            background: #111a30;
+        }
+        iframe.gradio-frame { width: 100%; height: 100%; border: none; }
 
-        .container-tool { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        /* Loader */
+        #app-loader {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0b132b; z-index: 10;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0,170,255,0.3);
+            border-radius: 50%; border-top-color: #00aaff;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        .loader-text { color: #fff; font-size: 14px; animation: pulse 1.5s infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 50% { opacity: 0.6; } }
 
-        .tool-box {
-            background-color: #111a30; padding: 40px 20px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0;
+        /* Help Button */
+        .help-fab {
+            position: fixed; bottom: 25px; left: 25px; width: 50px; height: 50px;
+            background: #00aaff; color: #fff; border-radius: 50%; border: none;
+            box-shadow: 0 4px 15px rgba(0,170,255,0.3); cursor: pointer; z-index: 1200;
+            display: flex; justify-content: center; align-items: center; font-size: 20px;
         }
 
-        .tool-box i {
-            font-size: 60px; color: #27ae60; margin-bottom: 25px;
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 3000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.2s;
         }
-
-        h1 {
-            color: #fff; font-size: 24px; margin-bottom: 15px;
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: #111a30; width: 90%; max-width: 400px;
+            border-radius: 12px; border: 1px solid #00aaff; overflow: hidden;
         }
-
-        p {
-            color: #ccc; font-size: 16px; margin-bottom: 30px;
+        .modal-header {
+            background: #00aaff; color: #fff; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .btn-back {
-            background: #00aaff; color: #111; padding: 12px 30px;
-            border-radius: 8px; font-weight: bold; transition: 0.2s;
-            text-decoration: none; display: inline-block;
-        }
-        .btn-back:hover { background: #fff; }
-
+        .steps-list { padding: 20px; list-style: none; }
+        .steps-list li { margin-bottom: 15px; display: flex; gap: 12px; }
+        .step-icon { color: #00aaff; font-size: 18px; margin-top: 3px; }
+        .step-text h4 { margin: 0; color: #fff; font-size: 15px; }
+        .step-text p { margin: 5px 0 0; color: #aaa; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -131,6 +153,7 @@
             <a href="index.html" class="logo">
                 <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
             </a>
+            
             <label class="hamburger menu-toggle">
               <input type="checkbox" id="menu-checkbox">
               <svg viewBox="0 0 32 32">
@@ -141,7 +164,7 @@
         </div>
     </header>
 
-    <nav class="sidebar" id="sidebar">
+    <nav class="sidebar">
         <div class="sidebar-section">
             <h4>القسم 1: تعريف واختصار</h4>
             <ul>
@@ -150,7 +173,8 @@
                 <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
                 <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
                 <li><a href="login.html" id="auth-link">
-                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                    <i class="fas fa-sign-in-alt"></i> 
+                    <span>تسجيل الدخول</span>
                 </a></li>
             </ul>
         </div>
@@ -158,7 +182,7 @@
         <div class="sidebar-section">
             <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
             <ul>
-                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="remove-background-pro.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
                 <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
                 <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
                 <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
@@ -230,34 +254,95 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">SkyData © 2025</p>
+            <p class="copyright">
+                SkyData © 2025
+            </p>
         </div>
     </nav>
 
-    <main class="container-tool">
-        
-        <div class="tool-box">
-            <i class="fab fa-google-play"></i>
-            <h1>تحديث التطبيق</h1>
-            <p>سيتوفر تطبيق SkyData على متجر بلاي قريباً.</p>
-            
-            <a href="index.html" class="btn-back">العودة للرئيسية</a>
+    <main class="gradio-container">
+        <div id="app-loader">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">جاري الاتصال بالسيرفر...</div>
         </div>
-
+        <iframe 
+            src="https://skydata001-crystal-removed-background.hf.space?__theme=dark" 
+            class="gradio-frame"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+        ></iframe>
     </main>
 
+    <button class="help-fab" onclick="toggleHelp()">
+        <i class="fas fa-question"></i>
+    </button>
+
+    <div id="help-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>طريقة الاستخدام</h3>
+                <button style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;" onclick="toggleHelp()">&times;</button>
+            </div>
+            <ul class="steps-list">
+                <li>
+                    <i class="fas fa-upload step-icon"></i>
+                    <div class="step-text">
+                        <h4>1. رفع الصورة</h4>
+                        <p>ارفع الصورة المراد تفريغها.</p>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-magic step-icon"></i>
+                    <div class="step-text">
+                        <h4>2. المعالجة</h4>
+                        <p>انتظر قليلاً للمعالجة (30 ثانية).</p>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-download step-icon"></i>
+                    <div class="step-text">
+                        <h4>3. الحفظ</h4>
+                        <p>حمل الصورة الناتجة من زر التحميل.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <script>
-        // --- فتح/إغلاق القائمة ---
         const menuCheckbox = document.getElementById('menu-checkbox');
-        const sidebar = document.getElementById('sidebar');
+        const sidebar = document.querySelector('.sidebar');
         const overlay = document.getElementById('sidebar-overlay');
 
         function toggleMenu(open) {
-            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
-            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+            if(open) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                menuCheckbox.checked = true;
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                menuCheckbox.checked = false;
+            }
         }
+
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
+
+        function toggleHelp() {
+            document.getElementById('help-modal').classList.toggle('active');
+        }
+        document.getElementById('help-modal').addEventListener('click', (e) => {
+            if(e.target.id === 'help-modal') toggleHelp();
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('app-loader');
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+            }, 3500);
+        });
     </script>
 
     <script type="module">
@@ -267,7 +352,12 @@
         const firebaseConfig = {
             apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
             authDomain: "skydata-ai.firebaseapp.com",
-            projectId: "skydata-ai"
+            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skydata-ai",
+            storageBucket: "skydata-ai.firebasestorage.app",
+            messagingSenderId: "165531796197",
+            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
+            measurementId: "G-JYS7P7FY3Z"
         };
 
         try {
@@ -275,16 +365,23 @@
             const auth = getAuth(app);
             const authLink = document.getElementById('auth-link');
             if (authLink) {
-                const ico = authLink.querySelector('i'); const txt = authLink.querySelector('span');
+                const authIcon = authLink.querySelector('i');
+                const authText = authLink.querySelector('span');
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        authLink.href = 'menu.html'; ico.className = 'fas fa-user-circle'; txt.textContent = 'ملف الشخصي';
+                        authLink.href = 'menu.html';
+                        if (authIcon) authIcon.className = 'fas fa-user-circle'; 
+                        if (authText) authText.textContent = 'ملف الشخصي';
                     } else {
-                        authLink.href = 'login.html'; ico.className = 'fas fa-sign-in-alt'; txt.textContent = 'تسجيل الدخول';
+                        authLink.href = 'login.html'; 
+                        if (authIcon) authIcon.className = 'fas fa-sign-in-alt';
+                        if (authText) authText.textContent = 'تسجيل الدخول';
                     }
                 });
             }
-        } catch (e) { console.error("Firebase Error:", e); }
+        } catch (error) {
+            console.error("فشل تهيئة Firebase:", error);
+        }
     </script>
 
 </body>

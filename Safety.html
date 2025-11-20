@@ -3,473 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="pageTitle">شروط الاستخدام وسياسة الخصوصية - Sky Data</title>
+    
+    <title>SkyData - الشروط والخصوصية</title>
+    <meta name="description" content="تعرف على سياسة الخصوصية وشروط الاستخدام في SkyData. نحن نلتزم بحماية بياناتك وتوفير أدوات مجانية وآمنة بموجب القوانين الجزائرية.">
+    <meta name="keywords" content="سياسة الخصوصية, شروط الاستخدام, SkyData, حماية البيانات, قوانين الجزائر, privacy policy, terms of service">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
-    });
-  });
-</script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* ==============================================
+           1. أساسيات الصفحة
+           ============================================== */
         body {
-            font-family: Arial, sans-serif; direction: rtl; 
-            background-color: #121212; color: #e0e0e0;
-            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
-        }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; flex-grow: 1; }
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background-color: #1e1e1e; border-bottom: 1px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .logo-container { display: flex; align-items: center; }
-        .logo-container img { height: 40px; margin-left: 10px; }
-        .lang-switcher { display: flex; }
-        .lang-switcher a {
-            text-decoration: none; color: #007bff; margin: 0 5px;
-            font-weight: bold; cursor: pointer; padding: 5px 8px; border-radius: 5px;
-        }
-        .lang-switcher a.active { background-color: #007bff; color: #ffffff; }
-
-        footer {
-            background-color: #1e1e1e; padding: 20px;
-            text-align: center; margin-top: auto;
-            border-top: 1px solid #333;
-        }
-        
-        main { text-align: right; }
-        .content-box {
-            background-color: #1e1e1e; padding: 30px;
-            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease;
-            line-height: 1.8; /* (جديد) لسهولة القراءة */
-        }
-        .content-box h1 { 
-            color: #ffffff; 
-            margin-bottom: 20px; 
-            text-align: center; 
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-        }
-        .content-box h2 {
-            color: #007bff;
-            margin-top: 30px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
-        }
-        .content-box p, .content-box ul {
-            font-size: 1.1em;
-            color: #e0e0e0;
-        }
-        .content-box ul {
-            list-style: disc inside;
-            padding-right: 20px;
-        }
-        .content-box a {
-            color: #4da6ff; /* لون أزرق فاتح للروابط */
-            text-decoration: none;
-        }
-        .content-box a:hover {
-            text-decoration: underline;
-        }
-        
-        /* (جديد) تصميم جدول المحتويات */
-        .toc {
-            background-color: #121212;
-            border: 1px solid #333;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .toc h3 {
-            margin-top: 0;
-            text-align: center;
-            color: #fff;
-        }
-        .toc ul {
-            list-style: none;
-            padding: 0;
-            columns: 2; /* عرض القائمة في عمودين */
-        }
-        .toc li {
-            margin-bottom: 10px;
-        }
-        .toc a {
-            font-weight: bold;
-            font-size: 1.05em;
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
         }
 
-        .cta-button {
-            display: inline-block; background-color: #007bff; color: #ffffff;
-            padding: 12px 25px; font-size: 1.1em; font-weight: bold;
-            text-decoration: none; border-radius: 5px; border: none;
-            cursor: pointer; 
-            transition: all 0.3s ease;
-            margin: 5px;
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+            box-sizing: border-box;
         }
-        
-        .back-button { 
-            background-color: #555; margin-top: 50px; 
-            font-size: 1.1em; padding: 10px 20px;
-            display: inline-block;
-        }
-        .back-button:hover { background-color: #444; }
-        
-        /* (جديد) تنسيق ملاحظات خاصة */
-        .note {
-            background-color: #2a2a2a;
-            border-right: 4px solid #fd7e14; /* برتقالي */
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-        .privacy-note {
-             border-right-color: #28a745; /* أخضر */
+        *:focus { outline: none; border-color: transparent !important; }
+
+        /* الهيدر */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .container { padding: 10px; }
-            header { padding: 10px 15px; }
-            .content-box { padding: 20px; }
-            .toc ul { columns: 1; } /* عمود واحد في الهاتف */
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
         }
-        @media (max-width: 380px) {
-            .logo-container img { height: 30px; }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* القائمة الجانبية */
+        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
+        .hamburger input { display: none; }
+        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line-top-bottom { stroke-dasharray: 12 63; }
+        .hamburger input:checked + svg { transform: rotate(-45deg); }
+        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
+
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
+        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
+        .social-links a:hover { color: #00aaff; }
+        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .footer-nav a { color: #ccc; font-size: 13px; }
+        .copyright { font-size: 12px; color: #666; }
+
+        /* ==============================================
+           2. تنسيقات صفحة السياسة والشروط
+           ============================================== */
+
+        .container-doc { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        .doc-box {
+            background-color: #111a30; padding: 40px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2a3a5a; color: #e0e0e0; line-height: 1.8;
+        }
+
+        /* العناوين */
+        h1.main-title {
+            color: #00aaff; text-align: center; font-size: 28px; margin-bottom: 10px;
+        }
+        .last-update {
+            text-align: center; color: #777; font-size: 14px; margin-bottom: 40px; border-bottom: 1px solid #2a3a5a; padding-bottom: 20px;
+        }
+
+        h2 { color: #fff; font-size: 20px; margin-top: 30px; margin-bottom: 15px; border-right: 4px solid #00aaff; padding-right: 10px; }
+        h3 { color: #ccc; font-size: 18px; margin-top: 20px; margin-bottom: 10px; }
+
+        /* النصوص والقوائم */
+        p { margin-bottom: 15px; font-size: 15px; text-align: justify; }
+        
+        ul { list-style: none; padding-right: 20px; margin-bottom: 20px; }
+        ul li { position: relative; margin-bottom: 10px; font-size: 15px; }
+        ul li::before {
+            content: "•"; color: #00aaff; font-weight: bold; font-size: 20px;
+            position: absolute; right: -20px; top: -2px;
+        }
+
+        /* تمييز النصوص */
+        .highlight { color: #00aaff; font-weight: bold; }
+        .important-box {
+            background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d;
+            padding: 15px; border-radius: 8px; margin: 20px 0; color: #ffcccc;
+        }
+        .safe-box {
+            background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60;
+            padding: 15px; border-radius: 8px; margin: 20px 0; color: #a9dfbf;
+        }
+
+        /* الروابط */
+        .doc-link { color: #00aaff; text-decoration: underline; }
+        .doc-link:hover { color: #fff; text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .doc-box { padding: 20px; }
+            h1.main-title { font-size: 24px; }
         }
 
     </style>
-    </head>
+</head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/hJ2nq38z/clouddata.webp" alt="شعار CloudData">
-            <img src="https://i.ibb.co/v9zLrFg/skydata.webp" alt="شعار Skydata">
-        </div>
-        <div class="lang-switcher">
-            <a href="#" id="lang-ar" class="active" onclick="setLanguage('ar'); return false;">AR</a>
-            <a href="#" id="lang-en" onclick="setLanguage('en'); return false;">EN</a>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
         </div>
     </header>
 
-    <div class="container">
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html" style="background: rgba(0, 170, 255, 0.1); color: #fff;"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
+            <ul>
+                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
+                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
+                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
+                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
+                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
+                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>القسم 3: أدوات مجانية</h4>
+            <ul>
+                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
+                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
+                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
+                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
+                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
+                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
+                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
+                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
+                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
+                
+                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
+                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
+
+                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
+                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
+                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
+                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
+                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
+                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
+                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
+                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
+                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
+                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
+                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
+                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
+                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
+                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
+                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
+                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
+                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
+                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
+                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
+                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
+                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
+                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
+                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
+                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
+                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
+                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
+                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
+                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
+                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
+                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
+                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
+                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
+            </ul>
+        </div>
         
-        <main>
-            <div class="content-box">
-                <h1 data-lang-key="mainTitle">شروط الاستخدام وسياسة الخصوصية</h1>
-                
-                <div class="toc">
-                    <h3 data-lang-key="tocTitle">جدول المحتويات</h3>
-                    <ul>
-                        <li><a href="#section_intro" data-lang-key="toc_intro">1. مقدمة عن خدماتنا</a></li>
-                        <li><a href="#section_privacy" data-lang-key="toc_privacy">2. سياسة الخصوصية</a></li>
-                        <li><a href="#section_accounts" data-lang-key="toc_accounts">3. حسابات المستخدمين</a></li>
-                        <li><a href="#section_email" data-lang-key="toc_email">4. سياسة البريد والتسويق</a></li>
-                        <li><a href="#section_plans" data-lang-key="toc_plans">5. الخطط والاشتراكات</a></li>
-                        <li><a href="#section_refunds" data-lang-key="toc_refunds">6. الاسترداد والمسؤولية</a></li>
-                        <li><a href="#section_support" data-lang-key="toc_support">7. الدعم الفني</a></li>
-                        <li><a href="#section_changes" data-lang-key="toc_changes">8. تغييرات على الشروط</a></li>
-                    </ul>
-                </div>
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">SkyData © 2025</p>
+        </div>
+    </nav>
 
-                <h2 id="section_intro" data-lang-key="s1_title">1. مقدمة عن خدماتنا</h2>
-                <p data-lang-key="s1_p1">
-                    مرحباً بك في Sky Data ("نحن"، "الشركة"). نحن نقدم منصة متكاملة من أدوات الويب والذكاء الاصطناعي المجانية والاحترافية. تشمل خدماتنا (على سبيل المثال لا الحصر) أدوات معالجة الصور مثل تحويل الصور إلى PDF [sic: 4]، وضغط WEBP [sic: 13]، وتحويل الصور إلى روابط [sic: 14]، والعديد من الأدوات القادمة مستقبلاً.
-                </p>
-                <p data-lang-key="s1_p2">
-                    باستخدامك لموقعنا <a href="https://www.skydata.kozow.com/">https://www.skydata.kozow.com/</a> [sic: 3] وأي من خدماته، فإنك توافق على الالتزام بهذه الشروط وسياسة الخصوصية.
-                </p>
-
-                <h2 id="section_privacy" data-lang-key="s2_title">2. سياسة الخصوصية</h2>
-                <p data-lang-key="s2_p1">
-                    نحن نأخذ خصوصيتك على محمل الجد. نوضح لك كيف نتعامل مع بياناتك بشفافية:
-                </p>
-                <ul>
-                    <li data-lang-key="s2_li1">
-                        <strong>المعالجة من جانب العميل (Client-Side):</strong>
-                        غالبية أدواتنا (مثل تحويل PDF [sic: 4]، ضغط WEBP [sic: 13]، تغيير الحجم [sic: 16]) تعمل بالكامل داخل متصفحك. هذا يعني أن ملفاتك وصورك لا تترك جهازك أبداً ولا يتم رفعها أو تخزينها على خوادمنا. نحن لا نرى بياناتك ولا يمكننا الوصول إليها، مما يوفر لك خصوصية تامة.
-                    </li>
-                    <li data-lang-key="s2_li2">
-                        <strong>المعالجة من جانب الخادم (Server-Side):</strong>
-                        بعض خدماتنا المتقدمة (مثل أدوات الذكاء الاصطناعي [sic: 10, 15] أو نظام تسجيل الدخول [sic: 17]) تتطلب معالجة على خوادمنا. عند استخدام هذه الأدوات، نضمن لك أن بياناتك محمية في قواعد بيانات آمنة ومُعززة.
-                    </li>
-                    <li data-lang-key="s2_li3">
-                        <strong>خدمات الطرف الثالث (ImgBB):</strong>
-                        أداة "تحويل الصور إلى روابط" [sic: 14] تستخدم خدمة طرف ثالث (ImgBB) لاستضافة الصور. عند استخدام هذه الأداة، فإنك تخضع لسياسة خصوصية ImgBB. نحن نوفر لك "رابط الحذف" للتحكم الكامل في صورك.
-                    </li>
-                </ul>
-
-                <h2 id="section_accounts" data-lang-key="s3_title">3. حسابات المستخدمين</h2>
-                <h3 data-lang-key="s3_h3_1">التسجيل</h3>
-                <p data-lang-key="s3_p1">
-                    بعض خدماتنا قد تتطلب منك إنشاء حساب عن طريق البريد الإلكتروني [sic: 17]. أنت مسؤول عن الحفاظ على سرية معلومات حسابك.
-                </p>
-                <h3 data-lang-key="s3_h3_2">حذف الحساب</h3>
-                <p data-lang-key="s3_p2">
-                    يمكنك طلب حذف حسابك في أي وقت من خلال صفحة إعدادات ملفك الشخصي (`Menu.html`) [sic: 18].
-                </p>
-                <div class="note">
-                    <p data-lang-key="s3_p3">
-                        <strong>تنبيه:</strong> عملية حذف الحساب نهائية ولا يمكن التراجع عنها [sic: 18]. بمجرد تأكيد الحذف، سيتم مسح جميع بياناتك المرتبطة بحسابك بشكل دائم من قواعد بياناتنا.
-                    </p>
-                </div>
-
-                <h2 id="section_email" data-lang-key="s4_title">4. سياسة البريد والتسويق</h2>
-                <p data-lang-key="s4_p1">
-                    نحن نمنحك التحكم الكامل في الرسائل التي تصلك منا. عند التسجيل، لك حرية الاختيار في قبول أو رفض استلام رسائل البريد الإلكتروني التسويقية والتحديثات [sic: 18].
-                </p>
-                <h3 data-lang-key="s4_h3_1">إلغاء الاشتراك</h3>
-                <p data-lang-key="s4_p2">
-                    يمكنك إلغاء الاشتراك في أي وقت عبر الخطوات التالية:
-                </p>
-                <ul>
-                    <li data-lang-key="s4_li1">
-                        <strong>من خلال حسابك:</strong> قم بزيارة صفحة الملف الشخصي (`Menu.html`) [sic: 18]، ادخل إلى "الإعدادات"، ثم "الإشعارات"، وقم بإلغاء تفعيل خيار البريد.
-                    </li>
-                    <li data-lang-key="s4_li2">
-                        <strong>من خلال الدعم:</strong> يمكنك التواصل معنا مباشرة عبر البريد الإلكتروني <a href="mailto:support@skydata.abrdns.com">support@skydata.abrdns.com</a> أو عبر <a href="https://www.skydata.kozow.com/support.html">صفحة الدعم</a>، مع إرسال عنوان بريدك الإلكتروني، وسيقوم فريقنا بإلغاء اشتراكك فوراً.
-                    </li>
-                </ul>
-                <div class="note">
-                    <p data-lang-key="s4_p3">
-                        <strong>للحماية من السبام:</strong> نسمح بتغيير حالة الاشتراك (تفعيل أو إلغاء) مرة واحدة كل 5 دقائق [sic: 18]. هذا الإجراء يهدف للحد من أي أخطاء أو محاولات استغلال قد تؤدي لوصول رسائل لا ترغب بها.
-                    </p>
-                </div>
-                
-                <h2 id="section_plans" data-lang-key="s5_title">5. الخطط والاشتراكات</h2>
-                <p data-lang-key="s5_p1">
-                    تقدم Sky Data حالياً "خطة حرة" تتيح الوصول إلى جميع أدواتنا الأساسية.
-                </p>
-                <ul>
-                    <li data-lang-key="s5_li1">
-                        <strong>الخطة الحرة (Free Plan):</strong> تمنحك وصولاً كاملاً للأدوات، مع وصول محدود لبعض خدمات الذكاء الاصطناعي والخدمات الاحترافية التي قد تتطلب ترقية مستقبلاً.
-                    </li>
-                    <li data-lang-key="s5_li2">
-                        <strong>الخطط المدفوعة (Pro Plans):</strong> قيد التطوير حالياً. ستوفر هذه الخطط وصولاً غير محدود لجميع الأدوات، ودعم فني مميز، وفترة تجريبية مجانية لمدة 15 يوماً.
-                    </li>
-                </ul>
-                <div class="note">
-                    <p data-lang-key="s5_p2">
-                        <strong>ملاحظة هامة:</strong> جميع الخطط المدفوعة غير متوفرة حالياً وهي "تحت الصيانة والتطوير".
-                    </p>
-                </div>
-
-                <h2 id="section_refunds" data-lang-key="s6_title">6. الاسترداد والمسؤولية</h2>
-                <p data-lang-key="s6_p1">
-                    على الرغم من أن خدماتنا المدفوعة غير مفعلة حالياً، فإننا نوضح سياستنا المستقبلية:
-                </p>
-                <p data-lang-key="s6_p2">
-                    يمكن استرداد الأموال في ظروف معينة، مثل حدوث أخطاء فنية من طرفنا، أو أخطاء في عمليات الدفع، أو في حالة حدوث عطل غير متوقع في الخدمة يمنعك من استخدامها. نحن نتحمل مسؤولية الأخطاء التي تحدث من جانبنا.
-                </p>
-                
-                <h2 id="section_support" data-lang-key="s7_title">7. الدعم الفني</h2>
-                <p data-lang-key="s7_p1">
-                    فريق الدعم الفني لدينا متاح لمساعدتك.
-                </p>
-                <ul>
-                    <li data-lang-key="s7_li1">
-                        <strong>أوقات العمل:</strong> 24 ساعة يومياً، 7 أيام في الأسبوع (12:00 صباحاً إلى 12:00 منتصف الليل) بتوقيت الجزائر (UTC+1).
-                    </li>
-                    <li data-lang-key="s7_li2">
-                        <strong>البريد الرسمي:</strong> <a href="mailto:support@skydata.abrdns.com">support@skydata.abrdns.com</a>
-                    </li>
-                    <li data-lang-key="s7_li3">
-                        <strong>صفحة الدعم:</strong> <a href="https://www.skydata.kozow.com/support.html">https://www.skydata.kozow.com/support.html</a>
-                    </li>
-                </ul>
-
-                <h2 id="section_changes" data-lang-key="s8_title">8. تغييرات على الشروط</h2>
-                <p data-lang-key="s8_p1">
-                    نحتفظ بالحق في تعديل هذه الشروط في أي وقت. سنقوم بإعلامك بأي تغييرات جوهرية. استمرارك في استخدام الموقع بعد هذه التغييرات يعني موافقتك على الشروط الجديدة.
-                </p>
-
-                </div>
-
-            <a href="index.html" class="cta-button back-button" data-lang-key="backToHome">العودة للرئيسية</a> [sic: 3]
-        </main>
+    <main class="container-doc">
         
-    </div> 
-    
-    <footer style="margin-top: auto;">
-        </footer>
+        <div class="doc-box">
+            <h1 class="main-title"><i class="fas fa-shield-alt"></i> سياسة الخصوصية وشروط الاستخدام</h1>
+            <div class="last-update">آخر تحديث: 2025</div>
 
+            <section>
+                <h2>1. مقدمة وتعريف (من نحن)</h2>
+                <p>مرحباً بكم في <span class="highlight">SkyData</span>. نحن منصة عربية رائدة تهدف إلى توفير مجموعة شاملة من الأدوات الرقمية المجانية للمستخدمين والمطورين وصناع المحتوى. هدفنا هو تسهيل المهام اليومية دون الحاجة إلى تثبيت برامج معقدة أو دفع رسوم اشتراك.</p>
+                <p>نقدم أكثر من 50 أداة تشمل الذكاء الاصطناعي، معالجة الصور، تحويل الملفات، أدوات الأمان، وغيرها الكثير.</p>
+            </section>
+
+            <section>
+                <h2>2. أدواتنا وخدماتنا</h2>
+                <p>يوفر موقع SkyData مجموعة متنوعة من الأدوات المقسمة إلى عدة فئات لتسهيل الوصول إليها:</p>
+                <ul>
+                    <li><strong>أدوات الذكاء الاصطناعي (AI):</strong> مثل إزالة الخلفية من الصور، تحليل الصور واستخراج النصوص (OCR)، وتوليد الأسماء وكلمات المرور.</li>
+                    <li><strong>أدوات الصور:</strong> تحرير، قص، ضغط، تغيير الأبعاد، وتحويل الصيغ (WEBP, JPG, PNG).</li>
+                    <li><strong>أدوات الملفات والنصوص:</strong> تحويل الصور والنصوص إلى PDF، دمج الملفات، تنسيق الأكواد (HTML, CSS, JS)، والتحويل بين التنسيقات (JSON, CSV, YAML).</li>
+                    <li><strong>أدوات الأمان والشبكات:</strong> تشفير وفك تشفير (AES, Base64, Hash)، فحص الروابط، وتحليل DNS.</li>
+                    <li><strong>أدوات عامة:</strong> حساب العمر، مواقيت الصلاة، الطقس، تحويل العملات والوحدات، وقياس سرعة الإنترنت والضوضاء.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. شروط الاستخدام (مجانية الخدمة)</h2>
+                <p>بوصولك واستخدامك لموقع SkyData، فإنك توافق على الشروط التالية:</p>
+                <ul>
+                    <li><strong>الاستخدام المجاني:</strong> جميع الأدوات المتاحة على الموقع مجانية تماماً للاستخدام الشخصي والتجاري المحدود.</li>
+                    <li><strong>الاستخدام العادل:</strong> يمنع استخدام أدواتنا لأي أغراض غير قانونية، أو لمحاولة الضرر بالخوادم، أو استخراج البيانات بشكل آلي (Scraping) دون إذن.</li>
+                    <li><strong>المسؤولية:</strong> يتم توفير الأدوات "كما هي" (As Is). نحن نبذل قصارى جهدنا لضمان دقة النتائج، ولكننا لا نتحمل مسؤولية أي أخطاء أو فقدان للبيانات ناتج عن استخدام الموقع.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>4. سياسة الخصوصية وأمن البيانات</h2>
+                <div class="safe-box">
+                    <i class="fas fa-lock"></i> <strong>خصوصيتك أولويتنا:</strong>
+                    معظم أدواتنا تعمل بتقنية <strong>Client-Side</strong>، مما يعني أن معالجة الملفات (مثل ضغط الصور، تحويل PDF، التشفير) تتم داخل متصفحك ولا يتم رفع ملفاتك إلى خوادمنا، مما يضمن خصوصية بياناتك بنسبة 100%.
+                </div>
+                <p>في الحالات القليلة التي تتطلب معالجة سحابية (مثل بعض أدوات الذكاء الاصطناعي)، يتم حذف الملفات تلقائياً وفوراً بعد انتهاء المعالجة.</p>
+                <p>نحن نستخدم ملفات تعريف الارتباط (Cookies) فقط لتحسين تجربة المستخدم وحفظ التفضيلات البسيطة (مثل الوضع الليلي) ولا نقوم ببيع بياناتك لأي طرف ثالث.</p>
+            </section>
+
+            <section>
+                <h2>5. القانون الواجب التطبيق</h2>
+                <div class="important-box">
+                    تخضع شروط الاستخدام وسياسة الخصوصية هذه وتفسر وفقاً لقوانين <strong>الجمهورية الجزائرية الديمقراطية الشعبية</strong>. يوافق المستخدم على الخضوع للاختصاص القضائي الحصري للمحاكم الجزائرية في حالة وجود أي نزاع يتعلق باستخدام الموقع.
+                </div>
+            </section>
+
+            <section>
+                <h2>6. اتصل بنا</h2>
+                <p>إذا كان لديك أي استفسار حول هذه الشروط أو واجهت أي مشكلة، لا تتردد في التواصل معنا عبر صفحة <a href="support.html" class="doc-link">الدعم الفني</a>.</p>
+            </section>
+
+        </div>
+    </main>
 
     <script>
-        // --- 1. قاموس الترجمة (مُحدث بالكامل) ---
-        const translations = {
-            "ar": {
-                "pageTitle": "شروط الاستخدام وسياسة الخصوصية - Sky Data",
-                "mainTitle": "شروط الاستخدام وسياسة الخصوصية",
-                "backToHome": "العودة للرئيسية",
-                
-                "tocTitle": "جدول المحتويات",
-                "toc_intro": "1. مقدمة عن خدماتنا",
-                "toc_privacy": "2. سياسة الخصوصية",
-                "toc_accounts": "3. حسابات المستخدمين",
-                "toc_email": "4. سياسة البريد والتسويق",
-                "toc_plans": "5. الخطط والاشتراكات",
-                "toc_refunds": "6. الاسترداد والمسؤولية",
-                "toc_support": "7. الدعم الفني",
-                "toc_changes": "8. تغييرات على الشروط",
+        // --- فتح/إغلاق القائمة ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
 
-                "s1_title": "1. مقدمة عن خدماتنا",
-                "s1_p1": "مرحباً بك في Sky Data (\"نحن\"، \"الشركة\"). نحن نقدم منصة متكاملة من أدوات الويب والذكاء الاصطناعي المجانية والاحترافية. تشمل خدماتنا (على سبيل المثال لا الحصر) أدوات معالجة الصور مثل تحويل الصور إلى PDF، وضغط WEBP، وتحويل الصور إلى روابط، والعديد من الأدوات القادمة مستقبلاً.",
-                "s1_p2": "باستخدامك لموقعنا https://www.skydata.kozow.com/ وأي من خدماته، فإنك توافق على الالتزام بهذه الشروط وسياسة الخصوصية.",
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+    </script>
 
-                "s2_title": "2. سياسة الخصوصية",
-                "s2_p1": "نحن نأخذ خصوصيتك على محمل الجد. نوضح لك كيف نتعامل مع بياناتك بشفافية:",
-                "s2_li1": "<strong>المعالجة من جانب العميل (Client-Side):</strong> غالبية أدواتنا (مثل تحويل PDF، ضغط WEBP، تغيير الحجم) تعمل بالكامل داخل متصفحك. هذا يعني أن ملفاتك وصورك لا تترك جهازك أبداً ولا يتم رفعها أو تخزينها على خوادمنا. نحن لا نرى بياناتك ولا يمكننا الوصول إليها، مما يوفر لك خصوصية تامة.",
-                "s2_li2": "<strong>المعالجة من جانب الخادم (Server-Side):</strong> بعض خدماتنا المتقدمة (مثل أدوات الذكاء الاصطناعي أو نظام تسجيل الدخول) تتطلب معالجة على خوادمنا. عند استخدام هذه الأدوات، نضمن لك أن بياناتك محمية في قواعد بيانات آمنة ومُعززة.",
-                "s2_li3": "<strong>خدمات الطرف الثالث (ImgBB):</strong> أداة \"تحويل الصور إلى روابط\" تستخدم خدمة طرف ثالث (ImgBB) لاستضافة الصور. عند استخدام هذه الأداة، فإنك تخضع لسياسة خصوصية ImgBB. نحن نوفر لك \"رابط الحذف\" للتحكم الكامل في صورك.",
-                
-                "s3_title": "3. حسابات المستخدمين",
-                "s3_h3_1": "التسجيل",
-                "s3_p1": "بعض خدماتنا قد تتطلب منك إنشاء حساب عن طريق البريد الإلكتروني. أنت مسؤول عن الحفاظ على سرية معلومات حسابك.",
-                "s3_h3_2": "حذف الحساب",
-                "s3_p2": "يمكنك طلب حذف حسابك في أي وقت من خلال صفحة إعدادات ملفك الشخصي (`Menu.html`).",
-                "s3_p3": "<strong>تنبيه:</strong> عملية حذف الحساب نهائية ولا يمكن التراجع عنها. بمجرد تأكيد الحذف، سيتم مسح جميع بياناتك المرتبطة بحسابك بشكل دائم من قواعد بياناتنا.",
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-                "s4_title": "4. سياسة البريد والتسويق",
-                "s4_p1": "نحن نمنحك التحكم الكامل في الرسائل التي تصلك منا. عند التسجيل، لك حرية الاختيار في قبول أو رفض استلام رسائل البريد الإلكتروني التسويقية والتحديثات.",
-                "s4_h3_1": "إلغاء الاشتراك",
-                "s4_p2": "يمكنك إلغاء الاشتراك في أي وقت عبر الخطوات التالية:",
-                "s4_li1": "<strong>من خلال حسابك:</strong> قم بزيارة صفحة الملف الشخصي (`Menu.html`)، ادخل إلى \"الإعدادات\"، ثم \"الإشعارات\"، وقم بإلغاء تفعيل خيار البريد.",
-                "s4_li2": "<strong>من خلال الدعم:</strong> يمكنك التواصل معنا مباشرة عبر البريد الإلكتروني support@skydata.abrdns.com أو عبر صفحة الدعم، مع إرسال عنوان بريدك الإلكتروني، وسيقوم فريقنا بإلغاء اشتراكك فوراً.",
-                "s4_p3": "<strong>للحماية من السبام:</strong> نسمح بتغيير حالة الاشتراك (تفعيل أو إلغاء) مرة واحدة كل 5 دقائق. هذا الإجراء يهدف للحد من أي أخطاء أو محاولات استغلال قد تؤدي لوصول رسائل لا ترغب بها.",
-                
-                "s5_title": "5. الخطط والاشتراكات",
-                "s5_p1": "تقدم Sky Data حالياً \"خطة حرة\" تتيح الوصول إلى جميع أدواتنا الأساسية.",
-                "s5_li1": "<strong>الخطة الحرة (Free Plan):</strong> تمنحك وصولاً كاملاً للأدوات، مع وصول محدود لبعض خدمات الذكاء الاصطناعي والخدمات الاحترافية التي قد تتطلب ترقية مستقبلاً.",
-                "s5_li2": "<strong>الخطط المدفوعة (Pro Plans):</strong> قيد التطوير حالياً. ستوفر هذه الخطط وصولاً غير محدود لجميع الأدوات، ودعم فني مميز، وفترة تجريبية مجانية لمدة 15 يوماً.",
-                "s5_p2": "<strong>ملاحظة هامة:</strong> جميع الخطط المدفوعة غير متوفرة حالياً وهي \"تحت الصيانة والتطوير\".",
-                
-                "s6_title": "6. الاسترداد والمسؤولية",
-                "s6_p1": "على الرغم من أن خدماتنا المدفوعة غير مفعلة حالياً، فإننا نوضح سياستنا المستقبلية:",
-                "s6_p2": "يمكن استرداد الأموال في ظروف معينة، مثل حدوث أخطاء فنية من طرفنا، أو أخطاء في عمليات الدفع، أو في حالة حدوث عطل غير متوقع في الخدمة يمنعك من استخدامها. نحن نتحمل مسؤولية الأخطاء التي تحدث من جانبنا.",
-
-                "s7_title": "7. الدعم الفني",
-                "s7_p1": "فريق الدعم الفني لدينا متاح لمساعدتك.",
-                "s7_li1": "<strong>أوقات العمل:</strong> 24 ساعة يومياً، 7 أيام في الأسبوع (12:00 صباحاً إلى 12:00 منتصف الليل) بتوقيت الجزائر (UTC+1).",
-                "s7_li2": "<strong>البريد الرسمي:</strong> support@skydata.abrdns.com",
-                "s7_li3": "<strong>صفحة الدعم:</strong> https://www.skydata.kozow.com/support.html",
-                
-                "s8_title": "8. تغييرات على الشروط",
-                "s8_p1": "نحتفظ بالحق في تعديل هذه الشروط في أي وقت. سنقوم بإعلامك بأي تغييرات جوهرية. استمرارك في استخدام الموقع بعد هذه التغييرات يعني موافقتك على الشروط الجديدة."
-            },
-            "en": {
-                "pageTitle": "Terms of Use and Privacy Policy - Sky Data",
-                "mainTitle": "Terms of Use and Privacy Policy",
-                "backToHome": "Back to Home",
-
-                "tocTitle": "Table of Contents",
-                "toc_intro": "1. Our Services",
-                "toc_privacy": "2. Privacy Policy",
-                "toc_accounts": "3. User Accounts",
-                "toc_email": "4. Email & Marketing Policy",
-                "toc_plans": "5. Plans & Subscriptions",
-                "toc_refunds": "6. Refunds & Liability",
-                "toc_support": "7. Technical Support",
-                "toc_changes": "8. Changes to Terms",
-
-                "s1_title": "1. Our Services",
-                "s1_p1": "Welcome to Sky Data (\"us\", \"we\", \"the Company\"). We provide an integrated platform of free and professional web and AI tools. Our services include (but are not limited to) image processing tools like Image to PDF, WEBP Compression, Image to Link, and many more tools to come.",
-                "s1_p2": "By using our site https://www.skydata.kozow.com/ and any of its services, you agree to be bound by these Terms and Privacy Policy.",
-
-                "s2_title": "2. Privacy Policy",
-                "s2_p1": "We take your privacy seriously. We handle your data with transparency:",
-                "s2_li1": "<strong>Client-Side Processing:</strong> The majority of our tools (like PDF Conversion, WEBP Compression, Resizing) operate entirely within your browser. This means your files and images never leave your device and are never uploaded to or stored on our servers. We do not see or have access to your data, providing you with complete privacy.",
-                "s2_li2": "<strong>Server-Side Processing:</strong> Some of our advanced services (like AI tools or the login system) require processing on our servers. When using these tools, we ensure your data is protected in secure and enhanced databases.",
-                "s2_li3": "<strong>Third-Party Services (ImgBB):</strong> Our \"Image to Link\" tool uses a third-party service (ImgBB) for image hosting. By using this tool, you are subject to ImgBB's privacy policy. We provide you with the \"Delete URL\" for full control over your images.",
-
-                "s3_title": "3. User Accounts",
-                "s3_h3_1": "Registration",
-                "s3_p1": "Some of our services may require you to create an account via email. You are responsible for maintaining the confidentiality of your account information.",
-                "s3_h3_2": "Account Deletion",
-                "s3_p2": "You can request to delete your account at any time through your profile settings page (`Menu.html`).",
-                "s3_p3": "<strong>Warning:</strong> The account deletion process is final and irreversible. Once you confirm deletion, all data associated with your account will be permanently erased from our databases.",
-
-                "s4_title": "4. Email & Marketing Policy",
-                "s4_p1": "We give you full control over the messages you receive from us. When registering, you have the freedom to opt-in or opt-out of receiving marketing emails and updates.",
-                "s4_h3_1": "Unsubscribing",
-                "s4_p2": "You can unsubscribe at any time via the following steps:",
-                "s4_li1": "<strong>Via Your Account:</strong> Visit your profile page (`Menu.html`), go to \"Settings\", then \"Notifications\", and deactivate the email option.",
-                "s4_li2": "<strong>Via Support:</strong> You can contact us directly at support@skydata.abrdns.com or via our Support Page, providing your email address, and our team will unsubscribe you immediately.",
-                "s4_p3": "<strong>Spam Protection:</strong> We only allow changing the subscription status (on or off) once every 5 minutes. This measure is to prevent errors or exploits that could lead to you receiving unwanted messages.",
-
-                "s5_title": "5. Plans & Subscriptions",
-                "s5_p1": "Sky Data currently offers a \"Free Plan\" that provides access to all our basic tools.",
-                "s5_li1": "<strong>Free Plan:</strong> Gives you full access to tools, with limited access to some AI and professional services that may require a future upgrade.",
-                "s5_li2": "<strong>Pro Plans:</strong> Currently under development. These plans will offer unlimited access to all tools, premium support, and a 15-day free trial.",
-                "s5_p2": "<strong>Important Note:</strong> All paid plans are currently unavailable and are \"under maintenance and development\".",
-
-                "s6_title": "6. Refunds & Liability",
-                "s6_p1": "Although our paid services are not yet active, we clarify our future policy:",
-                "s6_p2": "Refunds may be issued under certain circumstances, such as technical errors on our part, payment processing errors, or unexpected service outages that prevent you from using the service. We take responsibility for errors on our side.",
-
-                "s7_title": "7. Technical Support",
-                "s7_p1": "Our technical support team is available to help you.",
-                "s7_li1": "<strong>Hours:</strong> 24 hours a day, 7 days a week (12:00 AM to 12:00 AM) Algeria Time (UTC+1).",
-                "s7_li2": "<strong>Official Email:</strong> support@skydata.abrdns.com",
-                "s7_li3": "<strong>Support Page:</strong> https://www.skydata.kozow.com/support.html",
-
-                "s8_title": "8. Changes to Terms",
-                "s8_p1": "We reserve the right to modify these terms at any time. We will notify you of any major changes. Your continued use of the site after these changes signifies your agreement to the new terms."
-            }
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
+            authDomain: "skydata-ai.firebaseapp.com",
+            projectId: "skydata-ai"
         };
 
-        // --- 2. متغير اللغة الحالي ---
-        let currentLang = 'ar'; 
-
-        // --- 3. دالة تبديل اللغة ---
-        window.setLanguage = function(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-
-            document.querySelectorAll('[data-lang-key]').forEach(element => {
-                const key = element.getAttribute('data-lang-key');
-                if (translations[lang][key] !== undefined) {
-                    element.innerHTML = translations[lang][key];
-                }
-            });
-        }
-        
-        // --- 4. تشغيل الصفحة ---
-        document.addEventListener('DOMContentLoaded', () => {
-            setLanguage(currentLang);
-            
-            // (جديد) تفعيل التنقل السلس لجدول المحتويات
-            document.querySelectorAll('.toc a').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const authLink = document.getElementById('auth-link');
+            if (authLink) {
+                const ico = authLink.querySelector('i'); const txt = authLink.querySelector('span');
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authLink.href = 'menu.html'; ico.className = 'fas fa-user-circle'; txt.textContent = 'ملف الشخصي';
+                    } else {
+                        authLink.href = 'login.html'; ico.className = 'fas fa-sign-in-alt'; txt.textContent = 'تسجيل الدخول';
                     }
                 });
-            });
-        });
-        
+            }
+        } catch (e) { console.error("Firebase Error:", e); }
     </script>
-    </body>
+
+</body>
 </html>

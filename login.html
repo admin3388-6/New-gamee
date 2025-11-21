@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <style>
         /* ============ تنسيقات أساسية ============ */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
@@ -33,10 +35,36 @@
             border: 1px solid #1f2d4d;
             text-align: center;
             animation: fadeIn 0.5s ease;
+            margin-top: 60px; /* مساحة للهيدر */
         }
 
         h2 { color: #00aaff; margin-bottom: 10px; font-size: 24px; }
-        p { color: #aaa; font-size: 14px; margin-bottom: 30px; }
+        p { color: #aaa; font-size: 14px; margin-bottom: 20px; }
+
+        /* مربع الشروط */
+        .terms-box {
+            margin: 15px 0;
+            font-size: 13px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .terms-box input { 
+            accent-color: #00aaff; 
+            width: 16px; 
+            height: 16px; 
+            cursor: pointer;
+        }
+        .terms-box a { color: #00aaff; text-decoration: none; font-weight: bold; }
+
+        /* حاوية الكابتشا */
+        .captcha-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
         /* زر جوجل */
         .btn-google {
@@ -61,6 +89,9 @@
             box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
         }
         .btn-google:active { transform: scale(0.98); }
+        .btn-google:disabled {
+            opacity: 0.6; cursor: not-allowed; transform: none;
+        }
         .btn-google i { color: #DB4437; font-size: 20px; }
 
         /* زر الدعم */
@@ -76,7 +107,7 @@
         #toast {
             visibility: hidden; min-width: 250px; margin-left: -125px;
             background-color: #e74c3c; color: #fff; text-align: center;
-            border-radius: 50px; padding: 16px; position: fixed; z-index: 1;
+            border-radius: 50px; padding: 16px; position: fixed; z-index: 9999;
             left: 50%; bottom: 30px; font-size: 14px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
@@ -97,6 +128,15 @@
         <h2>مرحباً بك مجدداً</h2>
         <p>سجّل الدخول للوصول إلى جميع أدوات SkyData</p>
         
+        <div class="terms-box">
+            <input type="checkbox" id="agreeTerms">
+            <label for="agreeTerms">أوافق على <a href="safety.html" target="_blank">شروط الخدمة</a> و <a href="safety.html" target="_blank">الخصوصية</a></label>
+        </div>
+
+        <div class="captcha-container">
+            <div class="g-recaptcha" data-sitekey="6LewCRQsAAAAAHwUjEmPiZTCbOwz8g4vwovMMHaB"></div>
+        </div>
+
         <button id="google-btn" class="btn-google">
             <i class="fab fa-google"></i> متابعة باستخدام Google
         </button>
@@ -106,42 +146,68 @@
     <div id="toast">حدث خطأ ما...</div>
 
     <script type="module">
-        // استيراد الوظائف من الملف المركزي الذي أنشأناه سابقاً
         import { auth, googleProvider, signInWithPopup, onAuthStateChanged } from './firebase-config.js';
 
         const googleBtn = document.getElementById('google-btn');
         const toast = document.getElementById('toast');
+        const termsCheckbox = document.getElementById('agreeTerms');
 
-        function showToast(msg) {
+        function showToast(msg, type = 'error') {
             toast.innerText = msg;
+            toast.style.backgroundColor = type === 'success' ? '#27ae60' : '#e74c3c';
             toast.className = "show";
             setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
-        // 1. التحقق مما إذا كان المستخدم مسجلاً بالفعل (التوجيه التلقائي)
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // إذا كان مسجلاً، اذهب للقائمة فوراً
                 window.location.href = "menu.html";
             }
         });
 
-        // 2. منطق تسجيل الدخول عبر جوجل
         googleBtn.addEventListener('click', async () => {
+            // 1. التحقق من الشروط
+            if (!termsCheckbox.checked) {
+                showToast("يجب الموافقة على شروط الخدمة أولاً.");
+                return;
+            }
+
+            // 2. الحصول على توكن الكابتشا
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (recaptchaResponse.length === 0) {
+                showToast("الرجاء إثبات أنك لست روبوت.");
+                return;
+            }
+
             try {
                 googleBtn.disabled = true;
-                googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاتصال...';
+                googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+
+                // 3. إرسال التوكن إلى سيرفرنا للتحقق (أمان عالي)
+                const verifyReq = await fetch('/api/verify-captcha', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: recaptchaResponse })
+                });
                 
-                const result = await signInWithPopup(auth, googleProvider);
-                const user = result.user;
+                const verifyRes = await verifyReq.json();
+
+                if (!verifyRes.success) {
+                    throw new Error("فشل التحقق من الكابتشا. حاول مجدداً.");
+                }
+
+                // 4. إذا نجح التحقق، نكمل تسجيل الدخول مع جوجل
+                googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاتصال بجوجل...';
+                await signInWithPopup(auth, googleProvider);
                 
-                // نجاح! سيتم التوجيه تلقائياً عبر onAuthStateChanged أعلاه
-                
+                // التوجيه يتم تلقائياً عبر onAuthStateChanged
+
             } catch (error) {
                 console.error(error);
-                showToast("فشل تسجيل الدخول: " + error.message);
+                showToast(error.message || "فشل تسجيل الدخول.");
                 googleBtn.disabled = false;
                 googleBtn.innerHTML = '<i class="fab fa-google"></i> متابعة باستخدام Google';
+                grecaptcha.reset(); // إعادة تعيين الكابتشا
             }
         });
     </script>

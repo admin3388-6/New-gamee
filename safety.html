@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>SkyData - الشروط والخصوصية</title>
-    <meta name="description" content="تعرف على سياسة الخصوصية وشروط الاستخدام في SkyData. نحن نلتزم بحماية بياناتك وتوفير أدوات مجانية وآمنة بموجب القوانين الجزائرية.">
-    <meta name="keywords" content="سياسة الخصوصية, شروط الاستخدام, SkyData, حماية البيانات, قوانين الجزائر, privacy policy, terms of service">
+    <title>SkyData - مركز الشفافية والخصوصية</title>
+    <meta name="description" content="الوثيقة الشاملة لسياسة الخصوصية وشروط الاستخدام في SkyData. تعرف على كيفية حمايتنا لبياناتك، حقوقك، والتزامنا بالشفافية التامة.">
+    <meta name="keywords" content="سياسة الخصوصية, شروط الاستخدام, حماية البيانات, Google Sign-In, قوانين الجزائر, مسح البيانات, SkyData Privacy">
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="style.css">
@@ -35,6 +35,7 @@
             overflow-x: hidden;
             font-family: 'Cairo', sans-serif;
             display: block; 
+            color: #e0e0e0;
         }
 
         *, *::before, *::after {
@@ -43,7 +44,6 @@
             box-shadow: none !important;
             box-sizing: border-box;
         }
-        *:focus { outline: none; border-color: transparent !important; }
 
         /* الهيدر */
         .main-header {
@@ -89,56 +89,77 @@
         .copyright { font-size: 12px; color: #666; }
 
         /* ==============================================
-           2. تنسيقات صفحة السياسة والشروط
+           2. تنسيقات المستند القانوني
            ============================================== */
 
-        .container-doc { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .container-doc { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
 
-        .doc-box {
-            background-color: #111a30; padding: 40px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0; line-height: 1.8;
+        .doc-wrapper {
+            background-color: #111a30; padding: 50px;
+            border-radius: 15px; box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            border: 1px solid #2a3a5a;
         }
 
-        /* العناوين */
-        h1.main-title {
-            color: #00aaff; text-align: center; font-size: 28px; margin-bottom: 10px;
-        }
-        .last-update {
-            text-align: center; color: #777; font-size: 14px; margin-bottom: 40px; border-bottom: 1px solid #2a3a5a; padding-bottom: 20px;
-        }
+        /* رأس الصفحة */
+        .doc-header { text-align: center; border-bottom: 1px solid #2a3a5a; padding-bottom: 30px; margin-bottom: 40px; }
+        .doc-header h1 { color: #00aaff; font-size: 32px; margin-bottom: 10px; }
+        .doc-header p { color: #888; font-size: 14px; }
 
-        h2 { color: #fff; font-size: 20px; margin-top: 30px; margin-bottom: 15px; border-right: 4px solid #00aaff; padding-right: 10px; }
-        h3 { color: #ccc; font-size: 18px; margin-top: 20px; margin-bottom: 10px; }
+        /* جدول المحتويات (Quick Links) */
+        .toc-box {
+            background: #0e1624; border: 1px solid #00aaff; border-radius: 10px;
+            padding: 20px; margin-bottom: 40px;
+        }
+        .toc-title { color: #fff; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .toc-list {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;
+        }
+        .toc-link {
+            color: #aaa; text-decoration: none; font-size: 14px; transition: 0.2s;
+            display: flex; align-items: center; gap: 8px; padding: 5px;
+        }
+        .toc-link:hover { color: #00aaff; background: rgba(0, 170, 255, 0.1); border-radius: 5px; }
+        .toc-link i { font-size: 12px; }
 
-        /* النصوص والقوائم */
-        p { margin-bottom: 15px; font-size: 15px; text-align: justify; }
+        /* المحتوى */
+        .section-block { margin-bottom: 50px; scroll-margin-top: 100px; }
+        .section-title {
+            color: #fff; font-size: 22px; margin-bottom: 20px; padding-bottom: 10px;
+            border-bottom: 2px solid #1f2d4d; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title i { color: #00aaff; }
+
+        p { margin-bottom: 15px; font-size: 16px; line-height: 1.8; color: #ccc; text-align: justify; }
         
-        ul { list-style: none; padding-right: 20px; margin-bottom: 20px; }
-        ul li { position: relative; margin-bottom: 10px; font-size: 15px; }
-        ul li::before {
-            content: "•"; color: #00aaff; font-weight: bold; font-size: 20px;
-            position: absolute; right: -20px; top: -2px;
+        /* القوائم */
+        ul.styled-list { list-style: none; padding: 0; margin-bottom: 20px; }
+        ul.styled-list li {
+            position: relative; padding-right: 25px; margin-bottom: 12px; font-size: 15px; color: #ddd;
         }
+        ul.styled-list li::before {
+            content: "\f058"; font-family: "Font Awesome 5 Free"; font-weight: 900;
+            color: #27ae60; position: absolute; right: 0; top: 3px; font-size: 16px;
+        }
+        ul.styled-list.warning li::before { content: "\f071"; color: #e67e22; }
 
-        /* تمييز النصوص */
-        .highlight { color: #00aaff; font-weight: bold; }
-        .important-box {
-            background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d;
-            padding: 15px; border-radius: 8px; margin: 20px 0; color: #ffcccc;
+        /* الصناديق الملونة */
+        .info-box {
+            padding: 20px; border-radius: 8px; margin: 20px 0; font-size: 15px;
+            display: flex; gap: 15px; align-items: flex-start;
         }
-        .safe-box {
-            background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60;
-            padding: 15px; border-radius: 8px; margin: 20px 0; color: #a9dfbf;
-        }
+        .info-box.blue { background: rgba(0, 170, 255, 0.1); border: 1px solid #00aaff; color: #cceeff; }
+        .info-box.green { background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; color: #ccffdd; }
+        .info-box.red { background: rgba(231, 76, 60, 0.1); border: 1px solid #e74c3c; color: #ffcccc; }
+        .info-box i { font-size: 24px; margin-top: 3px; }
 
-        /* الروابط */
-        .doc-link { color: #00aaff; text-decoration: underline; }
-        .doc-link:hover { color: #fff; text-decoration: none; }
+        /* الروابط داخل النص */
+        .text-link { color: #00aaff; text-decoration: underline; transition: 0.2s; }
+        .text-link:hover { color: #fff; }
 
         @media (max-width: 768px) {
-            .doc-box { padding: 20px; }
+            .doc-wrapper { padding: 20px; }
             h1.main-title { font-size: 24px; }
+            .section-title { font-size: 20px; }
         }
 
     </style>
@@ -175,148 +196,159 @@
                 </a></li>
             </ul>
         </div>
-
-        <div class="sidebar-section">
-            <h4 class="ai-title"><i class="fas fa-brain"></i> القسم 2: أدوات AI</h4>
-            <ul>
-                <li><a href="remove-background-pro.html"><i class="fas fa-eraser"></i> <span>إزالة الخلفية</span></a></li>
-                <li><a href="imgscan.html"><i class="fas fa-text-height"></i> <span>تحليل الصور إلى نص</span></a></li>
-                <li><a href="logo.html"><i class="fas fa-palette"></i> <span>صنع شعار</span></a></li>
-                <li><a href="names.html"><i class="fas fa-random"></i> <span>مولِّد أسماء عشوائية</span></a></li>
-                <li><a href="password.html"><i class="fas fa-lock"></i> <span>مولّد كلمات مرور</span></a></li>
-                <li><a href="password-strength.html"><i class="fas fa-key"></i> <span>إختبار قوة كلمة السر</span></a></li>
-            </ul>
-        </div>
-
-        <div class="sidebar-section">
-            <h4>القسم 3: أدوات مجانية</h4>
-            <ul>
-                <li><a href="editor.html"><i class="fas fa-edit"></i> <span>تحرير الصور</span></a></li>
-                <li><a href="imgdv.html"><i class="fas fa-compress-arrows-alt"></i> <span>ضغط الصور</span></a></li>
-                <li><a href="imgtag.html"><i class="fas fa-link"></i> <span>تحويل صور إلى روابط</span></a></li>
-                <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> <span>تحويل صور إلى PDF</span></a></li>
-                <li><a href="qr.html"><i class="fas fa-qrcode"></i> <span>صانع كود QR</span></a></li>
-                <li><a href="size.html"><i class="fas fa-expand-arrows-alt"></i> <span>تغيير أبعاد الصورة</span></a></li>
-                <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
-                <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
-                <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
-                <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
-                <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
-                <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
-                <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
-                <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
-                <li><a href="units.html"><i class="fas fa-exchange-alt"></i> <span>محوّلات وحدات</span></a></li>
-                <li><a href="cameqr.html"><i class="fas fa-camera"></i> <span>قارئ QR من الكاميرا</span></a></li>
-                <li><a href="recorder.html"><i class="fas fa-microphone"></i> <span>تسجيل صوت</span></a></li>
-                <li><a href="v-o-edit.html"><i class="fas fa-cut"></i> <span>قص مقطع صوت/فيديو</span></a></li>
-                <li><a href="money.html"><i class="fas fa-money-bill-wave"></i> <span>تحويل العملات</span></a></li>
-                <li><a href="calculator.html"><i class="fas fa-calculator"></i> <span>الة حاسبة</span></a></li>
-                <li><a href="arbtxt.html"><i class="fas fa-font"></i> <span>زخرفة نصوص عربية</span></a></li>
-                <li><a href="engtxt.html"><i class="fas fa-spell-check"></i> <span>زخرفة نصوص إنجليزية</span></a></li>
-                <li><a href="emoji.html"><i class="fas fa-smile"></i> <span>رموز و إيموجي</span></a></li>
-                <li><a href="more.html"><i class="fas fa-sort-amount-up"></i> <span>استخراج الكلمات المكررة</span></a></li>
-                <li><a href="fix.html"><i class="fas fa-check-double"></i> <span>تصحيح إملائي</span></a></li>
-                <li><a href="pixels.html"><i class="fas fa-draw-polygon"></i> <span>رسم & Pixel</span></a></li>
-                <li><a href="hide.html"><i class="fas fa-eye-slash"></i> <span>حروف مخفية</span></a></li>
-                <li><a href="kill.html"><i class="fas fa-th-large"></i> <span>تقسيم نص</span></a></li>
-                <li><a href="delete.html"><i class="fas fa-trash-alt"></i> <span>حذف الأسطر المكررة</span></a></li>
-                <li><a href="gif.html"><i class="fas fa-film"></i> <span>تحويل فيديو إلى GIF</span></a></li>
-                <li><a href="morse.html"><i class="fas fa-ellipsis-h"></i> <span>شيفرة مورس</span></a></li>
-                <li><a href="hash.html"><i class="fas fa-hashtag"></i> <span>مولد Hash</span></a></li>
-                <li><a href="crypto.html"><i class="fas fa-shield-virus"></i> <span>تشفير AES</span></a></li>
-                <li><a href="url.html"><i class="fas fa-shield-alt"></i> <span>كشف روابط ضارة</span></a></li>
-                <li><a href="voyse.html"><i class="fas fa-volume-up"></i> <span>قياس الضوضاء (dB)</span></a></li>
-                <li><a href="base64.html"><i class="fas fa-retweet"></i> <span>تشفير Base64</span></a></li>
-                <li><a href="yaml.html"><i class="fas fa-file-code"></i> <span>JSON ↔ YAML</span></a></li>
-                <li><a href="codegood.html"><i class="fas fa-code"></i> <span>تنسيق الأكواد</span></a></li>
-                <li><a href="dns.html"><i class="fas fa-network-wired"></i> <span>فحص DNS</span></a></li>
-                <li><a href="csv.html"><i class="fas fa-file-csv"></i> <span>CSV ↔ JSON</span></a></li>
-                <li><a href="zip.html"><i class="fas fa-file-archive"></i> <span>تجميع ملفات ZIP</span></a></li>
-                <li><a href="imgcut.html"><i class="fas fa-crop-alt"></i> <span>قص الصور بأشكال</span></a></li>
-                <li><a href="safetymake.html"><i class="fas fa-file-signature"></i> <span>مولد سياسة الخصوصية</span></a></li>
-                <li><a href="goodarbtxt.html"><i class="fas fa-text-width"></i> <span>ضغط خطوط الويب</span></a></li>
-            </ul>
-        </div>
-        
         <div class="sidebar-footer">
-            <div class="social-links">
-                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
-                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
-                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
-            </div>
-            <div class="footer-nav">
-                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
-                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
-                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
-            </div>
             <p class="copyright">SkyData © 2025</p>
         </div>
     </nav>
 
     <main class="container-doc">
-        
-        <div class="doc-box">
-            <h1 class="main-title"><i class="fas fa-shield-alt"></i> سياسة الخصوصية وشروط الاستخدام</h1>
-            <div class="last-update">آخر تحديث: 2025/11/21</div>
+        <div class="doc-wrapper">
+            
+            <div class="doc-header">
+                <h1 class="main-title">مركز الشفافية والخصوصية</h1>
+                <p>آخر تحديث: 21 نوفمبر 2025 | الإصدار 2.0</p>
+                <p style="font-size:13px; margin-top:10px;">
+                    في SkyData، نؤمن بأن الثقة هي أساس خدمتنا. هذه الوثيقة تشرح بالتفصيل الممل كيف نتعامل مع بياناتك، ولماذا نقوم بذلك، وكيف يمكنك التحكم بها.
+                </p>
+            </div>
 
-            <section>
-                <h2>1. مقدمة وتعريف (من نحن)</h2>
-                <p>مرحباً بكم في <span class="highlight">SkyData</span>. نحن منصة عربية رائدة تهدف إلى توفير مجموعة شاملة من الأدوات الرقمية المجانية للمستخدمين والمطورين وصناع المحتوى. هدفنا هو تسهيل المهام اليومية دون الحاجة إلى تثبيت برامج معقدة أو دفع رسوم اشتراك.</p>
-                <p>نقدم أكثر من 50 أداة تشمل الذكاء الاصطناعي، معالجة الصور، تحويل الملفات، أدوات الأمان، وغيرها الكثير.</p>
-            </section>
+            <div class="toc-box">
+                <div class="toc-title"><i class="fas fa-list-ul"></i> تنقل سريع في الوثيقة:</div>
+                <div class="toc-list">
+                    <a href="#intro" class="toc-link"><i class="fas fa-info-circle"></i> المقدمة والتعريف</a>
+                    <a href="#auth" class="toc-link"><i class="fab fa-google"></i> المصادقة والأمان</a>
+                    <a href="#data" class="toc-link"><i class="fas fa-database"></i> البيانات التي نجمعها</a>
+                    <a href="#cookies" class="toc-link"><i class="fas fa-cookie-bite"></i> ملفات الارتباط</a>
+                    <a href="#tech" class="toc-link"><i class="fas fa-code"></i> جانب العميل والخادم</a>
+                    <a href="#rights" class="toc-link"><i class="fas fa-user-shield"></i> حقوقك وحذف الحساب</a>
+                    <a href="#spam" class="toc-link"><i class="fas fa-envelope-open"></i> سياسة البريد والسبام</a>
+                    <a href="#terms" class="toc-link"><i class="fas fa-gavel"></i> شروط الاستخدام</a>
+                </div>
+            </div>
 
-            <section>
-                <h2>2. أدواتنا وخدماتنا</h2>
-                <p>يوفر موقع SkyData مجموعة متنوعة من الأدوات المقسمة إلى عدة فئات لتسهيل الوصول إليها:</p>
-                <ul>
-                    <li><strong>أدوات الذكاء الاصطناعي (AI):</strong> مثل إزالة الخلفية من الصور، تحليل الصور واستخراج النصوص (OCR)، وتوليد الأسماء وكلمات المرور.</li>
-                    <li><strong>أدوات الصور:</strong> تحرير، قص، ضغط، تغيير الأبعاد، وتحويل الصيغ (WEBP, JPG, PNG).</li>
-                    <li><strong>أدوات الملفات والنصوص:</strong> تحويل الصور والنصوص إلى PDF، دمج الملفات، تنسيق الأكواد (HTML, CSS, JS)، والتحويل بين التنسيقات (JSON, CSV, YAML).</li>
-                    <li><strong>أدوات الأمان والشبكات:</strong> تشفير وفك تشفير (AES, Base64, Hash)، فحص الروابط، وتحليل DNS.</li>
-                    <li><strong>أدوات عامة:</strong> حساب العمر، مواقيت الصلاة، الطقس، تحويل العملات والوحدات، وقياس سرعة الإنترنت والضوضاء.</li>
+            <div id="intro" class="section-block">
+                <h2 class="section-title"><i class="fas fa-info-circle"></i> 1. المقدمة والتعريف</h2>
+                <p>
+                    مرحباً بك في <strong>SkyData</strong>. نحن منصة أدوات رقمية شاملة مقرها الجزائر، تهدف إلى توفير حلول برمجية متقدمة (مثل معالجة الصور، التحويلات، أدوات المطورين) بشكل مجاني وسهل الوصول للجميع.
+                </p>
+                <p>
+                    استخدامك للموقع يعني موافقتك الصريحة على هذه الشروط. نحن نلتزم بتقديم خدمة شفافة، آمنة، وتحترم خصوصيتك إلى أقصى حد ممكن تقنياً وقانونياً.
+                </p>
+            </div>
+
+            <div id="auth" class="section-block">
+                <h2 class="section-title"><i class="fab fa-google"></i> 2. المصادقة والأمان (لماذا جوجل فقط؟)</h2>
+                <div class="info-box green">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>نحن لا نقوم بتخزين كلمات المرور الخاصة بك أبداً.</strong>
+                        <br>
+                        لقد اتخذنا قراراً استراتيجياً بعدم استخدام نظام تسجيل الدخول التقليدي (إيميل + كلمة مرور) لتعزيز أمانك.
+                    </div>
+                </div>
+                <p>
+                    بدلاً من ذلك، نعتمد حصرياً على <strong>Google Sign-In</strong> (بروتوكول OAuth 2.0) للأسباب التالية:
+                </p>
+                <ul class="styled-list">
+                    <li><strong>الأمان العالي:</strong> جوجل تتكفل بحماية عملية الدخول، ونحن لا نرى كلمة مرورك ولا نملك الوصول إليها.</li>
+                    <li><strong>منع الاختراق:</strong> بما أننا لا نملك قاعدة بيانات لكلمات المرور، فلا يمكن سرقتها من خوادمنا.</li>
+                    <li><strong>المصداقية:</strong> نضمن أن المستخدمين حقيقيون، مما يقلل من الحسابات الوهمية والسبام.</li>
                 </ul>
-            </section>
+            </div>
 
-            <section>
-                <h2>3. شروط الاستخدام (مجانية الخدمة)</h2>
-                <p>بوصولك واستخدامك لموقع SkyData، فإنك توافق على الشروط التالية:</p>
-                <ul>
-                    <li><strong>الاستخدام المجاني:</strong> جميع الأدوات المتاحة على الموقع مجانية تماماً للاستخدام الشخصي والتجاري المحدود.</li>
-                    <li><strong>الاستخدام العادل:</strong> يمنع استخدام أدواتنا لأي أغراض غير قانونية، أو لمحاولة الضرر بالخوادم، أو استخراج البيانات بشكل آلي (Scraping) دون إذن.</li>
-                    <li><strong>المسؤولية:</strong> يتم توفير الأدوات "كما هي" (As Is). نحن نبذل قصارى جهدنا لضمان دقة النتائج، ولكننا لا نتحمل مسؤولية أي أخطاء أو فقدان للبيانات ناتج عن استخدام الموقع.</li>
+            <div id="data" class="section-block">
+                <h2 class="section-title"><i class="fas fa-database"></i> 3. ما هي البيانات التي نجمعها؟ ولماذا؟</h2>
+                <p>
+                    نحن نؤمن بمبدأ "الحد الأدنى من البيانات" (Data Minimization). عند تسجيل الدخول عبر جوجل، نحن نحصل فقط على البيانات التالية ونخزنها في قواعد بياناتنا السحابية الآمنة (Google Firebase):
+                </p>
+                <ul class="styled-list">
+                    <li><strong>الاسم الكامل:</strong> لعرضه في ملفك الشخصي ولتخصيص تجربتك.</li>
+                    <li><strong>عنوان البريد الإلكتروني:</strong> لتمييز حسابك الفريد وللتواصل معك في الحالات الضرورية (مثل الدعم الفني).</li>
+                    <li><strong>صورة الملف الشخصي (Avatar):</strong> هي الصورة العامة لحسابك في جوجل، نستخدمها لتحسين واجهة المستخدم.</li>
+                    <li><strong>المعرّف الفريد (UID):</strong> كود رقمي يربط بياناتك (مثل الملاحظات المحفوظة أو المهام) بحسابك.</li>
                 </ul>
-            </section>
-
-            <section>
-                <h2>4. سياسة الخصوصية وأمن البيانات</h2>
-                <div class="safe-box">
-                    <i class="fas fa-lock"></i> <strong>خصوصيتك أولويتنا:</strong>
-                    معظم أدواتنا تعمل بتقنية <strong>Client-Side</strong>، مما يعني أن معالجة الملفات (مثل ضغط الصور، تحويل PDF، التشفير) تتم داخل متصفحك ولا يتم رفع ملفاتك إلى خوادمنا، مما يضمن خصوصية بياناتك بنسبة 100%.
+                <div class="info-box blue">
+                    <i class="fas fa-handshake"></i>
+                    <div>
+                        <strong>التزام صارم:</strong> نحن لا نبيع، لا نؤجر، ولا نشارك هذه البيانات مع أي طرف ثالث (Third-Party) لأغراض إعلانية أو تجارية. البيانات تستخدم حصرياً لتشغيل وظائف الموقع.
+                    </div>
                 </div>
-                <p>في الحالات القليلة التي تتطلب معالجة سحابية (مثل بعض أدوات الذكاء الاصطناعي)، يتم حذف الملفات تلقائياً وفوراً بعد انتهاء المعالجة.</p>
-                <p>نحن نستخدم ملفات تعريف الارتباط (Cookies) فقط لتحسين تجربة المستخدم وحفظ التفضيلات البسيطة (مثل الوضع الليلي) ولا نقوم ببيع بياناتك لأي طرف ثالث.</p>
-            </section>
+            </div>
 
-            <section>
-                <h2>5. القانون الواجب التطبيق</h2>
-                <div class="important-box">
-                    استخدام وإسغلال الثغرات يعرضك للحظر عنوان ip الخاص بك وتجميد كل حساباتك على المنصة
+            <div id="cookies" class="section-block">
+                <h2 class="section-title"><i class="fas fa-cookie-bite"></i> 4. ملفات تعريف الارتباط (Cookies) والتخزين المحلي</h2>
+                <p>
+                    نحن لا نستخدم ملفات تعريف الارتباط لتتبعك عبر الإنترنت. استخدامنا لتقنيات التخزين (Local Storage & Cookies) ينحصر في الأغراض التشغيلية البحتة:
+                </p>
+                <ul class="styled-list">
+                    <li><strong>حفظ الجلسة:</strong> لكي لا تضطر لتسجيل الدخول في كل مرة تفتح فيها الموقع.</li>
+                    <li><strong>التفضيلات:</strong> لحفظ إعداداتك المفضلة (مثل الوضع الليلي، اللغة، أو حجم الخط في المحرر).</li>
+                    <li><strong>البيانات المؤقتة:</strong> لحفظ الملاحظات وقوائم المهام التي تكتبها في أداة "المذكرة" داخل متصفحك فقط.</li>
+                </ul>
+            </div>
+
+            <div id="tech" class="section-block">
+                <h2 class="section-title"><i class="fas fa-server"></i> 5. الشفافية التقنية: أين تتم معالجة ملفاتك؟</h2>
+                <p>
+                    هذه نقطة جوهرية لخصوصيتك. تنقسم أدواتنا إلى نوعين من حيث المعالجة:
+                </p>
+                
+                <h3>أ. المعالجة جانب العميل (Client-Side) - آمنة 100%</h3>
+                <p>
+                    معظم الأدوات (مثل: ضغط الصور، تحويل PDF، تشفير النصوص، المذكرة، الآلة الحاسبة) تعمل <strong>بالكامل داخل متصفحك</strong>. هذا يعني أن الملفات لا تغادر جهازك أبداً ولا يتم رفعها لأي خادم.
+                </p>
+
+                <h3>ب. المعالجة السحابية (Server-Side) - عند الضرورة فقط</h3>
+                <p>
+                    بعض الأدوات المعقدة (مثل: الذكاء الاصطناعي لإزالة الخلفية، أو إنشاء روابط مباشرة للصور) تتطلب معالجة سحابية. في هذه الحالة:
+                </p>
+                <ul class="styled-list">
+                    <li>يتم نقل الملف عبر اتصال مشفر (HTTPS).</li>
+                    <li>يتم معالجة الملف فوراً.</li>
+                    <li><strong>الحذف التلقائي:</strong> لا نحتفظ بالملفات. بالنسبة لأداة "تحويل الصور لروابط"، نستخدم خدمة ImgBB ونوفر لك رابطاً مباشراً لحذف الصورة نهائياً من السيرفر فور انتهائك منها.</li>
+                </ul>
+            </div>
+
+            <div id="rights" class="section-block">
+                <h2 class="section-title"><i class="fas fa-user-shield"></i> 6. حقوقك: التحكم الكامل والحذف</h2>
+                <p>
+                    أنت المالك الوحيد لبياناتك. بموجب القوانين الدولية وقوانين حماية البيانات، نمنحك الحقوق التالية:
+                </p>
+                <div class="info-box red">
+                    <i class="fas fa-trash-alt"></i>
+                    <div>
+                        <strong>إمكانية حذف الحساب ذاتياً:</strong>
+                        <br>
+                        لا تحتاج لمراسلة الدعم لحذف حسابك. يوجد زر "حذف الحساب" في لوحة الإعدادات. عند الضغط عليه وتأكيده، يتم محو سجلك بالكامل من قاعدة بياناتنا بشكل فوري ولا رجعة فيه.
+                    </div>
                 </div>
-            </section>
+            </div>
 
-<section>
-                <h2>6. تحديث المعلومات</h2>
-                <div class="important-box">
-نود تنويه انه يتم تحديث المعلومات  و القوانين والشروط في اي وقت وسيتم اعلامك
-                </div>
-            </section>
+            <div id="spam" class="section-block">
+                <h2 class="section-title"><i class="fas fa-envelope-open-text"></i> 7. سياسة البريد ومكافحة الإزعاج</h2>
+                <p>
+                    نحن نكره الرسائل المزعجة (Spam) بقدر ما تكرهها أنت. لذلك نلتزم بالتالي:
+                </p>
+                <ul class="styled-list">
+                    <li>لن نرسل لك أي بريد إلكتروني تسويقي أو دعائي ما لم تشترك بنفسك في القائمة البريدية (إن وجدت مستقبلاً).</li>
+                    <li>استخدامنا لبريدك ينحصر في: تأكيد تسجيل الدخول، الرد على تذاكر الدعم الفني التي تفتحها، أو إشعارات أمان هامة جداً تخص حسابك.</li>
+                </ul>
+            </div>
 
-            <section>
-                <h2>7. اتصل بنا</h2>
-                <p>إذا كان لديك أي استفسار حول هذه الشروط أو واجهت أي مشكلة، لا تتردد في التواصل معنا عبر صفحة <a href="support.html" class="doc-link">الدعم الفني</a>.</p>
-            </section>
+            <div id="terms" class="section-block">
+                <h2 class="section-title"><i class="fas fa-gavel"></i> 8. شروط الاستخدام والقوانين</h2>
+                <ul class="styled-list warning">
+                    <li><strong>الاستخدام العادل:</strong> يمنع استخدام أدواتنا في أي نشاط غير قانوني، أو لمحاولة اختراق الموقع، أو الضغط على الخوادم (DDoS).</li>
+                    <li><strong>الملكية الفكرية:</strong> المحتوى الذي تنشئه بأدواتنا (مثل الصور المعدلة) هو ملك لك. أما كود الموقع وتصميمه فهو ملك لـ SkyData.</li>
+                    <li><strong>إخلاء المسؤولية:</strong> نقدم الخدمات "كما هي". بينما نسعى لضمان دقة عمل الأدوات بنسبة 100%، لا نتحمل مسؤولية أي فقدان للبيانات ناتج عن سوء الاستخدام أو أخطاء تقنية خارجة عن إرادتنا.</li>
+                    <li><strong>القانون المطبق:</strong> تخضع هذه الشروط لقوانين الجمهورية الجزائرية الديمقراطية الشعبية.</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 50px; border-top: 1px solid #2a3a5a; padding-top: 20px; text-align: center;">
+                <p>إذا كان لديك أي استفسار، فريقنا موجود لخدمتك.</p>
+                <a href="support.html" class="cta-button" style="background:#00aaff; color:#111; padding:10px 30px; border-radius:50px; text-decoration:none; font-weight:bold;">تواصل مع الدعم الفني</a>
+            </div>
 
         </div>
     </main>
@@ -336,9 +368,9 @@
     </script>
 
     <script type="module">
-    import { updateAuthUI } from './firebase-config.js';
-    updateAuthUI();
-</script>
+        import { updateAuthUI } from './firebase-config.js';
+        updateAuthUI();
+    </script>
 
 </body>
 </html>

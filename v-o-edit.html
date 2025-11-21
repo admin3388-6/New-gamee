@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>SkyData - استوديو المونتاج السريع</title>
-    <meta name="description" content="محرر فيديو وصوت متقدم يعمل في المتصفح. قص، دمج، وتعديل بدقة عالية مع معاينة فورية.">
+    <title>SkyData - استوديو المونتاج</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,166 +14,83 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
-        /* ==============================================
-           تنسيقات استوديو المونتاج (Advanced Editor)
-           ============================================== */
-        body {
-            background-color: #0b132b;
-            padding-top: 80px;
-            font-family: 'Cairo', sans-serif;
-            overflow-x: hidden;
-            user-select: none; /* منع تحديد النصوص لتجربة لمس أفضل */
-        }
-
-        .container-editor {
-            max-width: 1000px; margin: 0 auto; padding: 15px;
-        }
-
-        .editor-box {
-            background-color: #111a30; padding: 20px;
-            border-radius: 15px; border: 1px solid #2a3a5a;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative; overflow: hidden;
-        }
-
-        /* منطقة العرض */
-        .preview-container {
-            width: 100%; background: #000; border-radius: 10px;
-            margin-bottom: 20px; position: relative; display: flex;
-            justify-content: center; align-items: center; min-height: 300px;
-            border: 1px solid #333;
-        }
+        /* نفس تنسيقات الستايل العامة */
+        body { background-color: #0b132b; padding-top: 80px; font-family: 'Cairo', sans-serif; overflow-x: hidden; user-select: none; }
+        
+        /* الهيدر والقائمة (تمت إعادتها) */
+        .main-header { height: 70px !important; background-color: #0b132b !important; border-bottom: 1px solid #1f2d4d; position: fixed; top: 0; width: 100%; z-index: 2000; display: flex !important; align-items: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .main-header .container { width: 100% !important; padding: 0 20px !important; display: flex !important; justify-content: space-between !important; align-items: center !important; }
+        .logo-img { height: 35px !important; width: auto; }
+        
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; transition: right 0.3s ease; overflow-y: auto; }
+        .sidebar.open { right: 0; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px); }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
+        /* تنسيقات المحرر */
+        .container-editor { max-width: 1000px; margin: 0 auto; padding: 15px; }
+        .editor-box { background-color: #111a30; padding: 20px; border-radius: 15px; border: 1px solid #2a3a5a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+        
+        .preview-container { width: 100%; background: #000; border-radius: 10px; margin-bottom: 20px; position: relative; display: flex; justify-content: center; align-items: center; min-height: 300px; border: 1px solid #333; }
         video, audio { max-width: 100%; max-height: 400px; width: 100%; }
         
-        /* شاشة الترحيب / الرفع */
-        .upload-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #111a30; z-index: 10; display: flex;
-            flex-direction: column; justify-content: center; align-items: center;
-        }
-        .upload-btn {
-            padding: 15px 40px; background: #00aaff; color: #fff; font-size: 18px;
-            border-radius: 50px; cursor: pointer; transition: 0.3s; border: none;
-            display: flex; align-items: center; gap: 10px; font-weight: bold;
-        }
-        .upload-btn:hover { transform: scale(1.05); background: #fff; color: #00aaff; }
-
-        /* الشريط الزمني (Timeline) */
-        .timeline-wrapper {
-            position: relative; height: 80px; background: #0e1624;
-            border-radius: 8px; margin: 20px 0; border: 1px solid #2a3a5a;
-            cursor: pointer; touch-action: none; /* لمنع السكرول أثناء السحب */
-        }
+        .upload-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #111a30; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .upload-btn { padding: 15px 40px; background: #00aaff; color: #fff; font-size: 18px; border-radius: 50px; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; gap: 10px; font-weight: bold; }
         
-        .timeline-track {
-            position: absolute; top: 50%; left: 0; width: 100%; height: 4px;
-            background: #333; transform: translateY(-50%);
-        }
-        
-        .timeline-fill {
-            position: absolute; top: 50%; height: 4px; background: #00aaff;
-            transform: translateY(-50%); left: 0; width: 100%;
-        }
-
-        /* مقابض التحكم (Handles) */
-        .handle {
-            position: absolute; top: 10px; width: 20px; height: 60px;
-            background: #fff; border-radius: 4px; cursor: ew-resize;
-            z-index: 5; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
+        .timeline-wrapper { position: relative; height: 80px; background: #0e1624; border-radius: 8px; margin: 20px 0; border: 1px solid #2a3a5a; cursor: pointer; touch-action: none; }
+        .timeline-track { position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background: #333; transform: translateY(-50%); }
+        .timeline-fill { position: absolute; top: 50%; height: 4px; background: #00aaff; transform: translateY(-50%); left: 0; width: 100%; }
+        .handle { position: absolute; top: 10px; width: 20px; height: 60px; background: #fff; border-radius: 4px; cursor: ew-resize; z-index: 5; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         .handle::after { content: '||'; color: #333; font-size: 10px; font-weight: bold; }
-        .handle-left { left: 0; background: #00aaff; }
-        .handle-right { right: 0; background: #00aaff; }
-
-        /* مؤشر الوقت (Tooltip) */
-        .time-tooltip {
-            position: absolute; top: -35px; background: #27ae60; color: #fff;
-            padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: monospace;
-            pointer-events: none; display: none; transform: translateX(-50%);
-            white-space: nowrap; z-index: 20; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .time-tooltip::after {
-            content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
-            border-width: 5px; border-style: solid; border-color: #27ae60 transparent transparent transparent;
-        }
-
-        /* نقاط القطع (Markers) */
-        .marker {
-            position: absolute; top: 50%; width: 16px; height: 16px;
-            border-radius: 50%; transform: translate(-50%, -50%);
-            z-index: 4; cursor: pointer; transition: 0.3s; border: 2px solid #fff;
-        }
-        .marker-blue { background: #00aaff; box-shadow: 0 0 10px #00aaff; }
-        .marker-red { background: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; }
-
-        /* شريط الأدوات */
-        .toolbar {
-            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;
-            margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a3a5a;
-        }
-        .tool-btn {
-            background: #1f2d4d; color: #fff; border: 1px solid #2a3a5a;
-            width: 50px; height: 50px; border-radius: 12px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
-            transition: 0.2s; position: relative;
-        }
+        .handle-left { left: 0; background: #00aaff; } .handle-right { right: 0; background: #00aaff; }
+        
+        .toolbar { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a3a5a; }
+        .tool-btn { background: #1f2d4d; color: #fff; border: 1px solid #2a3a5a; width: 50px; height: 50px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.2s; position: relative; }
         .tool-btn:hover { background: #00aaff; color: #111; transform: translateY(-3px); }
         .tool-btn.active { background: #00aaff; color: #111; border-color: #fff; box-shadow: 0 0 15px rgba(0, 170, 255, 0.4); }
-        
-        .tool-btn-text {
-            position: absolute; bottom: -25px; font-size: 11px; color: #aaa; width: 100px; text-align: center;
-        }
+        .tool-btn-text { position: absolute; bottom: -25px; font-size: 11px; color: #aaa; width: 100px; text-align: center; }
+        .btn-save { background: #27ae60; color: #fff; padding: 0 30px; width: auto; font-weight: bold; font-size: 16px; }
 
-        .btn-save {
-            background: #27ae60; color: #fff; padding: 0 30px; width: auto; font-weight: bold; font-size: 16px;
-        }
-        
-        /* انيميشن القص */
-        .cut-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 77, 77, 0.3); z-index: 50; display: none;
-            pointer-events: none;
-        }
-        .cut-overlay.animate { animation: flashRed 0.5s ease; display: block; }
-        @keyframes flashRed { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-
-        /* التوست المخصص */
-        #custom-toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: #1f2d4d; color: #fff; padding: 12px 25px; border-radius: 50px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; gap: 10px;
-            opacity: 0; transition: 0.3s; pointer-events: none; border: 1px solid #00aaff;
-        }
-        #custom-toast.show { opacity: 1; bottom: 50px; }
-        #toast-icon { font-size: 18px; }
-
-        /* شاشة التحميل */
-        #loader {
-            position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(11, 19, 43, 0.9);
-            z-index: 100; display: none; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .loader-spin {
-            width: 50px; height: 50px; border: 5px solid #2a3a5a; border-top-color: #00aaff;
-            border-radius: 50%; animation: spin 1s linear infinite;
-        }
+        #loader { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(11, 19, 43, 0.95); z-index: 100; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .loader-spin { width: 50px; height: 50px; border: 5px solid #2a3a5a; border-top-color: #00aaff; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to {transform: rotate(360deg);} }
 
+        /* تنبيه الأمان */
+        .security-warning {
+            color: #ff4d4d; margin-top: 20px; font-size: 13px; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 5px; display: none;
+        }
     </style>
 </head>
 <body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <header class="main-header">
         <div class="container">
             <a href="index.html" class="logo">
                 <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
             </a>
-            <div style="color:#00aaff; font-weight:bold;">Studio</div>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
         </div>
     </header>
 
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القائمة</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="menu.html"><i class="fas fa-th-large"></i> <span>لوحة التحكم</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
     <main class="container-editor">
-        
         <div class="editor-box">
             <div id="upload-screen" class="upload-overlay">
                 <input type="file" id="file-input" accept="video/*,audio/*" style="display:none">
@@ -186,10 +102,11 @@
 
             <div id="loader">
                 <div class="loader-spin"></div>
-                <p id="loader-msg" style="margin-top:15px; color:#fff;">جاري المعالجة...</p>
+                <p id="loader-msg" style="margin-top:15px; color:#fff;">جاري تهيئة المعالج...</p>
+                <div id="security-warning" class="security-warning">
+                    ⚠️ تنبيه: لم يتم تفعيل "SharedArrayBuffer". إذا استمر التحميل طويلاً، يرجى التأكد من إضافة ملف vercel.json
+                </div>
             </div>
-
-            <div id="cut-fx" class="cut-overlay"></div>
 
             <div class="preview-container">
                 <video id="main-player" controlsList="nodownload"></video>
@@ -197,411 +114,183 @@
             </div>
 
             <div class="timeline-wrapper" id="timeline">
-                <div class="time-tooltip" id="time-tooltip">00:00</div>
                 <div class="timeline-track"></div>
                 <div class="timeline-fill" id="progress-fill"></div>
-                
                 <div class="handle handle-left" id="handle-start"></div>
                 <div class="handle handle-right" id="handle-end"></div>
             </div>
 
             <div class="toolbar">
-                <button class="tool-btn" onclick="togglePlay()" title="تشغيل/إيقاف">
-                    <i class="fas fa-play" id="play-icon"></i>
-                    <span class="tool-btn-text">تشغيل</span>
-                </button>
-                
-                <button class="tool-btn" id="btn-trim-mode" onclick="setMode('trim')" title="قص الأطراف">
-                    <i class="fas fa-compress-alt"></i>
-                    <span class="tool-btn-text">قص الحواف</span>
-                </button>
-
-                <button class="tool-btn" id="btn-split-mode" onclick="setMode('split')" title="قطع جزء داخلي">
-                    <i class="fas fa-cut"></i>
-                    <span class="tool-btn-text">قطع جزء</span>
-                </button>
-
-                <div style="width: 1px; background: #333; margin: 0 10px;"></div>
-
-                <button class="tool-btn" onclick="undo()" title="تراجع">
-                    <i class="fas fa-undo"></i>
-                    <span class="tool-btn-text">تراجع</span>
-                </button>
-                
-                <button class="tool-btn" onclick="resetEditor()" title="إعادة تعيين">
-                    <i class="fas fa-redo"></i>
-                    <span class="tool-btn-text">جديد</span>
-                </button>
-
-                <button class="tool-btn btn-save" onclick="processAndSave()">
-                    <i class="fas fa-save"></i> حفظ
-                </button>
+                <button class="tool-btn" onclick="togglePlay()"><i class="fas fa-play" id="play-icon"></i></button>
+                <button class="tool-btn btn-save" onclick="processAndSave()"><i class="fas fa-save"></i> حفظ</button>
+                <button class="tool-btn" onclick="location.reload()"><i class="fas fa-redo"></i></button>
             </div>
-
         </div>
-
     </main>
 
-    <div id="custom-toast">
-        <i id="toast-icon" class="fas fa-check-circle" style="color:#2ecc71;"></i>
-        <span id="toast-msg">تمت العملية بنجاح</span>
-    </div>
-
     <script>
-        // --- إعدادات FFmpeg ---
+        // --- القائمة الجانبية ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- منطق FFmpeg ---
         const { createFFmpeg, fetchFile } = FFmpeg;
-        const ffmpeg = createFFmpeg({ log: false }); // إخفاء السجلات للسرعة
+        let ffmpeg = null;
+
+        // التحقق من دعم المتصفح
+        if (!crossOriginIsolated) {
+            // إذا لم تكن الهيدرز موجودة، ستفشل المكتبة. نظهر رسالة تحذير.
+            document.getElementById('security-warning').style.display = 'block';
+        }
+
+        ffmpeg = createFFmpeg({ 
+            log: true,
+            corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js'
+        });
 
         // --- المتغيرات ---
         let mediaFile = null;
-        let mediaType = 'video';
         let duration = 0;
-        let mode = 'trim'; // 'trim' (edges) or 'split' (middle)
-        
-        // التعديلات
-        let state = {
-            trimStart: 0,
-            trimEnd: 0,
-            splitPoints: [] // [PointA, PointB]
-        };
-        let historyStack = [];
-        
-        let unsavedChanges = false;
+        let trimStart = 0;
+        let trimEnd = 0;
 
-        // --- العناصر ---
         const player = document.getElementById('main-player');
         const audioPlayer = document.getElementById('audio-player');
-        const timeline = document.getElementById('timeline');
         const handleStart = document.getElementById('handle-start');
         const handleEnd = document.getElementById('handle-end');
-        const tooltip = document.getElementById('time-tooltip');
-        const toastEl = document.getElementById('custom-toast');
-        
-        // --- التهيئة عند الرفع ---
+
+        // --- عند رفع الملف ---
         document.getElementById('file-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(!file) return;
 
-            if(file.size > 1024 * 1024 * 1024) { showToast('حجم الملف أكبر من 1 جيجا!', 'error'); return; }
-
             document.getElementById('loader').style.display = 'flex';
-            document.getElementById('loader-msg').innerText = 'جاري تحليل الوسائط...';
+            document.getElementById('loader-msg').innerText = 'جاري تحميل المحرك (قد يستغرق وقتاً)...';
 
-            // تحميل FFmpeg
-            if(!ffmpeg.isLoaded()) await ffmpeg.load();
+            try {
+                if(!ffmpeg.isLoaded()) await ffmpeg.load();
+            } catch(err) {
+                alert("فشل تحميل المحرك. تأكد من إعدادات Vercel Headers.");
+                document.getElementById('loader').style.display = 'none';
+                return;
+            }
 
             mediaFile = file;
-            mediaType = file.type.startsWith('video') ? 'video' : 'audio';
-
             const url = URL.createObjectURL(file);
-            
-            if(mediaType === 'video') {
-                player.src = url;
-                player.style.display = 'block';
-                audioPlayer.style.display = 'none';
-                player.onloadedmetadata = initEditor;
+            const isVideo = file.type.startsWith('video');
+
+            if(isVideo) {
+                player.src = url; player.style.display = 'block'; audioPlayer.style.display = 'none';
+                player.onloadedmetadata = () => initEditor(player.duration);
             } else {
-                audioPlayer.src = url;
-                audioPlayer.style.display = 'block';
-                player.style.display = 'none';
-                audioPlayer.onloadedmetadata = () => {
-                    duration = audioPlayer.duration;
-                    if(duration > 3600) { alert('الملف أطول من ساعة!'); location.reload(); return; }
-                    initUI();
-                };
+                audioPlayer.src = url; audioPlayer.style.display = 'block'; player.style.display = 'none';
+                audioPlayer.onloadedmetadata = () => initEditor(audioPlayer.duration);
             }
         });
 
-        function initEditor() {
-            duration = player.duration;
-            if(duration > 3600) { alert('الملف أطول من ساعة!'); location.reload(); return; }
-            initUI();
-        }
-
-        function initUI() {
+        function initEditor(dur) {
+            duration = dur;
+            trimStart = 0;
+            trimEnd = duration;
             document.getElementById('upload-screen').style.display = 'none';
             document.getElementById('loader').style.display = 'none';
-            
-            state.trimStart = 0;
-            state.trimEnd = duration;
-            
             updateHandles();
-            setMode('trim');
-            saveState(); // Save initial state
-            unsavedChanges = true;
         }
 
-        // --- إدارة الحالة (Undo/Redo) ---
-        function saveState() {
-            // نسخ عميق للحالة
-            const snapshot = JSON.parse(JSON.stringify(state));
-            historyStack.push(snapshot);
-            if(historyStack.length > 10) historyStack.shift(); // احتفاظ بـ 10 خطوات فقط
-        }
+        // --- تحريك المقابض ---
+        let dragging = null;
+        const timeline = document.getElementById('timeline');
 
-        function undo() {
-            if(historyStack.length > 1) {
-                historyStack.pop(); // إزالة الحالة الحالية
-                const prevState = historyStack[historyStack.length - 1];
-                state = JSON.parse(JSON.stringify(prevState));
-                
-                // إزالة أي نقاط (Markers) قديمة
-                document.querySelectorAll('.marker').forEach(el => el.remove());
-                
-                updateHandles();
-                showToast('تم التراجع خطوة', 'info');
-            } else {
-                showToast('لا يوجد خطوات سابقة', 'warn');
-            }
-        }
-
-        // --- التفاعل مع الشريط الزمني ---
-        
-        // 1. تحريك المؤشر وعرض الوقت
-        timeline.addEventListener('mousemove', (e) => {
-            const rect = timeline.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const percent = Math.max(0, Math.min(1, x / rect.width));
-            const time = percent * duration;
-
-            tooltip.style.left = x + 'px';
-            tooltip.style.display = 'block';
-            tooltip.innerText = formatTime(time);
-            
-            // معاينة دقيقة للفيديو (Scrubbing)
-            if(mode === 'trim') getActivePlayer().currentTime = time;
+        [handleStart, handleEnd].forEach(h => {
+            h.addEventListener('mousedown', (e) => { dragging = h; e.preventDefault(); });
+            h.addEventListener('touchstart', (e) => { dragging = h; e.preventDefault(); });
         });
 
-        timeline.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none';
-        });
+        window.addEventListener('mouseup', () => dragging = null);
+        window.addEventListener('touchend', () => dragging = null);
 
-        // 2. النقر (Split Mode)
-        timeline.addEventListener('click', (e) => {
-            if(mode !== 'split') return;
-            
-            const rect = timeline.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const percent = x / rect.width;
-            const time = percent * duration;
+        window.addEventListener('mousemove', moveHandle);
+        window.addEventListener('touchmove', (e) => moveHandle(e.touches[0]));
 
-            if(state.splitPoints.length === 0) {
-                // النقطة الأولى (زرقاء)
-                addMarker(x, 'blue');
-                state.splitPoints.push(time);
-                showToast('تم تحديد البداية. اختر النهاية', 'info');
-            } else if(state.splitPoints.length === 1) {
-                // النقطة الثانية (زرقاء مؤقتاً)
-                if(time <= state.splitPoints[0]) { showToast('يجب أن تكون النهاية بعد البداية', 'error'); return; }
-                
-                addMarker(x, 'blue');
-                state.splitPoints.push(time);
-                
-                // تأكيد فوري
-                setTimeout(() => {
-                    if(confirm(`هل تريد حذف الجزء ما بين ${formatTime(state.splitPoints[0])} و ${formatTime(state.splitPoints[1])}؟`)) {
-                        document.querySelectorAll('.marker').forEach(el => el.classList.replace('marker-blue', 'marker-red'));
-                        // هنا منطق الحذف الفعلي سيتم عند الحفظ، لكن بصرياً نعرضه
-                        showToast('تم تحديد الجزء للحذف', 'success');
-                        saveState();
-                    } else {
-                        // إلغاء
-                        state.splitPoints = [];
-                        document.querySelectorAll('.marker').forEach(el => el.remove());
-                    }
-                }, 100);
-            }
-        });
-
-        function addMarker(x, color) {
-            const marker = document.createElement('div');
-            marker.className = `marker marker-${color}`;
-            marker.style.left = x + 'px';
-            timeline.appendChild(marker);
-        }
-
-        // 3. سحب الحواف (Trim Mode)
-        let draggingHandle = null;
-
-        function setupHandle(handle, type) {
-            handle.addEventListener('mousedown', (e) => {
-                if(mode !== 'trim') return;
-                draggingHandle = type;
-                e.stopPropagation();
-            });
-            
-            handle.addEventListener('touchstart', (e) => {
-                if(mode !== 'trim') return;
-                draggingHandle = type;
-                e.stopPropagation();
-            });
-        }
-
-        setupHandle(handleStart, 'start');
-        setupHandle(handleEnd, 'end');
-
-        window.addEventListener('mousemove', handleDrag);
-        window.addEventListener('touchmove', (e) => handleDrag(e.touches[0]));
-        
-        window.addEventListener('mouseup', () => { 
-            if(draggingHandle) { saveState(); draggingHandle = null; } 
-        });
-        window.addEventListener('touchend', () => { 
-            if(draggingHandle) { saveState(); draggingHandle = null; } 
-        });
-
-        function handleDrag(e) {
-            if(!draggingHandle) return;
-
+        function moveHandle(e) {
+            if(!dragging) return;
             const rect = timeline.getBoundingClientRect();
             const x = e.clientX - rect.left;
             let percent = Math.max(0, Math.min(1, x / rect.width));
             let time = percent * duration;
 
-            if(draggingHandle === 'start') {
-                if(time >= state.trimEnd - 1) return; // Minimum 1 sec
-                state.trimStart = time;
+            if(dragging === handleStart) {
+                if(time < trimEnd) trimStart = time;
             } else {
-                if(time <= state.trimStart + 1) return;
-                state.trimEnd = time;
+                if(time > trimStart) trimEnd = time;
             }
             
             updateHandles();
-            getActivePlayer().currentTime = time; // Live Preview
+            const p = player.style.display !== 'none' ? player : audioPlayer;
+            p.currentTime = time;
         }
 
         function updateHandles() {
-            const startPct = (state.trimStart / duration) * 100;
-            const endPct = (state.trimEnd / duration) * 100;
+            const startPct = (trimStart / duration) * 100;
+            const endPct = (trimEnd / duration) * 100;
             
             handleStart.style.left = startPct + '%';
             handleEnd.style.left = endPct + '%';
-            
-            // تلوين المنطقة النشطة
             document.getElementById('progress-fill').style.left = startPct + '%';
             document.getElementById('progress-fill').style.width = (endPct - startPct) + '%';
         }
 
-        // --- أدوات التحكم ---
-        function setMode(m) {
-            mode = m;
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + m + '-mode').classList.add('active');
-            
-            if(m === 'split') {
-                handleStart.style.display = 'none';
-                handleEnd.style.display = 'none';
-                showToast('اضغط على الشريط لتحديد نقطة القطع', 'info');
-            } else {
-                handleStart.style.display = 'flex';
-                handleEnd.style.display = 'flex';
-                // إخفاء النقاط
-                document.querySelectorAll('.marker').forEach(el => el.style.display = 'none');
-            }
-        }
-
-        function getActivePlayer() { return mediaType === 'video' ? player : audioPlayer; }
-
         function togglePlay() {
-            const p = getActivePlayer();
-            if(p.paused) {
-                p.currentTime = state.trimStart; // Start from trim point
-                p.play();
-                document.getElementById('play-icon').classList.replace('fa-play', 'fa-pause');
-            } else {
-                p.pause();
-                document.getElementById('play-icon').classList.replace('fa-pause', 'fa-play');
-            }
+            const p = player.style.display !== 'none' ? player : audioPlayer;
+            if(p.paused) { p.currentTime = trimStart; p.play(); }
+            else p.pause();
         }
 
-        function formatTime(s) {
-            const m = Math.floor(s / 60);
-            const sc = Math.floor(s % 60);
-            return `${m}:${sc.toString().padStart(2, '0')}`;
-        }
-
-        function showToast(msg, type) {
-            const icon = document.getElementById('toast-icon');
-            const text = document.getElementById('toast-msg');
-            
-            text.innerText = msg;
-            if(type === 'error') { icon.className = 'fas fa-times-circle'; icon.style.color = '#ff4d4d'; }
-            else if(type === 'info') { icon.className = 'fas fa-info-circle'; icon.style.color = '#00aaff'; }
-            else { icon.className = 'fas fa-check-circle'; icon.style.color = '#2ecc71'; }
-
-            toastEl.classList.add('show');
-            setTimeout(() => toastEl.classList.remove('show'), 2000);
-        }
-
-        function resetEditor() {
-            if(confirm('هل أنت متأكد؟ سيتم فقدان جميع التغييرات.')) {
-                location.reload();
-            }
-        }
-
-        // --- المعالجة (FFmpeg) ---
+        // --- الحفظ والقص ---
         async function processAndSave() {
-            if(!unsavedChanges) return;
-
-            // تأثير بصري (Animation)
-            const cutFx = document.getElementById('cut-fx');
-            cutFx.classList.add('animate');
-            setTimeout(() => cutFx.classList.remove('animate'), 500);
-
             const loader = document.getElementById('loader');
             loader.style.display = 'flex';
-            document.getElementById('loader-msg').innerText = 'جاري قص وتجهيز الملف...';
+            document.getElementById('loader-msg').innerText = 'جاري القص...';
 
             try {
-                const name = 'input' + (mediaType === 'video' ? '.mp4' : '.mp3');
-                const outName = 'output' + (mediaType === 'video' ? '.mp4' : '.mp3');
-                
-                ffmpeg.FS('writeFile', name, await fetchFile(mediaFile));
+                const ext = mediaFile.name.split('.').pop();
+                const inputName = 'input.' + ext;
+                const outputName = 'output.' + ext;
 
-                // الأمر السحري (قص سريع جداً بدون إعادة تشفير)
-                // نستخدم -ss و -to للقص من الأطراف (Trim)
-                // ملاحظة: دمج الـ Split (القطع الداخلي) مع Trim معقد جداً في أمر واحد، 
-                // للتبسيط والموثوقية سنطبق الـ Trim الأساسي (الأطراف) لأنه الأكثر طلباً.
-                
-                await ffmpeg.run('-i', name, '-ss', formatTimeFF(state.trimStart), '-to', formatTimeFF(state.trimEnd), '-c', 'copy', outName);
+                ffmpeg.FS('writeFile', inputName, await fetchFile(mediaFile));
 
-                const data = ffmpeg.FS('readFile', outName);
+                // الأمر السحري: -ss (بداية) -to (نهاية) -c copy (بدون إعادة تشفير = سرعة خيالية)
+                await ffmpeg.run('-i', inputName, '-ss', trimStart.toString(), '-to', trimEnd.toString(), '-c', 'copy', outputName);
+
+                const data = ffmpeg.FS('readFile', outputName);
                 const url = URL.createObjectURL(new Blob([data.buffer], { type: mediaFile.type }));
                 
-                // تحميل تلقائي
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = "skydata_edited_" + mediaFile.name;
+                a.download = `edited_${mediaFile.name}`;
                 a.click();
                 
-                unsavedChanges = false;
-                showToast('تم الحفظ بنجاح!', 'success');
-
-            } catch (e) {
+                alert("تم الحفظ بنجاح!");
+            } catch(e) {
                 console.error(e);
-                showToast('حدث خطأ أثناء المعالجة', 'error');
+                alert("حدث خطأ. قد يكون بسبب عدم دعم المتصفح.");
             } finally {
                 loader.style.display = 'none';
             }
         }
-
-        function formatTimeFF(s) {
-            const date = new Date(0);
-            date.setMilliseconds(s * 1000);
-            return date.toISOString().substr(11, 12); // HH:MM:SS.mmm
-        }
-
-        // تحذير عند الخروج
-        window.onbeforeunload = function() {
-            if (unsavedChanges) return "هل أنت متأكد من المغادرة دون حفظ؟";
-        };
-
     </script>
-
+    
     <script type="module">
-        import { updateAuthUI } from './firebase-config.js';
-        updateAuthUI();
+    import { updateAuthUI } from './firebase-config.js';
+    updateAuthUI();
     </script>
-
 </body>
 </html>

@@ -1,5 +1,5 @@
 // firebase-config.js
-// هذا الملف يحتوي على إعدادات الاتصال بـ Firebase ويتم استدعاؤه في كل الصفحات
+// إعدادات الاتصال والحماية المركزية
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { 
@@ -19,6 +19,12 @@ import {
     serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
+// استيراد مكتبة App Check للحماية من السبام والبوتات
+import { 
+    initializeAppCheck, 
+    ReCaptchaV3Provider 
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app-check.js";
+
 // إعدادات مشروعك
 const firebaseConfig = {
     apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
@@ -31,14 +37,33 @@ const firebaseConfig = {
     measurementId: "G-JYS7P7FY3Z"
 };
 
-// تهيئة التطبيق
+// 1. تهيئة التطبيق
 const app = initializeApp(firebaseConfig);
+
+// 2. تفعيل الحماية (App Check)
+// استبدل 'YOUR_RECAPTCHA_V3_SITE_KEY' بمفتاحك الحقيقي من الخطوة السابقة
+try {
+    // تفعيل وضع التصحيح محلياً (اختياري، يساعدك أثناء التطوير على localhost)
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+
+    initializeAppCheck(app, {
+        // المفتاح العام الذي حصلت عليه من كونسول reCAPTCHA v3
+        provider: new ReCaptchaV3Provider('6LcFHxMsAAAAAE4lAelw_z56QzIj_UoMKBTl2Lel'),
+        
+        // تجديد التوكن تلقائياً لضمان استمرار الاتصال
+        isTokenAutoRefreshEnabled: true
+    });
+    console.log("🛡️ Firebase App Check Activated!");
+} catch (e) {
+    console.warn("App Check Warning:", e);
+}
+
+// 3. تهيئة الخدمات
 const auth = getAuth(app);
 const db = getDatabase(app);
 const googleProvider = new GoogleAuthProvider();
 
-// دالة عامة لتحديث واجهة الهيدر (زر الدخول/البروفايل)
-// سنستخدم هذه الدالة في كل الصفحات لاختصار الكود
+// دالة تحديث واجهة المستخدم (تستخدم في كل الصفحات)
 function updateAuthUI() {
     const authLink = document.getElementById('auth-link');
     if (authLink) {
@@ -59,20 +84,10 @@ function updateAuthUI() {
     }
 }
 
-// تصدير الوظائف لاستخدامها في الملفات الأخرى
+// التصدير
 export { 
-    app, 
-    auth, 
-    db, 
-    googleProvider, 
-    signInWithPopup, 
-    signOut, 
-    onAuthStateChanged, 
-    ref, 
-    set, 
-    get, 
-    child, 
-    push, 
-    serverTimestamp,
+    app, auth, db, googleProvider, 
+    signInWithPopup, signOut, onAuthStateChanged, 
+    ref, set, get, child, push, serverTimestamp,
     updateAuthUI 
 };

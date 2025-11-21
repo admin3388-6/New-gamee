@@ -687,7 +687,32 @@
 
         // تشغيل
         init();
-
+      <script type="module">
+        import { updateAuthUI } from './firebase-config.js';
+        
+        // تحديث حالة تسجيل الدخول (زر الخروج في الهيدر)
+        updateAuthUI();
+        
+        // تعديل بسيط لزر الخروج في الهيدر ليعمل مع النظام الجديد
+        const exitBtn = document.querySelector('.action-btn[href="index.html"]');
+        if(exitBtn && exitBtn.innerText === "خروج") {
+            // تغيير النص والرابط بناءً على الحالة (يتم تلقائياً عبر updateAuthUI لكن هنا تخصيص إضافي إذا أردت)
+            // حالياً updateAuthUI يبحث عن id="auth-link"، وهذا الملف لا يحتوي عليه في القائمة الجانبية لأن تصميمه مختلف.
+            // لذا سنضيف كود خاص لهذا الملف:
+            
+            import { auth, onAuthStateChanged } from './firebase-config.js';
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    exitBtn.href = "menu.html";
+                    exitBtn.innerText = "القائمة";
+                    exitBtn.style.background = "#27ae60";
+                } else {
+                    exitBtn.href = "login.html";
+                    exitBtn.innerText = "دخول";
+                    exitBtn.style.background = "#00aaff";
+                }
+            });
+        }
     </script>
 </body>
 </html>

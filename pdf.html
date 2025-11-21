@@ -709,8 +709,14 @@
         overlay.addEventListener('click', () => toggleMenu(false));
 
         // --- التشغيل ---
-        setLanguage(currentLang);
+        updateStatusMessage(progressStatus, 'statusReady'); // تحديث النص عند التحميل
         resetTool();
     </script>
+
+    <script type="module">
+        import { updateAuthUI } from './firebase-config.js';
+        updateAuthUI();
+    </script>
+
 </body>
 </html>

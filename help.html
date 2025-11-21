@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SkyData - ادعمنا</title>
+    <meta name="description" content="ساهم في استمرار وتطوير SkyData. دعمك يساعدنا على توفير المزيد من الأدوات المجانية وتحسين الخدمات.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
+
+    <style>
+        /* ==============================================
+           1. أساسيات الصفحة
+           ============================================== */
+        body {
+            background-color: #0b132b;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: block; 
+        }
+
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+            box-sizing: border-box;
+        }
+        *:focus { outline: none; border-color: transparent !important; }
+
+        /* الهيدر */
+        .main-header {
+            height: 70px !important; 
+            background-color: #0b132b !important;
+            border-bottom: 1px solid #1f2d4d;
+            padding: 0 !important;
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            display: flex !important; align-items: center !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-header .container {
+            width: 100% !important; height: 100% !important; max-width: 100% !important;
+            padding: 0 20px !important;
+            display: flex !important; justify-content: space-between !important;
+            align-items: center !important; margin: 0 !important;
+        }
+
+        .logo-img { height: 35px !important; width: auto; }
+
+        /* القائمة الجانبية */
+        .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 2002; }
+        .hamburger input { display: none; }
+        .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .line-top-bottom { stroke-dasharray: 12 63; }
+        .hamburger input:checked + svg { transform: rotate(-45deg); }
+        .hamburger input:checked + svg .line-top-bottom { stroke-dasharray: 20 300; stroke-dashoffset: -32.42; }
+
+        .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1500;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        .sidebar-footer { margin-top: 20px; border-top: 1px solid #2a3a5a; padding: 20px; text-align: center; }
+        .social-links a { margin: 0 8px; color: #aaa; font-size: 20px; transition: 0.3s; }
+        .social-links a:hover { color: #00aaff; }
+        .footer-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .footer-nav a { color: #ccc; font-size: 13px; }
+        .copyright { font-size: 12px; color: #666; }
+
+        /* ==============================================
+           2. تنسيقات صفحة الدعم
+           ============================================== */
+
+        .container-tool { 
+            max-width: 800px; width: 100%; margin: 0 auto; 
+            padding: 20px; text-align: center; display: block;
+        }
+
+        .support-box {
+            background-color: #111a30; padding: 50px 30px;
+            width: 100%; border-radius: 20px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            border: 1px solid #2a3a5a; margin-bottom: 30px;
+            display: block;
+        }
+
+        .heart-icon {
+            font-size: 70px; color: #ff4d4d; margin-bottom: 25px;
+            animation: heartbeat 1.5s infinite; display: inline-block;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); } 15% { transform: scale(1.15); }
+            30% { transform: scale(1); } 45% { transform: scale(1.15); } 60% { transform: scale(1); }
+        }
+
+        h1 { color: #fff; margin-bottom: 15px; font-size: 28px; }
+        p { 
+            color: #ccc; font-size: 16px; line-height: 1.8; margin-bottom: 35px; 
+            max-width: 100%; margin-left: auto; margin-right: auto; 
+        }
+
+        .features-list {
+            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 40px; width: 100%;
+        }
+        .feature-item {
+            background: #1f2d4d; padding: 15px 20px; border-radius: 10px;
+            display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;
+            border: 1px solid #2a3a5a; min-width: 180px; justify-content: center;
+        }
+        .feature-item i { color: #00aaff; }
+
+        /* زر التبرع المباشر */
+        .paypal-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background: #0070BA; /* لون بايبال الرسمي */
+            color: #fff; font-size: 20px; font-weight: bold;
+            padding: 18px 50px; border-radius: 50px; text-decoration: none;
+            transition: 0.3s; box-shadow: 0 5px 20px rgba(0, 112, 186, 0.4);
+            width: 100%; max-width: 350px;
+        }
+        .paypal-btn:hover { 
+            background: #005ea6; transform: translateY(-3px); 
+            box-shadow: 0 8px 25px rgba(0, 112, 186, 0.6); 
+        }
+        .paypal-btn i { font-size: 24px; }
+        .paypal-btn span { font-family: 'Verdana', sans-serif; }
+
+        .other-methods { margin-top: 50px; border-top: 1px dashed #2a3a5a; padding-top: 25px; width: 100%; }
+        .other-methods h3 { color: #aaa; font-size: 16px; margin-bottom: 15px; }
+        .share-btn {
+            background: #0e1624; color: #fff; border: 1px solid #2a3a5a;
+            padding: 12px 25px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-family: 'Cairo';
+        }
+        .share-btn:hover { background: #00aaff; color: #111; border-color: #00aaff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="logo-img">
+            </a>
+            <label class="hamburger menu-toggle">
+              <input type="checkbox" id="menu-checkbox">
+              <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                <path class="line" d="M7 16 27 16"></path>
+              </svg>
+            </label>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h4>القسم 1: تعريف واختصار</h4>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>المنزل</span></a></li>
+                <li><a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a></li>
+                <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
+                <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
+                <li><a href="login.html" id="auth-link">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                </a></li>
+            </ul>
+        </div>
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://discord.gg/6m3c2up4p3" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://youtube.com/@skydataa" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="update.html"><i class="fab fa-android"></i> <span>تحميل التطبيق</span></a>
+            </div>
+            <div class="footer-nav">
+                <a href="safety.html"><i class="fas fa-shield-alt"></i> <span>الخصوصية</span></a>
+                <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
+                <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
+            </div>
+            <p class="copyright">SkyData © 2025</p>
+        </div>
+    </nav>
+
+    <main class="container-tool">
+        
+        <div class="support-box">
+            <i class="fas fa-heart heart-icon"></i>
+            <h1>ساهم في دعم SkyData</h1>
+            <p>
+                نحن نسعى جاهدين لتوفير أفضل الأدوات الرقمية بشكل مجاني تماماً للجميع. دعمك المادي يساعدنا على دفع تكاليف الخوادم والتطوير.
+            </p>
+
+            <div class="features-list">
+                <div class="feature-item"><i class="fas fa-server"></i> استمرار الخوادم</div>
+                <div class="feature-item"><i class="fas fa-code"></i> تطوير أدوات جديدة</div>
+                <div class="feature-item"><i class="fas fa-ban"></i> موقع خالي من الإعلانات</div>
+            </div>
+
+            <a href="https://www.paypal.com/ncp/payment/CC83BQ5ZVP5LQ" target="_blank" class="paypal-btn">
+                <i class="fab fa-paypal"></i> تبرع عبر <span>PayPal.Me</span>
+            </a>
+
+            <div class="other-methods">
+                <h3>طرق أخرى للدعم</h3>
+                <button class="share-btn" onclick="shareSite()">
+                    <i class="fas fa-share-alt"></i> شارك الموقع مع أصدقائك
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // --- فتح/إغلاق القائمة ---
+        const menuCheckbox = document.getElementById('menu-checkbox');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu(open) {
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); menuCheckbox.checked = true; }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('active'); menuCheckbox.checked = false; }
+        }
+        menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // --- مشاركة الموقع ---
+        function shareSite() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SkyData',
+                    text: 'اكتشف SkyData: مجموعة ضخمة من الأدوات المجانية والذكاء الاصطناعي!',
+                    url: window.location.origin
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.origin);
+                alert('تم نسخ رابط الموقع! شكراً لمشاركتك ❤️');
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { updateAuthUI } from './firebase-config.js';
+        updateAuthUI();
+    </script>
+
+</body>
+</html>

@@ -471,31 +471,9 @@
     </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-            authDomain: "skydata-ai.firebaseapp.com",
-            projectId: "skydata-ai"
-        };
-
-        try {
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const authLink = document.getElementById('auth-link');
-            if (authLink) {
-                const ico = authLink.querySelector('i'); const txt = authLink.querySelector('span');
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        authLink.href = 'menu.html'; ico.className = 'fas fa-user-circle'; txt.textContent = 'ملف الشخصي';
-                    } else {
-                        authLink.href = 'login.html'; ico.className = 'fas fa-sign-in-alt'; txt.textContent = 'تسجيل الدخول';
-                    }
-                });
-            }
-        } catch (e) { console.error("Firebase Error:", e); }
-    </script>
+    import { updateAuthUI } from './firebase-config.js';
+    updateAuthUI();
+</script>
 
 </body>
 </html>

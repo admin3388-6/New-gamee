@@ -611,62 +611,10 @@
         });
     </script>
     
-    <script type="module">
-        // 1. استيراد المكتبات مباشرة من CDN (نفس إصدار login.html)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-        // 2. إعدادات المشروع (مطابقة تماماً لما في login.html)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-            authDomain: "skydata-ai.firebaseapp.com",
-            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "skydata-ai",
-            storageBucket: "skydata-ai.firebasestorage.app",
-            messagingSenderId: "165531796197",
-            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
-            measurementId: "G-JYS7P7FY3Z"
-        };
-
-        // 3. تهيئة التطبيق
-        let app, auth;
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            console.log("تم الاتصال بـ Firebase في الصفحة الرئيسية بنجاح");
-        } catch (error) {
-            console.error("فشل تهيئة Firebase:", error);
-        }
-
-        // 4. التعامل مع عناصر واجهة المستخدم (زر الدخول/الملف الشخصي)
-        const authLink = document.getElementById('auth-link');
-        // نتأكد من وجود العنصر قبل محاولة تعديله لتجنب الأخطاء
-        if (authLink) {
-            const authIcon = authLink.querySelector('i');
-            const authText = authLink.querySelector('span');
-
-            // 5. مراقبة حالة تسجيل الدخول
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // إذا كان المستخدم مسجلاً للدخول
-                    // التحقق مما إذا كان البريد مفعلاً (اختياري، يعتمد على رغبتك في ظهور الزر)
-                    // هنا سنعرض زر الملف الشخصي لأي مستخدم مسجل
-                    authLink.href = 'menu.html';
-                    
-                    if (authIcon) authIcon.className = 'fas fa-user-circle'; 
-                    if (authText) authText.textContent = 'ملف الشخصي';
-                    
-                    console.log("المستخدم مسجل الدخول:", user.email);
-                } else {
-                    // إذا لم يكن مسجلاً للدخول
-                    authLink.href = 'login.html'; 
-                    
-                    if (authIcon) authIcon.className = 'fas fa-sign-in-alt';
-                    if (authText) authText.textContent = 'تسجيل الدخول';
-                }
-            });
-        }
-    </script>
+   <script type="module">
+    import { updateAuthUI } from './firebase-config.js';
+    updateAuthUI();
+</script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {

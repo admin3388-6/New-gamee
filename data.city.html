@@ -360,41 +360,9 @@
     </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-            authDomain: "skydata-ai.firebaseapp.com",
-            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "skydata-ai",
-            storageBucket: "skydata-ai.firebasestorage.app",
-            messagingSenderId: "165531796197",
-            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
-            measurementId: "G-JYS7P7FY3Z"
-        };
-
-        try {
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const authLink = document.getElementById('auth-link');
-            if (authLink) {
-                const authIcon = authLink.querySelector('i');
-                const authText = authLink.querySelector('span');
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        authLink.href = 'menu.html';
-                        if (authIcon) authIcon.className = 'fas fa-user-circle'; 
-                        if (authText) authText.textContent = 'ملف الشخصي';
-                    } else {
-                        authLink.href = 'login.html'; 
-                        if (authIcon) authIcon.className = 'fas fa-sign-in-alt';
-                        if (authText) authText.textContent = 'تسجيل الدخول';
-                    }
-                });
-            }
-        } catch (e) { console.error("Firebase Error:", e); }
-    </script>
+    import { updateAuthUI } from './firebase-config.js';
+    updateAuthUI();
+</script>
 
     <script>
         const { DateTime } = luxon; 

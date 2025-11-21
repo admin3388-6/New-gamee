@@ -451,23 +451,9 @@
     </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        const app = initializeApp({
-            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-            authDomain: "skydata-ai.firebaseapp.com",
-            projectId: "skydata-ai"
-        });
-        const auth = getAuth(app);
-        const link = document.getElementById('auth-link');
-        if(link) {
-            const ico = link.querySelector('i'); const txt = link.querySelector('span');
-            onAuthStateChanged(auth, u => {
-                if(u) { link.href='menu.html'; ico.className='fas fa-user-circle'; txt.textContent='ملف الشخصي'; }
-                else { link.href='login.html'; ico.className='fas fa-sign-in-alt'; txt.textContent='تسجيل الدخول'; }
-            });
-        }
-    </script>
+    import { updateAuthUI } from './firebase-config.js';
+    updateAuthUI();
+</script>
 
 </body>
 </html>

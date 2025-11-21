@@ -9,111 +9,82 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ============ 1. التصميم الأساسي (CSS) ============ */
+        /* ============ تنسيقات أساسية ============ */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background-color: #0b132b; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        body { background-color: #0b132b; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         
-        /* إزالة التحديد والمربعات المزعجة */
-        *:focus { outline: none !important; }
-        a, button, input, span, label { -webkit-tap-highlight-color: transparent; }
-
-        /* الهيدر الثابت */
+        /* الهيدر */
         .main-header {
             position: fixed; top: 0; width: 100%;
             background: rgba(11, 19, 43, 0.95);
             padding: 15px; z-index: 1000;
-            text-align: center; border-bottom: 1px solid #00aaff;
+            text-align: center; border-bottom: 1px solid #1f2d4d;
         }
         .logo-img { height: 40px; }
 
-        /* حاوية نموذج الدخول */
+        /* حاوية التسجيل */
         .auth-container {
             background-color: #111a30;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 40px 30px;
+            border-radius: 20px;
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
             border: 1px solid #1f2d4d;
-            margin-top: 80px; /* مسافة عشان الهيدر */
-            margin-bottom: 50px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
         }
 
-        /* حقول الإدخال */
-        .input-group { margin-bottom: 15px; position: relative; }
-        .input-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: bold; }
-        .input-group input {
-            width: 100%; padding: 12px; background: #0b132b;
-            border: 1px solid #2a3a5a; color: #fff; border-radius: 8px;
-            transition: border 0.3s;
-        }
-        .input-group input:focus { border-color: #00aaff; }
-        
-        /* أيقونة العين */
-        .toggle-pass {
-            position: absolute; left: 15px; top: 42px;
-            color: #00aaff; cursor: pointer;
-            padding: 5px;
-        }
+        h2 { color: #00aaff; margin-bottom: 10px; font-size: 24px; }
+        p { color: #aaa; font-size: 14px; margin-bottom: 30px; }
 
-        /* الأزرار */
-        .btn-primary {
-            width: 100%; padding: 12px; background: #00aaff;
-            color: #0b132b; border: none; border-radius: 8px;
-            font-weight: bold; cursor: pointer; margin-top: 10px;
-            font-size: 16px; transition: transform 0.2s, background 0.3s;
+        /* زر جوجل */
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background-color: #fff;
+            color: #333;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:disabled { background: #445566; color: #aaa; cursor: not-allowed; opacity: 0.8; }
-        
-        .btn-secondary {
-            width: 100%; padding: 10px; background: transparent;
-            color: #00aaff; border: 1px solid #00aaff; border-radius: 8px;
-            font-weight: bold; cursor: pointer; margin-top: 10px;
+        .btn-google:hover {
+            background-color: #f1f1f1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
         }
+        .btn-google:active { transform: scale(0.98); }
+        .btn-google i { color: #DB4437; font-size: 20px; }
 
-        /* الروابط والنصوص */
-        .switch-text { text-align: center; margin-top: 20px; font-size: 14px; }
-        .clickable-text { color: #00aaff; cursor: pointer; font-weight: bold; text-decoration: underline; }
-        
-        .terms-box { font-size: 12px; margin-bottom: 15px; color: #ccc; display: flex; align-items: flex-start; gap: 8px; }
-        .terms-box a { color: #00aaff; text-decoration: none; }
-
-        /* أدوات مساعدة */
-        .hidden { display: none !important; }
-        
-        /* زر الدعم العائم */
+        /* زر الدعم */
         .support-fab {
-            position: fixed; bottom: 20px; left: 20px; width: 55px; height: 55px;
-            background-color: #00aaff; color: #111a30; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; font-size: 24px; z-index: 2000;
-            text-decoration: none; box-shadow: 0 4px 15px rgba(0,170,255,0.4);
+            position: fixed; bottom: 20px; left: 20px; width: 50px; height: 50px;
+            background-color: #1f2d4d; color: #00aaff; border-radius: 50%; border: 1px solid #00aaff;
+            display: flex; justify-content: center; align-items: center; font-size: 20px;
+            text-decoration: none; transition: 0.3s;
         }
+        .support-fab:hover { background: #00aaff; color: #fff; }
 
-        /* نظام الإشعارات (Toasts) */
-        #toast-container {
-            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-            display: flex; flex-direction: column; gap: 10px; max-width: 350px;
-            width: 90%; pointer-events: none;
+        /* Toast Notification */
+        #toast {
+            visibility: hidden; min-width: 250px; margin-left: -125px;
+            background-color: #e74c3c; color: #fff; text-align: center;
+            border-radius: 50px; padding: 16px; position: fixed; z-index: 1;
+            left: 50%; bottom: 30px; font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .toast-alert {
-            background-color: #1f2d4d; color: #fff; padding: 15px 20px;
-            border-radius: 8px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            font-size: 14px; line-height: 1.5; opacity: 0;
-            transform: translateX(100%); 
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            pointer-events: auto;
-        }
-        .toast-content { display: flex; align-items: center; gap: 10px; }
-        .toast-error { background-color: #4b1a1a; border-right: 5px solid #ff4d4d; color: #ffcccc; }
-        .toast-error .fas { color: #ff4d4d; }
-        .toast-success { background-color: #1a4b2a; border-right: 5px solid #00ff7f; color: #ccffdd; }
-        .toast-success .fas { color: #00ff7f; }
-        .toast-warning { background-color: #4b441a; border-right: 5px solid #ffc107; color: #fffbe6; }
-        .toast-warning .fas { color: #ffc107; }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         
-        .toast-in { opacity: 1; transform: translateX(0); }
-        .toast-out { opacity: 0; transform: translateX(100%); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
@@ -123,323 +94,57 @@
     </div>
 
     <div class="auth-container">
+        <h2>مرحباً بك مجدداً</h2>
+        <p>سجّل الدخول للوصول إلى جميع أدوات SkyData</p>
         
-        <div id="view-login">
-            <h2 style="text-align:center; color:#00aaff; margin-bottom:20px;">تسجيل الدخول</h2>
-            
-            <form id="formLogin">
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="emailLogin" required autocomplete="username">
-                </div>
-                <div class="input-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="passLogin" required autocomplete="current-password">
-                    <i class="fas fa-eye toggle-pass" onclick="toggleP('passLogin', this)"></i>
-                </div>
-                
-                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:15px;">
-                    <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
-                        <input type="checkbox"> تذكرني
-                    </label>
-                    <span class="clickable-text" onclick="swap('reset')" style="text-decoration:none;">نسيت كلمة السر؟</span>
-                </div>
-
-                <button type="button" class="btn-primary" id="btnLogin">دخول آمن</button>
-            </form>
-
-            <div class="switch-text">
-                ليس لديك حساب؟ <span class="clickable-text" onclick="swap('signup')">أنشئ حساباً جديداً</span>
-            </div>
-        </div>
-
-        <div id="view-signup" class="hidden">
-            <h2 style="text-align:center; color:#00aaff; margin-bottom:20px;">إنشاء حساب</h2>
-
-            <form id="formSignup">
-                <div class="input-group">
-                    <label>الاسم الكامل</label>
-                    <input type="text" id="nameReg" required maxlength="14" autocomplete="name">
-                </div>
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="emailReg" required autocomplete="email">
-                </div>
-                <div class="input-group">
-                    <label>كلمة المرور (8+ حروف)</label>
-                    <input type="password" id="passReg" required minlength="8" autocomplete="new-password">
-                    <i class="fas fa-eye toggle-pass" onclick="toggleP('passReg', this)"></i>
-                </div>
-
-                <div class="terms-box">
-                    <input type="checkbox" id="agreeTerms" required>
-                    <span>أوافق على <a href="safety.html" target="_blank">شروط الخدمة</a> و <a href="safety.html" target="_blank">سياسة الخصوصية</a></span>
-                </div>
-
-                <button type="button" class="btn-primary" id="btnSignup">إنشاء الحساب</button>
-            </form>
-
-            <div class="switch-text">
-                لديك حساب بالفعل؟ <span class="clickable-text" onclick="swap('login')">تسجيل الدخول</span>
-            </div>
-        </div>
-
-        <div id="view-reset" class="hidden">
-            <h2 style="text-align:center; color:#00aaff; margin-bottom:20px;">استعادة الحساب</h2>
-            <p style="text-align:center; font-size:13px; color:#bbb; margin-bottom:15px;">أدخل بريدك الإلكتروني لنرسل لك رابط استعادة كلمة المرور.</p>
-
-            <form id="formReset">
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="emailReset" required>
-                </div>
-                <button type="button" class="btn-primary" id="btnReset">إرسال الرابط</button>
-            </form>
-
-            <div class="switch-text">
-                <span class="clickable-text" onclick="swap('login')">العودة لتسجيل الدخول</span>
-            </div>
-        </div>
-
-        <div id="view-verify" class="hidden">
-            <h2 style="text-align:center; color:#e67e22; margin-bottom:20px;"><i class="fas fa-exclamation-circle"></i> الحساب غير مفعل</h2>
-            <p style="text-align:center; font-size:14px; line-height:1.6; margin-bottom:20px;">
-                يرجى مراجعة بريدك الإلكتروني (بما في ذلك مجلد الرسائل غير المرغوب فيها) للضغط على رابط التفعيل.
-            </p>
-            <button type="button" class="btn-primary" id="btnResendVerify">إعادة إرسال رابط التفعيل</button>
-            <button type="button" class="btn-secondary" onclick="window.location.reload()">تم التفعيل؟ (تحديث)</button>
-            <div class="switch-text">
-                <span class="clickable-text" onclick="signOutAndBack()">تسجيل خروج</span>
-            </div>
-        </div>
-
+        <button id="google-btn" class="btn-google">
+            <i class="fab fa-google"></i> متابعة باستخدام Google
+        </button>
     </div>
-    
-    <a href="support.html" class="support-fab" title="تواصل مع الدعم"><i class="fas fa-headset"></i></a>
 
-    <div id="toast-container"></div>
+    <a href="support.html" class="support-fab" title="الدعم الفني"><i class="fas fa-headset"></i></a>
+    <div id="toast">حدث خطأ ما...</div>
 
-    <script>
-        if (window.location.protocol === 'file:') {
-            alert("تنبيه هام: لا يمكنك تشغيل هذا الملف بالنقر المباشر (file://) لأن جوجل تمنع ذلك.\n\nيجب تشغيل الملف عبر سيرفر محلي (Live Server) لكي يعمل تسجيل الدخول.");
-        }
-    </script>
+    <script type="module">
+        // استيراد الوظائف من الملف المركزي الذي أنشأناه سابقاً
+        import { auth, googleProvider, signInWithPopup, onAuthStateChanged } from './firebase-config.js';
 
-    <script>
-        const COOLDOWN_TIME = 60; 
+        const googleBtn = document.getElementById('google-btn');
+        const toast = document.getElementById('toast');
 
-        // إظهار الإشعار
-        function showToast(type, message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast-alert toast-${type} toast-in`;
-            
-            let icon = '';
-            if (type === 'error') icon = '<i class="fas fa-times-circle"></i>';
-            else if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
-            else if (type === 'warning') icon = '<i class="fas fa-exclamation-triangle"></i>';
-
-            toast.innerHTML = `<div class="toast-content">${icon}<span>${message}</span></div>`;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.replace('toast-in', 'toast-out');
-                setTimeout(() => { toast.remove(); }, 500); 
-            }, 4000); 
+        function showToast(msg) {
+            toast.innerText = msg;
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
-        // التبديل بين الواجهات
-        function swap(viewName) {
-            ['login','signup','reset','verify'].forEach(v => {
-                const el = document.getElementById('view-'+v);
-                if(el) el.classList.add('hidden');
-            });
-            document.getElementById('view-' + viewName).classList.remove('hidden');
-        }
+        // 1. التحقق مما إذا كان المستخدم مسجلاً بالفعل (التوجيه التلقائي)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // إذا كان مسجلاً، اذهب للقائمة فوراً
+                window.location.href = "menu.html";
+            }
+        });
 
-        // إظهار كلمة السر
-        function toggleP(id, icon) {
-            let x = document.getElementById(id);
-            if (x.type === "password") { x.type = "text"; icon.classList.remove("fa-eye"); icon.classList.add("fa-eye-slash"); } 
-            else { x.type = "password"; icon.classList.add("fa-eye"); icon.classList.remove("fa-eye-slash"); }
-        }
-
-        // إدارة المؤقت
-        function startCooldown(btnId, storageKey) {
-            const btn = document.getElementById(btnId);
-            if(!btn) return;
-
-            const expireTime = Date.now() + (COOLDOWN_TIME * 1000);
-            localStorage.setItem(storageKey, expireTime);
-            disableBtn(btn, expireTime);
-        }
-
-        function disableBtn(btn, expireTime) {
-            btn.disabled = true;
-            const interval = setInterval(() => {
-                const now = Date.now();
-                const left = Math.ceil((expireTime - now) / 1000);
-                if (left <= 0) {
-                    clearInterval(interval);
-                    btn.disabled = false;
-                    btn.innerText = (btn.id === 'btnReset') ? "إرسال الرابط" : "إعادة إرسال رابط التفعيل";
-                    localStorage.removeItem(btn.id === 'btnReset' ? 'resetCooldown' : 'verifyCooldown');
-                } else {
-                    btn.innerText = `انتظر ${left} ثانية...`;
-                }
-            }, 1000);
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const resetTime = localStorage.getItem('resetCooldown');
-            if(resetTime && parseInt(resetTime) > Date.now()) disableBtn(document.getElementById('btnReset'), parseInt(resetTime));
-            const verifyTime = localStorage.getItem('verifyCooldown');
-            if(verifyTime && parseInt(verifyTime) > Date.now()) disableBtn(document.getElementById('btnResendVerify'), parseInt(verifyTime));
+        // 2. منطق تسجيل الدخول عبر جوجل
+        googleBtn.addEventListener('click', async () => {
+            try {
+                googleBtn.disabled = true;
+                googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاتصال...';
+                
+                const result = await signInWithPopup(auth, googleProvider);
+                const user = result.user;
+                
+                // نجاح! سيتم التوجيه تلقائياً عبر onAuthStateChanged أعلاه
+                
+            } catch (error) {
+                console.error(error);
+                showToast("فشل تسجيل الدخول: " + error.message);
+                googleBtn.disabled = false;
+                googleBtn.innerHTML = '<i class="fab fa-google"></i> متابعة باستخدام Google';
+            }
         });
     </script>
 
-    <script type="module">
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getDatabase } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-
-        // 1. إعدادات مشروعك (تم دمجها هنا)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-            authDomain: "skydata-ai.firebaseapp.com",
-            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "skydata-ai",
-            storageBucket: "skydata-ai.firebasestorage.app",
-            messagingSenderId: "165531796197",
-            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
-            measurementId: "G-JYS7P7FY3Z"
-        };
-
-        // 2. تشغيل الخدمات
-        let app, auth, database;
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            database = getDatabase(app);
-            console.log("تم الاتصال بـ Firebase بنجاح");
-        } catch (e) {
-            showToast('error', 'فشل الاتصال بالسيرفر. تأكد من الإنترنت.');
-        }
-
-        // دالة مساعدة للخروج
-        window.signOutAndBack = async () => {
-            await signOut(auth);
-            showToast('success', 'تم تسجيل الخروج.');
-            swap('login');
-        };
-
-        // 3. زر تسجيل الدخول (يعمل بحدث النقر Click)
-        const btnLogin = document.getElementById('btnLogin');
-        if(btnLogin) {
-            btnLogin.addEventListener('click', async () => {
-                const form = document.getElementById('formLogin');
-                if(!form.checkValidity()) {
-                    showToast('error', 'البيانات ناقصة أو غير صحيحة.');
-                    form.reportValidity(); 
-                    return;
-                }
-                
-                try {
-                    btnLogin.innerText = "جاري التحقق..."; btnLogin.disabled = true;
-                    const email = document.getElementById('emailLogin').value;
-                    const pass = document.getElementById('passLogin').value;
-
-                    const userCred = await signInWithEmailAndPassword(auth, email, pass);
-                    
-                    if(!userCred.user.emailVerified) {
-                        showToast('warning', 'حسابك غير مفعل.');
-                        swap('verify');
-                        btnLogin.innerText = "دخول آمن"; btnLogin.disabled = false;
-                        return;
-                    }
-
-                    showToast('success', 'تم الدخول بنجاح!');
-                    window.location.href = "menu.html";
-                } catch(err) {
-                    let msg = "بيانات الدخول خاطئة.";
-                    if(err.code === 'auth/too-many-requests') msg = "الحساب محظور مؤقتاً.";
-                    showToast('error', msg);
-                    btnLogin.innerText = "دخول آمن"; btnLogin.disabled = false;
-                }
-            });
-        }
-
-        // 4. زر إنشاء حساب
-        const btnSignup = document.getElementById('btnSignup');
-        if(btnSignup) {
-            btnSignup.addEventListener('click', async () => {
-                const form = document.getElementById('formSignup');
-                if(!form.checkValidity()) {
-                    showToast('error', 'أكمل البيانات بشكل صحيح.');
-                    form.reportValidity();
-                    return;
-                }
-                if(!document.getElementById('agreeTerms').checked) {
-                    showToast('error', 'يجب الموافقة على الشروط.');
-                    return;
-                }
-
-                try {
-                    btnSignup.innerText = "جاري الإنشاء..."; btnSignup.disabled = true;
-                    const name = document.getElementById('nameReg').value;
-                    const email = document.getElementById('emailReg').value;
-                    const pass = document.getElementById('passReg').value;
-
-                    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-                    await updateProfile(userCred.user, {displayName: name});
-                    await sendEmailVerification(userCred.user);
-
-                    startCooldown('btnResendVerify', 'verifyCooldown');
-                    showToast('success', 'تم! تفقد بريدك للتفعيل.');
-                    setTimeout(() => swap('verify'), 1500);
-                } catch(err) {
-                    let msg = "خطأ في الإنشاء.";
-                    if(err.code === 'auth/email-already-in-use') msg = "البريد مستخدم مسبقاً.";
-                    if(err.code === 'auth/weak-password') msg = "كلمة السر ضعيفة.";
-                    showToast('error', msg);
-                    btnSignup.innerText = "إنشاء الحساب"; btnSignup.disabled = false;
-                }
-            });
-        }
-
-        // 5. زر استعادة كلمة السر
-        const btnReset = document.getElementById('btnReset');
-        if(btnReset) {
-            btnReset.addEventListener('click', async () => {
-                const form = document.getElementById('formReset');
-                if(!form.checkValidity()) { form.reportValidity(); return; }
-
-                try {
-                    btnReset.innerText = "جاري..."; btnReset.disabled = true;
-                    const email = document.getElementById('emailReset').value;
-                    await sendPasswordResetEmail(auth, email, {url: 'https://skydata.casacam.net/password.back'});
-                    startCooldown('btnReset', 'resetCooldown');
-                    showToast('success', 'تم إرسال الرابط.');
-                } catch(err) {
-                    showToast('error', 'البريد غير صحيح.');
-                    if(!localStorage.getItem('resetCooldown')) { btnReset.innerText = "إرسال الرابط"; btnReset.disabled = false; }
-                }
-            });
-        }
-
-        // 6. زر إعادة التفعيل
-        const btnResendVerify = document.getElementById('btnResendVerify');
-        if(btnResendVerify) {
-            btnResendVerify.addEventListener('click', async () => {
-                if(auth.currentUser) {
-                    try {
-                        await sendEmailVerification(auth.currentUser);
-                        startCooldown('btnResendVerify', 'verifyCooldown');
-                        showToast('success', 'تم الإرسال.');
-                    } catch(err) { showToast('warning', 'انتظر قليلاً.'); }
-                }
-            });
-        }
-    </script>
 </body>
 </html>

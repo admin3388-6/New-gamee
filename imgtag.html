@@ -435,13 +435,9 @@
     </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        import { updateAuthUI } from './firebase-config.js'; // استخدام الملف المركزي
-
-        // استدعاء دالة تحديث الهيدر (اختيارية هنا لأننا في HTML عادي، ولكن للتوحيد)
-        updateAuthUI();
-    </script>
+    import { updateAuthUI } from './firebase-config.js';
+    updateAuthUI();
+</script>
 
 </body>
 </html>

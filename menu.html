@@ -21,7 +21,7 @@
     </script>
 
     <style>
-        /* ======== 1. أساسيات وإزالة المربع الأزرق ======== */
+        /* ======== 1. أساسيات ======== */
         * {
             -webkit-tap-highlight-color: transparent !important;
             outline: none !important;
@@ -32,8 +32,9 @@
             background-color: #0b132b; 
             font-family: 'Cairo', sans-serif;
             min-height: 100vh;
-            padding-top: 85px; /* مسافة للهيدر */
+            padding-top: 85px;
             overflow-x: hidden;
+            color: #fff;
         }
 
         /* ======== 2. الهيدر ======== */
@@ -53,14 +54,12 @@
         .logo { display: flex; align-items: center; gap: 10px; }
         .logo-img { height: 35px; width: auto; } 
         
-        .rank-badge {
-            font-size: 10px; padding: 3px 8px; border-radius: 4px;
-            font-weight: bold; letter-spacing: 1px; display: inline-block;
+        .user-avatar-small {
+            width: 35px; height: 35px; border-radius: 50%; border: 2px solid #00aaff;
+            object-fit: cover;
         }
-        .rank-free { background: #2a3a5a; color: #aaa; border: 1px solid #444; }
-        .rank-pro { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; border: 1px solid #ffd700; }
 
-        /* زر القائمة (Animation) */
+        /* زر القائمة */
         .hamburger { cursor: pointer; height: 30px; width: 30px; position: relative; z-index: 1001; }
         .hamburger input { display: none; }
         .hamburger svg { height: 30px; transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -91,10 +90,14 @@
         .welcome-section { text-align: center; margin-bottom: 30px; }
         .welcome-section h2 { color: #fff; font-size: 20px; margin-bottom: 5px; }
         .welcome-section p { color: #888; font-size: 13px; direction: ltr; font-family: monospace; }
+        .profile-pic-large {
+            width: 80px; height: 80px; border-radius: 50%; border: 3px solid #00aaff;
+            margin-bottom: 15px; object-fit: cover; box-shadow: 0 0 15px rgba(0,170,255,0.3);
+        }
 
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* عمودين للموبايل */
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px; padding-bottom: 50px;
         }
 
@@ -102,8 +105,7 @@
             background: #161f36; border: 1px solid #253250; border-radius: 12px;
             padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; cursor: pointer; position: relative;
-            height: 120px; /* ارتفاع ثابت ومستطيل */
-            transition: transform 0.2s;
+            height: 120px; transition: transform 0.2s;
         }
         .menu-card:active { transform: scale(0.96); background: #1c2742; }
         .menu-card i.main-icon { font-size: 26px; color: #00aaff; margin-bottom: 10px; }
@@ -143,7 +145,7 @@
 
         .modal-body { padding: 20px; overflow-y: auto; }
 
-        /* عناصر الأدمن والمدخلات */
+        /* عناصر الأدمن */
         .admin-panel { display: none; border-top: 2px dashed #333; margin-top: 20px; padding-top: 20px; }
         
         .form-group { margin-bottom: 12px; text-align: right; }
@@ -153,12 +155,6 @@
             border-radius: 6px; color: #fff; font-family: inherit; font-size: 14px;
         }
         
-        /* حقل الحذف Terminal */
-        #del-confirm-input {
-            background: #000; border: 1px solid #ff4d4d; color: #00ff7f;
-            text-align: center; font-family: monospace; font-size: 13px; padding: 12px; width: 100%;
-        }
-
         .btn-action {
             width: 100%; padding: 12px; border: none; border-radius: 6px;
             font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 14px;
@@ -166,7 +162,6 @@
         }
         .btn-save { background: #00aaff; color: #fff; }
         .btn-danger { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid #ff4d4d; }
-        .btn-upgrade { background: linear-gradient(45deg, #ffd700, #ffaa00); color: #000; }
 
         /* رسائل العرض */
         .message-display {
@@ -187,120 +182,54 @@
         <div class="container">
             <div class="logo">
                 <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="Logo" class="logo-img">
-                <span id="user-rank-badge" class="rank-badge rank-free">...</span>
             </div>
-            
-            <label class="hamburger menu-toggle">
-              <input type="checkbox">
-              <svg viewBox="0 0 32 32">
-                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
-                <path class="line" d="M7 16 27 16"></path>
-              </svg>
-            </label>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <img id="header-avatar" src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" class="user-avatar-small" style="display: none;">
+                <label class="hamburger menu-toggle">
+                  <input type="checkbox">
+                  <svg viewBox="0 0 32 32">
+                    <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                    <path class="line" d="M7 16 27 16"></path>
+                  </svg>
+                </label>
+            </div>
         </div>
     </header>
 
     <nav class="sidebar">
         <ul>
             <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
-            <li><a href="#" onclick="signOutUser(this)"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
+            <li><a href="#" id="btn-logout-sidebar"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
         </ul>
     </nav>
 
     <div class="container">
         <div class="welcome-section">
+            <img id="profile-pic" src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" class="profile-pic-large">
             <h2>أهلاً، <span id="display-name" style="color:#00aaff;">User</span></h2>
             <p id="display-email">...</p>
         </div>
 
         <div class="menu-grid">
-            <div class="menu-card" onclick="openModal('settings')">
-                <i class="fas fa-cog main-icon"></i>
-                <h3>الإعدادات</h3>
-            </div>
-
             <div class="menu-card" onclick="openModal('inbox')">
                 <div class="notification-dot" id="inbox-dot"></div>
                 <i class="fas fa-envelope main-icon"></i>
-                <h3>البريد</h3>
+                <h3>الرسائل</h3>
             </div>
 
             <div class="menu-card" onclick="window.location.href='index.html'">
-                <i class="fas fa-home main-icon"></i>
-                <h3>الرئيسية</h3>
+                <i class="fas fa-rocket main-icon"></i>
+                <h3>الأدوات</h3>
             </div>
 
-            <div class="menu-card" onclick="signOutUser(this)" style="border-color: rgba(255, 77, 77, 0.3);">
+            <div class="menu-card" onclick="window.location.href='support.html'">
+                <i class="fas fa-headset main-icon"></i>
+                <h3>الدعم</h3>
+            </div>
+
+            <div class="menu-card" id="btn-logout-card" style="border-color: rgba(255, 77, 77, 0.3);">
                 <i class="fas fa-sign-out-alt main-icon" style="color: #ff4d4d;"></i>
                 <h3 style="color: #ff4d4d;">خروج</h3>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-settings" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>إعدادات الحساب</h3>
-                <button class="close-modal" onclick="closeModal('settings')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>الاسم</label>
-                    <input type="text" id="edit-name" class="form-control" placeholder="الاسم">
-                </div>
-                <button class="btn-action btn-save" id="btn-save-name">حفظ</button>
-                
-                <hr style="border-color:#253250; margin: 15px 0;">
-                
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="edit-pass" class="form-control" placeholder="الجديدة">
-                </div>
-                <button class="btn-action btn-save" id="btn-save-pass">تغيير</button>
-
-                <hr style="border-color:#253250; margin: 15px 0;">
-                
-                <button class="btn-action btn-upgrade" onclick="window.location.href='pro.html'">
-                    <i class="fas fa-crown"></i> ترقية الحساب
-                </button>
-                <button class="btn-action btn-danger" onclick="openDeleteFlow()">
-                    <i class="fas fa-trash"></i> حذف الحساب
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-delete" class="modal-overlay" style="z-index: 2100;">
-        <div class="modal-content" style="border-color: #ff4d4d;">
-            <div class="modal-header" style="background: rgba(255,0,0,0.1);">
-                <h3 style="color:#ff4d4d;">منطقة الخطر</h3>
-                <button class="close-modal" onclick="closeModal('delete')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="del-step-1">
-                    <p style="text-align:center; margin-bottom:15px; color:#ddd;">هل أنت متأكد من الحذف؟</p>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn-action btn-danger" onclick="nextDelStep(2)">نعم</button>
-                        <button class="btn-action btn-save" onclick="closeModal('delete')">إلغاء</button>
-                    </div>
-                </div>
-
-                <div id="del-step-2" style="display:none;">
-                    <p style="text-align:center; margin-bottom:15px; color:#ffcccc; font-size:13px;">سيتم حذف كل البيانات نهائياً.</p>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn-action btn-danger" onclick="nextDelStep(3)">تأكيد</button>
-                        <button class="btn-action btn-save" onclick="closeModal('delete')">تراجع</button>
-                    </div>
-                </div>
-
-                <div id="del-step-3" style="display:none;">
-                    <p style="font-size:12px; color:#aaa; margin-bottom:10px; text-align:center;">انسخ الجملة التالية:</p>
-                    <div style="background:#111; padding:8px; border-radius:4px; font-size:11px; color:#00ff7f; user-select:all; margin-bottom:10px; text-align:center; direction:ltr; border:1px dashed #444;">
-                        انا متأكد من حذف حسابي <span id="del-email-display" style="color:#fff;"></span> نهائيا
-                    </div>
-                    <input type="text" id="del-confirm-input" placeholder="الصق هنا" autocomplete="off">
-                    <button class="btn-action btn-danger" id="btn-final-delete" style="margin-top:10px; opacity:0.5;" disabled>حذف نهائي</button>
-                </div>
             </div>
         </div>
     </div>
@@ -314,41 +243,41 @@
             <div class="modal-body">
                 <div id="user-inbox-view">
                     <div id="messages-container"></div>
-                    <p id="no-msg-text" style="text-align:center; color:#555; font-size:13px; margin-top:20px;">لا توجد رسائل</p>
+                    <p id="no-msg-text" style="text-align:center; color:#555; font-size:13px; margin-top:20px;">لا توجد رسائل جديدة</p>
                 </div>
                 
                 <div id="admin-inbox-view" class="admin-panel">
-                    <h4 style="color:#ffaa00; font-size:12px; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">لوحة الأدمن (إرسال)</h4>
+                    <h4 style="color:#ffaa00; font-size:12px; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">لوحة الإرسال (Admin)</h4>
                     
                     <div class="form-group">
                         <label>المرسل</label>
-                        <input type="text" id="msg-sender" value="Admin" class="form-control">
+                        <input type="text" id="msg-sender" value="SkyData Team" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label>صورة (رفع)</label>
+                        <label>صورة (اختياري)</label>
                         <input type="file" id="msg-file" class="form-control">
                         <input type="hidden" id="msg-avatar-url" value="https://i.ibb.co/v4vwvcGq/skydatafull.webp">
                     </div>
 
                     <div class="form-group">
-                        <label>نص الرسالة</label>
-                        <textarea id="msg-text" rows="3" class="form-control" placeholder="اكتب هنا..."></textarea>
+                        <label>الرسالة</label>
+                        <textarea id="msg-text" rows="3" class="form-control" placeholder="اكتب رسالتك هنا..."></textarea>
                     </div>
 
                     <div style="display:flex; gap:5px;">
                         <div class="form-group" style="flex:1;">
-                            <label>كلمة ملونة</label>
+                            <label>نص مميز</label>
                             <input type="text" id="msg-highlight" class="form-control">
                         </div>
                         <div class="form-group" style="width:50px;">
-                            <label>اللون</label>
+                            <label>لون</label>
                             <input type="color" id="msg-color" value="#00aaff" style="width:100%; height:38px; padding:0;">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>مدة البقاء (ساعات)</label>
+                        <label>مدة العرض (ساعات)</label>
                         <input type="number" id="msg-duration" value="24" class="form-control">
                     </div>
 
@@ -367,118 +296,71 @@
 
         function openModal(id) { document.getElementById('modal-'+id).classList.add('active'); }
         function closeModal(id) { document.getElementById('modal-'+id).classList.remove('active'); }
-
-        function nextDelStep(step) {
-            [1,2,3].forEach(n => document.getElementById('del-step-'+n).style.display = 'none');
-            document.getElementById('del-step-'+step).style.display = 'block';
-        }
-        function openDeleteFlow() { nextDelStep(1); openModal('delete'); }
     </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+        // استيراد الإعدادات والوظائف من الملف المركزي
+        import { auth, db, signOut, onAuthStateChanged, ref, get, set } from './firebase-config.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAw_EI5sOrqvxWn-5DZgG_t0rgF910T-wE",
-            authDomain: "skydata-ai.firebaseapp.com",
-            databaseURL: "https://skydata-ai-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "skydata-ai",
-            storageBucket: "skydata-ai.firebasestorage.app",
-            messagingSenderId: "165531796197",
-            appId: "1:165531796197:web:8dcd76fc9ec5dedb994a0c",
-            measurementId: "G-JYS7P7FY3Z"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
         let currentUser = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                document.getElementById('display-name').textContent = user.displayName || 'مستخدم';
+                
+                // عرض البيانات من حساب جوجل
+                const displayName = user.displayName || 'مستخدم SkyData';
+                const photoURL = user.photoURL || 'https://i.ibb.co/v4vwvcGq/skydatafull.webp';
+                
+                document.getElementById('display-name').textContent = displayName;
                 document.getElementById('display-email').textContent = user.email;
-                document.getElementById('del-email-display').textContent = user.email;
-                document.getElementById('edit-name').value = user.displayName || '';
+                document.getElementById('profile-pic').src = photoURL;
                 
-                checkRank(user.uid);
-                checkInbox();
-                
+                const headerAvatar = document.getElementById('header-avatar');
+                headerAvatar.src = photoURL;
+                headerAvatar.style.display = 'block';
+
+                // تفعيل OneSignal
                 if(window.OneSignalDeferred){
                     window.OneSignalDeferred.push(function(OS){ OS.login(user.uid); OS.User.addEmail(user.email); });
                 }
 
-                // إظهار لوحة الأدمن فقط لهذا الإيميل
+                // فحص الرسائل
+                checkInbox();
+
+                // إظهار لوحة الأدمن
                 if(user.email === "brxpara@gmail.com") {
                     document.getElementById('admin-inbox-view').style.display = 'block';
                 }
             } else {
+                // إذا لم يكن مسجلاً، ارجع للدخول
                 window.location.href = 'login.html';
             }
         });
 
-        async function checkRank(uid) {
-            const badge = document.getElementById('user-rank-badge');
-            try {
-                const snap = await get(child(ref(db), `users/${uid}/rank`));
-                if (snap.exists() && snap.val() === 'pro') {
-                    badge.textContent = "PRO"; badge.className = "rank-badge rank-pro";
-                } else {
-                    badge.textContent = "FREE"; badge.className = "rank-badge rank-free";
-                }
-            } catch (e) { badge.textContent = "FREE"; }
-        }
-
-        window.signOutUser = (btn) => {
-            btn.style.pointerEvents = 'none';
+        // دالة تسجيل الخروج
+        const handleLogout = () => {
             if(window.OneSignalDeferred) window.OneSignalDeferred.push(function(OS){ OS.logout(); });
             signOut(auth).then(() => { window.location.href = 'login.html'; });
         };
 
-        document.getElementById('btn-save-name').addEventListener('click', function() {
-            const name = document.getElementById('edit-name').value;
-            if(name.length < 2) return alert("اسم قصير");
-            updateProfile(currentUser, { displayName: name }).then(() => {
-                document.getElementById('display-name').textContent = name; alert("تم الحفظ");
-            });
-        });
+        document.getElementById('btn-logout-card').addEventListener('click', handleLogout);
+        document.getElementById('btn-logout-sidebar').addEventListener('click', handleLogout);
 
-        document.getElementById('btn-save-pass').addEventListener('click', function() {
-            const p = document.getElementById('edit-pass').value;
-            if(p.length < 6) return alert("6 حروف على الأقل");
-            updatePassword(currentUser, p).then(() => alert("تم التغيير")).catch(() => alert("يجب تسجيل الدخول مجدداً"));
-        });
-
-        const delInp = document.getElementById('del-confirm-input');
-        const delBtn = document.getElementById('btn-final-delete');
-        delInp.addEventListener('input', () => {
-            const match = `انا متأكد من حذف حسابي ${currentUser.email} نهائيا`;
-            if(delInp.value.trim() === match) { delBtn.disabled = false; delBtn.style.opacity = "1"; }
-            else { delBtn.disabled = true; delBtn.style.opacity = "0.5"; }
-        });
-
-        delBtn.addEventListener('click', () => {
-            delBtn.innerText = "...";
-            set(ref(db, 'users/' + currentUser.uid), null);
-            deleteUser(currentUser).then(() => window.location.href = 'login.html')
-            .catch(e => alert("خطأ: " + e.message));
-        });
-
-        // رفع الصورة (ImgBB)
+        // --- منطق الرسائل (Inbox) ---
+        // ملاحظة: هذا الجزء يستخدم ImgBB API بشكل مباشر حالياً، سنقوم بنقله لـ Backend في الخطوة القادمة.
+        
         document.getElementById('msg-file').addEventListener('change', async function() {
             if(!this.files[0]) return;
             const fd = new FormData(); fd.append("image", this.files[0]);
             try {
+                // هذا المفتاح سيتم تأمينه في الخطوة القادمة
                 const r = await fetch("https://api.imgbb.com/1/upload?key=c0216950144467262408820345687052", {method:"POST", body:fd});
                 const d = await r.json();
-                if(d.success) { document.getElementById('msg-avatar-url').value = d.data.url; alert("تم الرفع!"); }
-            } catch(e){}
+                if(d.success) { document.getElementById('msg-avatar-url').value = d.data.url; alert("تم رفع الصورة!"); }
+            } catch(e){ alert("فشل رفع الصورة"); }
         });
 
-        // زر الإرسال (Send Broadcast) - موجود الآن
         document.getElementById('btn-send-broadcast').addEventListener('click', function() {
             const txt = document.getElementById('msg-text').value;
             if(!txt) return alert("أدخل نص الرسالة");
@@ -492,7 +374,7 @@
                 expiry: Date.now() + (document.getElementById('msg-duration').value * 3600000),
                 timestamp: Date.now()
             };
-            set(ref(db, 'global_messages'), msg).then(() => { alert("تم الإرسال"); closeModal('inbox'); });
+            set(ref(db, 'global_messages'), msg).then(() => { alert("تم الإرسال للجميع"); closeModal('inbox'); });
         });
 
         function checkInbox() {
@@ -524,7 +406,8 @@
                     <div style="color:#ccc; font-size:13px; line-height:1.4;">${body}</div>
                 </div>`;
             
-            document.querySelector('.menu-card:nth-child(2)').addEventListener('click', () => {
+            // عند فتح البطاقة، نخفي النقطة الحمراء
+            document.querySelector('.menu-card:first-child').addEventListener('click', () => {
                 document.getElementById('inbox-dot').style.display = 'none';
                 localStorage.setItem('last_msg', d.timestamp);
             });

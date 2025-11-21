@@ -1,37 +1,36 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SkyData - تحويل الصور إلى روابط مُباشرة</title>
+    <title>SkyData - تحويل الصور إلى روابط مُباشرة</title>
 
-<meta name="description" content="أداة Skydata مجانية 100% لتحويل الصور بسرعة عالية إلى روابط URL مباشرة (Image Links) لعام 2025. استضافة صور سريعة وآمنة مع رابط حذف.">
+    <meta name="description" content="أداة Skydata مجانية 100% لتحويل الصور بسرعة عالية إلى روابط URL مباشرة (Image Links) لعام 2025. استضافة صور سريعة وآمنة مع رابط حذف.">
+    <meta name="keywords" content="تحويل الصور إلى رابط, رفع صور مجاني, استضافة صور مجانية, صورة إلى URL, رابط مباشر للصور, Image to Link, Free Image Hosting, SkyData">
 
-<meta name="keywords" content="تحويل الصور إلى رابط, رفع صور مجاني, استضافة صور مجانية, صورة إلى URL, رابط مباشر للصور, Image to Link, Free Image Hosting, SkyData">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
-      safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
-      notifyButton: { enable: true },
-    });
-  });
-</script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "9bc8ff80-a325-4935-ba4d-03e362a3cc5f",
+          safari_web_id: "web.onesignal.auto.bfdbea16-3639-4052-8230-1f603036145d",
+          notifyButton: { enable: true },
+        });
+      });
+    </script>
 
     <style>
         /* ==============================================
-           1. إصلاحات الهيدر والقائمة والعناصر (Standard)
+           1. تنسيقات الصفحة (Standard)
            ============================================== */
         
         body {
@@ -42,18 +41,15 @@
             display: block; 
         }
 
-        /* إزالة تأثيرات التركيز والضغط */
         *, *::before, *::after {
             -webkit-tap-highlight-color: transparent !important;
             outline: none !important;
             box-shadow: none !important;
+            box-sizing: border-box;
         }
-        *:focus, *:active {
-            outline: none !important;
-            border-color: transparent !important;
-        }
+        *:focus { outline: none; border-color: transparent !important; }
 
-        /* الهيدر المثبت */
+        /* الهيدر */
         .main-header {
             height: 70px !important; 
             background-color: #0b132b !important;
@@ -76,18 +72,20 @@
         /* القائمة الجانبية */
         .sidebar { z-index: 2001 !important; padding-top: 20px !important; background-color: #111a30; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
         
-        /* طبقة التعتيم */
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1500;
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px);
         }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
-        
-        /* ======== 2. تنسيقات أداة ImgTag ======== */
 
-        main { text-align: center; max-width: 900px; margin: 0 auto; padding: 20px 20px 50px 20px; }
-        
+
+        /* ==============================================
+           2. تنسيقات أداة ImgTag
+           ============================================== */
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
         .tool-box {
             background-color: #111a30; padding: 30px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -95,7 +93,7 @@
             margin-top: 0; 
         }
         
-        .tool-box h1 { color: #00aaff; margin-bottom: 20px; }
+        h1 { color: #00aaff; margin-bottom: 20px; }
 
         /* زر الرفع */
         #image-input { display: none; }
@@ -107,26 +105,17 @@
         }
         .file-upload-label:hover { background-color: #fff; transform: scale(1.02); }
 
-        /* منطقة المعاينة (إصلاح التشوه) */
+        /* منطقة المعاينة */
         #preview-area {
             margin-top: 20px; display: none; background: #0e1624;
             padding: 15px; border-radius: 10px; border: 1px solid #2a3a5a;
             min-height: 100px;
-            display: flex; /* لضمان التوسيط */
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
         }
         .preview-single-image { 
-            max-width: 100%; /* إصلاح التشوه الأفقي */
-            max-height: 250px; /* تحديد ارتفاع أقصى */
-            width: auto;
-            height: auto;
+            max-width: 100%; max-height: 250px;
             border-radius: 5px; border: 2px solid #00aaff;
             object-fit: contain;
-        }
-        #preview-multi-text {
-            color: #ccc; margin-bottom: 15px;
         }
 
         /* الأزرار */
@@ -138,8 +127,6 @@
         .btn-blue { background-color: #00aaff; color: #111a30; }
         .btn-green { background-color: #27ae60; }
         .btn-red { background-color: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
-        .btn-red:hover { background-color: #ff4d4d; color: #fff; }
-        .btn-orange { background-color: #e67e22; }
 
         /* النتائج */
         #results-container {
@@ -157,53 +144,15 @@
             flex-grow: 1; background-color: #0b132b; color: #fff; border: 1px solid #2a3a5a;
             padding: 8px; border-radius: 0 5px 5px 0; font-size: 0.9em; direction: ltr;
         }
-        .result-item .copy-btn { background-color: #00aaff; color: #111a30; padding: 0 12px; border-radius: 5px 0 0 5px; }
+        .result-item .copy-btn { background-color: #00aaff; color: #111a30; padding: 0 12px; border-radius: 5px 0 0 5px; border:none; cursor:pointer; font-weight:bold; }
 
-        #storage-area { 
-            display: flex; justify-content: center; gap: 15px; margin: 20px 0; 
-            flex-wrap: wrap; /* للسماح للأزرار بالنزول في سطر جديد على الموبايل */
+        /* التحميل */
+        #progress-area { margin-top: 20px; display: none; }
+        .progress-circle {
+            width: 40px; height: 40px; border: 4px solid #2a3a5a; border-top-color: #00aaff;
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;
         }
-        
-        /* زر المساعدة العائم (FAB) */
-        .help-fab {
-            position: fixed; bottom: 25px; left: 25px; width: 50px; height: 50px;
-            background: #00aaff; color: #fff; border-radius: 50%; border: none;
-            box-shadow: 0 4px 15px rgba(0,170,255,0.3); cursor: pointer; z-index: 1500;
-            display: flex; justify-content: center; align-items: center; font-size: 20px;
-        }
-
-        /* ======== 3. توحيد تصميم Modals ======== */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 3000;
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: 0.2s;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        
-        /* محتوى المودال القياسي (للتخزين والتعليمات) */
-        .modal-content-standard {
-            background: #111a30; width: 90%; max-width: 450px; 
-            border-radius: 12px; border: 1px solid #00aaff; overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,170,255,0.2);
-            display: flex; flex-direction: column;
-        }
-        .modal-header-standard {
-            background: #00aaff; color: #fff; padding: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .modal-header-close {
-            background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;
-            transition: 0.2s; 
-        }
-        .modal-header-close:hover { color: #ff4d4d; transform: scale(1.1); } /* زر الإغلاق المحسن */
-
-        /* Modal تخزين النتائج */
-        .stored-link-item {
-            background: #0e1624; padding: 10px; border-radius: 5px; margin-bottom: 8px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .stored-link-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 3px; margin-left: 10px; }
+        @keyframes spin { to {transform: rotate(360deg);} }
 
     </style>
 </head>
@@ -226,7 +175,7 @@
         </div>
     </header>
 
-    <nav class="sidebar">
+    <nav class="sidebar" id="sidebar">
         <div class="sidebar-section">
             <h4>القسم 1: تعريف واختصار</h4>
             <ul>
@@ -235,8 +184,7 @@
                 <li><a href="safety.html"><i class="fas fa-shield-alt"></i> <span>شروط الخدمة</span></a></li>
                 <li><a href="support.html"><i class="fas fa-headset"></i> <span>خدمة العملاء</span></a></li>
                 <li><a href="login.html" id="auth-link">
-                    <i class="fas fa-sign-in-alt"></i> 
-                    <span>تسجيل الدخول</span>
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
                 </a></li>
             </ul>
         </div>
@@ -265,10 +213,8 @@
                 <li><a href="zoom.html"><i class="fas fa-search-plus"></i> <span>تكبير دقة الصورة</span></a></li>
                 <li><a href="note.html"><i class="fas fa-sticky-note"></i> <span>مذكرة فورية</span></a></li>
                 <li><a href="age.html"><i class="fas fa-calendar-alt"></i> <span>حساب الفرق بين تاريخين</span></a></li>
-                
                 <li><a href="prayer.html"><i class="fas fa-mosque"></i> <span>أوقات الصلاة</span></a></li>
                 <li><a href="data.city.html"><i class="fas fa-cloud-sun-rain"></i> <span>الطقس</span></a></li>
-
                 <li><a href="txtpdf.html"><i class="fas fa-file-word"></i> <span>تحويل النص إلى PDF</span></a></li>
                 <li><a href="Mp3.html"><i class="fas fa-file-audio"></i> <span>تحويل فيديو إلى MP3</span></a></li>
                 <li><a href="coler.html"><i class="fas fa-swatchbook"></i> <span>أداة ألوان (Picker)</span></a></li>
@@ -323,119 +269,36 @@
     </nav>
 
     <main class="container">
-        
         <div class="tool-box">
             <h1><i class="fas fa-link"></i> أداة تحويل الصور إلى روابط</h1>
             
-            <label for="image-input" class="file-upload-label" id="upload-label" data-lang-key="selectImages">
-                <i class="fas fa-cloud-upload-alt"></i> اختر صوراً (بحد أقصى 50)
+            <label for="image-input" class="file-upload-label" id="upload-label">
+                <i class="fas fa-cloud-upload-alt"></i> اختر صوراً (حد أقصى 5)
             </label>
             <input type="file" id="image-input" multiple accept="image/*">
             
             <div id="preview-area"></div>
 
-            <div id="progress-area">
-                <div id="progress-spinner" style="display: none;">
-                    <div class="progress-circle" style="width:50px; height:50px; border-width: 5px; border-top-color:#00aaff; border-color: #2a3a5a; margin: 0 auto 10px auto;"></div>
-                </div>
-                <p id="progress-status" data-lang-key="statusReady">اختر صورة واحدة أو أكثر...</p>
+            <div id="progress-area" style="display:none; margin-top:20px;">
+                <div class="progress-circle"></div>
+                <p id="progress-status" style="margin-top:10px; color:#aaa;">جاري المعالجة...</p>
             </div>
 
             <div id="button-area"></div>
-            
-            <div id="storage-area">
-                <button class="cta-button btn-green" id="save-btn" style="display: none;" data-lang-key="storageSave">
-                    <i class="fas fa-save"></i> حفظ الروابط
-                </button>
-                <button class="cta-button btn-orange" id="load-btn" data-lang-key="storageLoad">
-                    <i class="fas fa-history"></i> استرجاع المحفوظات
-                </button>
-            </div>
-
             <div id="results-container"></div>
             
             <div id="reset-area" style="margin-top: 30px; display: none;">
-                <button id="reset-btn" class="cta-button btn-red" data-lang-key="resetButton">
+                <button id="reset-btn" class="cta-button btn-red">
                     <i class="fas fa-redo"></i> رفع ملفات جديدة
                 </button>
             </div>
-
         </div>
-
-        <button class="help-fab" onclick="toggleHelpModal()">
-            <i class="fas fa-question"></i>
-        </button>
-
     </main>
-        
-    <div class="modal-overlay" id="modal-instructions">
-        <div class="modal-content-standard" id="modal-instructions-content">
-            <div class="modal-header-standard">
-                <h2 data-lang-key="instructionTitle" style="color:#fff;">دليل استخدام أداة رفع الصور</h2>
-                <button class="modal-header-close" onclick="toggleHelpModal()">&times;</button>
-            </div>
-            <div class="instruction-box-modal" style="padding: 20px;">
-                
-                <p data-lang-key="whatIsImgBB" style="color: #ccc;">
-                    تتيح لك هذه الأداة رفع صورك (حتى 50 صورة دفعة واحدة) إلى خدمة ImgBB والحصول على روابط مباشرة ومجانية لمشاركتها.
-                </p>
-                
-                <h3 style="color:#00aaff; font-size:16px; margin-top:20px; border-bottom:1px dashed #2a3a5a; padding-bottom:5px;">كيفية الاستخدام</h3>
-                <ul>
-                    <li data-lang-key="step1">1. اختر صورك (الحد الأقصى 50 صورة).</li>
-                    <li data-lang-key="step2">2. (اختياري) اضغط "معاينة" لحذف أي صور لا تريدها.</li>
-                    <li data-lang-key="step3">3. اضغط "ابدأ الرفع" وانتظر انتهاء العملية.</li>
-                    <li data-lang-key="step4">4. انسخ روابطك، أو اضغط "حفظ" لتخزينها في المتصفح لوقت لاحق.</li>
-                </ul>
-                
-                <h3 style="color:#00aaff; font-size:16px; margin-top:20px; border-bottom:1px dashed #2a3a5a; padding-bottom:5px;">الميزات</h3>
-                <ul>
-                    <li data-lang-key="benefit1">تحويل غير محدود ومجاني.</li>
-                    <li data-lang-key="benefit2">روابط مباشرة لصورك (Direct Links).</li>
-                    <li data-lang-key="benefit3">يمكنك حذف صورك نهائياً من الخادم باستخدام زر الحذف.</li>
-                </ul>
-                
-                <p class="privacy-note" data-lang-key="privacyNote">
-                    <i class="fas fa-lock"></i> يتم رفع صورك للحصول على الرابط، ولكننا نوفر لك "رابط الحذف" الخاص بكل صورة لإتلافها نهائياً متى شئت.
-                </p>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="modal-overlay" id="storage-modal">
-        <div class="modal-content-standard" id="storage-modal-content" style="max-height: 80vh;">
-            <div class="modal-header-standard">
-                <h2 data-lang-key="storageModalTitle" style="color:#fff;">الروابط المحفوظة</h2>
-                <button class="modal-header-close" id="storage-modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body" id="storage-modal-body" style="padding: 15px; overflow-y: auto;">
-                <p style="text-align:center; color:#ccc;">لا توجد روابط محفوظة حالياً.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="preview-modal">
-        <div class="modal-content-standard" style="max-width: 600px; max-height: 80vh;">
-            <div class="modal-header-standard">
-                <h2 data-lang-key="modalTitle" style="color:#fff;">معاينة الصور</h2>
-                <button class="modal-header-close" id="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body" id="modal-body" style="padding: 15px; overflow-y: auto;">
-                </div>
-            <div style="padding:15px; border-top:1px solid #2a3a5a; text-align:center;">
-                <button class="cta-button btn-red" id="modal-delete-all" data-lang-key="modalDeleteAll">
-                    <i class="fas fa-trash"></i> حذف الكل
-                </button>
-            </div>
-        </div>
-    </div>
-
 
     <script>
-        // --- 1. القائمة الجانبية ---
+        // --- القائمة الجانبية ---
         const menuCheckbox = document.getElementById('menu-checkbox');
-        const sidebar = document.querySelector('.sidebar');
+        const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
 
         function toggleMenu(open) {
@@ -444,182 +307,59 @@
         }
         menuCheckbox.addEventListener('change', (e) => toggleMenu(e.target.checked));
         overlay.addEventListener('click', () => toggleMenu(false));
-        
-        // --- 2. نافذة التعليمات ---
-        function toggleHelpModal() {
-             document.getElementById('modal-instructions').classList.toggle('active');
-        }
-        document.getElementById('modal-instructions').addEventListener('click', (e) => {
-             if (e.target.id === 'modal-instructions') toggleHelpModal();
-        });
 
-
-        // --- 3. منطق الأداة (محدث) ---
-        const IMGBB_API_KEY = "f0ff703738276bb67fcc6b7f0a6778d5";
-        const translations = {
-            "ar": {
-                "selectImages": "اختر الصور (حد أقصى 50)", "maxImagesError": "لا يمكن اختيار أكثر من 50 صورة دفعة واحدة.", "maxSizeError": "حجم الصورة ({name}) يتجاوز الحد (32 ميغا) ولن يتم رفعها.", "startButton": "ابدأ الرفع ({count})", "statusReady": "اختر صورة واحدة أو أكثر...", "statusSelected": " تم اختيار {count} صور. جاهز للبدء.", "statusUploading": "جاري رفع الصورة {current} من {total}...", "statusDone": "اكتمل الرفع!", "statusError": "حدث خطأ أثناء الرفع.", "storageSave": "حفظ الروابط", "storageLoad": "استرجاع المحفوظات", "storageSaved": "تم الحفظ!", "storageLoaded": "تم الاسترجاع!", "storageEmpty": "لا توجد روابط محفوظة.", "storageModalTitle": "الروابط المحفوظة", "copyLink": "نسخ", "copied": "تم النسخ!", "deleteFromImgBB": "حذف من الخادم", "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه الصورة نهائياً من الخادم؟ لا يمكن التراجع عن هذا.", "deleting": "جاري الحذف...", "deleted": "تم الحذف بنجاح!", "resetButton": "رفع ملفات جديدة", "previewButton": "معاينة ({count})", "modalTitle": "معاينة الصور", "modalDeleteAll": "حذف الكل", "modalNoImages": "لا توجد صور لعرضها. سيتم إغلاق النافذة.", "instructionTitle": "دليل استخدام أداة رفع الصور", "whatIsImgBB": "تتيح لك هذه الأداة رفع صورك (حتى 50 صورة دفعة واحدة) إلى خدمة ImgBB والحصول على روابط مباشرة ومجانية لمشاركتها.", "howToUse": "كيفية الاستخدام", "step1": "1. اختر صورك (الحد الأقصى 50 صورة، والصورة الواحدة لا تتعدى 32 ميغا).", "step2": "2. (اختياري) اضغط \"معاينة\" لحذف أي صور لا تريدها.", "step3": "3. اضغط \"ابدأ الرفع\" وانتظر انتهاء العملية.", "step4": "4. انسخ روابطك، أو اضغط \"حفظ\" لتخزينها في المتصفح لوقت لاحق.", "benefitsTitle": "الميزات", "benefit1": "تحويل غير محدود ومجاني.", "benefit2": "روابط مباشرة لصورك (Direct Links).", "benefit3": "يمكنك حذف صورك نهائياً من الخادم باستخدام زر الحذف.", "privacyNote": "+ يتم رفع صورك للحصول على الرابط، ولكننا نوفر لك \"رابط الحذف\" الخاص بكل صورة لإتلافها نهائياً متى شئت."
-            }
-        };
-        let currentLang = 'ar'; 
-
+        // --- منطق الأداة الآمن (Secure Logic) ---
         const imageInput = document.getElementById('image-input');
         const previewArea = document.getElementById('preview-area');
         const progressArea = document.getElementById('progress-area');
         const progressStatus = document.getElementById('progress-status');
-        const progressSpinner = document.getElementById('progress-spinner');
         const buttonArea = document.getElementById('button-area');
         const resultsContainer = document.getElementById('results-container');
-        const storageModal = document.getElementById('storage-modal');
-        const storageModalBody = document.getElementById('storage-modal-body');
-        const storageModalCloseBtn = document.getElementById('storage-modal-close-btn');
         const resetArea = document.getElementById('reset-area');
         const uploadLabel = document.getElementById('upload-label');
-        const modal = document.getElementById('preview-modal');
-        const modalBody = document.getElementById('modal-body');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-        const modalDeleteAllBtn = document.getElementById('modal-delete-all');
 
         let selectedFiles = [];
-        let uploadedImages = []; 
-        const MAX_SIZE = 32 * 1024 * 1024; 
+        const MAX_FILES = 5; 
+        const MAX_SIZE_MB = 4; // 4MB (حد Vercel للطلب الواحد)
 
-        function updateStatusMessage(element, key, values = {}) {
-            let text = translations[currentLang][key] || '';
-            if (values.count) text = text.replace('{count}', values.count);
-            if (values.current) text = text.replace('{current}', values.current);
-            if (values.total) text = text.replace('{total}', values.total);
-            if (values.name) text = text.replace('{name}', values.name);
-            element.innerText = text;
-        }
+        imageInput.addEventListener('change', (e) => {
+            let files = Array.from(e.target.files);
+            if (files.length > MAX_FILES) { 
+                alert(`عذراً، الحد الأقصى ${MAX_FILES} صور في المرة الواحدة.`); 
+                files = files.slice(0, MAX_FILES); 
+            }
+            selectedFiles = files;
+            renderPreview();
+        });
 
-        function renderPreviewArea() {
+        function renderPreview() {
             previewArea.innerHTML = '';
             buttonArea.innerHTML = '';
+            if (selectedFiles.length === 0) { previewArea.style.display = 'none'; return; }
 
-            if (selectedFiles.length === 0) {
-                previewArea.style.display = 'none';
-                progressArea.style.display = 'block';
-                progressSpinner.style.display = 'none';
-                updateStatusMessage(progressStatus, 'statusReady');
-                return;
-            }
-
-            progressArea.style.display = 'none'; 
-            previewArea.style.display = 'flex'; // استخدام flex لتوسيط المعاينة
-
+            previewArea.style.display = 'flex';
             if (selectedFiles.length === 1) {
                 const url = URL.createObjectURL(selectedFiles[0]);
                 previewArea.innerHTML = `<img src="${url}" class="preview-single-image">`;
             } else {
-                const text = document.createElement('p');
-                text.id = 'preview-multi-text';
-                updateStatusMessage(text, 'statusSelected', { count: selectedFiles.length });
-                
-                const previewButton = document.createElement('button');
-                previewButton.className = 'cta-button btn-orange';
-                previewButton.id = 'open-modal-btn';
-                updateStatusMessage(previewButton, 'previewButton', { count: selectedFiles.length });
-                previewButton.onclick = openModal;
-                
-                // إضافة المعاينة النصية وزر فتح المودال لمنطقة المعاينة
-                previewArea.innerHTML = '';
-                previewArea.appendChild(text);
-                previewArea.appendChild(previewButton);
+                previewArea.innerHTML = `<p style="color:#ccc;">تم اختيار ${selectedFiles.length} صور</p>`;
             }
-            
-            const startButton = document.createElement('button');
-            startButton.className = 'cta-button btn-blue';
-            startButton.id = 'start-btn';
-            updateStatusMessage(startButton, 'startButton', { count: selectedFiles.length });
-            startButton.onclick = startUpload;
-            
-            buttonArea.appendChild(startButton); // إضافة زر البدء إلى المنطقة المخصصة للأزرار
+
+            const startBtn = document.createElement('button');
+            startBtn.className = 'cta-button btn-blue';
+            startBtn.innerText = 'ابدأ الرفع';
+            startBtn.onclick = startUpload;
+            buttonArea.appendChild(startBtn);
         }
 
-        function openModal() {
-            renderModalBody();
-            modal.classList.add('active');
-        }
-        function closeModal() {
-            modal.classList.remove('active');
-        }
-        function renderModalBody() {
-             modalBody.innerHTML = '';
-             if (selectedFiles.length === 0) {
-                 modalBody.innerHTML = `<p style="text-align:center; color:#ccc;">${translations[currentLang].modalNoImages}</p>`;
-                 setTimeout(closeModal, 1500);
-                 return;
-             }
-             selectedFiles.forEach((file, index) => {
-                 const item = document.createElement('div');
-                 item.className = 'modal-image-item';
-                 const url = URL.createObjectURL(file);
-                 const deleteButtonHTML = `<button aria-label="Delete item" class="delete-button" data-index="${index}"><i class="fas fa-trash-alt" style="color:#e74c3c;"></i></button>`;
-                 item.innerHTML = `<img src="${url}" alt="${file.name}"><span>${file.name}</span>${deleteButtonHTML}`;
-                 modalBody.appendChild(item);
-             });
-        }
-        
-        function displayResultCard(data, container) {
-            const item = document.createElement('div');
-            item.className = 'result-item';
-            const idPrefix = (container === resultsContainer) ? 'item-' : 'item-saved-';
-            item.id = `${idPrefix}${data.id}`;
-            
-            const deleteButtonHTML = `
-                <button aria-label="Delete item" class="delete-button" data-delete-url="${data.delete_url}" data-id="${data.id}" title="${translations[currentLang].deleteFromImgBB}">
-                  <i class="fas fa-trash-alt" style="color: #e74c3c;"></i>
-                </button>`;
+        // تحويل الملف إلى Base64
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+        });
 
-            item.innerHTML = `
-                ${deleteButtonHTML}
-                <img src="${data.thumb.url}" alt="${data.filename}">
-                <div class="link-container">
-                    <input type="text" value="${data.url}" readonly>
-                    <button class="copy-btn">${translations[currentLang].copyLink}</button>
-                </div>
-            `;
-            container.appendChild(item);
-        }
-
-        async function handleDelete(deleteButton) {
-            if (!confirm(translations[currentLang].deleteConfirm)) return;
-            
-            const deleteUrl = deleteButton.dataset.deleteUrl;
-            const cardId = deleteButton.dataset.id;
-            
-            const mainCard = document.getElementById(`item-${cardId}`);
-            const savedCard = document.getElementById(`item-saved-${cardId}`);
-            
-            deleteButton.disabled = true;
-            deleteButton.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#00aaff;"></i>`;
-            
-            try {
-                const response = await fetch(deleteUrl);
-                
-                if (response.ok) {
-                    [mainCard, savedCard].forEach(card => {
-                        if (card) {
-                            card.style.transition = 'opacity 0.5s ease';
-                            card.style.opacity = '0';
-                            setTimeout(() => card.remove(), 500);
-                        }
-                    });
-                    
-                    uploadedImages = uploadedImages.filter(img => img.id !== cardId);
-                    
-                    let savedImages = JSON.parse(localStorage.getItem('skydata_imgbb_links') || '[]');
-                    savedImages = savedImages.filter(img => img.id !== cardId);
-                    localStorage.setItem('skydata_imgbb_links', JSON.stringify(savedImages));
-                } else {
-                    alert(`Failed to delete image: ${response.statusText}`);
-                }
-            } catch (error) {
-                 alert("Error deleting image.");
-            }
-        }
-        
         async function startUpload() {
             if (selectedFiles.length === 0) return;
 
@@ -627,150 +367,81 @@
             buttonArea.innerHTML = '';
             uploadLabel.style.display = 'none';
             progressArea.style.display = 'block';
-            progressSpinner.style.display = 'block';
             resultsContainer.innerHTML = '';
-            uploadedImages = [];
 
             for (let i = 0; i < selectedFiles.length; i++) {
                 const file = selectedFiles[i];
-                updateStatusMessage(progressStatus, 'statusUploading', { current: i + 1, total: selectedFiles.length });
-
-                if (file.size > MAX_SIZE) {
-                    displayErrorCard(file.name, translations[currentLang].maxSizeError.replace('{name}', file.name));
+                
+                if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                    alert(`الصورة ${file.name} أكبر من ${MAX_SIZE_MB} ميجا. تم تجاوزها.`);
                     continue;
                 }
 
-                const formData = new FormData();
-                formData.append('key', IMGBB_API_KEY);
-                formData.append('image', file);
+                progressStatus.innerText = `جاري رفع ${i+1} من ${selectedFiles.length}...`;
 
                 try {
-                    const response = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+                    const base64Image = await toBase64(file);
+                    
+                    // إرسال الطلب إلى دالة الـ Backend (Serverless)
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: base64Image })
+                    });
+
                     const result = await response.json();
 
-                    if (result.success) {
-                        uploadedImages.push(result.data);
-                        displayResultCard(result.data, resultsContainer);
+                    if (response.ok && result.success) {
+                        displayResult(result.data);
                     } else {
-                        displayErrorCard(file.name, result.error ? result.error.message : translations[currentLang].statusError);
+                        console.error('Upload failed:', result);
+                        alert(`فشل رفع ${file.name}: ${result.error || 'خطأ غير معروف'}`);
                     }
 
                 } catch (error) {
-                    displayErrorCard(file.name, translations[currentLang].statusError);
+                    console.error('Error:', error);
+                    alert(`خطأ في الاتصال أثناء رفع ${file.name}`);
                 }
             }
 
-            updateStatusMessage(progressStatus, 'statusDone');
-            progressSpinner.style.display = 'none';
-
-            if (uploadedImages.length > 0) {
-                document.getElementById('save-btn').style.display = 'inline-block';
-            }
-
+            progressArea.style.display = 'none';
             resetArea.style.display = 'block';
-            document.getElementById('reset-btn').addEventListener('click', resetTool);
-        }
-        
-        function resetTool() {
-            selectedFiles = [];
-            uploadedImages = [];
-            imageInput.value = null;
-            
-            resultsContainer.innerHTML = '';
-            buttonArea.innerHTML = '';
-            document.getElementById('save-btn').style.display = 'none';
-            resetArea.style.display = 'none';
-            previewArea.style.display = 'none';
-            
-            progressArea.style.display = 'block';
-            progressSpinner.style.display = 'none';
-            updateStatusMessage(progressStatus, 'statusReady');
-            
-            uploadLabel.style.display = 'inline-block';
+            document.getElementById('reset-btn').onclick = () => window.location.reload();
         }
 
+        function displayResult(data) {
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            div.innerHTML = `
+                <img src="${data.thumb.url}" alt="Thumb">
+                <div class="link-container">
+                    <input type="text" value="${data.url}" readonly>
+                    <button class="copy-btn" onclick="copyLink(this)">نسخ</button>
+                </div>
+                <div style="font-size:12px; color:#aaa; margin-top:5px;">
+                    <a href="${data.delete_url}" target="_blank" style="color:#ff4d4d; text-decoration:underline;">رابط الحذف (احتفظ به)</a>
+                </div>
+            `;
+            resultsContainer.appendChild(div);
+        }
 
-        // --- مستمعات الأحداث ---
-        imageInput.addEventListener('change', (e) => {
-            uploadedImages = [];
-            resultsContainer.innerHTML = '';
-            document.getElementById('save-btn').style.display = 'none';
-            resetArea.style.display = 'none';
-            
-            let files = Array.from(e.target.files);
-            if (files.length > 50) { alert(translations[currentLang].maxImagesError); files = files.slice(0, 50); }
-            
-            selectedFiles = files;
-            renderPreviewArea(); 
-        });
-        
-        modalCloseBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-        
-        modalDeleteAllBtn.addEventListener('click', () => { selectedFiles = []; renderModalBody(); renderPreviewArea(); });
-        modalBody.addEventListener('click', (e) => {
-            const deleteButton = e.target.closest('.delete-button');
-            if (deleteButton) { const index = parseInt(deleteButton.getAttribute('data-index'), 10); selectedFiles.splice(index, 1); renderModalBody(); renderPreviewArea(); }
-        });
-        
-        // --- مستمعات أزرار التخزين ---
-        document.getElementById('save-btn').addEventListener('click', () => {
-            let savedImages = JSON.parse(localStorage.getItem('skydata_imgbb_links') || '[]');
-            const newImagesToAdd = uploadedImages.filter(newImg => !savedImages.some(savedImg => savedImg.id === newImg.id));
-            const combinedImages = savedImages.concat(newImagesToAdd);
-            localStorage.setItem('skydata_imgbb_links', JSON.stringify(combinedImages));
-            updateStatusMessage(progressStatus, 'storageSaved');
-            progressArea.style.display = 'block';
-            setTimeout(() => { progressArea.style.display = 'none'; }, 2000);
-        });
-        
-        loadBtn.addEventListener('click', () => {
-            const savedData = localStorage.getItem('skydata_imgbb_links');
-            if (!savedData || JSON.parse(savedData).length === 0) {
-                updateStatusMessage(progressStatus, 'storageEmpty'); progressArea.style.display = 'block'; setTimeout(() => { progressArea.style.display = 'none'; }, 2000); return;
-            }
-            const images = JSON.parse(savedData);
-            storageModalBody.innerHTML = '';
-            images.forEach(data => { displayResultCard(data, storageModalBody); });
-            storageModal.classList.add('active');
-        });
-        
-        storageModalCloseBtn.addEventListener('click', () => storageModal.classList.remove('active'));
-        storageModal.addEventListener('click', (e) => { if (e.target === storageModal) storageModal.classList.remove('active'); });
-
-        resultsContainer.addEventListener('click', async (e) => {
-            const copyBtn = e.target.closest('.copy-btn');
-            const deleteButton = e.target.closest('.delete-button');
-            if (copyBtn) {
-                const input = copyBtn.previousElementSibling;
-                input.select();
-                document.execCommand('copy');
-                copyBtn.innerText = translations[currentLang].copied;
-                setTimeout(() => { copyBtn.innerText = translations[currentLang].copyLink; }, 1500);
-                return;
-            }
-            if (deleteButton) { handleDelete(deleteButton); }
-        });
-        
-        storageModalBody.addEventListener('click', async (e) => {
-            const copyBtn = e.target.closest('.copy-btn');
-            const deleteButton = e.target.closest('.delete-button');
-            if (copyBtn) {
-                const input = copyBtn.previousElementSibling;
-                input.select();
-                document.execCommand('copy');
-                copyBtn.innerText = translations[currentLang].copied;
-                setTimeout(() => { copyBtn.innerText = translations[currentLang].copyLink; }, 1500);
-                return;
-            }
-            if (deleteButton) { handleDelete(deleteButton); }
-        });
-
-        // --- التشغيل ---
-        document.addEventListener("DOMContentLoaded", () => {
-            resetTool();
-        });
-        
+        window.copyLink = function(btn) {
+            const input = btn.previousElementSibling;
+            input.select();
+            document.execCommand('copy');
+            btn.innerText = 'تم!';
+            setTimeout(() => btn.innerText = 'نسخ', 1500);
+        };
     </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        import { updateAuthUI } from './firebase-config.js'; // استخدام الملف المركزي
+
+        // استدعاء دالة تحديث الهيدر (اختيارية هنا لأننا في HTML عادي، ولكن للتوحيد)
+        updateAuthUI();
+    </script>
+
 </body>
 </html>

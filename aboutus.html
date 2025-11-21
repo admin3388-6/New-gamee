@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>SkyData - من نحن</title>
-    <meta name="description" content="تعرف على SkyData، المنصة العربية الرائدة للأدوات الرقمية المجانية. نحن نقدم حلولاً ذكية وسريعة للجميع.">
-    <meta name="keywords" content="من نحن, عن الموقع, SkyData, فريق العمل, أدوات مجانية, about us">
+    <meta name="description" content="تعرف على SkyData، المنصة الشاملة للأدوات الرقمية. نحن نقدم حلولاً ذكية، سريعة، ومجانية للجميع.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="style.css">
@@ -27,7 +26,7 @@
 
     <style>
         /* ==============================================
-           1. أساسيات الصفحة (Standard)
+           1. أساسيات الصفحة
            ============================================== */
         body {
             background-color: #0b132b;
@@ -89,39 +88,71 @@
         .copyright { font-size: 12px; color: #666; }
 
         /* ==============================================
-           2. تنسيقات صفحة "من نحن" (مراجعة)
+           2. تنسيقات صفحة من نحن
            ============================================== */
 
-        .container-about { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .container-about { max-width: 1100px; margin: 0 auto; padding: 20px; }
 
-        .about-box {
-            background-color: #111a30; padding: 40px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid #2a3a5a; color: #e0e0e0; line-height: 1.8; text-align: center;
+        .about-hero {
+            text-align: center; padding: 40px 20px; background: #111a30;
+            border-radius: 20px; border: 1px solid #2a3a5a; margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-
-        h1.main-title { color: #00aaff; font-size: 32px; margin-bottom: 20px; }
         
-        /* تعديل الشعار الرئيسي */
-        .about-logo {
-            width: auto; height: 50px; margin: 0 auto 30px auto;
-            display: block; 
-        }
-
-        h2 { color: #fff; font-size: 22px; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #2a3a5a; display: inline-block; padding-bottom: 5px; }
+        .about-logo { height: 80px; margin-bottom: 20px; }
         
-        p { margin-bottom: 15px; font-size: 16px; color: #ccc; max-width: 800px; margin-left: auto; margin-right: auto; text-align: justify; }
+        h1 { color: #fff; font-size: 32px; margin-bottom: 15px; }
+        .hero-desc { font-size: 18px; color: #ccc; line-height: 1.6; max-width: 800px; margin: 0 auto; }
+        .highlight { color: #00aaff; font-weight: bold; }
 
-        .features-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px; margin-top: 30px;
+        /* شبكة شرح الأدوات */
+        .section-title {
+            text-align: center; color: #fff; font-size: 24px; margin-bottom: 30px;
+            position: relative; display: inline-block; width: 100%;
         }
-        .feature-card {
-            background: #0e1624; padding: 20px; border-radius: 10px; border: 1px solid #2a3a5a; transition: 0.3s;
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 3px; background: #00aaff;
+            margin: 10px auto 0; border-radius: 2px;
         }
-        .feature-card:hover { transform: translateY(-5px); border-color: #00aaff; }
-        .feature-icon { font-size: 30px; color: #00aaff; margin-bottom: 10px; }
-        .feature-title { font-weight: bold; color: #fff; margin-bottom: 5px; }
+
+        .services-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: #0e1624; border: 1px solid #2a3a5a; border-radius: 15px;
+            padding: 25px; text-align: center; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .service-card:hover {
+            transform: translateY(-10px); border-color: #00aaff;
+            box-shadow: 0 10px 20px rgba(0, 170, 255, 0.1);
+        }
+
+        .icon-circle {
+            width: 70px; height: 70px; border-radius: 50%; background: rgba(0, 170, 255, 0.1);
+            display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
+        }
+        .icon-circle i { font-size: 30px; color: #00aaff; }
+
+        .service-card h3 { color: #fff; font-size: 20px; margin-bottom: 10px; }
+        .service-card p { color: #aaa; font-size: 14px; line-height: 1.6; }
+
+        /* إحصائيات بسيطة */
+        .stats-row {
+            display: flex; justify-content: center; gap: 50px; margin-top: 50px; flex-wrap: wrap;
+            padding: 30px; background: #111a30; border-radius: 15px; border: 1px solid #2a3a5a;
+        }
+        .stat-item { text-align: center; }
+        .stat-number { display: block; font-size: 36px; font-weight: 900; color: #00aaff; }
+        .stat-label { color: #ccc; font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .about-hero { padding: 30px 15px; }
+            h1 { font-size: 24px; }
+            .hero-desc { font-size: 15px; }
+        }
 
     </style>
 </head>
@@ -233,53 +264,80 @@
                 <a href="aboutus.html"><i class="fas fa-users"></i> <span>عنا</span></a>
                 <a href="help.html"><i class="fas fa-hands-helping"></i> <span>ادعمنا</span></a>
             </div>
-            <p class="copyright">
-                SkyData © 2025
-            </p>
+            <p class="copyright">SkyData © 2025</p>
         </div>
     </nav>
 
     <main class="container-about">
         
-        <div class="about-box">
-            <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="شعار Skydata" class="about-logo">
-            
-            <h1 class="main-title">عن SkyData</h1>
+        <div class="about-hero">
+            <img src="https://i.ibb.co/v4vwvcGq/skydatafull.webp" alt="SkyData" class="about-logo">
+            <h1>أهلاً بك في <span class="highlight">SkyData</span></h1>
+            <p class="hero-desc">
+                نحن منصة متكاملة تهدف إلى تبسيط حياتك الرقمية. نوفر لك أكثر من 50 أداة ذكية ومجانية في مكان واحد، مصممة لمساعدتك في إنجاز مهامك بسرعة، كفاءة، وأمان تام.
+            </p>
+        </div>
 
-            <h2>من نحن؟</h2>
-            <p>
-                SkyData هي منصة عربية شاملة تهدف إلى توفير أدوات رقمية للجميع مجاناً نحن نؤمن بأن التكنولوجيا يجب أن تكون متاحة للجميع، لذلك قمنا بجمع أكثر من 50 أداة في مكان واحد، بدءاً من الذكاء الاصطناعي، مروراً بمعالجة الصور، وصولاً إلى أدوات المطورين
-            </p>
+        <h2 class="section-title">ماذا نقدم؟</h2>
+        
+        <div class="services-grid">
             
-            <h2>مهمتنا</h2>
-            <p>
-                نسعى لتبسيط المهام اليومية المعقدة بدلاً من تثبيت برامج ثقيلة أو دفع رسوم اشتراك باهظة، يمكنك إنجاز مهامك في ثوانٍ عبر متصفحك نحن نركز على السرعة والخصوصية وسهولة الاستخدام
-            </p>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-lock feature-icon"></i>
-                    <div class="feature-title">خصوصية تامة</div>
-                    <div>معظم الأدوات تعمل محلياً دون رفع الملفات</div>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-bolt feature-icon"></i>
-                    <div class="feature-title">سرعة فائقة</div>
-                    <div>أداء سريع واستجابة فورية لجميع الأدوات</div>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-check-circle feature-icon"></i>
-                    <div class="feature-title">مجاني 100%</div>
-                    <div>لا رسوم خفية، لا قيود مزعجة</div>
-                </div>
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-brain"></i></div>
+                <h3>حلول الذكاء الاصطناعي</h3>
+                <p>أدوات متطورة لإزالة الخلفيات بدقة، استخراج النصوص من الصور (OCR)، وتوليد المحتوى بذكاء لمساعدتك في مشاريعك الإبداعية.</p>
             </div>
 
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-image"></i></div>
+                <h3>معالجة الصور</h3>
+                <p>تحكم كامل في صورك: تحرير، قص، تغيير الحجم، ضغط، وتحويل الصيغ (WEBP, JPG, PNG) بجودة عالية وبدون فقدان التفاصيل.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-file-pdf"></i></div>
+                <h3>إدارة الملفات</h3>
+                <p>تحويل النصوص والصور إلى ملفات PDF احترافية، دمج الملفات، وضغطها. أدوات مكتبية سريعة تغنيك عن البرامج الثقيلة.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-code"></i></div>
+                <h3>أدوات المطورين</h3>
+                <p>مجموعة أدوات لا غنى عنها للمبرمجين: تنسيق الأكواد، تحويل JSON/XML، فحص DNS، وتشفير البيانات لضمان أمان مشاريعك.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-shield-alt"></i></div>
+                <h3>الحماية والأمان</h3>
+                <p>أدوات لفحص الروابط المشبوهة، توليد كلمات مرور قوية، وتشفير النصوص للحفاظ على خصوصيتك وأمان بياناتك على الإنترنت.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-calendar-check"></i></div>
+                <h3>أدوات يومية</h3>
+                <p>كل ما تحتاجه في يومك: مواقيت الصلاة، حالة الطقس، تحويل العملات، حساب العمر، والمزيد من الخدمات المفيدة.</p>
+            </div>
+
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">أداة مجانية</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">خصوصية وأمان</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">متاح دائماً</span>
+            </div>
         </div>
 
     </main>
 
     <script>
-        // --- فتح/إغلاق القائمة ---
         const menuCheckbox = document.getElementById('menu-checkbox');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -293,9 +351,9 @@
     </script>
 
     <script type="module">
-    import { updateAuthUI } from './firebase-config.js';
-    updateAuthUI();
-</script>
+        import { updateAuthUI } from './firebase-config.js';
+        updateAuthUI();
+    </script>
 
 </body>
 </html>
